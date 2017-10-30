@@ -8,7 +8,7 @@
 
 /* ===== Resets and base page ===== */
 html {
-    background: url("assets/bg.jpg") no-repeat center center fixed;
+    background: url("assets/background.jpg") no-repeat center center fixed;
     background-size: cover;
     margin: 0;
     height: 100%;
@@ -40,32 +40,39 @@ body {
 
 
 /* ===== Flex classes ===== */
-.column-container {
-    display: flex;
-    flex-direction: column;
-}
-
-.row-container {
-    display: flex;
+//containers
+.row {
+    display : flex;
     flex-direction: row;
 }
 
-.column-container-space-around {
-    @extend .column-container;
+.col {
+    display : flex;
+    flex-direction: column;
+}
+
+//Justify content
+.justify-end {
+    justify-content: flex-end;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.justify-around {
     justify-content: space-around;
 }
 
-.column-container-space-evenly {
-    @extend .column-container;
-    justify-content: space-evenly;
+//Align Items
+.align-end {
+    align-items: flex-end;
 }
 
-.row-container-space-around {
-    @extend .row-container;
-    justify-content: space-around;
-}
-
-.row-container-space-evenly {
-    @extend .row-container;
-    justify-content: space-evenly;
+.align-center {
+    align-items: center;
 }

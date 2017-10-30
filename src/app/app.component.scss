@@ -1,12 +1,3 @@
-html, body, main {
-	margin: 0;
-	width: 100vw;
-	height: 100vh;
-	background: url(assets/bg.jpg) no-repeat;
-	background-size: cover;
-	font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-}
-
 .container {
 	margin: 1%;
 }
@@ -50,53 +41,12 @@ aside {
 	margin: 1%;
 }
 
-/***
-    FLEXBOX
-***/
-.row {
-    display : flex;
-    flex-direction: row;
-}
-
-.col {
-    display : flex;
-    flex-direction: column;
-}
-
-/* Justify content */
-.justify-end {
-    justify-content: flex-end;
-}
-
-.justify-center {
-    justify-content: center;
-}
-
-.justify-between {
-    justify-content: space-between;
-}
-
-.justify-around {
-    justify-content: space-around;
-}
-
-/* Align Items */
-.align-end {
-    align-items: flex-end;
-}
-
-.align-center {
-    align-items: center;
-}
-
-
 /* Bouton */
 .bouton a {
 	display: block;
 	width: 75px;
 	line-height: 25px;
 	text-align: center;
-	vertical-align: middle;
 	background: url(assets/bouton-a.png) no-repeat;
 	background-size: cover;
 	color: black;
