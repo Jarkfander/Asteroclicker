@@ -8,18 +8,20 @@ $title-font: 'Russo One', sans-serif;
 
 /* ===== Colors ===== */
 
-    // Backgrounds
-$panel-background-color: rgba(0,0,0, 0.8);
-$panel-border-color: #000000;
+    // Panels
+$panel-background-color:            rgba(0, 0, 0, 0.8);
+$panel-border-color:                #000000;
 
-$input-field-color: #000000;
+    //Input
+$input-field-color:                 rgba(0, 0, 0, 0.6);
+$input-border-color:                #000000;
 
-$button-background-color: #000000;
-$button-hover-background-color: #000000;
-$button-active-background-color: #000000;
-
-
+    //buttons
+$button-background-color:           rgba(0, 0, 0, 0.6);
+$button-hover-background-color:     rgba(0, 0, 0, 0.4);
+$button-active-background-color:    rgba(0, 0, 0, 1.0);
+$button-border-color:               #000000;
 
     // Fonts
-$main-font-color: #f0f0f0;
-$footer-font-color: #6d6d6d;
+$main-font-color:                   rgba(240, 240, 240, 1.0);
+$footer-font-color:                 rgba(120, 120, 120, 1.0);
