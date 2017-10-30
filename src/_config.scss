@@ -1,7 +1,9 @@
 /* ===== Fonts ===== */
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
+@import url('https://fonts.googleapis.com/css?family=Russo+One');
 
 $main-font: 'Source Sans Pro', sans-serif;
+$title-font: 'Russo One', sans-serif;
 
 
 /* ===== Colors ===== */
@@ -9,6 +11,14 @@ $main-font: 'Source Sans Pro', sans-serif;
     // Backgrounds
 $panel-background-color: rgba(0,0,0, 0.8);
 $panel-border-color: #000000;
+
+$input-field-color: #000000;
+
+$button-background-color: #000000;
+$button-hover-background-color: #000000;
+$button-active-background-color: #000000;
+
+
 
     // Fonts
 $main-font-color: #f0f0f0;
