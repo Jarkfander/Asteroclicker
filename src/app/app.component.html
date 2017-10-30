@@ -1,0 +1,105 @@
+<main class="row">
+  <aside class="col left">
+    <div class="container">
+      <article class="row up asideTop">
+        <div id="shipSprite">
+         
+          <app-ship-view></app-ship-view>
+        </div>
+      </article>
+    </div>
+
+    <div class="container">
+      <article class="row down asideBot justify-center align-center ">
+        <div>
+          <h3 id="stockInfo" class="frontSize">
+            <u> Stock </u>
+            <br />
+            <br /> Current Level: 0 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+            <br /> Capacity: 0
+            <br />
+            <br /> Next Level: 0
+            <br /> Capacity: 0
+            <br /> Cost: 0 Credit
+            <br />
+          </h3>
+          <div class="bouton" onclick="stock()">
+            <p>
+              <a id="stock" href="#">Upgrade</a>
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <h3 id="mineRateInfo" class="frontSize">
+            <u> Mine Rate </u>
+            <br />
+            <br /> Current Level: 0
+            <br /> BaseRate: 0, MaxRate: 0
+            <br />
+            <br /> Next Level: 0
+            <br /> BaseRate: 0, MaxRate: 0
+            <br /> Cost: 0 Credit
+            <br />
+          </h3>
+          <div class="bouton" onclick="mineRate()">
+            <p>
+              <a id="mineRate" href="#">Upgrade</a>
+            </p>
+          </div>
+        </div>
+
+
+      </article>
+    </div>
+  </aside>
+
+  <section class="col middle">
+    <article class="container"> 
+      <app-asteroid-view></app-asteroid-view>
+    </article>
+    <div class="container">
+      <article class="middleBot row justify-center align-center frontSize2">
+
+        <div>
+          <h2 id="carbon">Carbon: - </h2>
+        </div>
+        &emsp;&emsp;&emsp;
+        <div>
+          <h2 id="currentMineRate">Current mine rate : - </h2>
+        </div>
+
+      </article>
+
+    </div>
+
+  </section>
+
+  <aside class="col right">
+
+    <div class="container">
+      <article class="row leftBox justify-center align-center">
+        <div>
+          <div>
+            <h2 id="credit" href="#">Credit: 0</h2>
+          </div>
+          <br />
+          <br />
+          <br/>
+          <div>
+            <h3 id="Information Carbon">
+              10 Carbon for - Credit
+            </h3>
+            <div class="bouton" onclick="sellCarbon(10)">
+              <a id="sellCarbon" href="#">Sell</a>
+            </div>
+
+          </div>
+
+        </div>
+      </article>
+    </div>
+
+  </aside>
+</main>
+<div id="content"></div>
