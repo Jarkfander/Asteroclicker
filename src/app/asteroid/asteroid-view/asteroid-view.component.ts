@@ -1,5 +1,6 @@
 import { Component, AfterViewInit, ElementRef, Renderer2 } from '@angular/core';
 import * as PIXI from 'pixi.js';
+import { UserService } from '../../user/user.service';
 import { Asteroid } from './asteroid';
 import { Drone } from './drone';
 
@@ -10,12 +11,12 @@ import { Drone } from './drone';
 })
 
 export class AsteroidViewComponent implements AfterViewInit {
+  constructor(private el: ElementRef, private render: Renderer2,private userS:UserService) {}
+
   private app: PIXI.Application;
   private aster: Asteroid;
   private drone: Drone;
-
-  constructor(private el: ElementRef, private render: Renderer2) {}
-
+  
     ngAfterViewInit() {
       const w = this.el.nativeElement.offsetWidth;
       const h = this.el.nativeElement.offsetHeight;
