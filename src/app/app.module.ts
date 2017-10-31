@@ -10,6 +10,7 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 import { environment } from '../environments/environment';
 import { UserService } from './user/user.service';
 import { SigninModule } from './signin/signin.module';
+import { TopbarModule } from './topbar/topbar.module';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { SigninModule } from './signin/signin.module';
     AngularFireAuthModule, // imports firebase/auth, only needed for auth features
     AsteroidModule,
     ShipModule,
-    SigninModule
+    SigninModule,
+    TopbarModule
   ],
   providers: [UserService],
   bootstrap: [AppComponent]

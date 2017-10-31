@@ -18,6 +18,23 @@ html {
     color: $main-font-color;   
 }
 
+//links
+a:link {
+    color: $link-font-color;
+}
+
+a:visited {
+    color: $link-font-color;
+}
+
+a:hover {
+    color: $link-hover-font-color;
+}
+
+a:active {
+    color: $link-clicked-font-color;
+}
+
 body {
     height:100%;
     width:100%;
@@ -28,7 +45,7 @@ body {
         padding: 10px 0 10px 0;
         width: 100%;
         background: $panel-background-color;
-        border-top: solid 1px $panel-border-color;
+        border: solid 1px $footer-border-color;
         position: absolute;
         right: 0;
         bottom: 0;

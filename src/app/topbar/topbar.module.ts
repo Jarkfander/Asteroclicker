@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SigninComponent } from './signin/signin.component';
+import { TopbarComponent } from './topbar/topbar.component';
 import { SharedModule} from '../shared/shared.module';
 
 @NgModule({
@@ -9,8 +9,8 @@ import { SharedModule} from '../shared/shared.module';
     SharedModule
   ],
   exports: [
-    SigninComponent
+    TopbarComponent
   ],
-  declarations: [SigninComponent]
+  declarations: [TopbarComponent]
 })
-export class SigninModule { }
+export class TopbarModule { }

@@ -10,18 +10,23 @@ $title-font: 'Roboto', sans-serif;
 
     // Panels
 $panel-background-color:            rgba(0, 0, 0, 0.6);
-$panel-border-color:                #000000;
+$footer-border-color:               rgba(0, 0, 0, 1.0);
 
     //Input
-$input-field-color:                 rgba(0, 0, 0, 0.6);
-$input-border-color:                #000000;
+$input-field-color:                 rgba(255, 255, 255, 0.05);
 
     //buttons
 $button-background-color:           rgba(0, 0, 0, 0.6);
 $button-hover-background-color:     rgba(0, 0, 0, 0.4);
 $button-active-background-color:    rgba(0, 0, 0, 1.0);
-$button-border-color:               #000000;
 
     // Fonts
 $main-font-color:                   rgba(240, 240, 240, 1.0);
 $footer-font-color:                 rgba(120, 120, 120, 1.0);
+$credit-font-color:                 rgba(214, 171, 51, 1.0);
+$alert-font-color:                  rgba(255, 55, 55, 1.0);
+
+    //Link fonts
+$link-font-color:                   rgba(240, 240, 240, 1.0);
+$link-hover-font-color:             rgb(200, 200, 200);
+$link-clicked-font-color:           rgb(160, 160, 160);
