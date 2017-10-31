@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MiningPanelComponent } from './mining-panel.component';
+import { InfosViewComponent } from './infos-view.component';
 
-describe('MiningPanelComponent', () => {
-  let component: MiningPanelComponent;
-  let fixture: ComponentFixture<MiningPanelComponent>;
+describe('InfosViewComponent', () => {
+  let component: InfosViewComponent;
+  let fixture: ComponentFixture<InfosViewComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MiningPanelComponent ]
+      declarations: [ InfosViewComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MiningPanelComponent);
+    fixture = TestBed.createComponent(InfosViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
