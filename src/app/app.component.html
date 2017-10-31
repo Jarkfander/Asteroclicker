@@ -1,4 +1,4 @@
-<main class="row">
+<main *ngIf="userS.currentUser" class="row">
   <aside class="col left">
     <div class="container">
       <article class="row up asideTop">
@@ -102,4 +102,12 @@
 
   </aside>
 </main>
+
+<div *ngIf="!userS.currentUser" >
+  <b>Interface de connexion</b><br>
+  Login : <input #log id="log" name="champ1"><br>
+  Mot de passe : <input #pswd type="password" id="mdp" name="champ2"><br>
+  <input type="button" value="Valider" (click)="ValiderLogIn(log.value,pswd.value)">
+</div>
+
 <div id="content"></div>

@@ -1,5 +1,6 @@
 import { Component, AfterViewInit, ElementRef, Renderer2 } from '@angular/core';
 import * as PIXI from 'pixi.js';
+import { UserService } from '../../user/user.service';
 
 @Component({
   selector: 'app-asteroid-view',
@@ -7,7 +8,7 @@ import * as PIXI from 'pixi.js';
   styleUrls: ['./asteroid-view.component.scss']
 })
 export class AsteroidViewComponent implements AfterViewInit {
-  constructor(private el: ElementRef, private render: Renderer2) {}
+  constructor(private el: ElementRef, private render: Renderer2,private userS:UserService) {}
   private app: PIXI.Application;
 
     ngAfterViewInit() {

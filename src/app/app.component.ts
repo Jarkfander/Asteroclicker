@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { UserService } from './user/user.service';
 
 
 @Component({
@@ -9,4 +10,9 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'app';
 
+  constructor(private userS:UserService) {}
+
+  public ValiderLogIn(log,pswd){
+    this.userS.LogIn(log,pswd);
+  }
 }
