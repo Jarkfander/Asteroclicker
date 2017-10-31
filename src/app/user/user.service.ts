@@ -13,7 +13,6 @@ export class UserService {
     this.db=db;
     this.afAuth=afAuth;
     //afAuth.auth.signInWithEmailAndPassword("test@test.fr","aaaaaa");
-    afAuth.auth.signOut();
     afAuth.authState.subscribe( (auth) => {
       if (auth != null) {
         this.currentUser=new User();
