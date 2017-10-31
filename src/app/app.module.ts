@@ -11,6 +11,7 @@ import { environment } from '../environments/environment';
 import { UserService } from './user/user.service';
 import { SigninModule } from './signin/signin.module';
 import { TopbarModule } from './topbar/topbar.module';
+import { SharedModule } from './shared/shared.module';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { TopbarModule } from './topbar/topbar.module';
     AsteroidModule,
     ShipModule,
     SigninModule,
-    TopbarModule
+    TopbarModule,
+    SharedModule
   ],
   providers: [UserService],
   bootstrap: [AppComponent]

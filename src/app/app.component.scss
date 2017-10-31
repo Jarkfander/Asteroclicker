@@ -1,11 +1,52 @@
-.ship-panel {
+@import '../config';
+
+.game-content {
+    position: absolute;
+    top: 6%;
+    left: 0;
+    height: 89%;
+
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-around;
     
+    .game-panel {
+        width: 33%;
+    }
+
+    .ship-panel {
+        display: flex;
+        flex-direction: column;
+
+        .ship-panel-ship-view {
+            height: 60%;
+        }
+        
+        .ship-panel-upgrade-view {
+            height: 40%;
+        }
+    }
+
+    .mining-panel {
+        display: flex;
+        flex-direction: column;
+
+        .mining-panel-asteroid-view {
+            height: 60%;
+        }
+
+        .mining-panel-infos-view {
+            height: 40%;
+        }
+    }
+
+    .market-panel {
+        
+    }
 }
 
-.mining-panel {
-
-}
-
-.market-panel {
-
+.light-box-panel {
+    background-color: $panel-background-color;
+    border: solid 1px rgba(0,0,0,0);
 }
