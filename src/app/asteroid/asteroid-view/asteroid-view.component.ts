@@ -18,8 +18,8 @@ export class AsteroidViewComponent implements AfterViewInit {
   private drone: Drone;
 
   ngAfterViewInit() {
-    const w = this.el.nativeElement.offsetWidth;
-    const h = this.el.nativeElement.offsetHeight;
+    const w = this.el.nativeElement.parentElement.offsetWidth;
+    const h = this.el.nativeElement.parentElement.offsetHeight;
 
     this.app = new PIXI.Application(w, h, {backgroundColor : 0x1079bb});
     this.render.appendChild(this.el.nativeElement, this.app.view);

@@ -2,12 +2,14 @@ import { Component, AfterViewInit, ElementRef, Renderer2 } from '@angular/core';
 import * as PIXI from 'pixi.js';
 import { Ship } from './ship';
 import { UserService } from '../../user/user.service';
+import { User } from '../../user/user';
 
 @Component({
   selector: 'app-ship-view',
   templateUrl: './ship-view.component.html',
   styleUrls: ['./ship-view.component.scss']
 })
+
 export class ShipViewComponent implements AfterViewInit {
   private app: PIXI.Application;
   private v: number;
@@ -16,8 +18,8 @@ export class ShipViewComponent implements AfterViewInit {
   constructor(private el: ElementRef, private render: Renderer2, private userS: UserService) {}
 
     ngAfterViewInit() {
-      const w = this.el.nativeElement.offsetWidth;
-      const h = this.el.nativeElement.offsetHeight;
+      const w = this.el.nativeElement.parentElement.offsetWidth;
+      const h = this.el.nativeElement.parentElement.offsetHeight;
 
       this.app = new PIXI.Application(w, h, {backgroundColor : 0x1099bb});
       this.render.appendChild(this.el.nativeElement, this.app.view);
@@ -27,8 +29,11 @@ export class ShipViewComponent implements AfterViewInit {
       background.height = this.app.renderer.height;
       this.app.stage.addChild(background);
 
+      this.ship = new Ship(0.25, 0.25, this.app);
       // Ship
-      this.ship = new Ship(0.25, 0.25, this.app, 0);
+      this.userS.userSubject.subscribe( (user: User) => {
+          this.ship.autoUpgrade(user.storage.lvl, this.ship.radarUpgrade);
+      });
     }
 
 }
