@@ -1,1 +1,99 @@
-/* You can add global styles to this file, and also import other style files */
+/*
+    Global style.css
+    ----------------
+*/
+
+/* ===== Imports ===== */
+@import 'config';
+
+/* ===== Resets and base page ===== */
+html {
+    background: url("assets/background.jpg") no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+
+    font-family: $main-font;
+    color: $main-font-color;   
+}
+
+//links
+a:link {
+    color: $link-font-color;
+}
+
+a:visited {
+    color: $link-font-color;
+}
+
+a:hover {
+    color: $link-hover-font-color;
+}
+
+a:active {
+    color: $link-clicked-font-color;
+}
+
+body {
+    height:100%;
+    width:100%;
+    margin: 0;
+    overflow: hidden;
+
+    footer {
+        padding: 10px 0 10px 0;
+        width: 100%;
+        background: $panel-background-color;
+        border: solid 1px $footer-border-color;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        text-align: center;
+        color: $footer-font-color;
+        overflow: hidden;
+    }
+}
+
+h1,h2,h3,h4,h5,h6 {
+    font-family: $title-font;
+}
+
+
+/* ===== Flex classes ===== */
+//containers
+.row {
+    display : flex;
+    flex-direction: row;
+}
+
+.col {
+    display : flex;
+    flex-direction: column;
+}
+
+//Justify content
+.justify-end {
+    justify-content: flex-end;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.justify-around {
+    justify-content: space-around;
+}
+
+//Align Items
+.align-end {
+    align-items: flex-end;
+}
+
+.align-center {
+    align-items: center;
+}

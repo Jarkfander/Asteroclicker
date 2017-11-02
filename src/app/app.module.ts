@@ -9,6 +9,9 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { environment } from '../environments/environment';
 import { UserService } from './user/user.service';
+import { SigninModule } from './signin/signin.module';
+import { TopbarModule } from './topbar/topbar.module';
+import { SharedModule } from './shared/shared.module';
 
 
 @NgModule({
@@ -21,7 +24,10 @@ import { UserService } from './user/user.service';
     AngularFireDatabaseModule, // imports firebase/firestore, only needed for database features
     AngularFireAuthModule, // imports firebase/auth, only needed for auth features
     AsteroidModule,
-    ShipModule
+    ShipModule,
+    SigninModule,
+    TopbarModule,
+    SharedModule
   ],
   providers: [UserService],
   bootstrap: [AppComponent]

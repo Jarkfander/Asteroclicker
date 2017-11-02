@@ -1,117 +1,52 @@
-html, body, main {
-	margin: 0;
-	width: 100vw;
-	height: 100vh;
-	background: url(assets/bg.jpg) no-repeat;
-	background-size: cover;
-	font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-}
+@import '../config';
 
-.container {
-	margin: 1%;
-}
+.game-content {
+    position: absolute;
+    top: 6%;
+    left: 0;
+    height: 89%;
 
-aside {
-	flex: 1;
-}
-
-.asideTop {
-	height: 70%;
-	width: 100%;
-}
-
-.asideBot {
-	flex: 1;
-	background: url(assets/metalplate.png) no-repeat;
-	background-size: cover;
-}
-
-
-.middle {
-    width: 34%;
-    height: 100%;
-}
-
-.middle #canvas-container {
-	width: 100%;
-	height: 70%;
-	background-color: blue;
-}
-
-.middleBot {
-	flex: 1;
-	background: url(assets/metalplate.png) no-repeat;
-	background-size: cover;
-}
-
-.leftBox {
-	background: url(assets/metalplate.png) no-repeat;
-	background-size:cover;
-	margin: 1%;
-}
-
-/***
-    FLEXBOX
-***/
-.row {
-    display : flex;
+    display: flex;
     flex-direction: row;
-}
-
-.col {
-    display : flex;
-    flex-direction: column;
-}
-
-/* Justify content */
-.justify-end {
-    justify-content: flex-end;
-}
-
-.justify-center {
-    justify-content: center;
-}
-
-.justify-between {
-    justify-content: space-between;
-}
-
-.justify-around {
+    width: 100%;
     justify-content: space-around;
+    
+    .game-panel {
+        width: 33%;
+    }
+
+    .ship-panel {
+        display: flex;
+        flex-direction: column;
+
+        .ship-panel-ship-view {
+            height: 60%;
+        }
+        
+        .ship-panel-upgrade-view {
+            height: 40%;
+        }
+    }
+
+    .mining-panel {
+        display: flex;
+        flex-direction: column;
+
+        .mining-panel-asteroid-view {
+            height: 60%;
+        }
+
+        .mining-panel-infos-view {
+            height: 40%;
+        }
+    }
+
+    .market-panel {
+        
+    }
 }
 
-/* Align Items */
-.align-end {
-    align-items: flex-end;
-}
-
-.align-center {
-    align-items: center;
-}
-
-
-/* Bouton */
-.bouton a {
-	display: block;
-	width: 75px;
-	line-height: 25px;
-	text-align: center;
-	vertical-align: middle;
-	background: url(assets/bouton-a.png) no-repeat;
-	background-size: cover;
-	color: black;
-}
-
-.bouton a:hover {
-	background: url(assets/bouton-a-enter.png) no-repeat;
-	background-size: cover;
-	color: white;
-}
-
-.frontSize {
-	font-size: 15px;
-}
-
-.frontSize2 {
-	font-size: 12px;
+.light-box-panel {
+    background-color: $panel-background-color;
+    border: solid 1px rgba(0,0,0,0);
 }

@@ -1,0 +1,46 @@
+@import '../../../config';
+
+.signin {
+    color: white;
+    max-width: 600px;
+    margin: 10px auto;
+    padding: 10px;
+    background: $panel-background-color;
+
+    border: solid 1px rgba(0, 0, 0, 0);
+}
+
+.signin input {
+    display: block;
+    margin: 10px auto;
+    width: auto;
+    padding: 5px;
+    font-size: x-large; 
+    text-align: center;
+    border: solid 1px rgba(0, 0, 0, 0);
+    color: white;
+}
+
+.signin .button {
+    box-sizing: content-box;
+    background: $button-background-color;
+    padding: 5px 20px 5px 20px;
+    cursor: pointer;
+}
+
+.text-input {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.logo {
+    display: block;
+    margin: 20px auto;
+    max-width:100%;
+    height:auto;
+}
+
+h1{
+    text-align: center;
+    border-bottom: solid 1px #444444;
+    padding-bottom: 10px;
+}
