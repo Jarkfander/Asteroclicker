@@ -9,8 +9,8 @@ export class User {
     public mineRate: MineRate;
     public storage: Storage;
     constructor() {
-        this.mineRate=new MineRate();
-        this.storage=new Storage();
+        this.mineRate = new MineRate(0, 0, 0, 0);
+        this.storage = new Storage(0, 0, 0);
     }
 
 }
