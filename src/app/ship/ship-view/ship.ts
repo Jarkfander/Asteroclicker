@@ -8,13 +8,13 @@ class UpgradeShip {
     scaleY: number;
     currentLevel: number;
 
-    constructor(tabSprite, posx: number, posy: number, scalx: number, scaly: number) {
+    constructor(lvl: number, tabSprite, posx: number, posy: number, scalx: number, scaly: number) {
         this.tabUpgrade = tabSprite;
         this.posX = posx;
         this.posY = posy;
         this.scaleX = scalx;
         this.scaleY = scaly;
-        this.currentLevel = 0;
+        this.currentLevel = lvl;
     }
 
     spriteAdd() {
@@ -36,9 +36,9 @@ export class Ship {
     app: PIXI.Application;
 
     radarUpgrade: UpgradeShip;
-    currentLevelRader: number;
+    currentLevelRadar: number;
 
-    constructor(x: number , y: number, app: PIXI.Application) {
+    constructor(x: number , y: number, app: PIXI.Application, lvlRadar: number) {
         this.app = app;
         this.ship = PIXI.Sprite.fromImage('assets/vaisseau_part1.png');
         this.ship.texture.baseTexture.mipmap = true;
@@ -49,12 +49,10 @@ export class Ship {
         this.ship.y = this.app.renderer.height / 2;
         this.app.stage.addChild(this.ship);
 
+        this.currentLevelRadar = lvlRadar;
+
         this.initTabSprite(1, 'assets/shipRadar_');
         this.autoUpgrade(0, this.radarUpgrade);
-
-        this.app.ticker.add(() => {
-            this.ship.x += 0.25;
-        });
     }
 
     // init sprite for upgrade ship
@@ -63,7 +61,7 @@ export class Ship {
         for (let i = 0; i < nbMaxSprite ; i++) {
             temp.push(PIXI.Sprite.fromImage(nameSprite + i + '.png'));
         }
-        this.radarUpgrade = new UpgradeShip(temp, 1, 1, 1, 1);
+        this.radarUpgrade = new UpgradeShip(this.currentLevelRadar, temp, 1, 1, 1, 1);
     }
 
     // manage the upgrade when the level change

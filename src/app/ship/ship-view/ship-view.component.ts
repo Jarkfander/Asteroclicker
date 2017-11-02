@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, ElementRef, Renderer2 } from '@angular/core';
 import * as PIXI from 'pixi.js';
 import { Ship } from './ship';
+import { UserService } from '../../user/user.service';
 
 @Component({
   selector: 'app-ship-view',
@@ -12,7 +13,7 @@ export class ShipViewComponent implements AfterViewInit {
   private v: number;
   private ship: Ship;
 
-  constructor(private el: ElementRef, private render: Renderer2) {}
+  constructor(private el: ElementRef, private render: Renderer2, private userS: UserService) {}
 
     ngAfterViewInit() {
       const w = this.el.nativeElement.offsetWidth;
@@ -27,7 +28,7 @@ export class ShipViewComponent implements AfterViewInit {
       this.app.stage.addChild(background);
 
       // Ship
-      this.ship = new Ship(0.25, 0.25, this.app);
+      this.ship = new Ship(0.25, 0.25, this.app, 0);
     }
 
 }

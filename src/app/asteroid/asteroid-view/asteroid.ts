@@ -23,13 +23,13 @@ export class Asteroid {
             console.log('hit !');
         });
         const position = { x: 100, y: 0 };
-
+        const now = 0;
                 // Create a tween for position first
         const tween = new TWEEN.Tween(position);
 
         // Then tell the tween we want to animate the x property over 1000 milliseconds
-        tween.to({ x: 200 }, 1000);
-        tween.start();
-        console.log(tween);
+        tween.to({ x: 200 }, 1000).onUpdate(function onUpdate() {
+            this.asteroid.x += 10;
+          }).start(now);
     }
 }
