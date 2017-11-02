@@ -2,9 +2,9 @@
 <div class="signin" lightbox>
   <div class="form-panel">
       <h1>Log in</h1>
-      <input type="email" class="text-input" placeholder="e-mail" lightbox>
-      <input type="password" class="text-input" placeholder="password" lightbox>
-      <input type="button" class="button" value="Connect" onclick="valider();" lightbox>
+      <input #log type="email" class="text-input" placeholder="e-mail" lightbox>
+      <input #pswd type="password" class="text-input" placeholder="password" lightbox>
+      <input type="button" class="button" value="Connect" (click)="ValiderLogIn(log.value,pswd.value)" lightbox>
       <p><a href="#">I forgot my password</a></p>
       <p><a href="#">I dont have an account</a></p>
   </div>

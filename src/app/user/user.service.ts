@@ -16,7 +16,6 @@ export class UserService {
   constructor(db: AngularFireDatabase,afAuth: AngularFireAuth) { 
     this.db=db;
     this.afAuth=afAuth;
-    //afAuth.auth.signInWithEmailAndPassword("test@test.fr","aaaaaa");
     afAuth.authState.subscribe((auth) => {
       if (auth != null) {
         this.currentUser=new User();
@@ -32,6 +31,11 @@ export class UserService {
 
   public LogIn(log,pswd){
     this.afAuth.auth.signInWithEmailAndPassword(log,pswd);
+  }
+
+  public LogOut(){
+    this.currentUser=null;
+    this.afAuth.auth.signOut();
   }
 
   FillUser(snapshot){
