@@ -8,16 +8,20 @@ class UpgradeShip {
     scaleY: number;
     currentLevel: number;
 
-    constructor(tabSprite, posx: number, posy: number, scalx: number, scaly: number) {
+    constructor(lvl: number, tabSprite, posx: number, posy: number, scalx: number, scaly: number) {
         this.tabUpgrade = tabSprite;
         this.posX = posx;
         this.posY = posy;
         this.scaleX = scalx;
         this.scaleY = scaly;
-        this.currentLevel = 0;
+        this.currentLevel = lvl;
     }
 
-    spriteAdd() {
+    spriteAdd(newlvl: number) {
+        this.currentLevel = newlvl;
+        if (this.tabUpgrade[this.currentLevel] === null) {
+            return this.tabUpgrade[this.tabUpgrade.length - 1];
+        }
         if (this.currentLevel === 0) {
             return null;
         } else {
@@ -36,7 +40,7 @@ export class Ship {
     app: PIXI.Application;
 
     radarUpgrade: UpgradeShip;
-    currentLevelRader: number;
+    currentLevelRadar: number;
 
     constructor(x: number , y: number, app: PIXI.Application) {
         this.app = app;
@@ -49,12 +53,10 @@ export class Ship {
         this.ship.y = this.app.renderer.height / 2;
         this.app.stage.addChild(this.ship);
 
+        this.currentLevelRadar = 0;
+
         this.initTabSprite(1, 'assets/shipRadar_');
         this.autoUpgrade(0, this.radarUpgrade);
-
-        this.app.ticker.add(() => {
-            this.ship.x += 0.25;
-        });
     }
 
     // init sprite for upgrade ship
@@ -63,12 +65,12 @@ export class Ship {
         for (let i = 0; i < nbMaxSprite ; i++) {
             temp.push(PIXI.Sprite.fromImage(nameSprite + i + '.png'));
         }
-        this.radarUpgrade = new UpgradeShip(temp, 1, 1, 1, 1);
+        this.radarUpgrade = new UpgradeShip(this.currentLevelRadar, temp, 1, 1, 1, 1);
     }
 
     // manage the upgrade when the level change
     autoUpgrade(lvl: number, tab) {
-        const sprite = this.radarUpgrade.spriteAdd();
+        const sprite = this.radarUpgrade.spriteAdd(lvl);
         if (sprite) {
             this.ship.addChild(sprite);
         }
