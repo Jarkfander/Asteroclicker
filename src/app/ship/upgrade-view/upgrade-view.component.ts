@@ -36,7 +36,10 @@ export class UpgradeViewComponent implements AfterViewInit {
   }
 
   stockLvlUp() {
-    console.log('alala');
+      this.userS.stockLvlUp(this.stock[this.user.storageLvl + 1].cost);
   }
 
+  mineRateLvlUp() {
+    this.userS.mineRateLvlUp(this.stock[this.user.mineRateLvl + 1].cost);
+  }
 }

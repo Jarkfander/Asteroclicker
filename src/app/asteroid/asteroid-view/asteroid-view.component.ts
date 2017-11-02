@@ -42,8 +42,8 @@ export class AsteroidViewComponent implements AfterViewInit {
 
     this.drone = new Drone(0.25, 0.25, this.app);
 
-    setInterval(() => {this.userS.IncrementUserCarbon(this.mineRate); }, 1000)
-    setInterval(() => {this.resetClick()}, 200)
+    setInterval(() => {this.userS.IncrementUserCarbon(this.mineRate); }, 1000);
+    setInterval(() => {this.resetClick()}, 200);
   }
 
 
