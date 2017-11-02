@@ -21,7 +21,7 @@ export class UserService {
         this.currentUser=new User();
         this.db.object("users/"+auth.uid).snapshotChanges().subscribe(
           (snapshot: any) => {
-            this.FillUser(snapshot.payload.val());
+            this.FillUser(auth.uid,snapshot.payload.val());
         });
       }
     });
@@ -38,7 +38,10 @@ export class UserService {
     this.afAuth.auth.signOut();
   }
 
-  FillUser(snapshot){
+  FillUser(uid,snapshot){
+
+    this.currentUser.uid=uid;
+
     this.currentUser.carbon=snapshot.carbon;
     this.currentUser.credit=snapshot.credit;
     this.currentUser.email=snapshot.email;
@@ -52,6 +55,15 @@ export class UserService {
     this.currentUser.storage.cost=snapshot.storage.cost;
     this.currentUser.storage.capacity=snapshot.storage.capacity;
     this.userSubject.next(this.currentUser);
+  }
+
+  public IncrementUserCarbon(delta : number){
+    const carbonValue : number = this.currentUser.carbon+delta;
+    console.log(carbonValue);
+    if(carbonValue<this.currentUser.storage.capacity){
+      this.db.object("users/"+this.currentUser.uid+"/carbon").set(carbonValue);
+    }
+
   }
 
 }

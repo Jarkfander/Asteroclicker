@@ -3,14 +3,14 @@ import { Storage } from "../upgrade/storage";
 
 export class User {
 
+    public uid:string;
     public carbon: number;
     public credit: number;
     public email: string;
-    public mineRate: MineRate;
-    public storage: Storage;
+    public mineRateLvl: number;
+    public storageLvl: number;
+    
     constructor() {
-        this.mineRate=new MineRate();
-        this.storage=new Storage();
     }
 
 }

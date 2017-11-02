@@ -11,5 +11,6 @@ import { InfosViewComponent } from './infos-view/infos-view.component';
   ],
   declarations: [AsteroidViewComponent, InfosViewComponent, MiningPanelComponent],
   exports: [AsteroidViewComponent, InfosViewComponent],
+  providers: [UserService]
 })
 export class AsteroidModule { }
