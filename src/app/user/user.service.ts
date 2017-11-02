@@ -3,6 +3,8 @@ import { User } from './user';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Subject } from 'rxjs/Subject';
+import { Storage } from '../upgrade/storage';
+import { MineRate } from '../upgrade/mineRate';
 
 @Injectable()
 export class UserService {
@@ -25,8 +27,6 @@ export class UserService {
         });
       }
     });
-
-
   }
 
   public LogIn(log,pswd){
@@ -46,14 +46,12 @@ export class UserService {
     this.currentUser.credit=snapshot.credit;
     this.currentUser.email=snapshot.email;
 
-    this.currentUser.mineRate.lvl=snapshot.mineRate.lvl;
-    this.currentUser.mineRate.cost=snapshot.mineRate.cost;
-    this.currentUser.mineRate.maxRate=snapshot.mineRate.maxRate;
-    this.currentUser.mineRate.baseRate=snapshot.mineRate.baseRate;
+    const tempMine = snapshot.mineRate;
+    this.currentUser.mineRate = new MineRate(tempMine.lvl, tempMine.stock, tempMine.mineRate, tempMine.maxRate);
 
-    this.currentUser.storage.lvl=snapshot.storage.lvl;
-    this.currentUser.storage.cost=snapshot.storage.cost;
-    this.currentUser.storage.capacity=snapshot.storage.capacity;
+    const tempStock = snapshot.storage;
+    this.currentUser.storage = new Storage(tempStock.lvl, tempStock.stock, tempStock.capacity);
+
     this.userSubject.next(this.currentUser);
   }
 

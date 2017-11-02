@@ -1,14 +1,37 @@
-<h3 id="stockInfo" class="frontSize">
-  <u> Stock </u> <br /><br />
-  Current Level: 0 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<br />
-  Capacity: 0<br /><br />
-  Next Level: 0 <br />
-  Capacity: 0 <br />
-  Cost: 0 Credit<br />
-</h3>
-<div class="bouton" onclick="stock()">
-  <p>
-      <a id="stock" href="#">Upgrade</a>
-  </p>
+<div>
+  <u> Stock </u> <br />
+  <div *ngIf="stock[user.storage.lvl]">
+      Current Level: {{user.storage.lvl}} :     
+      Capacity: {{ stock[user.storage.lvl].capacity }} 
+      <br />
+      Next Level: {{ user.storage.lvl + 1 }} :
+      Capacity: {{ stock[user.storage.lvl + 1].capacity }} <br />
+      Cost: {{ stock[user.storage.lvl + 1].cost }}  Credit<br />      
+  </div>
+</div>
+<div class="bouton" (click)="stockLvlUp()">
+    <p>
+        <a id="stock" href="#">Upgrade</a>
+    </p>
+</div>  
+
+
+<div>
+    <u> MineRate </u> <br />  
+    <div *ngIf="mineRate">
+        Current Level: {{user.mineRate.lvl}} :
+        Base Rate: {{ mineRate[user.mineRate.lvl].baseRate }} ,
+        Max Rate: {{ mineRate[user.mineRate.lvl].maxRate }} 
+        <br />
+        Next Level: {{ user.mineRate.lvl + 1 }} : 
+        Base Rate: {{ mineRate[user.mineRate.lvl + 1].baseRate }}, 
+        Max Rate: {{ mineRate[user.mineRate.lvl + 1].maxRate }} <br />
+        Cost: {{ mineRate[user.mineRate.lvl + 1].cost }}  Credit
+    </div>   
 </div>
 
+<div class="bouton" (click)="stockLvlUp()">
+    <p>
+        <a id="stock" href="#">Upgrade</a>
+    </p>
+</div>
