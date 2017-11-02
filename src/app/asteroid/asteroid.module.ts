@@ -9,7 +9,7 @@ import { InfosViewComponent } from './infos-view/infos-view.component';
   imports: [
     CommonModule
   ],
-  declarations: [AsteroidViewComponent, InfosViewComponent],
+  declarations: [AsteroidViewComponent, InfosViewComponent, MiningPanelComponent],
   exports: [AsteroidViewComponent, InfosViewComponent],
 })
 export class AsteroidModule { }
