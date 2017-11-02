@@ -11,11 +11,6 @@ export class User {
     public storageLvl: number;
     
     constructor() {
-<<<<<<< HEAD
-=======
-        this.mineRate = new MineRate(0, 0, 0, 0);
-        this.storage = new Storage(0, 0, 0);
->>>>>>> 34387eedf9f5dfee63842d47f08488f8e8721314
     }
 
 }

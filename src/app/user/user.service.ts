@@ -46,21 +46,15 @@ export class UserService {
     this.currentUser.credit=snapshot.credit;
     this.currentUser.email=snapshot.email;
 
-    const tempMine = snapshot.mineRate;
-    this.currentUser.mineRate = new MineRate(tempMine.lvl, tempMine.stock, tempMine.mineRate, tempMine.maxRate);
-
-    const tempStock = snapshot.storage;
-    this.currentUser.storage = new Storage(tempStock.lvl, tempStock.stock, tempStock.capacity);
+    this.currentUser.mineRateLvl=snapshot.mineRateLvl;
+    this.currentUser.storageLvl=snapshot.storageLvl;
 
     this.userSubject.next(this.currentUser);
   }
 
   public IncrementUserCarbon(delta : number){
     const carbonValue : number = this.currentUser.carbon+delta;
-    console.log(carbonValue);
-    if(carbonValue<this.currentUser.storage.capacity){
       this.db.object("users/"+this.currentUser.uid+"/carbon").set(carbonValue);
-    }
 
   }
 

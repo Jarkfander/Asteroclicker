@@ -4,6 +4,7 @@ import { UserService } from '../../user/user.service';
 import { Asteroid } from './asteroid';
 import { Drone } from './drone';
 import { User } from '../../user/user';
+import { UpgradeService } from '../../upgrade/upgrade.service';
 
 @Component({
   selector: 'app-asteroid-view',
@@ -12,7 +13,7 @@ import { User } from '../../user/user';
 })
 
 export class AsteroidViewComponent implements AfterViewInit {
-  constructor(private el: ElementRef, private render: Renderer2, private userS: UserService) { }
+  constructor(private el: ElementRef, private render: Renderer2, private userS: UserService, private upgradeS: UpgradeService) { }
 
   private app: PIXI.Application;
   private aster: Asteroid;
@@ -49,21 +50,25 @@ export class AsteroidViewComponent implements AfterViewInit {
   asteroidClick() {
     //ga('asteroid.send', 'event', 'buttons', 'click', 'asteroid');
     this.clicked = true;
-    if (this.mineRate < this.userS.currentUser.mineRate.maxRate) {
-      this.mineRate = this.mineRate + this.userS.currentUser.mineRate.maxRate * 0.1 > this.userS.currentUser.mineRate.maxRate ?
-        this.userS.currentUser.mineRate.maxRate : this.mineRate + this.userS.currentUser.mineRate.maxRate * 0.1;
+    const max=this.upgradeS.mineRate[this.userS.currentUser.mineRateLvl].maxRate;
+    
+    if (this.mineRate < max) {
+      this.mineRate = this.mineRate + max * 0.1 > max ?
+      max : this.mineRate + max * 0.1;
       //this.updateLaserSpeed();
     }
   }
 
   resetClick() {
+    const max=this.upgradeS.mineRate[this.userS.currentUser.mineRateLvl].maxRate;
+    const base=this.upgradeS.mineRate[this.userS.currentUser.mineRateLvl].baseRate;
+
     if (!this.clicked) {
-      if (this.mineRate > this.userS.currentUser.mineRate.baseRate) {
-        this.mineRate = this.mineRate - (0.1 * this.userS.currentUser.mineRate.maxRate) < this.userS.currentUser.mineRate.baseRate ? this.userS.currentUser.mineRate.baseRate : this.mineRate - (0.1 * this.userS.currentUser.mineRate.maxRate);
+      if (this.mineRate > base) {
+        this.mineRate = this.mineRate - (0.1 * max) < base ? base : this.mineRate - (0.1 * max);
       }
       else{
-        console.log("test");
-        this.mineRate=this.userS.currentUser.mineRate.baseRate;
+        this.mineRate=base;
       }
     }
     else {
