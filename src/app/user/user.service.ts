@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { User } from './user';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
+import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class UserService {
@@ -9,11 +10,14 @@ export class UserService {
   db : AngularFireDatabase;
   currentUser : User;
   afAuth : AngularFireAuth;
+
+  userSubject = new Subject<User>();
+
   constructor(db: AngularFireDatabase,afAuth: AngularFireAuth) { 
     this.db=db;
     this.afAuth=afAuth;
     //afAuth.auth.signInWithEmailAndPassword("test@test.fr","aaaaaa");
-    afAuth.authState.subscribe( (auth) => {
+    afAuth.authState.subscribe((auth) => {
       if (auth != null) {
         this.currentUser=new User();
         this.db.object("users/"+auth.uid).snapshotChanges().subscribe(
@@ -43,7 +47,7 @@ export class UserService {
     this.currentUser.storage.lvl=snapshot.storage.lvl;
     this.currentUser.storage.cost=snapshot.storage.cost;
     this.currentUser.storage.capacity=snapshot.storage.capacity;
-
+    this.userSubject.next(this.currentUser);
   }
 
 }
