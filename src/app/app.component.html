@@ -1,10 +1,12 @@
-<!--<app-signin></app-signin>-->
+<div *ngIf="!userS.currentUser">
+<app-signin ></app-signin>
+</div>
 
 <header>
   <app-topbar></app-topbar>
 </header>
 
-<div class="game-content">
+<div *ngIf="userS.currentUser" class="game-content">
   <div class="game-panel ship-panel">
     <div class="ship-panel-ship-view">
       <app-ship-view></app-ship-view>

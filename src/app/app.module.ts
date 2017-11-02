@@ -12,6 +12,7 @@ import { UserService } from './user/user.service';
 import { SigninModule } from './signin/signin.module';
 import { TopbarModule } from './topbar/topbar.module';
 import { SharedModule } from './shared/shared.module';
+import { CommonModule } from '@angular/common';
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import { SharedModule } from './shared/shared.module';
     AppComponent
   ],
   imports: [
+    CommonModule,
     BrowserModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule, // imports firebase/firestore, only needed for database features
