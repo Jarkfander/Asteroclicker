@@ -51,6 +51,5 @@ export class UpgradeService {
     this.mineRateLoad=true;
     this.upgradeMineRateSubject.next(this.mineRate);
   }
-
 }
 

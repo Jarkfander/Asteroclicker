@@ -19,8 +19,9 @@ class UpgradeShip {
 
     spriteAdd(newlvl: number) {
         this.currentLevel = newlvl;
-        if (this.tabUpgrade[this.currentLevel] === null) {
-            return this.tabUpgrade[this.tabUpgrade.length - 1];
+
+        if (this.currentLevel > 1) {
+            return this.tabUpgrade[this.tabUpgrade.length];
         }
         if (this.currentLevel === 0) {
             return null;
@@ -31,7 +32,6 @@ class UpgradeShip {
             upg.anchor.set(0.5);
             return upg;
         }
-
     }
 }
 

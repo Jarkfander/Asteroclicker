@@ -57,8 +57,22 @@ export class UserService {
 
   public IncrementUserCarbon(delta : number){
     const carbonValue : number = this.currentUser.carbon+delta;
-      this.db.object("users/"+this.currentUser.uid+"/carbon").set(carbonValue);
+      this.db.object('users/'+this.currentUser.uid+'/carbon').set(carbonValue);
 
+  }
+
+  public stockLvlUp(creditDown: number) {
+    const levelStock: number = this.currentUser.storageLvl + 1;
+    const creditAfter: number = this.currentUser.credit - creditDown;
+    this.db.object('users/' + this.currentUser.uid + '/storageLvl').set(levelStock);
+    this.db.object('users/' + this.currentUser.uid + '/credit').set(creditAfter);
+  }
+
+  public mineRateLvlUp(creditDown: number) {
+    const mineRate: number = this.currentUser.mineRateLvl + 1;
+    const creditAfter: number = this.currentUser.credit - creditDown;
+    this.db.object('users/' + this.currentUser.uid + '/mineRateLvl').set(mineRate);
+    this.db.object('users/' + this.currentUser.uid + '/credit').set(creditAfter);
   }
 
 }
