@@ -14,6 +14,9 @@ export class UpgradeService {
   mineRate: MineRate[];
   afAuth: AngularFireAuth;
 
+  storageLoad: boolean=false;
+  mineRateLoad: boolean=false;
+
   upgradeStockSubject = new Subject<Storage[]>();
   upgradeMineRateSubject = new Subject<MineRate[]>();
 
@@ -33,17 +36,19 @@ export class UpgradeService {
 
   // create the tab of stock
   FillStock(snapshot) {
-    for (let i = 1 ; i < snapshot.length ; i++) {
+    for (let i = 0 ; i < snapshot.length ; i++) {
         this.storage.push(new Storage(i, snapshot[i].cost, snapshot[i].capacity));
     }
     this.upgradeStockSubject.next(this.storage);
+    this.storageLoad=true;
   }
 
   // create the tab of MineRate
   FillMineRate(snapshot) {
-    for (let i = 1 ; i < snapshot.length ; i++) {
+    for (let i = 0 ; i < snapshot.length ; i++) {
         this.mineRate.push(new MineRate(i, snapshot[i].cost, snapshot[i].baseRate, snapshot[i].maxRate));
     }
+    this.mineRateLoad=true;
     this.upgradeMineRateSubject.next(this.mineRate);
   }
 

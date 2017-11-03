@@ -1,12 +1,13 @@
-<div *ngIf="!userS.currentUser">
+<div *ngIf="userS && !userS.userLoad">
 <app-signin ></app-signin>
 </div>
 
 <header>
   <app-topbar></app-topbar>
 </header>
-
-<div *ngIf="userS.currentUser" class="game-content">
+<div>eijnoiehjeiozhiuehzriuzehoiruhezoiurhezoiurhzeuirhziurhzeiurhi</div>
+<div>up {{userS!=null}}</div>
+<div *ngIf="upgradeS && userS && userS.userLoad && upgradeS.storageLoad && upgradeS.mineRateLoad"  class="game-content">
   <div class="game-panel ship-panel">
     <div class="ship-panel-ship-view">
       <app-ship-view></app-ship-view>

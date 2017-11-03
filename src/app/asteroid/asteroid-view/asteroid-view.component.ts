@@ -60,6 +60,7 @@ export class AsteroidViewComponent implements AfterViewInit {
   }
 
   resetClick() {
+    console.log(this.userS.currentUser.mineRateLvl);
     const max=this.upgradeS.mineRate[this.userS.currentUser.mineRateLvl].maxRate;
     const base=this.upgradeS.mineRate[this.userS.currentUser.mineRateLvl].baseRate;
 

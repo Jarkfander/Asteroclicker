@@ -11,6 +11,7 @@ export class UserService {
 
   db : AngularFireDatabase;
   currentUser : User;
+  userLoad : boolean = false;
   afAuth : AngularFireAuth;
 
   userSubject = new Subject<User>();
@@ -34,6 +35,7 @@ export class UserService {
   }
 
   public LogOut(){
+    this.userLoad=false;
     this.currentUser=null;
     this.afAuth.auth.signOut();
   }
@@ -50,6 +52,7 @@ export class UserService {
     this.currentUser.storageLvl=snapshot.storageLvl;
 
     this.userSubject.next(this.currentUser);
+    this.userLoad=true;
   }
 
   public IncrementUserCarbon(delta : number){

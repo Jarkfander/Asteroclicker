@@ -1,0 +1,32 @@
+{
+  "rules": {
+    "users":{
+      "$id":{
+        "carbon": {
+           	".write": "(((!data.exists()) || (newData.val() - data.val() <=
+          	root.child('mineRate').child(''+data.parent().child('mineRateLvl').val()).child('maxRate').val())) && 
+            (newData.val() <= root.child('storage').  									 
+             child(''+ data.parent().child('storageLvl').val()).child('capacity').val()) &&
+            (data.val() >= 0))" // test du storage 
+        },
+        "storageLvl": {
+        	  ".write": "(((!data.exists()) || (newData.val() - data.val() == 1)) && 
+             data.parent().child('credit').val() >= root.child('storage').
+             child(''+ data.parent().child('storageLvl').val()).child('cost').val())" // test avec credit a voir si data.val suffit 
+        },
+        "mineRateLvl": {
+        	  ".write": "(((!data.exists()) || (newData.val() - data.val() == 1)) && 
+             data.parent().child('credit').val() >= root.child('mineRate').
+             child(''+ data.parent().child('mineRateLvl').val()).child('cost').val())" // test avec credit a voir si data.val suffit 
+        }, 
+				"credit": {
+        	  ".write": "(((!data.exists()) || (newData.val() > 0)) && 
+            ((data.val() - root.child('storage').child(''+ data.parent().child('storageLvl').val()).child('cost').val()) >= 0) ||
+            ((data.val() - root.child('mineRate').child(''+ data.parent().child('mineRateLvl').val()).child('cost').val()) >= 0) ||
+            (newData.val() >= 0 ))"
+        }
+      }
+    },
+    ".read": true
+  }
+}
