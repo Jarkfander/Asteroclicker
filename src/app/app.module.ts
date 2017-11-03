@@ -13,6 +13,7 @@ import { SigninModule } from './signin/signin.module';
 import { TopbarModule } from './topbar/topbar.module';
 import { SharedModule } from './shared/shared.module';
 import { CommonModule } from '@angular/common';
+import { UpgradeService } from './upgrade/upgrade.service';
 
 
 @NgModule({
@@ -31,7 +32,7 @@ import { CommonModule } from '@angular/common';
     TopbarModule,
     SharedModule
   ],
-  providers: [UserService],
+  providers: [UserService,UpgradeService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

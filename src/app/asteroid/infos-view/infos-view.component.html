@@ -1,3 +1,8 @@
-<p>
-  infos-view works!
-</p>
+<table style="width:100%">
+  <tr>
+    <td><img src="assets/smallRock.png" alt="carbonIcon"></td>
+    <td [ngStyle]="{'color': storageOverload ? 'red' : 'white'}" > Carbon : {{ user.carbon }}</td>
+    <td align="right">{{user.currentMineRate}} carbon/s</td>
+
+  </tr>
+</table>

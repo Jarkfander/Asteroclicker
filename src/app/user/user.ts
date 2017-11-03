@@ -9,6 +9,7 @@ export class User {
     public email: string;
     public mineRateLvl: number;
     public storageLvl: number;
+    public currentMineRate: number;
     
     constructor() {
     }
