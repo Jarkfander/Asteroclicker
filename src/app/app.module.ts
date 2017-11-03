@@ -14,6 +14,7 @@ import { TopbarModule } from './topbar/topbar.module';
 import { SharedModule } from './shared/shared.module';
 import { CommonModule } from '@angular/common';
 import { UpgradeService } from './upgrade/upgrade.service';
+import { MarketModule } from './market/market.module';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { UpgradeService } from './upgrade/upgrade.service';
     ShipModule,
     SigninModule,
     TopbarModule,
-    SharedModule
+    SharedModule,
+    MarketModule,
   ],
   providers: [UserService,UpgradeService],
   bootstrap: [AppComponent]

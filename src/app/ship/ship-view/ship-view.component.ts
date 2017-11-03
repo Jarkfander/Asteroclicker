@@ -31,6 +31,8 @@ export class ShipViewComponent implements AfterViewInit {
 
       this.ship = new Ship(0.25, 0.25, this.app);
       // Ship
+      this.ship.autoUpgrade(this.userS.currentUser.storageLvl, this.ship.radarUpgrade);
+      
       this.userS.userSubject.subscribe( (user: User) => {
           this.ship.autoUpgrade(user.storageLvl, this.ship.radarUpgrade);
       });

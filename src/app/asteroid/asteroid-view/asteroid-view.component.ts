@@ -27,7 +27,7 @@ export class AsteroidViewComponent implements AfterViewInit {
 
     this.app = new PIXI.Application(w, h, { backgroundColor: 0x1079bb });
     this.render.appendChild(this.el.nativeElement, this.app.view);
-
+    
     const background = PIXI.Sprite.fromImage('assets/Ciel.jpg');
     background.width = this.app.renderer.width;
     background.height = this.app.renderer.height;
@@ -40,6 +40,7 @@ export class AsteroidViewComponent implements AfterViewInit {
     });
 
     this.drone = new Drone(0.25, 0.25, this.app);
+    
 
     setInterval(() => {
           this.userS.IncrementUserCarbon(this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity); 

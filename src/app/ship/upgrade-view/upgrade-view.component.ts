@@ -7,39 +7,44 @@ import { MineRate } from '../../upgrade/MineRate';
 
 
 @Component({
-  selector: 'app-upgrade-view',
-  templateUrl: './upgrade-view.component.html',
-  styleUrls: ['./upgrade-view.component.scss']
+    selector: 'app-upgrade-view',
+    templateUrl: './upgrade-view.component.html',
+    styleUrls: ['./upgrade-view.component.scss']
 })
 export class UpgradeViewComponent implements AfterViewInit {
-  public user: User;
-  public stock: Storage[];
-  public mineRate: MineRate[];
+    public user: User;
+    public stock: Storage[];
+    public mineRate: MineRate[];
 
-  constructor(private el: ElementRef, private render: Renderer2, private userS: UserService, private upgradeS: UpgradeService) {
-      this.stock = new Array();
-      this.user = new User();
-  }
+    constructor(private el: ElementRef, private render: Renderer2, private userS: UserService, private upgradeS: UpgradeService) {
+        this.stock = upgradeS.storage;
+        this.user = userS.currentUser;
+        this.mineRate = upgradeS.mineRate;
+    }
 
-  ngAfterViewInit() {
-    this.userS.userSubject.subscribe( (user: User) => {
-        this.user = user;
-        this.upgradeS.upgradeStockSubject.subscribe( (tabStock: Storage[]) => {
+    ngAfterViewInit() {
+        this.userS.userSubject.subscribe((user: User) => {
+            this.user = user;
+        });
+        this.upgradeS.upgradeStockSubject.subscribe((tabStock: Storage[]) => {
             this.stock = tabStock;
         });
 
-        this.upgradeS.upgradeMineRateSubject.subscribe( (tabMineRate: MineRate[]) => {
+        this.upgradeS.upgradeMineRateSubject.subscribe((tabMineRate: MineRate[]) => {
             this.mineRate = tabMineRate;
         });
-    });
 
-  }
+    }
 
-  stockLvlUp() {
-      this.userS.stockLvlUp(this.stock[this.user.storageLvl + 1].cost);
-  }
+    stockLvlUp() {
+        if (this.userS.currentUser.credit > this.stock[this.user.storageLvl + 1].cost) {
+            this.userS.stockLvlUp(this.stock[this.user.storageLvl + 1].cost);
+        }
+    }
 
-  mineRateLvlUp() {
-    this.userS.mineRateLvlUp(this.stock[this.user.mineRateLvl + 1].cost);
-  }
+    mineRateLvlUp() {
+        if (this.userS.currentUser.credit > this.mineRate[this.user.mineRateLvl + 1].cost) {
+            this.userS.mineRateLvlUp(this.mineRate[this.user.mineRateLvl + 1].cost);
+        }
+    }
 }

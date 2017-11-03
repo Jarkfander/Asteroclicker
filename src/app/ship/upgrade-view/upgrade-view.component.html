@@ -1,36 +1,53 @@
-<div>
-  <u> Stock </u> <br />
-  <div *ngIf="stock[user.storageLvl]">
-      Current Level: {{user.storageLvl}} :     
-      Capacity: {{ stock[user.storageLvl].capacity }} 
-      <br />
-      Next Level: {{ user.storageLvl + 1 }} :
-      Capacity: {{ stock[user.storageLvl + 1].capacity }} <br />
-      Cost: {{ stock[user.storageLvl + 1].cost }}  Credit<br />      
-  </div>
-</div>
-<div class="bouton" (click)="stockLvlUp()">
-    <p>
-        <a id="stock" href="#">Upgrade</a>
-    </p>
-</div>  
 
-<div>
-    <u> MineRate </u> <br />  
-    <div *ngIf="mineRate">
-        Current Level: {{user.mineRateLvl}} :
-        Base Rate: {{ mineRate[user.mineRateLvl].baseRate }} ,
-        Max Rate: {{ mineRate[user.mineRateLvl].maxRate }} 
-        <br />
-        Next Level: {{ user.mineRateLvl + 1 }} : 
-        Base Rate: {{ mineRate[user.mineRateLvl + 1].baseRate }}, 
-        Max Rate: {{ mineRate[user.mineRateLvl + 1].maxRate }} <br />
-        Cost: {{ mineRate[user.mineRateLvl + 1].cost }}  Credit
-    </div>   
-</div>
 
-<div class="bouton" (click)="mineRateLvlUp()">
-    <p>
-        <a id="stock" href="#">Upgrade</a>
-    </p>
-</div>
+<table style="width:100%">
+    <tr>
+        <td align="left">
+            <div>
+                <u> Stock </u>
+                <br />
+                <div>
+                    Current Level: {{user.storageLvl}} : Capacity: {{ stock[user.storageLvl].capacity }}
+                    <br /> Next Level: {{ user.storageLvl + 1 }} : Capacity: {{ stock[user.storageLvl + 1].capacity }}
+                    <br /> Cost: {{ stock[user.storageLvl + 1].cost }} Credit
+                    <br />
+                </div>
+            </div>
+            <div class="bouton" (click)="stockLvlUp()">
+                <p>
+                    <a id="stock" href="#">Upgrade</a>
+                </p>
+            </div>
+        </td>
+        <td align="right">
+           <!---  <img src="assets/Radar_giff.gif" alt="carbonIcon" height="120" width="120"> -->
+        </td>
+    </tr>
+
+    <tr>
+        <td align="left">
+            <div>
+                <u> MineRate </u>
+                <br />
+                <div>
+                    Current Level: {{user.mineRateLvl}} : Base Rate: {{ mineRate[user.mineRateLvl].baseRate }} , Max Rate: {{ mineRate[user.mineRateLvl].maxRate
+                    }}
+                    <br /> Next Level: {{ user.mineRateLvl + 1 }} : Base Rate: {{ mineRate[user.mineRateLvl + 1].baseRate }}, Max Rate: {{
+                    mineRate[user.mineRateLvl + 1].maxRate }}
+                    <br /> Cost: {{ mineRate[user.mineRateLvl + 1].cost }} Credit
+                </div>
+            </div>
+            
+            <div class="bouton" (click)="mineRateLvlUp()">
+                <p>
+                    <a id="stock" href="#">Upgrade</a>
+                </p>
+            </div>
+        </td>
+        <td align="right">
+           <!--- <img src="assets/moteur_giff.gif" alt="carbonIcon" height="120" width="120"> -->
+        </td>
+    </tr>
+
+</table>
+

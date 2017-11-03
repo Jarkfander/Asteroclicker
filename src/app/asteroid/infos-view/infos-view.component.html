@@ -1,7 +1,10 @@
 <table style="width:100%">
-  <tr>
-    <td><img src="assets/smallRock.png" alt="carbonIcon"></td>
-    <td [ngStyle]="{'color': storageOverload ? 'red' : 'white'}" > Carbon : {{ user.carbon }}</td>
+  <tr  style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;" 
+  unselectable="on"
+  onselectstart="return false;" 
+  onmousedown="return false;">
+    <td align="left"><img src="assets/smallRock.png" alt="carbonIcon"></td>
+    <td align="left" [ngStyle]="{'color': storageOverload ? 'red' : 'white'}" > Carbon : {{ user.carbon }}</td>
     <td align="right">{{user.currentMineRate}} carbon/s</td>
 
   </tr>
