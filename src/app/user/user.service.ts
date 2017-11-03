@@ -9,64 +9,74 @@ import { MineRate } from '../upgrade/mineRate';
 @Injectable()
 export class UserService {
 
-  db : AngularFireDatabase;
-  currentUser : User;
-  userLoad : boolean = false;
-  afAuth : AngularFireAuth;
+  db: AngularFireDatabase;
+  currentUser: User;
+  userLoad: boolean = false;
+  afAuth: AngularFireAuth;
 
   userSubject = new Subject<User>();
 
-  constructor(db: AngularFireDatabase,afAuth: AngularFireAuth) { 
-    this.db=db;
-    this.afAuth=afAuth;
+  constructor(db: AngularFireDatabase, afAuth: AngularFireAuth) {
+    this.db = db;
+    this.afAuth = afAuth;
     afAuth.authState.subscribe((auth) => {
       if (auth != null) {
-        this.currentUser=new User();
-        this.db.object("users/"+auth.uid).snapshotChanges().subscribe(
+        this.currentUser = new User();
+        this.db.object("users/" + auth.uid).snapshotChanges().subscribe(
           (snapshot: any) => {
-            this.FillUser(auth.uid,snapshot.payload.val());
-        });
+            this.FillUser(auth.uid, snapshot.payload.val());
+          });
       }
     });
   }
 
-  public LogIn(log,pswd){
-    this.afAuth.auth.signInWithEmailAndPassword(log,pswd);
+  public LogIn(log, pswd) {
+    this.afAuth.auth.signInWithEmailAndPassword(log, pswd);
   }
 
-  public LogOut(){
-    this.userLoad=false;
-    this.currentUser=null;
+  public LogOut() {
+    this.userLoad = false;
+    this.currentUser = null;
     this.afAuth.auth.signOut();
   }
 
-  FillUser(uid,snapshot){
+  FillUser(uid, snapshot) {
 
-    this.currentUser.uid=uid;
+    this.currentUser.uid = uid;
 
-    this.currentUser.carbon=snapshot.carbon;
-    this.currentUser.credit=snapshot.credit;
-    this.currentUser.email=snapshot.email;
+    this.currentUser.carbon = snapshot.carbon;
+    this.currentUser.credit = snapshot.credit;
+    this.currentUser.email = snapshot.email;
 
-    this.currentUser.mineRateLvl=snapshot.mineRateLvl;
-    this.currentUser.storageLvl=snapshot.storageLvl;
+    this.currentUser.mineRateLvl = snapshot.mineRateLvl;
+    this.currentUser.storageLvl = snapshot.storageLvl;
 
     this.userSubject.next(this.currentUser);
-    this.userLoad=true;
+    this.userLoad = true;
   }
 
-  public IncrementUserCarbon(maxStorage:number){
-    const carbonValue : number = this.currentUser.carbon+this.currentUser.currentMineRate;
-    if(carbonValue<maxStorage){
-      this.db.object('users/'+this.currentUser.uid+'/carbon').set(carbonValue);
+  public IncrementUserCarbon(maxStorage: number) {
+    const carbonValue: number = this.currentUser.carbon + this.currentUser.currentMineRate;
+    if (carbonValue < maxStorage) {
+      this.db.object('users/' + this.currentUser.uid + '/carbon').set(carbonValue);
     }
-    else{
-      if(this.currentUser.carbon!=maxStorage){
-        this.db.object('users/'+this.currentUser.uid+'/carbon').set(maxStorage);
+    else {
+      if (this.currentUser.carbon != maxStorage) {
+        this.db.object('users/' + this.currentUser.uid + '/carbon').set(maxStorage);
       }
     }
+  }
 
-
+  public SellCarbon(amount: number) {
+    const carbonValue = 1;
+    if (this.currentUser.carbon - amount >= 0) {
+      this.db.object('users/' + this.currentUser.uid).update(
+        {
+          carbon: this.currentUser.carbon - amount,
+          credit: this.currentUser.credit + carbonValue
+        }
+      );
+    }
   }
 
   public stockLvlUp(creditDown: number) {

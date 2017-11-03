@@ -12,7 +12,7 @@ export class Drone {
         this.drone.scale.set(x, y);
 
         this.drone.x = this.app.renderer.width / 2;
-        this.drone.y = this.app.renderer.height / 2 - 200;
+        this.drone.y = this.app.renderer.height / 2 - 150;
         this.app.stage.addChild(this.drone);
 
         this.onAssetsLoaded();
