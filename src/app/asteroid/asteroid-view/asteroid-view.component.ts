@@ -20,7 +20,6 @@ export class AsteroidViewComponent implements AfterViewInit {
   private drone: Drone;
 
   clicked: boolean;
-  mineRate: number;
 
   ngAfterViewInit() {
     const w = this.el.nativeElement.parentElement.offsetWidth;
@@ -42,7 +41,9 @@ export class AsteroidViewComponent implements AfterViewInit {
 
     this.drone = new Drone(0.25, 0.25, this.app);
 
-    setInterval(() => {this.userS.IncrementUserCarbon(this.mineRate); }, 1000);
+    setInterval(() => {
+          this.userS.IncrementUserCarbon(this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity); 
+    }, 1000);
     setInterval(() => {this.resetClick()}, 200);
   }
 
@@ -52,9 +53,8 @@ export class AsteroidViewComponent implements AfterViewInit {
     this.clicked = true;
     const max=this.upgradeS.mineRate[this.userS.currentUser.mineRateLvl].maxRate;
     
-    if (this.mineRate < max) {
-      this.mineRate = this.mineRate + max * 0.1 > max ?
-      max : this.mineRate + max * 0.1;
+    if (this.userS.currentUser.currentMineRate < max) {
+      this.userS.currentUser.currentMineRate = this.userS.currentUser.currentMineRate + max * 0.1 > max ? max : this.userS.currentUser.currentMineRate + max * 0.1;
       //this.updateLaserSpeed();
     }
   }
@@ -64,11 +64,11 @@ export class AsteroidViewComponent implements AfterViewInit {
     const base=this.upgradeS.mineRate[this.userS.currentUser.mineRateLvl].baseRate;
 
     if (!this.clicked) {
-      if (this.mineRate > base) {
-        this.mineRate = this.mineRate - (0.1 * max) < base ? base : this.mineRate - (0.1 * max);
+      if (this.userS.currentUser.currentMineRate > base) {
+        this.userS.currentUser.currentMineRate = this.userS.currentUser.currentMineRate - (0.1 * max) < base ? base : this.userS.currentUser.currentMineRate - (0.1 * max);
       }
       else{
-        this.mineRate=base;
+        this.userS.currentUser.currentMineRate=base;
       }
     }
     else {

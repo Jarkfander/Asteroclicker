@@ -11,6 +11,7 @@ export class UserService {
 
   db : AngularFireDatabase;
   currentUser : User;
+  userLoad : boolean = false;
   afAuth : AngularFireAuth;
 
   userSubject = new Subject<User>();
@@ -34,6 +35,7 @@ export class UserService {
   }
 
   public LogOut(){
+    this.userLoad=false;
     this.currentUser=null;
     this.afAuth.auth.signOut();
   }
@@ -50,11 +52,20 @@ export class UserService {
     this.currentUser.storageLvl=snapshot.storageLvl;
 
     this.userSubject.next(this.currentUser);
+    this.userLoad=true;
   }
 
-  public IncrementUserCarbon(delta : number){
-    const carbonValue : number = this.currentUser.carbon+delta;
+  public IncrementUserCarbon(maxStorage:number){
+    const carbonValue : number = this.currentUser.carbon+this.currentUser.currentMineRate;
+    if(carbonValue<maxStorage){
       this.db.object('users/'+this.currentUser.uid+'/carbon').set(carbonValue);
+    }
+    else{
+      if(this.currentUser.carbon!=maxStorage){
+        this.db.object('users/'+this.currentUser.uid+'/carbon').set(maxStorage);
+      }
+    }
+
 
   }
 
