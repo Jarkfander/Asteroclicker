@@ -75,7 +75,7 @@ export class Asteroid {
                 "spawnCircle": {
                     "x": 0,
                     "y": 0,
-                    "r": 25
+                    "r": 0
                 }
             };
 
