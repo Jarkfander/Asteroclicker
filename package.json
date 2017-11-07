@@ -26,6 +26,7 @@
     "chart.js": "^2.7.1",
     "core-js": "^2.4.1",
     "firebase": "^4.6.0",
+    "firebase-functions": "^0.7.2",
     "ng2-charts": "^1.6.0",
     "pixi-particles": "^2.1.8",
     "pixi.js": "^4.6.0",
