@@ -12,15 +12,14 @@ export class UpgradeService {
   db: AngularFireDatabase;
   storage: Storage[];
   mineRate: MineRate[];
-  afAuth: AngularFireAuth;
 
-  storageLoad: boolean=false;
-  mineRateLoad: boolean=false;
+  storageLoad: boolean = false;
+  mineRateLoad: boolean = false;
 
   upgradeStockSubject = new Subject<Storage[]>();
   upgradeMineRateSubject = new Subject<MineRate[]>();
 
-  constructor(db: AngularFireDatabase, afAuth: AngularFireAuth) {
+  constructor(db: AngularFireDatabase) {
     this.storage = new Array();
     this.mineRate = new Array();
     this.db = db;

@@ -30,12 +30,15 @@ export class ShipViewComponent implements AfterViewInit {
       this.app.stage.addChild(background);
 
       this.ship = new Ship(0.25, 0.25, this.app);
-      // Ship
-      this.ship.autoUpgrade(this.userS.currentUser.storageLvl, this.ship.radarUpgrade);
-      
+      // init
+      this.ship.autoUpgrade(this.userS.currentUser.storageLvl, this.ship.stockUpgrade);
+      this.ship.autoUpgrade(this.userS.currentUser.mineRateLvl, this.ship.radarUpgrade);
+
       this.userS.userSubject.subscribe( (user: User) => {
-          this.ship.autoUpgrade(user.storageLvl, this.ship.radarUpgrade);
+          this.ship.autoUpgrade(user.storageLvl, this.ship.stockUpgrade);
+          this.ship.autoUpgrade(user.mineRateLvl, this.ship.radarUpgrade);
       });
+
     }
 
 }

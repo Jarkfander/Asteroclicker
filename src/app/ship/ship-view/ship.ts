@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js';
-
 class UpgradeShip {
     tabUpgrade = [];
     posX: number;
@@ -18,20 +17,16 @@ class UpgradeShip {
     }
 
     spriteAdd(newlvl: number) {
-        this.currentLevel = newlvl;
-
-        if (this.currentLevel > 1) {
-            return this.tabUpgrade[this.tabUpgrade.length];
-        }
-        if (this.currentLevel === 0) {
+        if (newlvl === 0) {
             return null;
-        } else {
-            const upg = this.tabUpgrade[this.currentLevel - 1];
-            upg.texture.baseTexture.mipmap = true;
-            upg.scale.set(this.scaleX, this.scaleY);
-            upg.anchor.set(0.5);
-            return upg;
         }
+        this.currentLevel = newlvl <= 5 ? 1 : Math.floor(newlvl / 5) + 1;
+
+        const upg = this.tabUpgrade[this.currentLevel - 1];
+        upg.texture.baseTexture.mipmap = true;
+        upg.scale.set(this.scaleX, this.scaleY);
+        upg.anchor.set(0.5);
+        return upg;
     }
 }
 
@@ -41,6 +36,9 @@ export class Ship {
 
     radarUpgrade: UpgradeShip;
     currentLevelRadar: number;
+
+    stockUpgrade: UpgradeShip;
+    currentLevelStock: number;
 
     constructor(x: number , y: number, app: PIXI.Application) {
         this.app = app;
@@ -54,23 +52,26 @@ export class Ship {
         this.app.stage.addChild(this.ship);
 
         this.currentLevelRadar = 0;
-
-        this.initTabSprite(1, 'assets/shipRadar_');
+        this.radarUpgrade = this.initTabSprite(1, 'assets/upgrade/shipRadar_', this.currentLevelRadar);
         this.autoUpgrade(0, this.radarUpgrade);
+
+        this.currentLevelStock = 0;
+        this.stockUpgrade = this.initTabSprite(1, 'assets/upgrade/shipStock_', this.currentLevelStock);
+        this.autoUpgrade(0, this.stockUpgrade);
     }
 
     // init sprite for upgrade ship
-    initTabSprite(nbMaxSprite: number, nameSprite: string) {
+    initTabSprite(nbMaxSprite: number, nameSprite: string, lvl: number) {
         const temp = [];
         for (let i = 0; i < nbMaxSprite ; i++) {
-            temp.push(PIXI.Sprite.fromImage(nameSprite + i + '.png'));
+            temp.push(PIXI.Sprite.fromImage(nameSprite + (i + 1) + '.png'));
         }
-        this.radarUpgrade = new UpgradeShip(this.currentLevelRadar, temp, 1, 1, 1, 1);
+        return new UpgradeShip(lvl, temp, 1, 1, 1, 1);
     }
 
     // manage the upgrade when the level change
-    autoUpgrade(lvl: number, tab) {
-        const sprite = this.radarUpgrade.spriteAdd(lvl);
+    autoUpgrade(lvl: number, tab: UpgradeShip) {
+        const sprite = tab.spriteAdd(lvl);
         if (sprite) {
             this.ship.addChild(sprite);
         }
