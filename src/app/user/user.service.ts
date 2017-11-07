@@ -5,6 +5,8 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { Subject } from 'rxjs/Subject';
 import { Storage } from '../upgrade/storage';
 import { MineRate } from '../upgrade/mineRate';
+import { UpgradeService } from '../upgrade/upgrade.service';
+import { MarketService } from '../market/market.service';
 
 @Injectable()
 export class UserService {
@@ -16,7 +18,8 @@ export class UserService {
 
   userSubject = new Subject<User>();
 
-  constructor(db: AngularFireDatabase, afAuth: AngularFireAuth) {
+  constructor(db: AngularFireDatabase, afAuth: AngularFireAuth,
+    private upgradeS: UpgradeService, private marketS: MarketService) {
     this.db = db;
     this.afAuth = afAuth;
     afAuth.authState.subscribe((auth) => {
@@ -68,12 +71,26 @@ export class UserService {
   }
 
   public SellCarbon(amount: number) {
-    const carbonValue = 1;
+    const carbonValue = this.marketS.currentOresCosts.carbonCosts[Object.keys(this.marketS.currentOresCosts.carbonCosts)[9]] * amount;
     if (this.currentUser.carbon - amount >= 0) {
       this.db.object('users/' + this.currentUser.uid).update(
         {
           carbon: this.currentUser.carbon - amount,
           credit: this.currentUser.credit + carbonValue
+        }
+      );
+    }
+  }
+
+  public BuyCarbon() {
+    const carbonAmout = 10;
+    const costFinal = carbonAmout * this.marketS.currentOresCosts.carbonCosts[Object.keys(this.marketS.currentOresCosts.carbonCosts)[9]];
+    if (this.currentUser.credit - costFinal >= 0 &&
+        this.currentUser.carbon + carbonAmout < this.upgradeS.storage[this.currentUser.storageLvl].capacity ) {
+      this.db.object('users/' + this.currentUser.uid).update(
+        {
+          carbon: this.currentUser.carbon + carbonAmout,
+          credit: this.currentUser.credit - costFinal
         }
       );
     }
