@@ -1,3 +1,22 @@
 <p>
-  <a href="#" style="background-color:black" (click)="SellCarbon();">Sell 10 carbons for 1 credit</a>
+  <a href="#" style="background-color:black" (click)="SellCarbon();">Sell 10 carbons for {{valuesCreditCarbon * 10}} credit</a>
+  <a href="#" style="background-color:black" (click)="BuyCarbon();">Buy 10 carbons for {{valuesCreditCarbon * 10}} credit</a>
 </p>
+  
+
+<div class="row">
+  <div class="col-md-6">
+    <div style="display: block;">
+    <canvas baseChart width="400" height="200"
+                [datasets]="chart.lineChartData"
+                [labels]="chart.lineChartLabels"
+                [options]="chart.lineChartOptions"
+                [colors]="chart.lineChartColors"
+                [legend]="false"
+                [chartType]="chart.lineChartType"></canvas>
+    </div>
+  </div>
+</div>  
+
+
+  
