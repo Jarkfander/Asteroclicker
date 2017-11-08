@@ -1,11 +1,31 @@
 <table style="width:100%">
+    <tr  style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;" 
+    unselectable="on"
+    onselectstart="return false;" 
+    onmousedown="return false;">
+    <td align="left">Type of Asteroid : {{ Asteroidname }}</td>
+    </tr> 
+</table>
+
+<br>
+<table style="width:100%">
   <tr  style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;" 
   unselectable="on"
   onselectstart="return false;" 
   onmousedown="return false;">
+
     <td align="left"><img src="assets/smallRock.png" alt="carbonIcon"></td>
     <td align="left" [ngStyle]="{'color': storageOverload ? 'red' : 'white'}" > Carbon : {{ user.carbon }}</td>
     <td align="right">{{user.currentMineRate}} carbon/s</td>
 
+  </tr>
+
+  <tr  style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;" 
+  unselectable="on"
+  onselectstart="return false;" 
+  onmousedown="return false;">
+    <td align="left"><img src="assets/smallRockTita.png" alt="carbonIcon"></td>
+    <td align="left" [ngStyle]="{'color': storageOverload ? 'red' : 'white'}" > Titanium : {{ user.titanium }}</td>
+    <td align="right">{{user.currentMineRate}} titanium/s</td>
   </tr>
 </table>
