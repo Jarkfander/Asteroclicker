@@ -35,7 +35,7 @@ export class MarketService {
     this.oreTrends.carbonTrend=snapshot.carbon;
   }
   // create the tab of stock
-  FillOreCostsInit(snapshot) {
+  FillOreCostsInit(snapshot) { 
     this.currentOresCosts.carbonCosts = snapshot;
     this.OreCostsSubject.next(this.currentOresCosts.carbonCosts);
   }

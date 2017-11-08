@@ -48,30 +48,34 @@ export class UserService {
     this.currentUser.uid = uid;
 
     this.currentUser.carbon = snapshot.carbon;
+    this.currentUser.titanium = snapshot.titanium;
+
     this.currentUser.credit = snapshot.credit;
     this.currentUser.email = snapshot.email;
 
     this.currentUser.mineRateLvl = snapshot.mineRateLvl;
     this.currentUser.storageLvl = snapshot.storageLvl;
 
+    this.currentUser.numAsteroid = snapshot.numAsteroid;
+
     this.userSubject.next(this.currentUser);
     this.userLoad = true;
   }
 
-  public IncrementUserCarbon(maxStorage: number) {
-    const carbonValue: number = this.currentUser.carbon + this.currentUser.currentMineRate;
-    if (carbonValue < maxStorage) {
-      this.db.object('users/' + this.currentUser.uid + '/carbon').set(carbonValue);
-    }
-    else {
-      if (this.currentUser.carbon != maxStorage) {
-        this.db.object('users/' + this.currentUser.uid + '/carbon').set(maxStorage);
+  public IncrementUserOre(maxStorage: number, ore: number, orename: string) {
+    const oreValue: number = ore + this.currentUser.currentMineRate;
+    if (oreValue < maxStorage) {
+      this.db.object('users/' + this.currentUser.uid + '/' + orename).set(oreValue);
+    } else {
+      if (ore !== maxStorage) {
+        this.db.object('users/' + this.currentUser.uid + '/' + orename).set(maxStorage);
       }
     }
   }
 
   public SellCarbon(amount: number) {
-    const carbonValue = this.marketS.currentOresCosts.carbonCosts[Object.keys(this.marketS.currentOresCosts.carbonCosts)[9]] * amount;
+    const carbonValue = Math.trunc(this.marketS.currentOresCosts.carbonCosts[Object.keys(this.marketS.currentOresCosts.carbonCosts)[9]] 
+                                  * amount);
     if (this.currentUser.carbon - amount >= 0) {
       this.db.object('users/' + this.currentUser.uid).update(
         {
@@ -82,9 +86,10 @@ export class UserService {
     }
   }
 
-  public BuyCarbon() {
-    const carbonAmout = 10;
-    const costFinal = carbonAmout * this.marketS.currentOresCosts.carbonCosts[Object.keys(this.marketS.currentOresCosts.carbonCosts)[9]];
+  public BuyCarbon(num: number) {
+    const carbonAmout = num;
+    const costFinal = Math.trunc(carbonAmout *
+       this.marketS.currentOresCosts.carbonCosts[Object.keys(this.marketS.currentOresCosts.carbonCosts)[9]]);
     if (this.currentUser.credit - costFinal >= 0 &&
         this.currentUser.carbon + carbonAmout < this.upgradeS.storage[this.currentUser.storageLvl].capacity ) {
       this.db.object('users/' + this.currentUser.uid).update(
