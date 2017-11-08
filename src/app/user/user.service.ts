@@ -44,7 +44,6 @@ export class UserService {
   }
 
   FillUser(uid, snapshot) {
-
     this.currentUser.uid = uid;
 
     this.currentUser.carbon = snapshot.carbon;

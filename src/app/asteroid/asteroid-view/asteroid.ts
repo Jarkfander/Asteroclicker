@@ -12,7 +12,7 @@ export class Asteroid {
         this.app = app;
         this.numAsteroid = numAsteroid;
 
-        this.asteroid = PIXI.Sprite.fromImage('assets/Asteroid/Asteroïde_' + numAsteroid + '.png');
+        this.asteroid = PIXI.Sprite.fromImage('assets/Asteroid/Asteroïde_' + this.numAsteroid + '.png');
         this.asteroid.texture.baseTexture.mipmap = true;
         this.asteroid.anchor.set(0.5);
         this.asteroid.scale.set(x, y);

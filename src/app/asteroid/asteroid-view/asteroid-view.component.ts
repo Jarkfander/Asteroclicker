@@ -5,6 +5,7 @@ import { Asteroid } from './asteroid';
 import { Drone } from './drone';
 import { User } from '../../user/user';
 import { UpgradeService } from '../../upgrade/upgrade.service';
+import { AsteroidService } from '../asteroid.service';
 
 @Component({
   selector: 'app-asteroid-view',
@@ -13,7 +14,8 @@ import { UpgradeService } from '../../upgrade/upgrade.service';
 })
 
 export class AsteroidViewComponent implements AfterViewInit {
-  constructor(private el: ElementRef, private render: Renderer2, private userS: UserService, private upgradeS: UpgradeService) { }
+  constructor(private el: ElementRef, private render: Renderer2, private userS: UserService,
+              private upgradeS: UpgradeService, private asteroidS: AsteroidService) { }
 
   private app: PIXI.Application;
   private aster: Asteroid;
@@ -43,9 +45,14 @@ export class AsteroidViewComponent implements AfterViewInit {
 
     setInterval(() => {
       this.userS.IncrementUserOre(this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity,
-                                  this.userS.currentUser.carbon, 'carbon');
+                                  this.retriveOre(), this.asteroidS.asteroidManaged[this.userS.currentUser.numAsteroid].ore);
     }, 1000);
     setInterval(() => { this.resetClick() }, 200);
+
+    this.userS.userSubject.subscribe( (user: User) => {
+       // this.aster.changeSprite(user.numAsteroid);
+    });
+
   }
 
 
@@ -77,4 +84,13 @@ export class AsteroidViewComponent implements AfterViewInit {
 
   }
 
+
+  retriveOre () {
+    if (this.asteroidS.asteroidManaged[this.userS.currentUser.numAsteroid].ore === 'carbon') {
+        return this.userS.currentUser.carbon;
+    }
+    if (this.asteroidS.asteroidManaged[this.userS.currentUser.numAsteroid].ore === 'titanium') {
+      return this.userS.currentUser.titanium;
+    }
+  }
 }

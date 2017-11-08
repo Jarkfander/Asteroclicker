@@ -16,6 +16,7 @@ import { CommonModule } from '@angular/common';
 import { UpgradeService } from './upgrade/upgrade.service';
 import { MarketModule } from './market/market.module';
 import { MarketService } from './market/market.service';
+import { AsteroidService } from './asteroid/asteroid.service';
 
 
 @NgModule({
@@ -35,7 +36,7 @@ import { MarketService } from './market/market.service';
     SharedModule,
     MarketModule,
   ],
-  providers: [UserService,UpgradeService, MarketService],
+  providers: [UserService,UpgradeService, MarketService, AsteroidService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
