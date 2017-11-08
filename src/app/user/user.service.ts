@@ -25,9 +25,9 @@ export class UserService {
     afAuth.authState.subscribe((auth) => {
       if (auth != null) {
         this.currentUser = new User();
-        this.db.object("users/" + auth.uid).snapshotChanges().subscribe(
+        this.db.object("users/" + auth.uid).valueChanges().subscribe(
           (snapshot: any) => {
-            this.FillUser(auth.uid, snapshot.payload.val());
+            this.FillUser(auth.uid, snapshot);
           });
       }
     });

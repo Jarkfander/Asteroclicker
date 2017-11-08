@@ -33,10 +33,12 @@ export class MarketViewComponent implements AfterViewInit {
 
   public SellCarbon() {
     this.userS.SellCarbon(10);
+    this.marketS.UpdateCarbonTrend(10);
   }
 
   public BuyCarbon() {
     this.userS.BuyCarbon();
+    this.marketS.UpdateCarbonTrend(-10);
   }
 
 }
