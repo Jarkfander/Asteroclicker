@@ -27,52 +27,51 @@ export class AsteroidViewComponent implements AfterViewInit {
 
     this.app = new PIXI.Application(w, h, { backgroundColor: 0x1079bb });
     this.render.appendChild(this.el.nativeElement, this.app.view);
-    
+
     const background = PIXI.Sprite.fromImage('assets/Ciel.jpg');
     background.width = this.app.renderer.width;
     background.height = this.app.renderer.height;
     this.app.stage.addChild(background);
 
-    this.aster = new Asteroid(0.25, 0.25, this.app);
+    this.aster = new Asteroid(0.25, 0.25, this.app, this.userS.currentUser.numAsteroid);
 
     this.aster.asteroid.on('click', (event) => {
       this.asteroidClick();
     });
 
     this.drone = new Drone(0.25, 0.25, this.app);
-    
 
     setInterval(() => {
-          this.userS.IncrementUserCarbon(this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity); 
+      this.userS.IncrementUserOre(this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity,
+                                  this.userS.currentUser.carbon, 'carbon');
     }, 1000);
-    setInterval(() => {this.resetClick()}, 200);
+    setInterval(() => { this.resetClick() }, 200);
   }
 
 
   asteroidClick() {
-    //ga('asteroid.send', 'event', 'buttons', 'click', 'asteroid');
+    // ga('asteroid.send', 'event', 'buttons', 'click', 'asteroid');
     this.clicked = true;
-    const max=this.upgradeS.mineRate[this.userS.currentUser.mineRateLvl].maxRate;
-    
+    const max = this.upgradeS.mineRate[this.userS.currentUser.mineRateLvl].maxRate;
     if (this.userS.currentUser.currentMineRate < max) {
-      this.userS.currentUser.currentMineRate = this.userS.currentUser.currentMineRate + max * 0.1 > max ? max : this.userS.currentUser.currentMineRate + max * 0.1;
-      //this.updateLaserSpeed();
+      this.userS.currentUser.currentMineRate = this.userS.currentUser.currentMineRate + max * 0.1 > max ? max :
+        this.userS.currentUser.currentMineRate + max * 0.1;
+      // this.updateLaserSpeed();
     }
   }
 
   resetClick() {
-    const max=this.upgradeS.mineRate[this.userS.currentUser.mineRateLvl].maxRate;
-    const base=this.upgradeS.mineRate[this.userS.currentUser.mineRateLvl].baseRate;
+    const max = this.upgradeS.mineRate[this.userS.currentUser.mineRateLvl].maxRate;
+    const base = this.upgradeS.mineRate[this.userS.currentUser.mineRateLvl].baseRate;
 
     if (!this.clicked) {
       if (this.userS.currentUser.currentMineRate > base) {
-        this.userS.currentUser.currentMineRate = this.userS.currentUser.currentMineRate - (0.1 * max) < base ? base : this.userS.currentUser.currentMineRate - (0.1 * max);
+        this.userS.currentUser.currentMineRate = this.userS.currentUser.currentMineRate - (0.1 * max) <
+          base ? base : this.userS.currentUser.currentMineRate - (0.1 * max);
+      } else {
+        this.userS.currentUser.currentMineRate = base;
       }
-      else{
-        this.userS.currentUser.currentMineRate=base;
-      }
-    }
-    else {
+    } else {
       this.clicked = false;
     }
 

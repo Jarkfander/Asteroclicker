@@ -21,7 +21,6 @@ class UpgradeShip {
             return null;
         }
         this.currentLevel = newlvl <= 5 ? 1 : Math.floor(newlvl / 5) + 1;
-
         const upg = this.tabUpgrade[this.currentLevel - 1];
         upg.texture.baseTexture.mipmap = true;
         upg.scale.set(this.scaleX, this.scaleY);
@@ -52,11 +51,11 @@ export class Ship {
         this.app.stage.addChild(this.ship);
 
         this.currentLevelRadar = 0;
-        this.radarUpgrade = this.initTabSprite(1, 'assets/upgrade/shipRadar_', this.currentLevelRadar);
+        this.radarUpgrade = this.initTabSprite(3, 'assets/upgrade/shipRadar_', this.currentLevelRadar);
         this.autoUpgrade(0, this.radarUpgrade);
 
         this.currentLevelStock = 0;
-        this.stockUpgrade = this.initTabSprite(1, 'assets/upgrade/shipStock_', this.currentLevelStock);
+        this.stockUpgrade = this.initTabSprite(3, 'assets/upgrade/shipStock_', this.currentLevelStock);
         this.autoUpgrade(0, this.stockUpgrade);
     }
 
