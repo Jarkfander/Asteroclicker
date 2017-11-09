@@ -17,15 +17,15 @@ export class MarketViewComponent implements AfterViewInit {
   public valuesCreditCarbon: number;
 
   constructor(private userS: UserService, private marketS: MarketService) {
-    this.valuesCreditCarbon = this.marketS.currentOresCosts.carbonCosts[Object.keys(this.marketS.currentOresCosts.carbonCosts)[9]];
+    this.valuesCreditCarbon = this.marketS.currentOresCosts.carbonCosts[Object.keys(this.marketS.currentOresCosts.carbonCosts)[59]];
   }
 
   ngAfterViewInit() {
     const line = this.carbonCanvas.nativeElement.getContext('2d');
     // draw line chart
-    this.chart = new ManagedChart(line, 10);
+    this.chart = new ManagedChart(line, 60);
     this.marketS.OreCostsSubject.subscribe( (tabCarbon: any[]) => {
-        this.valuesCreditCarbon = this.marketS.currentOresCosts.carbonCosts[Object.keys(this.marketS.currentOresCosts.carbonCosts)[9]];
+        this.valuesCreditCarbon = this.marketS.currentOresCosts.carbonCosts[Object.keys(this.marketS.currentOresCosts.carbonCosts)[59]];
         this.chart.addNew(tabCarbon);
     });
     this.chart.initTab(this.marketS.currentOresCosts.carbonCosts);

@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ElementRef, Renderer2 } from '@angular/core';
+import { Component, AfterViewInit, ElementRef, Renderer2, HostListener } from '@angular/core';
 import * as PIXI from 'pixi.js';
 import { Ship } from './ship';
 import { UserService } from '../../user/user.service';
@@ -39,6 +39,12 @@ export class ShipViewComponent implements AfterViewInit {
           this.ship.autoUpgrade(user.mineRateLvl, this.ship.radarUpgrade);
       });
 
+    }
+
+    @HostListener('window:resize') onResize() {
+      const w = this.el.nativeElement.parentElement.offsetWidth;
+      const h = this.el.nativeElement.parentElement.offsetHeight;
+      this.app.renderer.resize(w, h);
     }
 
 }

@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ElementRef, Renderer2 } from '@angular/core';
+import { Component, AfterViewInit, ElementRef, Renderer2, HostListener } from '@angular/core';
 import * as PIXI from 'pixi.js';
 import { UserService } from '../../user/user.service';
 import { Asteroid } from './asteroid';
@@ -58,6 +58,11 @@ export class AsteroidViewComponent implements AfterViewInit {
     });
   }
 
+  @HostListener('window:resize') onResize() {
+    const w = this.el.nativeElement.parentElement.offsetWidth;
+    const h = this.el.nativeElement.parentElement.offsetHeight;
+    this.app.renderer.resize(w, h);
+  }
 
   asteroidClick() {
     // ga('asteroid.send', 'event', 'buttons', 'click', 'asteroid');
@@ -66,7 +71,7 @@ export class AsteroidViewComponent implements AfterViewInit {
     if (this.userS.currentUser.currentMineRate < max) {
       this.userS.currentUser.currentMineRate = this.userS.currentUser.currentMineRate + max * 0.1 > max ? max :
         this.userS.currentUser.currentMineRate + max * 0.1;
-      // this.updateLaserSpeed();
+     // this.updateLaserSpeed();
     }
   }
 

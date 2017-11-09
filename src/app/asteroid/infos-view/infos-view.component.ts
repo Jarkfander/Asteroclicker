@@ -25,7 +25,14 @@ export class InfosViewComponent implements AfterViewInit {
     this.userS.userSubject.subscribe((user: User) => {
       this.user = user;
       this.storageOverload = this.user.carbon >= this.upgradeS.storage[this.user.storageLvl].capacity;
+      const name = this.AsteroidS.asteroidManaged[this.user.numAsteroid].ore;
+      this.Asteroidname = name.charAt(0).toUpperCase() + name.substring(1).toLowerCase();
     });
+  }
+
+  searchNewAster() {
+      const num = Math.floor((Math.random() * this.AsteroidS.asteroidManaged.length - 1) + 1);
+      this.userS.searchNewAsteroid(num);
   }
 
 }

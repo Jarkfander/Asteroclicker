@@ -114,4 +114,8 @@ export class UserService {
     this.db.object('users/' + this.currentUser.uid + '/credit').set(creditAfter);
   }
 
+
+  searchNewAsteroid(num: number) {
+    this.db.object('users/' + this.currentUser.uid + '/numAsteroid').set(num);
+  }
 }

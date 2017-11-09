@@ -38,7 +38,7 @@ export class Asteroid {
             this.emitter.updateOwnerPos(event.data.global.x, event.data.global.y);
 
         });
-        
+
         // Then tell the tween we want to animate the x property over 1000 milliseconds
         tween.to({ x: 200 }, 1000).onUpdate(function onUpdate() {
             this.asteroid.x += 10;
@@ -100,4 +100,8 @@ export class Asteroid {
         );
     }
 
+    changeSprite(num: number) {
+        this.numAsteroid = num;
+        this.asteroid = PIXI.Sprite.fromImage('assets/Asteroid/Asteroïde_' + this.numAsteroid + '.png');
+    }
 }
