@@ -11,7 +11,7 @@ export class MarketService {
   currentOresCosts: OreCosts;
   oreTrends: OreTrends;
 
-  OreCostsSubject = new Subject<number[]>();
+  OreCostsSubject = new Subject<OreCosts>();
   marketLoad: boolean = false;
 
 
@@ -19,7 +19,7 @@ export class MarketService {
     this.db = db;
     this.currentOresCosts = new OreCosts();
     this.oreTrends = new OreTrends();
-    this.db.object('trading/carbon').valueChanges().subscribe(
+    this.db.object('trading').valueChanges().subscribe(
       (snapshot: any) => {
         this.FillOreCostsInit(snapshot);
         this.marketLoad = true;
@@ -36,12 +36,13 @@ export class MarketService {
   }
   // create the tab of stock
   FillOreCostsInit(snapshot) {
-    this.currentOresCosts.carbonCosts = snapshot;
-    this.OreCostsSubject.next(this.currentOresCosts.carbonCosts);
+    this.currentOresCosts.carbonCosts = snapshot.carbon;
+    this.currentOresCosts.titaniumCosts = snapshot.titanium;
+    this.OreCostsSubject.next(this.currentOresCosts);
   }
 
-  UpdateOreTrend(delta : number,oreName : string){
-    this.db.object('trend/'+oreName).set(this.oreTrends.getTrendFromString(oreName)+delta);
+  UpdateOreTrend(delta: number, oreName: string) {
+    this.db.object('trend/' + oreName).set(this.oreTrends.getTrendFromString(oreName) + delta);
   }
 }
 
