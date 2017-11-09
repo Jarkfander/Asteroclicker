@@ -72,30 +72,30 @@ export class UserService {
     }
   }
 
-  public SellCarbon(amount: number) {
-    const carbonValue = Math.trunc(this.marketS.currentOresCosts.carbonCosts[Object.keys(this.marketS.currentOresCosts.carbonCosts)[9]] 
-                                  * amount);
-    if (this.currentUser.carbon - amount >= 0) {
+  public SellOre/*moon*/(amount: number, oreName: string) {
+    const oreValue = Math.trunc(this.marketS.currentOresCosts.getCostsFromString(oreName)[Object.keys(this.marketS.currentOresCosts.getCostsFromString(oreName))[59]]
+      * amount);
+    if (this.currentUser.getOreAmountFromString(oreName) - amount >= 0) {
+      var jsonUpdate={};
+      jsonUpdate[oreName]=this.currentUser.getOreAmountFromString(oreName)  - amount;
+      jsonUpdate["credit"]=this.currentUser.credit + oreValue;
+
       this.db.object('users/' + this.currentUser.uid).update(
-        {
-          carbon: this.currentUser.carbon - amount,
-          credit: this.currentUser.credit + carbonValue
-        }
+        jsonUpdate
       );
     }
   }
 
-  public BuyCarbon(num: number) {
-    const carbonAmout = num;
-    const costFinal = Math.trunc(carbonAmout *
-       this.marketS.currentOresCosts.carbonCosts[Object.keys(this.marketS.currentOresCosts.carbonCosts)[9]]);
+  public BuyOre(amount: number,oreName: string) {
+    const costFinal = Math.trunc(amount *
+      this.marketS.currentOresCosts.getCostsFromString(oreName)[Object.keys(this.marketS.currentOresCosts.getCostsFromString(oreName))[59]]);
     if (this.currentUser.credit - costFinal >= 0 &&
-        this.currentUser.carbon + carbonAmout < this.upgradeS.storage[this.currentUser.storageLvl].capacity ) {
+      this.currentUser.getOreAmountFromString(oreName) + amount < this.upgradeS.storage[this.currentUser.storageLvl].capacity) {
+        var jsonUpdate={};
+        jsonUpdate[oreName]=this.currentUser.getOreAmountFromString(oreName) + amount;
+        jsonUpdate["credit"]=this.currentUser.credit - costFinal;
       this.db.object('users/' + this.currentUser.uid).update(
-        {
-          carbon: this.currentUser.carbon + carbonAmout,
-          credit: this.currentUser.credit - costFinal
-        }
+        jsonUpdate
       );
     }
   }

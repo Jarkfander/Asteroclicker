@@ -11,7 +11,7 @@ export class MarketService {
   currentOresCosts: OreCosts;
   oreTrends: OreTrends;
 
-  OreCostsSubject = new Subject<any[]>();
+  OreCostsSubject = new Subject<number[]>();
   marketLoad: boolean = false;
 
 
@@ -40,8 +40,8 @@ export class MarketService {
     this.OreCostsSubject.next(this.currentOresCosts.carbonCosts);
   }
 
-  UpdateCarbonTrend(delta : number){
-    this.db.object('trend/carbon').set(this.oreTrends.carbonTrend+delta);
+  UpdateOreTrend(delta : number,oreName : string){
+    this.db.object('trend/'+oreName).set(this.oreTrends.getTrendFromString(oreName)+delta);
   }
 }
 

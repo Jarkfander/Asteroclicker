@@ -3,7 +3,7 @@ import { Storage } from "../upgrade/storage";
 
 export class User {
 
-    public uid:string;
+    public uid: string;
     public credit: number;
     public email: string;
     public mineRateLvl: number;
@@ -15,6 +15,16 @@ export class User {
     public titanium: number;
 
     constructor() {
+    }
+
+    public getOreAmountFromString(oreName: string) {
+        switch (oreName) {
+            case "carbon":
+                return this.carbon;
+            default:
+                console.log("unknown material (user)");
+                break;
+        }
     }
 
 }
