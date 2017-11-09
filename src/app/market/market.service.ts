@@ -18,7 +18,7 @@ export class MarketService {
   constructor(db: AngularFireDatabase) {
     this.db = db;
     this.currentOresCosts = new OreCosts();
-    this.oreTrends=new OreTrends();
+    this.oreTrends = new OreTrends();
     this.db.object('trading/carbon').valueChanges().subscribe(
       (snapshot: any) => {
         this.FillOreCostsInit(snapshot);
@@ -31,11 +31,11 @@ export class MarketService {
       });
   }
 
-  FillOreTrends(snapshot){
-    this.oreTrends.carbonTrend=snapshot.carbon;
+  FillOreTrends(snapshot) {
+    this.oreTrends.carbonTrend = snapshot.carbon;
   }
   // create the tab of stock
-  FillOreCostsInit(snapshot) { 
+  FillOreCostsInit(snapshot) {
     this.currentOresCosts.carbonCosts = snapshot;
     this.OreCostsSubject.next(this.currentOresCosts.carbonCosts);
   }
