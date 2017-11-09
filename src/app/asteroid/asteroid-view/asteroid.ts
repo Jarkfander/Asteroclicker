@@ -8,11 +8,13 @@ export class Asteroid {
     asteroid: PIXI.Sprite;
     app: PIXI.Application;
     emitter: ParticleBase;
+    numAsteroid: number;
 
-    constructor(x: number, y: number, app: PIXI.Application) {
+    constructor(x: number, y: number, app: PIXI.Application, numAsteroid: number) {
         this.app = app;
+        this.numAsteroid = numAsteroid;
 
-        this.asteroid = PIXI.Sprite.fromImage('assets/Asteroïde.png');
+        this.asteroid = PIXI.Sprite.fromImage('assets/Asteroid/Asteroïde_' + this.numAsteroid + '.png');
         this.asteroid.texture.baseTexture.mipmap = true;
         this.asteroid.anchor.set(0.5);
         this.asteroid.scale.set(x, y);
@@ -64,30 +66,30 @@ export class Asteroid {
                     "end": 100
                 },
                 "startRotation": {
-                    "min": 0,
-                    "max": 360
+                    'min': 0,
+                    'max': 360
                 },
-                "rotationSpeed": {
-                    "min": 0,
-                    "max": 0
+                'rotationSpeed': {
+                    'min': 0,
+                    'max': 0
                 },
-                "lifetime": {
-                    "min": 0.5,
-                    "max": 0.5
+                'lifetime': {
+                    'min': 0.5,
+                    'max': 0.5
                 },
-                "frequency": 0.008,
-                "emitterLifetime": 0.20,
-                "maxParticles": 1000,
-                "pos": {
-                    "x": 0,
-                    "y": 0
+                'frequency': 0.008,
+                'emitterLifetime': 0.20,
+                'maxParticles': 1000,
+                'pos': {
+                    'x': 0,
+                    'y': 0
                 },
-                "addAtBack": false,
-                "spawnType": "circle",
-                "spawnCircle": {
-                    "x": 0,
-                    "y": 0,
-                    "r": 0
+                'addAtBack': false,
+                'spawnType': 'circle',
+                'spawnCircle': {
+                    'x': 0,
+                    'y': 0,
+                    'r': 0
                 }
             };
 
@@ -97,4 +99,5 @@ export class Asteroid {
             config
         );
     }
+
 }

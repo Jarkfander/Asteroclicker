@@ -6,6 +6,8 @@ import { Drone } from './drone';
 import { User } from '../../user/user';
 import { UpgradeService } from '../../upgrade/upgrade.service';
 import { ParticleBase } from '../../pixiVisual/particleBase';
+import { AsteroidService } from '../asteroid.service';
+
 
 @Component({
   selector: 'app-asteroid-view',
@@ -14,7 +16,8 @@ import { ParticleBase } from '../../pixiVisual/particleBase';
 })
 
 export class AsteroidViewComponent implements AfterViewInit {
-  constructor(private el: ElementRef, private render: Renderer2, private userS: UserService, private upgradeS: UpgradeService) { }
+  constructor(private el: ElementRef, private render: Renderer2, private userS: UserService,
+              private upgradeS: UpgradeService, private asteroidS: AsteroidService) { }
 
   private app: PIXI.Application;
   private aster: Asteroid;
@@ -34,7 +37,7 @@ export class AsteroidViewComponent implements AfterViewInit {
     background.height = this.app.renderer.height;
     this.app.stage.addChild(background);
 
-    this.aster = new Asteroid(0.25, 0.25, this.app);
+    this.aster = new Asteroid(0.25, 0.25, this.app, this.userS.currentUser.numAsteroid);
 
     this.aster.asteroid.on('click', (event) => {
       this.asteroidClick();
@@ -45,21 +48,25 @@ export class AsteroidViewComponent implements AfterViewInit {
     this.initializeEmmiter();
     setInterval(() => {
       this.emitter.emit = true;
-
-      this.userS.IncrementUserCarbon(this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity);
+      this.userS.IncrementUserOre(this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity,
+                                  this.retriveOre(), this.asteroidS.asteroidManaged[this.userS.currentUser.numAsteroid].ore);
     }, 1000);
     setInterval(() => { this.resetClick() }, 200);
+
+    this.userS.userSubject.subscribe( (user: User) => {
+       // this.aster.changeSprite(user.numAsteroid);
+    });
   }
 
 
   asteroidClick() {
-    //ga('asteroid.send', 'event', 'buttons', 'click', 'asteroid');
+    // ga('asteroid.send', 'event', 'buttons', 'click', 'asteroid');
     this.clicked = true;
     const max = this.upgradeS.mineRate[this.userS.currentUser.mineRateLvl].maxRate;
-
     if (this.userS.currentUser.currentMineRate < max) {
-      this.userS.currentUser.currentMineRate = this.userS.currentUser.currentMineRate + max * 0.1 > max ? max : this.userS.currentUser.currentMineRate + max * 0.1;
-      //this.updateLaserSpeed();
+      this.userS.currentUser.currentMineRate = this.userS.currentUser.currentMineRate + max * 0.1 > max ? max :
+        this.userS.currentUser.currentMineRate + max * 0.1;
+      // this.updateLaserSpeed();
     }
   }
 
@@ -69,17 +76,17 @@ export class AsteroidViewComponent implements AfterViewInit {
 
     if (!this.clicked) {
       if (this.userS.currentUser.currentMineRate > base) {
-        this.userS.currentUser.currentMineRate = this.userS.currentUser.currentMineRate - (0.1 * max) < base ? base : this.userS.currentUser.currentMineRate - (0.1 * max);
-      }
-      else {
+        this.userS.currentUser.currentMineRate = this.userS.currentUser.currentMineRate - (0.1 * max) <
+          base ? base : this.userS.currentUser.currentMineRate - (0.1 * max);
+      } else {
         this.userS.currentUser.currentMineRate = base;
       }
-    }
-    else {
+    } else {
       this.clicked = false;
     }
 
   }
+
 
   initializeEmmiter() {
     const config =
@@ -134,6 +141,17 @@ export class AsteroidViewComponent implements AfterViewInit {
       config
     );
     this.emitter.updateOwnerPos(this.aster.asteroid.x-85, this.aster.asteroid.y-45);
+  }
+
+
+
+  retriveOre () {
+    if (this.asteroidS.asteroidManaged[this.userS.currentUser.numAsteroid].ore === 'carbon') {
+        return this.userS.currentUser.carbon;
+    }
+    if (this.asteroidS.asteroidManaged[this.userS.currentUser.numAsteroid].ore === 'titanium') {
+      return this.userS.currentUser.titanium;
+    }
   }
 
 }

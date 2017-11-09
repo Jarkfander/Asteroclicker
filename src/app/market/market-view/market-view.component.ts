@@ -12,33 +12,32 @@ import { MarketService } from '../market.service';
   styleUrls: ['./market-view.component.scss']
 })
 export class MarketViewComponent implements AfterViewInit {
-  @ViewChild('canvas') canvasEl: ElementRef;
+  @ViewChild('carbon') carbonCanvas: ElementRef;
   public chart: ManagedChart;
   public valuesCreditCarbon: number;
 
   constructor(private userS: UserService, private marketS: MarketService) {
-    this.valuesCreditCarbon = this.marketS.currentOresCosts.carbonCosts[Object.keys(this.marketS.currentOresCosts.carbonCosts)[9]] * 10;
+    this.valuesCreditCarbon = this.marketS.currentOresCosts.carbonCosts[Object.keys(this.marketS.currentOresCosts.carbonCosts)[9]];
   }
 
   ngAfterViewInit() {
-    const line = this.canvasEl.nativeElement.getContext('2d');
+    const line = this.carbonCanvas.nativeElement.getContext('2d');
     // draw line chart
     this.chart = new ManagedChart(line, 10);
     this.marketS.OreCostsSubject.subscribe( (tabCarbon: any[]) => {
-        this.valuesCreditCarbon = this.marketS.currentOresCosts.carbonCosts[Object.keys(this.marketS.currentOresCosts.carbonCosts)[9]] * 10;
+        this.valuesCreditCarbon = this.marketS.currentOresCosts.carbonCosts[Object.keys(this.marketS.currentOresCosts.carbonCosts)[9]];
         this.chart.addNew(tabCarbon);
     });
     this.chart.initTab(this.marketS.currentOresCosts.carbonCosts);
   }
 
-  public SellCarbon() {
-    this.userS.SellCarbon(10);
-    this.marketS.UpdateCarbonTrend(-10);
+  public SellCarbon(num: number) {
+    this.userS.SellCarbon(num);
+    this.marketS.UpdateCarbonTrend(-num);
   }
 
-  public BuyCarbon() {
-    this.userS.BuyCarbon();
-    this.marketS.UpdateCarbonTrend(10);
+  public BuyCarbon(num: number) {
+    this.userS.BuyCarbon(num);
+    this.marketS.UpdateCarbonTrend(num);
   }
-
 }
