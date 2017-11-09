@@ -25,7 +25,7 @@ export class UserService {
     afAuth.authState.subscribe((auth) => {
       if (auth != null) {
         this.currentUser = new User();
-        this.db.object("users/" + auth.uid).valueChanges().subscribe(
+        this.db.object('users/' + auth.uid).valueChanges().subscribe(
           (snapshot: any) => {
             this.FillUser(auth.uid, snapshot);
           });
@@ -61,7 +61,8 @@ export class UserService {
     this.userLoad = true;
   }
 
-  public IncrementUserOre(maxStorage: number, ore: number, orename: string) {
+  public IncrementUserOre(maxStorage: number, orename: string) {
+    const ore = this.currentUser.getOreAmountFromString(orename);
     const oreValue: number = ore + this.currentUser.currentMineRate;
     if (oreValue < maxStorage) {
       this.db.object('users/' + this.currentUser.uid + '/' + orename).set(oreValue);
@@ -73,12 +74,13 @@ export class UserService {
   }
 
   public SellOre/*moon*/(amount: number, oreName: string) {
-    const oreValue = Math.trunc(this.marketS.currentOresCosts.getCostsFromString(oreName)[Object.keys(this.marketS.currentOresCosts.getCostsFromString(oreName))[59]]
+    const oreValue = (this.marketS.currentOresCosts.getCostsFromString(oreName)
+    [Object.keys(this.marketS.currentOresCosts.getCostsFromString(oreName))[59]]
       * amount);
     if (this.currentUser.getOreAmountFromString(oreName) - amount >= 0) {
-      var jsonUpdate={};
-      jsonUpdate[oreName]=this.currentUser.getOreAmountFromString(oreName)  - amount;
-      jsonUpdate["credit"]=this.currentUser.credit + oreValue;
+      const jsonUpdate = {};
+      jsonUpdate[oreName] = this.currentUser.getOreAmountFromString(oreName) - amount;
+      jsonUpdate['credit'] = parseFloat((this.currentUser.credit + oreValue).toFixed(2));
 
       this.db.object('users/' + this.currentUser.uid).update(
         jsonUpdate
@@ -86,14 +88,14 @@ export class UserService {
     }
   }
 
-  public BuyOre(amount: number,oreName: string) {
-    const costFinal = Math.trunc(amount *
-      this.marketS.currentOresCosts.getCostsFromString(oreName)[Object.keys(this.marketS.currentOresCosts.getCostsFromString(oreName))[59]]);
+  public BuyOre(amount: number, oreName: string) {
+    const costFinal = amount * this.marketS.currentOresCosts.getCostsFromString(oreName)
+      [Object.keys(this.marketS.currentOresCosts.getCostsFromString(oreName))[59]];
     if (this.currentUser.credit - costFinal >= 0 &&
       this.currentUser.getOreAmountFromString(oreName) + amount < this.upgradeS.storage[this.currentUser.storageLvl].capacity) {
-        var jsonUpdate={};
-        jsonUpdate[oreName]=this.currentUser.getOreAmountFromString(oreName) + amount;
-        jsonUpdate["credit"]=this.currentUser.credit - costFinal;
+      const jsonUpdate = {};
+      jsonUpdate[oreName] = this.currentUser.getOreAmountFromString(oreName) + amount;
+      jsonUpdate['credit'] = parseFloat((this.currentUser.credit - costFinal).toFixed(2));
       this.db.object('users/' + this.currentUser.uid).update(
         jsonUpdate
       );

@@ -17,7 +17,7 @@ import { AsteroidService } from '../asteroid.service';
 
 export class AsteroidViewComponent implements AfterViewInit {
   constructor(private el: ElementRef, private render: Renderer2, private userS: UserService,
-              private upgradeS: UpgradeService, private asteroidS: AsteroidService) { }
+    private upgradeS: UpgradeService, private asteroidS: AsteroidService) { }
 
   private app: PIXI.Application;
   private aster: Asteroid;
@@ -37,7 +37,7 @@ export class AsteroidViewComponent implements AfterViewInit {
     background.height = this.app.renderer.height;
     this.app.stage.addChild(background);
 
-    this.aster = new Asteroid(0.25, 0.25, this.app, this.userS.currentUser.numAsteroid);
+    this.aster = new Asteroid(0.25, 0.25, this.app, this.userS.currentUser.numAsteroid, this.asteroidS.asteroidManaged.length);
 
     this.aster.asteroid.on('click', (event) => {
       this.asteroidClick();
@@ -49,12 +49,12 @@ export class AsteroidViewComponent implements AfterViewInit {
     setInterval(() => {
       this.emitter.emit = true;
       this.userS.IncrementUserOre(this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity,
-                                  this.retriveOre(), this.asteroidS.asteroidManaged[this.userS.currentUser.numAsteroid].ore);
+        this.asteroidS.asteroidManaged[this.userS.currentUser.numAsteroid].ore);
     }, 1000);
     setInterval(() => { this.resetClick() }, 200);
 
-    this.userS.userSubject.subscribe( (user: User) => {
-       // this.aster.changeSprite(user.numAsteroid);
+    this.userS.userSubject.subscribe((user: User) => {
+        this.aster.changeSprite(user.numAsteroid);
     });
   }
 
@@ -71,7 +71,7 @@ export class AsteroidViewComponent implements AfterViewInit {
     if (this.userS.currentUser.currentMineRate < max) {
       this.userS.currentUser.currentMineRate = this.userS.currentUser.currentMineRate + max * 0.1 > max ? max :
         this.userS.currentUser.currentMineRate + max * 0.1;
-     // this.updateLaserSpeed();
+      // this.updateLaserSpeed();
     }
   }
 
@@ -94,49 +94,48 @@ export class AsteroidViewComponent implements AfterViewInit {
 
 
   initializeEmmiter() {
-    const config =
-      {
-        "alpha": {
-          "start": 1,
-          "end": 1
+    const config = {
+        'alpha': {
+          'start': 1,
+          'end': 1
         },
-        "scale": {
-          "start": 1,
-          "end": 0
+        'scale': {
+          'start': 1,
+          'end': 0
         },
-        "color": {
-          "start": "ffffff",
-          "end": "ffffff"
+        'color': {
+          'start': 'ffffff',
+          'end': 'ffffff'
         },
-        "speed": {
-          "start": 300,
-          "end": 100
+        'speed': {
+          'start': 300,
+          'end': 100
         },
-        "startRotation": {
-          "min": 0,
-          "max": 360
+        'startRotation': {
+          'min': 0,
+          'max': 360
         },
-        "rotationSpeed": {
-          "min": 0,
-          "max": 0
+        'rotationSpeed': {
+          'min': 0,
+          'max': 0
         },
-        "lifetime": {
-          "min": 0.5,
-          "max": 0.5
+        'lifetime': {
+          'min': 0.5,
+          'max': 0.5
         },
-        "frequency": 0.008,
-        "emitterLifetime": 0.20,
-        "maxParticles": 1000,
-        "pos": {
-          "x": 0,
-          "y": 0
+        'frequency': 0.008,
+        'emitterLifetime': 0.20,
+        'maxParticles': 1000,
+        'pos': {
+          'x': 0,
+          'y': 0
         },
-        "addAtBack": false,
-        "spawnType": "circle",
-        "spawnCircle": {
-          "x": 0,
-          "y": 0,
-          "r": 0
+        'addAtBack': false,
+        'spawnType': 'circle',
+        'spawnCircle': {
+          'x': 0,
+          'y': 0,
+          'r': 0
         }
       };
 
@@ -145,18 +144,6 @@ export class AsteroidViewComponent implements AfterViewInit {
       PIXI.Texture.fromImage('assets/smallRock.png'),
       config
     );
-    this.emitter.updateOwnerPos(this.aster.asteroid.x-85, this.aster.asteroid.y-45);
+    this.emitter.updateOwnerPos(this.aster.asteroid.x - 85, this.aster.asteroid.y - 45);
   }
-
-
-
-  retriveOre () {
-    if (this.asteroidS.asteroidManaged[this.userS.currentUser.numAsteroid].ore === 'carbon') {
-        return this.userS.currentUser.carbon;
-    }
-    if (this.asteroidS.asteroidManaged[this.userS.currentUser.numAsteroid].ore === 'titanium') {
-      return this.userS.currentUser.titanium;
-    }
-  }
-
 }
