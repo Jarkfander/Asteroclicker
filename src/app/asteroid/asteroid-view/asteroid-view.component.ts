@@ -5,6 +5,7 @@ import { Asteroid } from './asteroid';
 import { Drone } from './drone';
 import { User } from '../../user/user';
 import { UpgradeService } from '../../upgrade/upgrade.service';
+import { ParticleBase } from '../../pixiVisual/particleBase';
 
 @Component({
   selector: 'app-asteroid-view',
@@ -18,7 +19,7 @@ export class AsteroidViewComponent implements AfterViewInit {
   private app: PIXI.Application;
   private aster: Asteroid;
   private drone: Drone;
-
+  private emitter: ParticleBase;
   clicked: boolean;
 
   ngAfterViewInit() {
@@ -27,7 +28,7 @@ export class AsteroidViewComponent implements AfterViewInit {
 
     this.app = new PIXI.Application(w, h, { backgroundColor: 0x1079bb });
     this.render.appendChild(this.el.nativeElement, this.app.view);
-    
+
     const background = PIXI.Sprite.fromImage('assets/Ciel.jpg');
     background.width = this.app.renderer.width;
     background.height = this.app.renderer.height;
@@ -40,20 +41,22 @@ export class AsteroidViewComponent implements AfterViewInit {
     });
 
     this.drone = new Drone(0.25, 0.25, this.app);
-    
 
+    this.initializeEmmiter();
     setInterval(() => {
-          this.userS.IncrementUserCarbon(this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity); 
+      this.emitter.emit = true;
+
+      this.userS.IncrementUserCarbon(this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity);
     }, 1000);
-    setInterval(() => {this.resetClick()}, 200);
+    setInterval(() => { this.resetClick() }, 200);
   }
 
 
   asteroidClick() {
     //ga('asteroid.send', 'event', 'buttons', 'click', 'asteroid');
     this.clicked = true;
-    const max=this.upgradeS.mineRate[this.userS.currentUser.mineRateLvl].maxRate;
-    
+    const max = this.upgradeS.mineRate[this.userS.currentUser.mineRateLvl].maxRate;
+
     if (this.userS.currentUser.currentMineRate < max) {
       this.userS.currentUser.currentMineRate = this.userS.currentUser.currentMineRate + max * 0.1 > max ? max : this.userS.currentUser.currentMineRate + max * 0.1;
       //this.updateLaserSpeed();
@@ -61,21 +64,76 @@ export class AsteroidViewComponent implements AfterViewInit {
   }
 
   resetClick() {
-    const max=this.upgradeS.mineRate[this.userS.currentUser.mineRateLvl].maxRate;
-    const base=this.upgradeS.mineRate[this.userS.currentUser.mineRateLvl].baseRate;
+    const max = this.upgradeS.mineRate[this.userS.currentUser.mineRateLvl].maxRate;
+    const base = this.upgradeS.mineRate[this.userS.currentUser.mineRateLvl].baseRate;
 
     if (!this.clicked) {
       if (this.userS.currentUser.currentMineRate > base) {
         this.userS.currentUser.currentMineRate = this.userS.currentUser.currentMineRate - (0.1 * max) < base ? base : this.userS.currentUser.currentMineRate - (0.1 * max);
       }
-      else{
-        this.userS.currentUser.currentMineRate=base;
+      else {
+        this.userS.currentUser.currentMineRate = base;
       }
     }
     else {
       this.clicked = false;
     }
 
+  }
+
+  initializeEmmiter() {
+    const config =
+      {
+        "alpha": {
+          "start": 1,
+          "end": 1
+        },
+        "scale": {
+          "start": 1,
+          "end": 0
+        },
+        "color": {
+          "start": "ffffff",
+          "end": "ffffff"
+        },
+        "speed": {
+          "start": 300,
+          "end": 100
+        },
+        "startRotation": {
+          "min": 0,
+          "max": 360
+        },
+        "rotationSpeed": {
+          "min": 0,
+          "max": 0
+        },
+        "lifetime": {
+          "min": 0.5,
+          "max": 0.5
+        },
+        "frequency": 0.008,
+        "emitterLifetime": 0.20,
+        "maxParticles": 1000,
+        "pos": {
+          "x": 0,
+          "y": 0
+        },
+        "addAtBack": false,
+        "spawnType": "circle",
+        "spawnCircle": {
+          "x": 0,
+          "y": 0,
+          "r": 0
+        }
+      };
+
+    this.emitter = new ParticleBase(
+      this.app.stage,
+      PIXI.Texture.fromImage('assets/smallRock.png'),
+      config
+    );
+    this.emitter.updateOwnerPos(this.aster.asteroid.x-85, this.aster.asteroid.y-45);
   }
 
 }
