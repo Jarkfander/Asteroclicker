@@ -36,3 +36,6 @@ For type script : Add "import * as PIXI from 'pixi.js';" in Asteroclicker\node_m
 
 npm install tween.js --save
 
+npm install chart.js --save 
+
+npm install ng2-charts --save
