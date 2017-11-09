@@ -5,7 +5,9 @@ import { Asteroid } from './asteroid';
 import { Drone } from './drone';
 import { User } from '../../user/user';
 import { UpgradeService } from '../../upgrade/upgrade.service';
+import { ParticleBase } from '../../pixiVisual/particleBase';
 import { AsteroidService } from '../asteroid.service';
+
 
 @Component({
   selector: 'app-asteroid-view',
@@ -20,7 +22,7 @@ export class AsteroidViewComponent implements AfterViewInit {
   private app: PIXI.Application;
   private aster: Asteroid;
   private drone: Drone;
-
+  private emitter: ParticleBase;
   clicked: boolean;
 
   ngAfterViewInit() {
@@ -43,7 +45,9 @@ export class AsteroidViewComponent implements AfterViewInit {
 
     this.drone = new Drone(0.25, 0.25, this.app);
 
+    this.initializeEmmiter();
     setInterval(() => {
+      this.emitter.emit = true;
       this.userS.IncrementUserOre(this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity,
                                   this.retriveOre(), this.asteroidS.asteroidManaged[this.userS.currentUser.numAsteroid].ore);
     }, 1000);
@@ -52,7 +56,6 @@ export class AsteroidViewComponent implements AfterViewInit {
     this.userS.userSubject.subscribe( (user: User) => {
        // this.aster.changeSprite(user.numAsteroid);
     });
-
   }
 
 
@@ -85,6 +88,63 @@ export class AsteroidViewComponent implements AfterViewInit {
   }
 
 
+  initializeEmmiter() {
+    const config =
+      {
+        "alpha": {
+          "start": 1,
+          "end": 1
+        },
+        "scale": {
+          "start": 1,
+          "end": 0
+        },
+        "color": {
+          "start": "ffffff",
+          "end": "ffffff"
+        },
+        "speed": {
+          "start": 300,
+          "end": 100
+        },
+        "startRotation": {
+          "min": 0,
+          "max": 360
+        },
+        "rotationSpeed": {
+          "min": 0,
+          "max": 0
+        },
+        "lifetime": {
+          "min": 0.5,
+          "max": 0.5
+        },
+        "frequency": 0.008,
+        "emitterLifetime": 0.20,
+        "maxParticles": 1000,
+        "pos": {
+          "x": 0,
+          "y": 0
+        },
+        "addAtBack": false,
+        "spawnType": "circle",
+        "spawnCircle": {
+          "x": 0,
+          "y": 0,
+          "r": 0
+        }
+      };
+
+    this.emitter = new ParticleBase(
+      this.app.stage,
+      PIXI.Texture.fromImage('assets/smallRock.png'),
+      config
+    );
+    this.emitter.updateOwnerPos(this.aster.asteroid.x-85, this.aster.asteroid.y-45);
+  }
+
+
+
   retriveOre () {
     if (this.asteroidS.asteroidManaged[this.userS.currentUser.numAsteroid].ore === 'carbon') {
         return this.userS.currentUser.carbon;
@@ -93,4 +153,5 @@ export class AsteroidViewComponent implements AfterViewInit {
       return this.userS.currentUser.titanium;
     }
   }
+
 }

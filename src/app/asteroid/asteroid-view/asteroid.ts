@@ -1,11 +1,13 @@
 import * as PIXI from 'pixi.js';
 import * as TWEEN from 'tween.js';
 import { UserService } from '../../user/user.service';
-import * as PIXIParticles from 'pixi-particles';
+import * as PIXIParticles from "pixi-particles";
+import { ParticleBase } from '../../pixiVisual/particleBase';
 
 export class Asteroid {
     asteroid: PIXI.Sprite;
     app: PIXI.Application;
+    emitter: ParticleBase;
     numAsteroid: number;
 
     constructor(x: number, y: number, app: PIXI.Application, numAsteroid: number) {
@@ -29,12 +31,22 @@ export class Asteroid {
         // Create a tween for position first
         const tween = new TWEEN.Tween(position);
 
+        this.InitializeEmitter();
+
         this.asteroid.on('click', (event) => {
-            emitter.emit = true;
-            emitter.updateOwnerPos(event.data.global.x,event.data.global.y);
+            this.emitter.emit = true;
+            this.emitter.updateOwnerPos(event.data.global.x, event.data.global.y);
 
         });
+        
+        // Then tell the tween we want to animate the x property over 1000 milliseconds
+        tween.to({ x: 200 }, 1000).onUpdate(function onUpdate() {
+            this.asteroid.x += 10;
+        }).start(now);
 
+    }
+
+    InitializeEmitter() {
         const config =
             {
                 "alpha": {
@@ -81,44 +93,11 @@ export class Asteroid {
                 }
             };
 
-        /*var preMultAlpha = !!options.preMultAlpha;
-        if(rendererOptions.transparent && !preMultAlpha)
-            rendererOptions.transparent = "notMultiplied";*/
-        var stage = app.stage;
-
-        var emitterContainer: PIXI.Container = new PIXI.Container();
-        stage.addChild(emitterContainer);
-        var emitter: PIXIParticles.Emitter = new PIXIParticles.Emitter(
-            emitterContainer,
-           PIXI.Texture.fromImage('assets/smallRock.png'),
+        this.emitter = new ParticleBase(
+            this.app.stage,
+            PIXI.Texture.fromImage('assets/smallRock.png'),
             config
         );
-
-        // Calculate the current time
-        var elapsed = Date.now();
-
-        // Update function every frame
-        var update = function () {
-            // Update the next frame
-            requestAnimationFrame(update);
-
-            var now = Date.now();
-
-            // The emitter requires the elapsed
-            // number of seconds since the last update
-            emitter.update((now - elapsed) * 0.001);
-            elapsed = now;
-
-            // Should re-render the PIXI Stage
-            // renderer.render(stage);
-        };
-        emitter.emit = true;
-        update();
-        // Then tell the tween we want to animate the x property over 1000 milliseconds
-        tween.to({ x: 200 }, 1000).onUpdate(function onUpdate() {
-            this.asteroid.x += 10;
-        }).start(now);
-
     }
 
 }
