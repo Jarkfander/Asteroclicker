@@ -31,13 +31,13 @@ export class MarketViewComponent implements AfterViewInit {
     this.chart.initTab(this.marketS.currentOresCosts.carbonCosts);
   }
 
-  public SellCarbon(num: number) {
-    this.userS.SellCarbon(num);
-    this.marketS.UpdateCarbonTrend(-num);
+  public SellOre/*moon*/(amount: number,oreName:string) {
+    this.userS.SellOre(amount,oreName);
+    this.marketS.UpdateOreTrend(-amount,oreName);
   }
 
-  public BuyCarbon(num: number) {
-    this.userS.BuyCarbon(num);
-    this.marketS.UpdateCarbonTrend(num);
+  public BuyOre(amount: number,oreName:string) {
+    this.userS.BuyOre(amount,oreName);
+    this.marketS.UpdateOreTrend(amount,oreName);
   }
 }
