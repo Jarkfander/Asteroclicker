@@ -4,7 +4,7 @@ import { UserService } from '../../user/user.service';
 import * as PIXIParticles from 'pixi-particles';
 import { ParticleBase } from '../../pixiVisual/particleBase';
 
-export class Asteroid {
+export class AsteroidSprite {
     asteroid: PIXI.Sprite;
     app: PIXI.Application;
     emitter: ParticleBase;

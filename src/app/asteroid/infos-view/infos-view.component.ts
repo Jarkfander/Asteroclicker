@@ -11,28 +11,33 @@ import { AsteroidService } from '../asteroid.service';
 })
 export class InfosViewComponent implements AfterViewInit {
   public user: User;
-  public storageOverload: boolean = false;
+  public carbonOverload: boolean = false;
+  public titaniumOverload: boolean = false;
   public Asteroidname: string;
+  public AsteroidRate: number;
 
   constructor(private userS: UserService, private upgradeS: UpgradeService, private AsteroidS: AsteroidService) {
-    this.user = this.userS.currentUser;
-    this.storageOverload = this.user.carbon >= this.upgradeS.storage[this.user.storageLvl].capacity;
-    const name = AsteroidS.asteroidManaged[this.user.numAsteroid].ore;
-    this.Asteroidname = name.charAt(0).toUpperCase() + name.substring(1).toLowerCase();
+    this.fillInfos(this.userS.currentUser);
   }
 
   ngAfterViewInit() {
     this.userS.userSubject.subscribe((user: User) => {
-      this.user = user;
-      this.storageOverload = this.user.carbon >= this.upgradeS.storage[this.user.storageLvl].capacity;
-      const name = this.AsteroidS.asteroidManaged[this.user.numAsteroid].ore;
-      this.Asteroidname = name.charAt(0).toUpperCase() + name.substring(1).toLowerCase();
+      this.fillInfos(user);
     });
   }
 
   searchNewAster() {
-      const num = Math.floor((Math.random() * this.AsteroidS.asteroidManaged.length - 1) + 1);
+      const num = Math.floor((Math.random() * this.AsteroidS.asteroidTypes.length - 1) + 1);
       this.userS.searchNewAsteroid(num);
+  }
+
+  fillInfos(user: User){
+    this.user = user;
+    this.carbonOverload = this.user.carbon >= this.upgradeS.storage[this.user.storageLvl].capacity;
+    this.titaniumOverload = this.user.titanium >= this.upgradeS.storage[this.user.storageLvl].capacity;
+    const name = this.AsteroidS.asteroidTypes[this.user.numAsteroid].ore;
+    this.Asteroidname = name.charAt(0).toUpperCase() + name.substring(1).toLowerCase();
+    this.AsteroidRate=this.AsteroidS.asteroidTypes[this.user.numAsteroid].mineRate/100;
   }
 
 }

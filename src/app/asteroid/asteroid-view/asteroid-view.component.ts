@@ -1,7 +1,7 @@
 import { Component, AfterViewInit, ElementRef, Renderer2, HostListener } from '@angular/core';
 import * as PIXI from 'pixi.js';
 import { UserService } from '../../user/user.service';
-import { Asteroid } from './asteroid';
+import { AsteroidSprite } from './asteroidSprite';
 import { Drone } from './drone';
 import { User } from '../../user/user';
 import { UpgradeService } from '../../upgrade/upgrade.service';
@@ -20,7 +20,7 @@ export class AsteroidViewComponent implements AfterViewInit {
     private upgradeS: UpgradeService, private asteroidS: AsteroidService) { }
 
   private app: PIXI.Application;
-  private aster: Asteroid;
+  private aster: AsteroidSprite;
   private drone: Drone;
   private emitter: ParticleBase;
   clicked: boolean;
@@ -37,7 +37,7 @@ export class AsteroidViewComponent implements AfterViewInit {
     background.height = this.app.renderer.height;
     this.app.stage.addChild(background);
 
-    this.aster = new Asteroid(0.25, 0.25, this.app, this.userS.currentUser.numAsteroid, this.asteroidS.asteroidManaged.length);
+    this.aster = new AsteroidSprite(0.25, 0.25, this.app, this.userS.currentUser.numAsteroid, this.asteroidS.asteroidTypes.length);
 
     this.aster.asteroid.on('click', (event) => {
       this.asteroidClick();
@@ -49,7 +49,7 @@ export class AsteroidViewComponent implements AfterViewInit {
     setInterval(() => {
       this.emitter.emit = true;
       this.userS.IncrementUserOre(this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity,
-        this.asteroidS.asteroidManaged[this.userS.currentUser.numAsteroid].ore);
+        this.asteroidS.asteroidTypes[this.userS.currentUser.numAsteroid].ore);
     }, 1000);
     setInterval(() => { this.resetClick() }, 200);
 
