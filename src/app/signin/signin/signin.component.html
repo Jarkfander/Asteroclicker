@@ -1,11 +1,26 @@
-<img src="/assets/logo.png" alt="asteroclicker logo" class="logo">
-<div class="signin" lightbox>
-  <div class="form-panel">
-      <h1>Log in</h1>
-      <input #log type="email" class="text-input" placeholder="e-mail" lightbox>
-      <input #pswd type="password" class="text-input" placeholder="password" lightbox>
-      <input type="button" class="button" value="Connect" (click)="ValiderLogIn(log.value,pswd.value)" lightbox>
-      <p><a href="#">I forgot my password</a></p>
-      <p><a href="#">I dont have an account</a></p>
+<div class="background-image"></div>
+<div class="content">
+  <div class="title">
+    <h1>AsteroClicker</h1>
   </div>
+  <div class="forms">
+    <div class="form-panel">
+      <h1>Sign in</h1>
+      <form class="form">
+          <input #log type="email" class="text-input" placeholder="e-mail">
+          <input #pswd type="password" class="text-input" placeholder="password">
+          <a class="button" (click)="ValiderLogIn(log.value,pswd.value)">Connect</a>
+      </form>
+    </div>
+    <div class="form-panel">
+      <h1>Sign up</h1>
+      <form class="form">
+          <input #log type="email" class="text-input" placeholder="e-mail">
+          <input #pswd type="password" class="text-input" placeholder="password">
+          <input  type="confirm-password" class="text-input" placeholder="confirm password">
+          <a class="button" (click)="ValiderLogIn(log.value,pswd.value)">Create account</a>
+      </form>
+    </div>
+  </div>
+  
 </div>

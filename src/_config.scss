@@ -1,24 +1,29 @@
 /* ===== Fonts ===== */
-@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
-@import url('https://fonts.googleapis.com/css?family=Roboto:500');
 
-$main-font: 'Source Sans Pro', sans-serif;
-$title-font: 'Roboto', sans-serif;
+$main-font: 'Montserrat-Regular', sans-serif;
+$title-font: 'Montserrat-SemiBold', sans-serif;
 
 
 /* ===== Colors ===== */
 
+    //Background
+$color-background-grad1:            #111111;
+$color-background-grad2:            rgb(8, 8, 8);
+
     // Panels
-$panel-background-color:            rgba(0, 0, 0, 0.6);
-$footer-border-color:               rgba(0, 0, 0, 1.0);
+$panel-background-color:            #000000;
+$footer-border-color:               #000000;
 
     //Input
-$input-field-color:                 rgba(255, 255, 255, 0.05);
+$input-field-color:                 #EEEEEE;
 
     //buttons
-$button-background-color:           rgba(0, 0, 0, 0.6);
-$button-hover-background-color:     rgba(0, 0, 0, 0.4);
-$button-active-background-color:    rgba(0, 0, 0, 1.0);
+$button-background-color:           #111111;
+$button-hover-background-color:     #1d1d1d;
+$button-active-background-color:    #272727;
+$button-border-color:               #000000;
+$button-hover-border-color:         #111111;
+$button-active-border-color:       #1d1d1d;
 
     // Fonts
 $main-font-color:                   rgba(240, 240, 240, 1.0);
