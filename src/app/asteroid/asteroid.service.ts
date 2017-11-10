@@ -1,18 +1,19 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { Subject } from 'rxjs/Subject';
+import { Asteroid } from './asteroid';
 
 @Injectable()
 export class AsteroidService {
   db: AngularFireDatabase;
-  asteroidManaged: any[];
+  asteroidTypes: Asteroid[];
 
   AsteroidSubject = new Subject<any[]>();
   asteroidLoad: boolean = false;
 
   constructor(db: AngularFireDatabase) {
     this.db = db;
-    this.asteroidManaged = new Array<any>();
+    this.asteroidTypes = new Array<Asteroid>();
 
     this.db.object('typeAste').valueChanges().subscribe(
       (snapshot: any) => {
@@ -22,8 +23,10 @@ export class AsteroidService {
   }
 
   FillAsteroid(snapshot) {
-    this.asteroidManaged = snapshot;
-    this.AsteroidSubject.next( this.asteroidManaged );
+    for(var i =0;i<snapshot.length;i++){
+      this.asteroidTypes.push(new Asteroid(snapshot[i].maxstock, snapshot[i].mineRate,snapshot[i].ore));
+    }
+    this.AsteroidSubject.next( this.asteroidTypes );
   }
 
 }

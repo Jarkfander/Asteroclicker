@@ -7,6 +7,7 @@ import { Storage } from '../upgrade/storage';
 import { MineRate } from '../upgrade/mineRate';
 import { UpgradeService } from '../upgrade/upgrade.service';
 import { MarketService } from '../market/market.service';
+import { AsteroidService } from '../asteroid/asteroid.service';
 
 @Injectable()
 export class UserService {
@@ -19,7 +20,7 @@ export class UserService {
   userSubject = new Subject<User>();
 
   constructor(db: AngularFireDatabase, afAuth: AngularFireAuth,
-    private upgradeS: UpgradeService, private marketS: MarketService) {
+    private upgradeS: UpgradeService, private marketS: MarketService, private asteroidS: AsteroidService) {
     this.db = db;
     this.afAuth = afAuth;
     afAuth.authState.subscribe((auth) => {
@@ -63,7 +64,9 @@ export class UserService {
 
   public IncrementUserOre(maxStorage: number, orename: string) {
     const ore = this.currentUser.getOreAmountFromString(orename);
-    const oreValue: number = ore + this.currentUser.currentMineRate;
+    var oreValue: number = ore + (this.currentUser.currentMineRate *
+      this.asteroidS.asteroidTypes[this.currentUser.numAsteroid].mineRate / 100);
+    oreValue = parseFloat((oreValue).toFixed(2));
     if (oreValue < maxStorage) {
       this.db.object('users/' + this.currentUser.uid + '/' + orename).set(oreValue);
     } else {
@@ -90,7 +93,7 @@ export class UserService {
 
   public BuyOre(amount: number, oreName: string) {
     const costFinal = amount * this.marketS.currentOresCosts.getCostsFromString(oreName)
-      [Object.keys(this.marketS.currentOresCosts.getCostsFromString(oreName))[59]];
+    [Object.keys(this.marketS.currentOresCosts.getCostsFromString(oreName))[59]];
     if (this.currentUser.credit - costFinal >= 0 &&
       this.currentUser.getOreAmountFromString(oreName) + amount < this.upgradeS.storage[this.currentUser.storageLvl].capacity) {
       const jsonUpdate = {};

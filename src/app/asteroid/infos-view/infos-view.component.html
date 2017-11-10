@@ -15,8 +15,8 @@
   onmousedown="return false;">
 
     <td align="left"><img src="assets/smallRock.png" alt="carbonIcon"></td>
-    <td align="left" [ngStyle]="{'color': storageOverload ? 'red' : 'white'}" > Carbon : {{ user.carbon }}</td>
-    <td align="right">{{user.currentMineRate}} carbon/s</td>
+    <td align="left" [ngStyle]="{'color': carbonOverload ? 'red' : 'white'}" > Carbon : {{ user.carbon }}</td>
+    <td *ngIf="Asteroidname=='Carbon'" align="right">{{(AsteroidRate*user.currentMineRate).toFixed(2)}} carbon/s</td>
 
   </tr>
 
@@ -25,8 +25,8 @@
   onselectstart="return false;" 
   onmousedown="return false;">
     <td align="left"><img src="assets/smallRockTita.png" alt="carbonIcon"></td>
-    <td align="left" [ngStyle]="{'color': storageOverload ? 'red' : 'white'}" > Titanium : {{ user.titanium }}</td>
-    <td align="right">{{user.currentMineRate}} titanium/s</td>
+    <td align="left" [ngStyle]="{'color': titaniumOverload ? 'red' : 'white'}" > Titanium : {{ user.titanium }}</td>
+    <td *ngIf="Asteroidname=='Titanium'" align="right">{{(AsteroidRate*user.currentMineRate).toFixed(2)}} titanium/s</td>
   </tr>
 </table>
 
