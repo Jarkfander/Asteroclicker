@@ -14,18 +14,16 @@
                     <br />
                 </div>
             </div>
-            <div class="bouton" (click)="stockLvlUp()">
-                <p>
-                    <a id="stock" href="#">Upgrade</a>
-                </p>
-            </div>
+            <br>
+            <button id="stock" (click)="stockLvlUp()" style="background-color:black;color: white">Upgrade</button>
+
         </td>
         <td align="right">
-           <!---  <img src="assets/Radar_giff.gif" alt="carbonIcon" height="120" width="120"> -->
+            <!---  <img src="assets/Radar_giff.gif" alt="carbonIcon" height="120" width="120"> -->
         </td>
     </tr>
-<br>
-<br>
+    <br>
+    <br>
     <tr>
         <td align="left">
             <div>
@@ -34,22 +32,18 @@
                 <div>
                     Current Level: {{user.mineRateLvl}} : Base Rate: {{ mineRate[user.mineRateLvl].baseRate }} , Max Rate: {{ mineRate[user.mineRateLvl].maxRate
                     }}
-                    <br /> Next Level: {{ user.mineRateLvl + 1 }} : Base Rate: {{ mineRate[user.mineRateLvl + 1].baseRate }}, Max Rate: {{
-                    mineRate[user.mineRateLvl + 1].maxRate }}
+                    <br /> Next Level: {{ user.mineRateLvl + 1 }} : Base Rate: {{ mineRate[user.mineRateLvl + 1].baseRate }}, Max
+                    Rate: {{ mineRate[user.mineRateLvl + 1].maxRate }}
                     <br /> Cost: {{ mineRate[user.mineRateLvl + 1].cost }} Credit
                 </div>
             </div>
-            
-            <div class="bouton" (click)="mineRateLvlUp()">
-                <p>
-                    <a id="stock" href="#">Upgrade</a>
-                </p>
-            </div>
+            <br>
+            <button id="stock" (click)="mineRateLvlUp()" style="background-color:black;color: white">Upgrade</button>
+
         </td>
         <td align="right">
-           <!--- <img src="assets/moteur_giff.gif" alt="carbonIcon" height="120" width="120"> -->
+            <!--- <img src="assets/moteur_giff.gif" alt="carbonIcon" height="120" width="120"> -->
         </td>
     </tr>
 
 </table>
-

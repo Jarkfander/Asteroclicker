@@ -10,7 +10,7 @@ import { User } from '../../user/user';
 export class TopbarComponent implements AfterViewInit {
   public user: User;
   constructor(private userS: UserService) {
-      this.user = new User();
+      this.user = userS.currentUser;
    }
 
   ngAfterViewInit() {
