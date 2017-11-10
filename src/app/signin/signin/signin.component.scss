@@ -1,46 +1,98 @@
 @import '../../../config';
 
-.signin {
-    color: white;
-    max-width: 600px;
-    margin: 10px auto;
-    padding: 10px;
-    background: $panel-background-color;
-
-    border: solid 1px rgba(0, 0, 0, 0);
-}
-
-.signin input {
+.background-image {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: -1;
+  
     display: block;
-    margin: 10px auto;
-    width: auto;
-    padding: 5px;
-    font-size: x-large; 
-    text-align: center;
-    border: solid 1px rgba(0, 0, 0, 0);
-    color: white;
+    background: url('../../../assets/bg2.jpg') no-repeat center fixed;
+    background-size: cover;
+    width: 105%;
+    height: 105%;
+
+    filter: blur(4px);
 }
 
-.signin .button {
-    box-sizing: content-box;
+.content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    //width: 40%;
+    padding: 20px;
+
+    /* centré */
+    margin-top: 50vh;
+    margin-left: auto;
+    margin-right: auto;
+    transform: translateY(-50%);
+
+    .title {
+        font-family: "Montserrat-ExtraLight", sans-serif;
+        font-variant: small-caps;
+        font-size: 6vw;
+        text-shadow: 4px 4px rgb(37, 37, 37)
+    }
+
+    .forms{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: flex-start;
+
+        .form-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 50px;
+    
+            h1 {
+                font-size: 3em;
+                font-variant: small-caps;
+                padding-bottom: 10px;
+                border-bottom: 1px #EEEEEE solid;
+                margin-bottom: 10px;
+                font-family: "Montserrat-Regular", sans-serif;
+            }
+    
+            .form {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+    
+                .text-input {
+                    margin: 5px auto;
+                    padding: 0 10px;
+                    width: 400px;
+                    height: 40px;
+                    font-size: 20px;
+                }
+            }
+        }
+    }
+    
+}
+
+.button {
+    padding: 10px 30px;
+    margin: 5px;
     background: $button-background-color;
-    padding: 5px 20px 5px 20px;
+    border-bottom: 5px $button-border-color solid;
     cursor: pointer;
+    user-select: none;
 }
 
-.text-input {
-    background: rgba(255, 255, 255, 0.05);
+.button:hover {
+    background: $button-hover-background-color;
+    border-bottom: 5px $button-hover-border-color solid;
 }
 
-.logo {
-    display: block;
-    margin: 20px auto;
-    max-width:100%;
-    height:auto;
-}
-
-h1{
-    text-align: center;
-    border-bottom: solid 1px #444444;
-    padding-bottom: 10px;
+.button:active {
+    background: $button-active-background-color;
+    border-bottom: 1px $button-active-border-color solid;
+    padding-top: 14px;
 }
