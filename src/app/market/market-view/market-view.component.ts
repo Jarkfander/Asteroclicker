@@ -18,31 +18,30 @@ export class MarketViewComponent implements AfterViewInit {
   public chartCarbon: ManagedChart;
   public chartTitanium: ManagedChart;
 
-  public valuesCreditCarbon: number;
-  public valuesCreditTitanium: number;
+  public valuesCreditCarbon10: number;
+  public valuesCreditCarbon100: number;
+  public valuesCreditTitanium10: number;
+  public valuesCreditTitanium100: number;
 
   constructor(private userS: UserService, private marketS: MarketService) {
-    this.valuesCreditCarbon = this.marketS.currentOresCosts.carbonCosts[Object.keys(this.marketS.currentOresCosts.carbonCosts)[59]];
-    this.valuesCreditTitanium = this.marketS.currentOresCosts.titaniumCosts[Object.keys(this.marketS.currentOresCosts.titaniumCosts)[59]];
+    this.valuesCreditCarbon10 = this.marketS.currentOresCosts.carbonCosts[Object.keys(this.marketS.currentOresCosts.carbonCosts)[29]];
+    this.valuesCreditTitanium10 = this.marketS.currentOresCosts.titaniumCosts[Object.keys(this.marketS.currentOresCosts.titaniumCosts)[29]];
+
+    this.valuesCreditCarbon10 = parseFloat((this.valuesCreditCarbon10 * 10).toFixed(2));
+    this.valuesCreditCarbon100 = parseFloat((this.valuesCreditCarbon10 * 10).toFixed(2));
+    this.valuesCreditTitanium10 = parseFloat((this.valuesCreditTitanium10 * 10).toFixed(2));
+    this.valuesCreditTitanium100 = parseFloat((this.valuesCreditTitanium10 * 10).toFixed(2));
   }
 
   ngAfterViewInit() {
     const lineCarbon = this.carbonCanvas.nativeElement.getContext('2d');
     const lineTitanium = this.titaniumCanvas.nativeElement.getContext('2d');
     // draw line chart
-    this.chartCarbon = new ManagedChart(lineCarbon, 60, 'rgba(125,125,75,1)');
-    this.chartTitanium = new ManagedChart(lineTitanium, 60, 'rgba(175,175,175,1)');
+    this.chartCarbon = new ManagedChart(lineCarbon, 30, 'rgba(125,125,75,1)');
+    this.chartTitanium = new ManagedChart(lineTitanium, 30, 'rgba(175,175,175,1)');
 
-    this.marketS.OreCostsSubject.subscribe((tab: OreCosts) => {
-      this.valuesCreditCarbon = this.marketS.currentOresCosts.carbonCosts[Object.keys(this.marketS.currentOresCosts.carbonCosts)[59]];
-      this.chartCarbon.addNew(tab.carbonCosts);
-
-      this.valuesCreditTitanium = this.marketS.currentOresCosts.titaniumCosts[Object.keys(this.marketS.currentOresCosts.titaniumCosts)[59]];
-      this.chartTitanium.addNew(tab.titaniumCosts);
-
-      this.valuesCreditCarbon = parseFloat((this.valuesCreditCarbon * 10).toFixed(2));
-      this.valuesCreditTitanium = parseFloat((this.valuesCreditTitanium * 10).toFixed(2));
-    });
+    // for update each tick
+    this.subjectOre();
 
     this.chartCarbon.initTab(this.marketS.currentOresCosts.carbonCosts);
     this.chartTitanium.initTab(this.marketS.currentOresCosts.titaniumCosts);
@@ -57,5 +56,25 @@ export class MarketViewComponent implements AfterViewInit {
   public BuyOre(amount: number, oreName: string) {
     this.userS.BuyOre(amount, oreName);
     this.marketS.UpdateOreTrend(amount, oreName);
+  }
+
+  subjectOre() {
+    this.marketS.OreCostsSubjectCarbon.subscribe((tab: number[]) => {
+      this.valuesCreditCarbon10 = this.marketS.currentOresCosts.carbonCosts[Object.keys(this.marketS.currentOresCosts.carbonCosts)[29]];
+      this.chartCarbon.addNew(tab);
+
+      this.valuesCreditCarbon10 = parseFloat((this.valuesCreditCarbon10 * 10).toFixed(2));
+      this.valuesCreditCarbon100 = parseFloat((this.valuesCreditCarbon10 * 10).toFixed(2));
+    });
+
+    this.marketS.OreCostsSubjectTitanium.subscribe((tab: number[]) => {
+      this.valuesCreditTitanium10 = this.marketS.currentOresCosts.titaniumCosts[Object.keys(
+                                    this.marketS.currentOresCosts.titaniumCosts)[29]];
+      this.chartTitanium.addNew(tab);
+
+      this.valuesCreditTitanium10 = parseFloat((this.valuesCreditTitanium10 * 10).toFixed(2));
+      this.valuesCreditTitanium100 = parseFloat((this.valuesCreditTitanium10 * 10).toFixed(2));
+    });
+
   }
 }
