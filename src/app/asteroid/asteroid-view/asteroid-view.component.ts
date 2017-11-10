@@ -45,9 +45,13 @@ export class AsteroidViewComponent implements AfterViewInit {
 
     this.drone = new Drone(0.25, 0.25, this.app);
 
+    this.drone.laserFirstState=this.userS.currentUser.getOreAmountFromString(this.asteroidS.asteroidTypes[this.userS.currentUser.numAsteroid].ore) < this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity;
+    
     this.initializeEmmiter();
     setInterval(() => {
-      this.emitter.emit = true;
+      if(this.drone.laser.visible){
+        this.emitter.emit = true;
+      }
       this.userS.IncrementUserOre(this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity,
         this.asteroidS.asteroidTypes[this.userS.currentUser.numAsteroid].ore);
     }, 1000);
@@ -55,7 +59,11 @@ export class AsteroidViewComponent implements AfterViewInit {
 
     this.userS.userSubject.subscribe((user: User) => {
         this.aster.changeSprite(user.numAsteroid);
-    });
+        if(this.drone.laser!=null){
+          this.drone.laser.visible=user.getOreAmountFromString(this.asteroidS.asteroidTypes[user.numAsteroid].ore) < this.upgradeS.storage[user.storageLvl].capacity;
+          console.log(this.drone.laser.visible);
+        }
+   });
   }
 
   @HostListener('window:resize') onResize() {
