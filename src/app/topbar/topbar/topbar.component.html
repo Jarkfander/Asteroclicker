@@ -8,8 +8,13 @@
   </div>
   <h1 class="credit-count"> {{ user.credit }} cr</h1>
   <ul>
+    <li><a href="#" (click)="OpenModal()">Quest</a></li>
     <li><a href="#">My profile</a></li>
     <li><a href="#">Configuration</a></li>
     <li><a href="#" (click)="LogOut();">Sign out</a></li>
   </ul>
 </div>
+
+<app-modal *ngIf="isModalOpen">
+    <a href="#" (click)="CloseModal()">Close</a>
+</app-modal>
