@@ -1,49 +1,21 @@
-<br>
+<div class="row justify-between">
+    <img src="http://placehold.it/100x100"/>
+    <div class="column justify-between">
+        <h1>Stock</h1>
+        <p>Current Level: {{user.storageLvl}} : Capacity: {{ stock[user.storageLvl].capacity }}</p>
+        <p>Next Level: {{ user.storageLvl + 1 }} : Capacity: {{ stock[user.storageLvl + 1].capacity }}</p>
+        <p>Cost: {{ stock[user.storageLvl + 1].cost }} Credit</p>
+    </div>
+    <button class="upgrade-btn" (click)="stockLvlUp()" style="background-color:black;color: white">Upgrade</button>
+</div>
 
-
-<table style="width:100%">
-    <tr>
-        <td align="left">
-            <div>
-                <u> Stock </u>
-                <br />
-                <div>
-                    Current Level: {{user.storageLvl}} : Capacity: {{ stock[user.storageLvl].capacity }}
-                    <br /> Next Level: {{ user.storageLvl + 1 }} : Capacity: {{ stock[user.storageLvl + 1].capacity }}
-                    <br /> Cost: {{ stock[user.storageLvl + 1].cost }} Credit
-                    <br />
-                </div>
-            </div>
-            <br>
-            <button id="stock" (click)="stockLvlUp()" style="background-color:black;color: white">Upgrade</button>
-
-        </td>
-        <td align="right">
-            <!---  <img src="assets/Radar_giff.gif" alt="carbonIcon" height="120" width="120"> -->
-        </td>
-    </tr>
-    <br>
-    <br>
-    <tr>
-        <td align="left">
-            <div>
-                <u> MineRate </u>
-                <br />
-                <div>
-                    Current Level: {{user.mineRateLvl}} : Base Rate: {{ mineRate[user.mineRateLvl].baseRate }} , Max Rate: {{ mineRate[user.mineRateLvl].maxRate
-                    }}
-                    <br /> Next Level: {{ user.mineRateLvl + 1 }} : Base Rate: {{ mineRate[user.mineRateLvl + 1].baseRate }}, Max
-                    Rate: {{ mineRate[user.mineRateLvl + 1].maxRate }}
-                    <br /> Cost: {{ mineRate[user.mineRateLvl + 1].cost }} Credit
-                </div>
-            </div>
-            <br>
-            <button id="stock" (click)="mineRateLvlUp()" style="background-color:black;color: white">Upgrade</button>
-
-        </td>
-        <td align="right">
-            <!--- <img src="assets/moteur_giff.gif" alt="carbonIcon" height="120" width="120"> -->
-        </td>
-    </tr>
-
-</table>
+<div class="row justify-between">
+    <img src="http://placehold.it/100x100"/>
+    <div class="column justify-between">
+        <h1>MineRate</h1>
+        <p>Current Level: {{user.mineRateLvl}} : Base Rate: {{ mineRate[user.mineRateLvl].baseRate }} , Max Rate: {{ mineRate[user.mineRateLvl].maxRate}}</p>
+        <p>Next Level: {{ user.mineRateLvl + 1 }} : Base Rate: {{ mineRate[user.mineRateLvl + 1].baseRate }}, Max Rate: {{ mineRate[user.mineRateLvl + 1].maxRate }}</p>
+        <p>Cost: {{ mineRate[user.mineRateLvl + 1].cost }} Credit</p>
+    </div>
+    <button class="upgrade-btn" (click)="mineRateLvlUp()" style="background-color:black;color: white">Upgrade</button>
+</div>
