@@ -9,6 +9,7 @@ import { User } from '../../user/user';
 })
 export class TopbarComponent implements AfterViewInit {
   public user: User;
+  public isModalOpen: boolean;
   constructor(private userS: UserService) {
       this.user = userS.currentUser;
    }
@@ -21,5 +22,13 @@ export class TopbarComponent implements AfterViewInit {
 
   public LogOut() {
     this.userS.LogOut();
+  }
+
+  public OpenModal() {
+    this.isModalOpen = true;
+  }
+
+  public CloseModal() {
+    this.isModalOpen = false;
   }
 }

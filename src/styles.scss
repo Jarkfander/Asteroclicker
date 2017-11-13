@@ -28,7 +28,8 @@ time, mark, audio, video {
 	border: 0;
 	font-size: 100%;
 	font: inherit;
-	vertical-align: baseline;
+    vertical-align: baseline;
+    user-select: none;
 }
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, 
@@ -96,19 +97,6 @@ body {
     width:100%;
     margin: 0;
     overflow: hidden;
-
-    footer {
-        padding: 10px 0 10px 0;
-        width: 100%;
-        background: $panel-background-color;
-        border: solid 1px $footer-border-color;
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        text-align: center;
-        color: $footer-font-color;
-        overflow: hidden;
-    }
 }
 
 h1,h2,h3,h4,h5,h6 {
