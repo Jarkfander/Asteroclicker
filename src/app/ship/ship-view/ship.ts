@@ -17,9 +17,10 @@ class UpgradeShip {
     }
 
     spriteAdd(newlvl: number) {
-        if (newlvl === 0) {
+        if (newlvl === 0  ||  (newlvl <= 5 ? 1 : Math.floor(newlvl / 5) + 1) === this.currentLevel) {
             return null;
         }
+
         this.currentLevel = newlvl <= 5 ? 1 : Math.floor(newlvl / 5) + 1;
         const upg = this.tabUpgrade[this.currentLevel - 1];
         upg.texture.baseTexture.mipmap = true;

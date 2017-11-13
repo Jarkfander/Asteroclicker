@@ -1,16 +1,29 @@
 <p>
-  <a href="#" style="background-color:black" (click)="SellOre(10,'carbon');">Sell 10 carbons for {{ valuesCreditCarbon  *10}} credit</a>
-  <a href="#" style="background-color:black" (click)="BuyOre(10,'carbon');">Buy 10 carbons for {{ valuesCreditCarbon *10}} credit</a>
-
+  <button type="button" style="background-color:black;color: white" (click)="SellOre(10,'carbon');">Sell 10 carbons for {{ valuesCreditCarbon10 }} credit</button> 
+  &emsp;&emsp;&emsp;
+  <button type="button" style="background-color:black;color: white" (click)="BuyOre(10,'carbon');">Buy 10 carbons for {{ valuesCreditCarbon10 }} credit</button>  
   <br>
-  <a href="#" style="background-color:black" (click)="SellOre(100,'carbon');">Sell 100 carbons for {{ valuesCreditCarbon * 100 }} credit</a>
-  <a href="#" style="background-color:black" (click)="BuyOre(100,'carbon');">Buy 100 carbons for {{ valuesCreditCarbon *100 }} credit</a>
+  <br>
+  <button type="button" style="background-color:black;color: white" (click)="SellOre(100,'carbon');">Sell 100 carbons for {{ valuesCreditCarbon100 }} credit</button>
+  &emsp;&emsp;&emsp;
+  <button type="button" style="background-color:black;color: white" (click)="BuyOre(100,'carbon');">Buy 100 carbons for {{ valuesCreditCarbon100 }} credit</button>
   
   <canvas #carbon width="400px" height="150px">
   </canvas>
   
-</p>
+  <br>  <br>   <br>  <br> 
+  <button type="button" style="background-color:black;color: white" (click)="SellOre(10,'titanium');">Sell 10 titanium for {{ valuesCreditTitanium10 }} credit</button>
+  &emsp;&emsp;&emsp;
+  <button type="button" style="background-color:black;color: white" (click)="BuyOre(10,'titanium');">Buy 10 titanium for {{ valuesCreditTitanium10 }} credit</button>
+  <br>
+  <br>
+  <button type="button" style="background-color:black;color: white" (click)="SellOre(100,'titanium');">Sell 100 titanium for {{ valuesCreditTitanium100 }} credit</button>
+  &emsp;&emsp;&emsp;
+  <button type="button" style="background-color:black;color: white" (click)="BuyOre(100,'titanium');">Buy 100 titanium for {{ valuesCreditTitanium100 }} credit</button>
   
+  <canvas #titanium width="400px" height="150px">
+  </canvas>
+</p>
 
 
 

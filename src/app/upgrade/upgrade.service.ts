@@ -27,7 +27,7 @@ export class UpgradeService {
       (snapshot: any) => {
           this.FillStock(snapshot);
       });
-    this.db.object('mineRate/carbon').valueChanges().take(1).subscribe(
+    this.db.object('mineRate').valueChanges().take(1).subscribe(
       (snapshot: any) => {
           this.FillMineRate(snapshot);
       });

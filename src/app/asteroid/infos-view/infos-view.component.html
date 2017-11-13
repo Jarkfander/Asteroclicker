@@ -1,37 +1,37 @@
+<br>
+
 <table style="width:100%">
-    <tr  style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;" 
-    unselectable="on"
-    onselectstart="return false;" 
-    onmousedown="return false;">
+  <tr style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;"
+    unselectable="on" onselectstart="return false;" onmousedown="return false;">
     <td align="left">Type of Asteroid : {{ Asteroidname }}</td>
-    </tr> 
+  </tr>
 </table>
 
 <br>
 <table style="width:100%">
-  <tr  style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;" 
-  unselectable="on"
-  onselectstart="return false;" 
-  onmousedown="return false;">
+  <tr style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;"
+    unselectable="on" onselectstart="return false;" onmousedown="return false;">
 
-    <td align="left"><img src="assets/smallRock.png" alt="carbonIcon"></td>
-    <td align="left" [ngStyle]="{'color': storageOverload ? 'red' : 'white'}" > Carbon : {{ user.carbon }}</td>
-    <td align="right">{{user.currentMineRate}} carbon/s</td>
+    <td align="left">
+      <img src="assets/smallRock.png" alt="carbonIcon">
+    </td>
+    <td align="left" [ngStyle]="{'color': carbonOverload ? 'red' : 'white'}"> Carbon : {{ user.carbon }}</td>
+    <td *ngIf="Asteroidname=='Carbon'" align="right">{{(AsteroidRate*user.currentMineRate).toFixed(2)}} carbon/s</td>
 
   </tr>
 
-  <tr  style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;" 
-  unselectable="on"
-  onselectstart="return false;" 
-  onmousedown="return false;">
-    <td align="left"><img src="assets/smallRockTita.png" alt="carbonIcon"></td>
-    <td align="left" [ngStyle]="{'color': storageOverload ? 'red' : 'white'}" > Titanium : {{ user.titanium }}</td>
-    <td align="right">{{user.currentMineRate}} titanium/s</td>
+  <tr style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;"
+    unselectable="on" onselectstart="return false;" onmousedown="return false;">
+    <td align="left">
+      <img src="assets/smallRockTita.png" alt="carbonIcon">
+    </td>
+    <td align="left" [ngStyle]="{'color': titaniumOverload ? 'red' : 'white'}"> Titanium : {{ user.titanium }}</td>
+    <td *ngIf="Asteroidname=='Titanium'" align="right">{{(AsteroidRate*user.currentMineRate).toFixed(2)}} titanium/s</td>
   </tr>
 </table>
+<br>
 
-<div class="bouton" (click)="searchNewAster()">
-  <p>
-      <a href="#">Search Another Asteroid</a>
-  </p>
-</div>
+<br>
+
+
+<button style="background-color:black;color: white" (click)="searchNewAster()">Search Another Asteroid</button>

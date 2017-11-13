@@ -1,5 +1,5 @@
-import { MineRate } from "../upgrade/mineRate";
-import { Storage } from "../upgrade/storage";
+import { MineRate } from '../upgrade/mineRate';
+import { Storage } from '../upgrade/storage';
 
 export class User {
 
@@ -19,10 +19,12 @@ export class User {
 
     public getOreAmountFromString(oreName: string) {
         switch (oreName) {
-            case "carbon":
+            case 'carbon':
                 return this.carbon;
+            case 'titanium':
+                 return this.titanium;
             default:
-                console.log("unknown material (user)");
+                console.log('unknown material (user)' + oreName);
                 break;
         }
     }

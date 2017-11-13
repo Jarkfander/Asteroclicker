@@ -7,6 +7,7 @@ import { Storage } from '../upgrade/storage';
 import { MineRate } from '../upgrade/mineRate';
 import { UpgradeService } from '../upgrade/upgrade.service';
 import { MarketService } from '../market/market.service';
+import { AsteroidService } from '../asteroid/asteroid.service';
 
 @Injectable()
 export class UserService {
@@ -19,13 +20,13 @@ export class UserService {
   userSubject = new Subject<User>();
 
   constructor(db: AngularFireDatabase, afAuth: AngularFireAuth,
-    private upgradeS: UpgradeService, private marketS: MarketService) {
+    private upgradeS: UpgradeService, private marketS: MarketService, private asteroidS: AsteroidService) {
     this.db = db;
     this.afAuth = afAuth;
     afAuth.authState.subscribe((auth) => {
       if (auth != null) {
         this.currentUser = new User();
-        this.db.object("users/" + auth.uid).valueChanges().subscribe(
+        this.db.object('users/' + auth.uid).valueChanges().subscribe(
           (snapshot: any) => {
             this.FillUser(auth.uid, snapshot);
           });
@@ -61,8 +62,11 @@ export class UserService {
     this.userLoad = true;
   }
 
-  public IncrementUserOre(maxStorage: number, ore: number, orename: string) {
-    const oreValue: number = ore + this.currentUser.currentMineRate;
+  public IncrementUserOre(maxStorage: number, orename: string) {
+    const ore = this.currentUser.getOreAmountFromString(orename);
+    var oreValue: number = ore + (this.currentUser.currentMineRate *
+      this.asteroidS.asteroidTypes[this.currentUser.numAsteroid].mineRate / 100);
+    oreValue = parseFloat((oreValue).toFixed(2));
     if (oreValue < maxStorage) {
       this.db.object('users/' + this.currentUser.uid + '/' + orename).set(oreValue);
     } else {
@@ -73,12 +77,13 @@ export class UserService {
   }
 
   public SellOre/*moon*/(amount: number, oreName: string) {
-    const oreValue = Math.trunc(this.marketS.currentOresCosts.getCostsFromString(oreName)[Object.keys(this.marketS.currentOresCosts.getCostsFromString(oreName))[59]]
+    const oreValue = (this.marketS.currentOresCosts.getCostsFromString(oreName)
+    [Object.keys(this.marketS.currentOresCosts.getCostsFromString(oreName))[29]]
       * amount);
     if (this.currentUser.getOreAmountFromString(oreName) - amount >= 0) {
-      var jsonUpdate={};
-      jsonUpdate[oreName]=this.currentUser.getOreAmountFromString(oreName)  - amount;
-      jsonUpdate["credit"]=this.currentUser.credit + oreValue;
+      const jsonUpdate = {};
+      jsonUpdate[oreName] = this.currentUser.getOreAmountFromString(oreName) - amount;
+      jsonUpdate['credit'] = parseFloat((this.currentUser.credit + oreValue).toFixed(2));
 
       this.db.object('users/' + this.currentUser.uid).update(
         jsonUpdate
@@ -86,14 +91,14 @@ export class UserService {
     }
   }
 
-  public BuyOre(amount: number,oreName: string) {
-    const costFinal = Math.trunc(amount *
-      this.marketS.currentOresCosts.getCostsFromString(oreName)[Object.keys(this.marketS.currentOresCosts.getCostsFromString(oreName))[59]]);
+  public BuyOre(amount: number, oreName: string) {
+    const costFinal = amount * this.marketS.currentOresCosts.getCostsFromString(oreName)
+      [Object.keys(this.marketS.currentOresCosts.getCostsFromString(oreName))[29]];
     if (this.currentUser.credit - costFinal >= 0 &&
       this.currentUser.getOreAmountFromString(oreName) + amount < this.upgradeS.storage[this.currentUser.storageLvl].capacity) {
-        var jsonUpdate={};
-        jsonUpdate[oreName]=this.currentUser.getOreAmountFromString(oreName) + amount;
-        jsonUpdate["credit"]=this.currentUser.credit - costFinal;
+      const jsonUpdate = {};
+      jsonUpdate[oreName] = this.currentUser.getOreAmountFromString(oreName) + amount;
+      jsonUpdate['credit'] = parseFloat((this.currentUser.credit - costFinal).toFixed(2));
       this.db.object('users/' + this.currentUser.uid).update(
         jsonUpdate
       );
@@ -102,14 +107,14 @@ export class UserService {
 
   public stockLvlUp(creditDown: number) {
     const levelStock: number = this.currentUser.storageLvl + 1;
-    const creditAfter: number = this.currentUser.credit - creditDown;
+    const creditAfter: number =  parseFloat((this.currentUser.credit - creditDown).toFixed(2));
     this.db.object('users/' + this.currentUser.uid + '/storageLvl').set(levelStock);
     this.db.object('users/' + this.currentUser.uid + '/credit').set(creditAfter);
   }
 
   public mineRateLvlUp(creditDown: number) {
     const mineRate: number = this.currentUser.mineRateLvl + 1;
-    const creditAfter: number = this.currentUser.credit - creditDown;
+    const creditAfter: number = parseFloat((this.currentUser.credit - creditDown).toFixed(2));
     this.db.object('users/' + this.currentUser.uid + '/mineRateLvl').set(mineRate);
     this.db.object('users/' + this.currentUser.uid + '/credit').set(creditAfter);
   }

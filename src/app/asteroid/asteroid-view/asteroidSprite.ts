@@ -1,20 +1,24 @@
 import * as PIXI from 'pixi.js';
 import * as TWEEN from 'tween.js';
 import { UserService } from '../../user/user.service';
-import * as PIXIParticles from "pixi-particles";
+import * as PIXIParticles from 'pixi-particles';
 import { ParticleBase } from '../../pixiVisual/particleBase';
 
-export class Asteroid {
+export class AsteroidSprite {
     asteroid: PIXI.Sprite;
     app: PIXI.Application;
     emitter: ParticleBase;
     numAsteroid: number;
 
-    constructor(x: number, y: number, app: PIXI.Application, numAsteroid: number) {
+    spriteAsteroids: PIXI.Texture[];
+
+    constructor(x: number, y: number, app: PIXI.Application, numAsteroid: number, numberOfSprite: number) {
         this.app = app;
         this.numAsteroid = numAsteroid;
 
-        this.asteroid = PIXI.Sprite.fromImage('assets/Asteroid/Asteroïde_' + this.numAsteroid + '.png');
+        this.initSpriteTab(numberOfSprite);
+        this.asteroid = new PIXI.Sprite(this.spriteAsteroids[this.numAsteroid]);
+
         this.asteroid.texture.baseTexture.mipmap = true;
         this.asteroid.anchor.set(0.5);
         this.asteroid.scale.set(x, y);
@@ -47,25 +51,24 @@ export class Asteroid {
     }
 
     InitializeEmitter() {
-        const config =
-            {
-                "alpha": {
-                    "start": 1,
-                    "end": 1
+        const config = {
+                'alpha': {
+                    'start': 1,
+                    'end': 1
                 },
-                "scale": {
-                    "start": 1,
-                    "end": 0
+                'scale': {
+                    'start': 1,
+                    'end': 0
                 },
-                "color": {
-                    "start": "ffffff",
-                    "end": "ffffff"
+                'color': {
+                    'start': 'ffffff',
+                    'end': 'ffffff'
                 },
-                "speed": {
-                    "start": 300,
-                    "end": 100
+                'speed': {
+                    'start': 300,
+                    'end': 100
                 },
-                "startRotation": {
+                'startRotation': {
                     'min': 0,
                     'max': 360
                 },
@@ -100,8 +103,21 @@ export class Asteroid {
         );
     }
 
+
+    // Ini the tab of all of sprite of asteroid
+    initSpriteTab(num: number) {
+        this.spriteAsteroids = new Array<PIXI.Texture>(num);
+
+        for (let i = 0 ; i < num ; i++) {
+            this.spriteAsteroids[i] = PIXI.Texture.fromImage('assets/Asteroid/Asteroïde_' + i + '.png');
+        }
+    }
+
+    // Change the sprite of asteroid when the user change 
     changeSprite(num: number) {
-        this.numAsteroid = num;
-        this.asteroid = PIXI.Sprite.fromImage('assets/Asteroid/Asteroïde_' + this.numAsteroid + '.png');
+        if (this.numAsteroid !== num) {
+            this.numAsteroid = num;
+            this.asteroid.texture = this.spriteAsteroids[num];
+        }
     }
 }
