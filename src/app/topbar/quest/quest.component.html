@@ -1,7 +1,12 @@
-<p>
-  Quest: <br> <br>
-    {{ userS.currentUser.quest.name }}: <br>
-    {{ userS.currentUser.quest.values - questS.questTab[userS.currentUser.quest.num].values}} / {{questS.questTab[userS.currentUser.quest.num].values}}    
+
+<div *ngIf="userS.currentUser.quest.gain != 0">
+    Quest: <br> <br>
+    {{ userS.currentUser.quest.name }}:
+    {{ questS.questTab[userS.currentUser.quest.num].values - userS.currentUser.quest.values }} / {{questS.questTab[userS.currentUser.quest.num].values}}    
     <br> <br>
-    {{ userS.currentUser.quest.gain }} Credit.
-</p>
+    You Win: {{ userS.currentUser.quest.gain }} Credit.
+</div>
+
+<div *ngIf="userS.currentUser.quest.gain === 0">
+  Nothing more !
+</div>
