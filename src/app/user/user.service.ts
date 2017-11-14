@@ -68,10 +68,12 @@ export class UserService {
 
   public IncrementUserOre(maxStorage: number, orename: string) {
     const ore = this.currentUser.getOreAmountFromString(orename);
-    var oreValue: number = ore + (this.currentUser.currentMineRate *
+    let oreValue: number = ore + (this.currentUser.currentMineRate *
       this.asteroidS.asteroidTypes[this.currentUser.numAsteroid].mineRate / 100);
     oreValue = parseFloat((oreValue).toFixed(2));
+
     if (oreValue < maxStorage) {
+      this.checkQuest(orename, oreValue - ore);
       this.db.object('users/' + this.currentUser.uid + '/' + orename).set(oreValue);
     } else {
       if (ore !== maxStorage) {
@@ -131,6 +133,27 @@ export class UserService {
 
   // Quest + - - - -  - - - - - - - - - - - - - - - - -- - - - - - - - - - - - - - - - -  -
   randomQuestUser(quest: Quest) {
-   
+
+  }
+
+  gainQuest() {
+    this.db.object('users/' + this.currentUser.uid + '/credit').set(this.currentUser.quest.gain + this.currentUser.credit);
+    this.db.object('users/' + this.currentUser.uid + '/quest/gain').set(0);
+  }
+
+  checkQuest(oreName: string, values: number) {
+    if (this.currentUser.quest.gain === 0) {
+      return;
+    }
+    if (oreName === this.currentUser.quest.type) {
+      const finalValues = this.currentUser.quest.values - values;
+      if (finalValues < 0) {
+        this.gainQuest();
+        this.db.object('users/' + this.currentUser.uid + '/quest/values').set(0);
+      } else {
+        this.db.object('users/' + this.currentUser.uid + '/quest/values').set(finalValues);
+      }
+    }
+
   }
 }
