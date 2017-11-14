@@ -45,6 +45,7 @@ export class AsteroidSprite {
 
         sprite.texture.baseTexture.mipmap = true;
         sprite.anchor.set(0.5);
+        
 
         sprite.x = (this.app.renderer.width / 2) + x;
         sprite.y = (this.app.renderer.height / 2) + y;
