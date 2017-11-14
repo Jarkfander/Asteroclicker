@@ -1,3 +1,4 @@
+import * as PIXI from 'pixi.js';
 export function getFramesFromSpriteSheet(texture: PIXI.Texture, frameWidth: number, frameHeight: number) {
     const frames = [];
     for (let j = 0; j < texture.height - frameHeight; j += frameHeight) {
