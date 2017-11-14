@@ -37,20 +37,23 @@ export class AsteroidViewComponent implements AfterViewInit {
     background.height = this.app.renderer.height;
     this.app.stage.addChild(background);
 
-    this.aster = new AsteroidSprite(0.25, 0.25, this.app, this.userS.currentUser.numAsteroid, this.asteroidS.asteroidTypes.length);
+    this.aster = new AsteroidSprite(0.25, 0.25, this.app, this.asteroidS.asteroidTypes[this.userS.currentUser.numAsteroid].ore, this.asteroidS.asteroidTypes.length);
 
-    this.aster.asteroid.on('click', (event) => {
-      this.asteroidClick();
-    });
+    for (let i = 0; i < this.aster.asteroid.length; i++) {
+      this.aster.asteroid[i].on('click', (event) => {
+        this.asteroidClick();
+      });
+    }
 
     this.drone = new Drone(0.25, 0.25, this.app);
 
-    this.drone.laserFirstState=this.userS.currentUser.getOreAmountFromString(this.asteroidS.asteroidTypes[this.userS.currentUser.numAsteroid].ore) < this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity;
-    
+    this.drone.laserFirstState = this.userS.currentUser.getOreAmountFromString(this.asteroidS.asteroidTypes[this.userS.currentUser.numAsteroid].ore) < this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity;
+
     this.initializeEmmiter();
     setInterval(() => {
-      if(this.drone.laser.visible){
+      if (this.drone.laser.visible) {
         this.emitter.emit = true;
+        this.emitter.updateOwnerPos(this.aster.asteroid[0].x, this.aster.asteroid[0].y);
       }
       this.userS.IncrementUserOre(this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity,
         this.asteroidS.asteroidTypes[this.userS.currentUser.numAsteroid].ore);
@@ -58,15 +61,14 @@ export class AsteroidViewComponent implements AfterViewInit {
     setInterval(() => { this.resetClick() }, 200);
 
     this.userS.userSubject.subscribe((user: User) => {
-        this.aster.changeSprite(user.numAsteroid);
-        if(this.drone.laser!=null){
-          this.drone.laser.visible=user.getOreAmountFromString(this.asteroidS.asteroidTypes[user.numAsteroid].ore) < this.upgradeS.storage[user.storageLvl].capacity;
-          console.log(this.drone.laser.visible);
-        }
-   });
+      this.aster.changeSprite(this.asteroidS.asteroidTypes[user.numAsteroid].ore);
+      if (this.drone.laser != null) {
+        this.drone.laser.visible = user.getOreAmountFromString(this.asteroidS.asteroidTypes[user.numAsteroid].ore) < this.upgradeS.storage[user.storageLvl].capacity;
+     }
+    });
   }
 
-  @HostListener('window:resize') onResize() {
+  @HostListener('window:resize') onResize() { 
     const w = this.el.nativeElement.parentElement.offsetWidth;
     const h = this.el.nativeElement.parentElement.offsetHeight;
     this.app.renderer.resize(w, h);
@@ -103,55 +105,55 @@ export class AsteroidViewComponent implements AfterViewInit {
 
   initializeEmmiter() {
     const config = {
-        'alpha': {
-          'start': 1,
-          'end': 1
-        },
-        'scale': {
-          'start': 1,
-          'end': 0
-        },
-        'color': {
-          'start': 'ffffff',
-          'end': 'ffffff'
-        },
-        'speed': {
-          'start': 300,
-          'end': 100
-        },
-        'startRotation': {
-          'min': 0,
-          'max': 360
-        },
-        'rotationSpeed': {
-          'min': 0,
-          'max': 0
-        },
-        'lifetime': {
-          'min': 0.5,
-          'max': 0.5
-        },
-        'frequency': 0.008,
-        'emitterLifetime': 0.20,
-        'maxParticles': 1000,
-        'pos': {
-          'x': 0,
-          'y': 0
-        },
-        'addAtBack': false,
-        'spawnType': 'circle',
-        'spawnCircle': {
-          'x': 0,
-          'y': 0,
-          'r': 0
-        }
-      };
+      'alpha': {
+        'start': 1,
+        'end': 1
+      },
+      'scale': {
+        'start': 1,
+        'end': 0
+      },
+      'color': {
+        'start': 'ffffff',
+        'end': 'ffffff'
+      },
+      'speed': {
+        'start': 300,
+        'end': 100
+      },
+      'startRotation': {
+        'min': 0,
+        'max': 360
+      },
+      'rotationSpeed': {
+        'min': 0,
+        'max': 0
+      },
+      'lifetime': {
+        'min': 0.5,
+        'max': 0.5
+      },
+      'frequency': 0.008,
+      'emitterLifetime': 0.20,
+      'maxParticles': 1000,
+      'pos': {
+        'x': 0,
+        'y': 0
+      },
+      'addAtBack': false,
+      'spawnType': 'circle',
+      'spawnCircle': {
+        'x': 0,
+        'y': 0,
+        'r': 0
+      }
+    };
 
     this.emitter = new ParticleBase(
       this.app.stage,
       PIXI.Texture.fromImage('assets/smallRock.png'),
       config
     );
-    this.emitter.updateOwnerPos(this.aster.asteroid.x - 85, this.aster.asteroid.y - 45);
+    this.emitter.updateOwnerPos(this.aster.asteroid[0].x, this.aster.asteroid[0].y);
   }
 }
