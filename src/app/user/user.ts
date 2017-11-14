@@ -1,5 +1,6 @@
 import { MineRate } from '../upgrade/mineRate';
 import { Storage } from '../upgrade/storage';
+import { Quest } from '../topbar/quest';
 
 export class User {
 
@@ -10,6 +11,8 @@ export class User {
     public storageLvl: number;
     public currentMineRate: number;
     public numAsteroid: number;
+
+    public quest: Quest;
 
     public carbon: number;
     public titanium: number;

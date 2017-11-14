@@ -8,6 +8,7 @@ import { MineRate } from '../upgrade/mineRate';
 import { UpgradeService } from '../upgrade/upgrade.service';
 import { MarketService } from '../market/market.service';
 import { AsteroidService } from '../asteroid/asteroid.service';
+import { Quest } from '../topbar/quest';
 
 @Injectable()
 export class UserService {
@@ -57,6 +58,9 @@ export class UserService {
     this.currentUser.storageLvl = snapshot.storageLvl;
 
     this.currentUser.numAsteroid = snapshot.numAsteroid;
+
+    this.currentUser.quest = new Quest(snapshot.quest.name, snapshot.quest.type, snapshot.quest.values,
+       snapshot.quest.num, snapshot.quest.gain);
 
     this.userSubject.next(this.currentUser);
     this.userLoad = true;
@@ -122,5 +126,11 @@ export class UserService {
 
   searchNewAsteroid(num: number) {
     this.db.object('users/' + this.currentUser.uid + '/numAsteroid').set(num);
+  }
+
+
+  // Quest + - - - -  - - - - - - - - - - - - - - - - -- - - - - - - - - - - - - - - - -  -
+  randomQuestUser(quest: Quest) {
+   
   }
 }

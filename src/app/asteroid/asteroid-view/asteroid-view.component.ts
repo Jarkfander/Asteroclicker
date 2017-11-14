@@ -51,10 +51,10 @@ export class AsteroidViewComponent implements AfterViewInit {
 
     this.initializeEmmiter();
     setInterval(() => {
-      if (this.drone.laser.visible) {
+      /*if (this.drone.laser.visible) {
         this.emitter.emit = true;
         this.emitter.updateOwnerPos(this.aster.asteroid[0].x, this.aster.asteroid[0].y);
-      }
+      }*/
       this.userS.IncrementUserOre(this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity,
         this.asteroidS.asteroidTypes[this.userS.currentUser.numAsteroid].ore);
     }, 1000);
