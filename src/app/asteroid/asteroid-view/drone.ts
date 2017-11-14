@@ -1,9 +1,10 @@
 import * as PIXI from 'pixi.js';
+import { getFramesFromSpriteSheet } from '../../loadAnimation';
 
 export class Drone {
     drone: PIXI.Sprite;
     app: PIXI.Application;
-    public laser : PIXI.extras.AnimatedSprite;
+    public laser: PIXI.extras.AnimatedSprite;
     laserFirstState:boolean;
 
     constructor(x: number , y: number, app: PIXI.Application) {
@@ -17,28 +18,12 @@ export class Drone {
         this.drone.y = this.app.renderer.height / 2 - 150;
         this.app.stage.addChild(this.drone);
 
-        this.onAssetsLoaded();
-    }
+        const laserAnim = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(PIXI.loader.resources['laser'].texture, 946, 964));
+        laserAnim.gotoAndPlay(0);
+        laserAnim.anchor.set(0.5, 0.04);
+        laserAnim.animationSpeed = 0.35;
+        laserAnim.visible = true;
 
-    // Animation
-    private onAssetsLoaded() {
-        PIXI.loader.add('laser', './assets/laser_(n2).png').load((loader, resources) => {
-            this.laser = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(resources.laser.texture, 946, 964));
-            this.laser.gotoAndPlay(0);
-            this.laser.anchor.set(0.5, 0.04);
-            this.laser.animationSpeed = 0.35;
-            this.drone.addChild(this.laser);
-            this.laser.visible=this.laserFirstState;
-        });
-
-        function getFramesFromSpriteSheet(texture, frameWidth, frameHeight) {
-            const frames = [];
-            for (let j = 0; j < texture.height - frameHeight; j += frameHeight) {
-                for (let i = 0; i < texture.width - frameWidth; i += frameWidth) {
-                    frames.push(new PIXI.Texture(texture.baseTexture, new PIXI.Rectangle(i, j, frameWidth, frameHeight)));
-                }
-            }
-            return frames;
-        }
+        this.drone.addChild(laserAnim);
     }
 }

@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { UpgradeService } from './upgrade/upgrade.service';
 import { MarketService } from './market/market.service';
 import { AsteroidService } from './asteroid/asteroid.service';
+import { LoadAnimation } from './loadAnimation';
 
 @Component({
   selector: 'app-root',
@@ -13,10 +14,15 @@ import { AsteroidService } from './asteroid/asteroid.service';
 export class AppComponent {
   title = 'app';
 
-  constructor(private userS: UserService, private upgradeS: UpgradeService,
-              private marketS: MarketService, private asteroidS: AsteroidService) {}
+  loadAnimation: LoadAnimation;
 
-  public ValiderLogIn(log,pswd){
-    this.userS.LogIn(log,pswd);
+  constructor(private userS: UserService, private upgradeS: UpgradeService,
+    private marketS: MarketService, private asteroidS: AsteroidService) {
+    this.loadAnimation = new LoadAnimation();
+  }
+
+  public ValiderLogIn(log, pswd) {
+    this.userS.LogIn(log, pswd);
+
   }
 }
