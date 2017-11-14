@@ -5,6 +5,7 @@ import { UpgradeService } from './upgrade/upgrade.service';
 import { MarketService } from './market/market.service';
 import { AsteroidService } from './asteroid/asteroid.service';
 import { LoadAnimation } from './loadAnimation';
+import { QuestService } from './topbar/quest.service';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +18,8 @@ export class AppComponent {
   loadAnimation: LoadAnimation;
 
   constructor(private userS: UserService, private upgradeS: UpgradeService,
-    private marketS: MarketService, private asteroidS: AsteroidService) {
+    private marketS: MarketService, private asteroidS: AsteroidService,
+    private questS: QuestService ) {
     this.loadAnimation = new LoadAnimation();
   }
 
