@@ -32,6 +32,7 @@ class UpgradeShip {
 export class Ship {
     ship: PIXI.extras.AnimatedSprite;
     tourelle: PIXI.extras.AnimatedSprite;
+    iTourelle: number;
 
     transformShipY: number;
     transformShipX: number;
@@ -51,16 +52,17 @@ export class Ship {
         this.app = app;
         this.deltaSum = 0;
         this.deltaSumShip = 0;
+        this.iTourelle = 1;
         this.initShip('ship', 500, 500);
-        this.initTourelle('tourelle_2', 500, 500);
+        this.initTourelle('tourelle_1', 500, 500);
 
         this.currentLevelRadar = 0;
 
-        this.radarUpgrade = this.initTabSprite(5, 'shipRadar_', this.currentLevelRadar, 500, 500, -20, 0);
-        this.smokeRadarUpgrade = this.initTabSprite(7, 'smoke_', this.currentLevelRadar, 500, 500, -20, 0);
+        this.radarUpgrade = this.initTabSprite(5, 'shipRadar_', this.currentLevelRadar, 500, 500, -20, 0, true);
+        this.smokeRadarUpgrade = this.initTabSprite(7, 'smoke_', this.currentLevelRadar, 500, 500, -20, 0, true);
 
         this.currentLevelStock = 0;
-        this.stockUpgrade = this.initTabSprite(7, 'shipStock_', this.currentLevelStock, 500, 500, 30, 0);
+        this.stockUpgrade = this.initTabSprite(7, 'shipStock_', this.currentLevelStock, 500, 500, 30, 0, false);
 
         this.transformShipY = this.ship.y;
         this.transformShipX = this.ship.x;
@@ -81,9 +83,6 @@ export class Ship {
                 this.ship.x = this.transformShipX + Math.cos(this.deltaSumShip) * 5;
                 this.ship.y = this.transformShipY + Math.sin(this.deltaSumShip) * 17;
 
-                this.initMoveXY(this.radarUpgrade, 5, 17, this.deltaSumShip);
-                this.initMoveXY(this.smokeRadarUpgrade, 5, 17, this.deltaSumShip);
-
                 this.initMoveXY(this.stockUpgrade, 30, 20, this.deltaSum);
             }
         });
@@ -99,9 +98,9 @@ export class Ship {
 
     // init sprite for upgrade ship
     initTabSprite(nbMaxSprite: number, nameSprite: string, lvl: number, width: number,
-        height: number, decalagex: number, decalagey: number) {
+        height: number, decalagex: number, decalagey: number, boolShipParent: boolean) {
         const temp = [];
-        temp.push(this.spritesheetFirstAnimation(nameSprite + 1, width, height, decalagex, decalagey));
+        temp.push(this.spritesheetFirstAnimation(nameSprite + 1, width, height, decalagex, decalagey, boolShipParent));
         for (let i = 1; i < nbMaxSprite; i++) {
             temp.push(this.spritesheetAnimation(nameSprite + (i + 1), width, height, decalagex, decalagey, temp[0]));
         }
@@ -113,7 +112,8 @@ export class Ship {
         tab.spriteAdd(lvl);
     }
 
-    spritesheetFirstAnimation(spriteName: string, width: number, height: number, decalagex: number, decalagey: number) {
+    spritesheetFirstAnimation(spriteName: string, width: number, height: number, decalagex: number,
+         decalagey: number, boolShipParent: boolean) {
         const spriteAnim = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
             PIXI.loader.resources[spriteName].texture, width, height));
         spriteAnim.gotoAndPlay(0);
@@ -121,9 +121,13 @@ export class Ship {
         spriteAnim.visible = false;
         spriteAnim.anchor.set(0.5);
 
-        spriteAnim.x = this.app.renderer.width / 2 + decalagex;
-        spriteAnim.y = this.app.renderer.height / 2 + decalagey;
-        this.app.stage.addChild(spriteAnim);
+        if (boolShipParent) {
+            this.ship.addChild(spriteAnim);
+        } else {
+            spriteAnim.x = this.app.renderer.width / 2 - decalagex;
+            spriteAnim.y = this.app.renderer.height / 2 - decalagey;
+            this.app.stage.addChild(spriteAnim);
+        }
 
         return spriteAnim;
     }
@@ -159,11 +163,24 @@ export class Ship {
         this.tourelle = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
             PIXI.loader.resources[spriteName].texture, width, height));
         this.tourelle.gotoAndPlay(0);
-        this.tourelle.animationSpeed = 0.10;
+        this.tourelle.animationSpeed = 0.18;
+        this.tourelle.loop = false;
         this.tourelle.visible = true;
         this.tourelle.texture.baseTexture.mipmap = true;
         this.tourelle.anchor.set(0.5);
-
+        this.tourelle.onComplete = () => { this.changeTourelleSprite(); };
         this.ship.addChild(this.tourelle);
+    }
+
+    changeTourelleSprite() {
+        this.iTourelle = ((this.iTourelle + 1) % 4) === 0 ? 1 : ((this.iTourelle + 1) % 4);
+        const stringTourelle: string = 'tourelle_' + this.iTourelle;
+
+        const tempTourelle = getFramesFromSpriteSheet(PIXI.loader.resources[stringTourelle].texture, 500, 500);
+
+        for ( let i = 0 ; i < this.tourelle.textures.length ; i++) {
+            this.tourelle.textures[i] = tempTourelle[i];
+        }
+        this.tourelle.gotoAndPlay(0);
     }
 }
