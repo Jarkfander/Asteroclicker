@@ -6,6 +6,7 @@ import { MiningPanelComponent } from './mining-panel/mining-panel.component';
 import { InfosViewComponent } from './infos-view/infos-view.component';
 import { UpgradeService } from '../upgrade/upgrade.service';
 import { AsteroidService } from './asteroid.service';
+import { SocketService } from '../socket/socket.service';
 
 @NgModule({
   imports: [
@@ -13,6 +14,6 @@ import { AsteroidService } from './asteroid.service';
   ],
   declarations: [AsteroidViewComponent, InfosViewComponent, MiningPanelComponent],
   exports: [AsteroidViewComponent, InfosViewComponent],
-  providers: [UserService, UpgradeService, AsteroidService]
+  providers: [UserService, UpgradeService, AsteroidService,SocketService]
 })
 export class AsteroidModule { }

@@ -4,6 +4,7 @@ import { ManagedChart } from './managedChart';
 import { User } from '../../user/user';
 import { OreCosts } from '../oreCosts';
 import { MarketService } from '../market.service';
+import { SocketService } from '../../socket/socket.service';
 
 
 @Component({
@@ -23,7 +24,7 @@ export class MarketViewComponent implements AfterViewInit {
   public valuesCreditTitanium10: number;
   public valuesCreditTitanium100: number;
 
-  constructor(private userS: UserService, private marketS: MarketService) {
+  constructor(private userS: UserService, private marketS: MarketService, private socketS: SocketService) {
     this.valuesCreditCarbon10 = this.marketS.currentOresCosts.carbonCosts[Object.keys(this.marketS.currentOresCosts.carbonCosts)[29]];
     this.valuesCreditTitanium10 = this.marketS.currentOresCosts.titaniumCosts[Object.keys(this.marketS.currentOresCosts.titaniumCosts)[29]];
 
@@ -49,13 +50,11 @@ export class MarketViewComponent implements AfterViewInit {
   }
 
   public SellOre/*moon*/(amount: number, oreName: string) {
-    this.userS.SellOre(amount, oreName);
-    this.marketS.UpdateOreTrend(-amount, oreName);
+    this.socketS.sellOre(oreName,amount);
   }
 
   public BuyOre(amount: number, oreName: string) {
-    this.userS.BuyOre(amount, oreName);
-    this.marketS.UpdateOreTrend(amount, oreName);
+    this.socketS.sellOre(oreName,amount);
   }
 
   subjectOre() {

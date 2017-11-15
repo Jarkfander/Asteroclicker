@@ -7,6 +7,7 @@ import { User } from '../../user/user';
 import { UpgradeService } from '../../upgrade/upgrade.service';
 import { ParticleBase } from '../../pixiVisual/particleBase';
 import { AsteroidService } from '../asteroid.service';
+import { SocketService } from '../../socket/socket.service';
 
 
 @Component({
@@ -17,7 +18,7 @@ import { AsteroidService } from '../asteroid.service';
 
 export class AsteroidViewComponent implements AfterViewInit {
   constructor(private el: ElementRef, private render: Renderer2, private userS: UserService,
-    private upgradeS: UpgradeService, private asteroidS: AsteroidService) { }
+    private upgradeS: UpgradeService, private asteroidS: AsteroidService, private socketS: SocketService) { }
 
   private app: PIXI.Application;
   private aster: AsteroidSprite;
@@ -57,8 +58,11 @@ export class AsteroidViewComponent implements AfterViewInit {
         this.emitter.emit = true;
         this.emitter.updateOwnerPos(this.aster.asteroid[0].x, this.aster.asteroid[0].y);
       }*/
-      this.userS.IncrementUserOre(this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity,
-        this.asteroidS.asteroidTypes[this.userS.currentUser.numAsteroid].ore);
+      /*this.userS.IncrementUserOre(this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity,
+        this.asteroidS.asteroidTypes[this.userS.currentUser.numAsteroid].ore);*/
+        this.socketS.incrementOre(this.asteroidS.asteroidTypes[this.userS.currentUser.numAsteroid].ore,
+        parseFloat((this.userS.currentUser.currentMineRate *
+         this.asteroidS.asteroidTypes[this.userS.currentUser.numAsteroid].mineRate/100).toFixed(2)));
     }, 1000);
     setInterval(() => { this.resetClick() }, 200);
 
