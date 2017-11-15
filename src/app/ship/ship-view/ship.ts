@@ -3,17 +3,13 @@ import { getFramesFromSpriteSheet } from '../../loadAnimation';
 class UpgradeShip {
     posX: number;
     posY: number;
-    scaleX: number;
-    scaleY: number;
     currentLevel: number;
     tabAnimation: PIXI.extras.AnimatedSprite[];
 
-    constructor(lvl: number, tabAnimation, posx: number, posy: number, scalx: number, scaly: number) {
+    constructor(lvl: number, tabAnimation, posx: number, posy: number) {
         this.tabAnimation = tabAnimation;
         this.posX = posx;
         this.posY = posy;
-        this.scaleX = scalx;
-        this.scaleY = scaly;
         this.currentLevel = lvl;
     }
 
@@ -24,7 +20,7 @@ class UpgradeShip {
         }
         this.currentLevel = lvlModulo;
 
-        for (let i = 0 ; i < this.currentLevel + 1 ; i++) {
+        for (let i = 0; i < this.currentLevel + 1; i++) {
             if (!this.tabAnimation[i]) {
                 break;
             }
@@ -35,6 +31,13 @@ class UpgradeShip {
 
 export class Ship {
     ship: PIXI.extras.AnimatedSprite;
+    tourelle: PIXI.extras.AnimatedSprite;
+
+    transformShipY: number;
+    transformShipX: number;
+    deltaSumShip: number;
+    deltaSum: number;
+
     app: PIXI.Application;
 
     radarUpgrade: UpgradeShip;
@@ -46,34 +49,71 @@ export class Ship {
 
     constructor(app: PIXI.Application) {
         this.app = app;
-
+        this.deltaSum = 0;
+        this.deltaSumShip = 0;
         this.initShip('ship', 500, 500);
+        this.initTourelle('tourelle_2', 500, 500);
 
         this.currentLevelRadar = 0;
+
         this.radarUpgrade = this.initTabSprite(5, 'shipRadar_', this.currentLevelRadar, 500, 500, -20, 0);
         this.smokeRadarUpgrade = this.initTabSprite(7, 'smoke_', this.currentLevelRadar, 500, 500, -20, 0);
 
         this.currentLevelStock = 0;
         this.stockUpgrade = this.initTabSprite(7, 'shipStock_', this.currentLevelStock, 500, 500, 30, 0);
 
+        this.transformShipY = this.ship.y;
+        this.transformShipX = this.ship.x;
+
+        // Listen for animate update
+        this.app.ticker.add((delta) => {
+            if (this.ship) {
+                if (this.deltaSum > 2 * Math.PI) {
+                    this.deltaSum = 0;
+                }
+                this.deltaSum += (2 * Math.PI) / 2500;
+
+                if (this.deltaSumShip > 2 * Math.PI) {
+                    this.deltaSumShip = 0;
+                }
+                this.deltaSumShip += (2 * Math.PI) / 1500;
+
+                this.ship.x = this.transformShipX + Math.cos(this.deltaSumShip) * 5;
+                this.ship.y = this.transformShipY + Math.sin(this.deltaSumShip) * 17;
+
+                this.initMoveXY(this.radarUpgrade, 5, 17, this.deltaSumShip);
+                this.initMoveXY(this.smokeRadarUpgrade, 5, 17, this.deltaSumShip);
+
+                this.initMoveXY(this.stockUpgrade, 30, 20, this.deltaSum);
+            }
+        });
+
+
+    }
+
+    // Move the ship each tick 
+    initMoveXY(upgradeAnimation, xVariation: number, yVariation: number, multiplicateurDetlta: number) {
+        upgradeAnimation.tabAnimation[0].y = upgradeAnimation.posY + Math.sin(multiplicateurDetlta) * yVariation;
+        upgradeAnimation.tabAnimation[0].x = upgradeAnimation.posX + Math.cos(multiplicateurDetlta) * xVariation;
     }
 
     // init sprite for upgrade ship
     initTabSprite(nbMaxSprite: number, nameSprite: string, lvl: number, width: number,
-         height: number, decalagex: number, decalagey: number) {
+        height: number, decalagex: number, decalagey: number) {
         const temp = [];
-        for (let i = 0; i < nbMaxSprite; i++) {
-            temp.push(this.spritesheetAnimation(nameSprite + (i + 1), width, height, decalagex, decalagey));
+        temp.push(this.spritesheetFirstAnimation(nameSprite + 1, width, height, decalagex, decalagey));
+        for (let i = 1; i < nbMaxSprite; i++) {
+            temp.push(this.spritesheetAnimation(nameSprite + (i + 1), width, height, decalagex, decalagey, temp[0]));
         }
-        return new UpgradeShip(lvl, temp, 1, 1, 1, 1);
+        return new UpgradeShip(lvl, temp, temp[0].x, temp[0].y);
     }
 
     // manage the upgrade when the level change
     autoUpgrade(lvl: number, tab: UpgradeShip) {
-         tab.spriteAdd(lvl);
+        tab.spriteAdd(lvl);
     }
 
-    spritesheetAnimation(spriteName: string, width: number, height: number, decalagex: number, decalagey: number) {
+    spritesheetFirstAnimation(spriteName: string, width: number, height: number, decalagex: number, decalagey: number) {
         const spriteAnim = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
             PIXI.loader.resources[spriteName].texture, width, height));
         spriteAnim.gotoAndPlay(0);
@@ -81,9 +121,22 @@ export class Ship {
         spriteAnim.visible = false;
         spriteAnim.anchor.set(0.5);
 
-        spriteAnim.x = this.app.renderer.width / 2  + decalagex;
+        spriteAnim.x = this.app.renderer.width / 2 + decalagex;
         spriteAnim.y = this.app.renderer.height / 2 + decalagey;
         this.app.stage.addChild(spriteAnim);
+
+        return spriteAnim;
+    }
+
+    spritesheetAnimation(spriteName: string, width: number, height: number, decalagex, decalagey, newParent) {
+        const spriteAnim = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
+            PIXI.loader.resources[spriteName].texture, width, height));
+        spriteAnim.gotoAndPlay(0);
+        spriteAnim.animationSpeed = 0.24;
+        spriteAnim.visible = false;
+        spriteAnim.anchor.set(0.5);
+
+        newParent.addChild(spriteAnim);
         return spriteAnim;
     }
 
@@ -97,9 +150,20 @@ export class Ship {
         this.ship.anchor.set(0.5);
 
         this.ship.x = this.app.renderer.width / 2 - 20;
-        this.ship.y = this.app.renderer.height / 2 ;
+        this.ship.y = this.app.renderer.height / 2;
 
         this.app.stage.addChild(this.ship);
     }
 
+    initTourelle(spriteName: string, width: number, height: number) {
+        this.tourelle = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
+            PIXI.loader.resources[spriteName].texture, width, height));
+        this.tourelle.gotoAndPlay(0);
+        this.tourelle.animationSpeed = 0.10;
+        this.tourelle.visible = true;
+        this.tourelle.texture.baseTexture.mipmap = true;
+        this.tourelle.anchor.set(0.5);
+
+        this.ship.addChild(this.tourelle);
+    }
 }
