@@ -9,6 +9,10 @@ export class AsteroidSprite {
     app: PIXI.Application;
     emitter: ParticleBase;
     asteroidOre: string;
+    delta = 0;
+
+    xBaseAsteroid: number;
+    yBaseAsteroid: number;
 
     spriteAsteroidCarbon: PIXI.Texture[];
     asteroidFolders;
@@ -24,15 +28,21 @@ export class AsteroidSprite {
 
         this.InitializeEmitter();
 
-        const position = { x: 100, y: 0 };
-        const now = 0;
-        // Create a tween for position first
-        const tween = new TWEEN.Tween(position);
+        this.xBaseAsteroid = this.asteroid[0].x;
+        this.yBaseAsteroid = this.asteroid[0].y;
 
-        // Then tell the tween we want to animate the x property over 1000 milliseconds
-        tween.to({ x: 200 }, 1000).onUpdate(function onUpdate() {
-            this.asteroid.x += 10;
-        }).start(now);
+        // Listen for animate update
+        this.app.ticker.add((delta) => {
+            if (this.asteroid[0]) {
+                if (this.delta > 2 * Math.PI) {
+                    this.delta = 0;
+                }
+                this.delta += (2 * Math.PI) / 1000;
+
+                this.asteroid[0].x = this.xBaseAsteroid + Math.cos(this.delta) * -5;
+                this.asteroid[0].y = this.yBaseAsteroid + Math.sin(this.delta) * -15;
+            }
+        });
 
     }
 
@@ -45,11 +55,17 @@ export class AsteroidSprite {
 
         sprite.texture.baseTexture.mipmap = true;
         sprite.anchor.set(0.5);
-        
 
-        sprite.x = (this.app.renderer.width / 2) + x;
-        sprite.y = (this.app.renderer.height / 2) + y;
-        this.app.stage.addChild(sprite);
+        if (x === 0 && y === 0) {
+            sprite.x = (this.app.renderer.width / 2) + x;
+            sprite.y = (this.app.renderer.height / 2) + y;
+            this.app.stage.addChild(sprite);
+        } else {
+            sprite.x = (this.asteroid[0].width / 2) + x;
+            sprite.y = (this.asteroid[0].height / 2) + y;
+            this.asteroid[0].addChild(sprite);
+        }
+
 
         sprite.interactive = true;
         sprite.buttonMode = true;
@@ -112,10 +128,10 @@ export class AsteroidSprite {
 
         this.asteroid[0].texture = this.asteroidFolders[asteroidType][0];
 
-        this.asteroid[1].texture=this.asteroidFolders[asteroidType][ranPos[0]];
-        this.asteroid[2].texture=this.asteroidFolders[asteroidType][ranPos[1]];
-        this.asteroid[3].texture=this.asteroidFolders[asteroidType][ranPos[2]];
-        this.asteroid[4].texture=this.asteroidFolders[asteroidType][ranPos[3]];
+        this.asteroid[1].texture = this.asteroidFolders[asteroidType][ranPos[0]];
+        this.asteroid[2].texture = this.asteroidFolders[asteroidType][ranPos[1]];
+        this.asteroid[3].texture = this.asteroidFolders[asteroidType][ranPos[2]];
+        this.asteroid[4].texture = this.asteroidFolders[asteroidType][ranPos[3]];
 
     }
     // Change the sprite of asteroid when the user change 

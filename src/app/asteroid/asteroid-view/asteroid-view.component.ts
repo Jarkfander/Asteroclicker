@@ -37,7 +37,8 @@ export class AsteroidViewComponent implements AfterViewInit {
     background.height = this.app.renderer.height;
     this.app.stage.addChild(background);
 
-    this.aster = new AsteroidSprite(0.25, 0.25, this.app, this.asteroidS.asteroidTypes[this.userS.currentUser.numAsteroid].ore, this.asteroidS.asteroidTypes.length);
+    this.aster = new AsteroidSprite(0.25, 0.25, this.app, this.asteroidS.asteroidTypes
+      [this.userS.currentUser.numAsteroid].ore, this.asteroidS.asteroidTypes.length);
 
     for (let i = 0; i < this.aster.asteroid.length; i++) {
       this.aster.asteroid[i].on('click', (event) => {
@@ -45,9 +46,10 @@ export class AsteroidViewComponent implements AfterViewInit {
       });
     }
 
-    this.drone = new Drone(0.25, 0.25, this.app);
+    this.drone = new Drone(0.20, 0.20, this.app);
 
-    this.drone.laserFirstState = this.userS.currentUser.getOreAmountFromString(this.asteroidS.asteroidTypes[this.userS.currentUser.numAsteroid].ore) < this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity;
+    this.drone.laserFirstState = this.userS.currentUser.getOreAmountFromString(this.asteroidS.asteroidTypes
+      [this.userS.currentUser.numAsteroid].ore) < this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity;
 
     this.initializeEmmiter();
     setInterval(() => {
@@ -63,12 +65,13 @@ export class AsteroidViewComponent implements AfterViewInit {
     this.userS.userSubject.subscribe((user: User) => {
       this.aster.changeSprite(this.asteroidS.asteroidTypes[user.numAsteroid].ore);
       if (this.drone.laser != null) {
-        this.drone.laser.visible = user.getOreAmountFromString(this.asteroidS.asteroidTypes[user.numAsteroid].ore) < this.upgradeS.storage[user.storageLvl].capacity;
+        this.drone.laser.visible = user.getOreAmountFromString(this.asteroidS.asteroidTypes[user.numAsteroid].ore) <
+         this.upgradeS.storage[user.storageLvl].capacity;
      }
     });
   }
 
-  @HostListener('window:resize') onResize() { 
+  @HostListener('window:resize') onResize() {
     const w = this.el.nativeElement.parentElement.offsetWidth;
     const h = this.el.nativeElement.parentElement.offsetHeight;
     this.app.renderer.resize(w, h);
