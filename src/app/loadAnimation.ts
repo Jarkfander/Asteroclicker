@@ -22,7 +22,10 @@ export class LoadAnimation {
         // Laser
         this.addKeySpriteName('laser', './assets/laser_(n2).png');
         this.addKeySpriteName('ship', './assets/upgrade/ship.png');
-
+         // tourelle animation
+         for (let i = 1 ; i < 4 ; i++) {
+            this.addKeySpriteName('tourelle_' + i, './assets/upgrade/tourelle' + i + '.png');
+        }
         // Stock animation
         for (let i = 1 ; i < 8 ; i++) {
             this.addKeySpriteName('shipStock_' + i, './assets/upgrade/shipStock_' + i + '.png');
@@ -33,10 +36,11 @@ export class LoadAnimation {
             this.addKeySpriteName('shipRadar_' + i, './assets/upgrade/shipRadar_' + i + '.png');
         }
 
-          // smoke animation
-          for (let i = 1 ; i < 8 ; i++) {
+        // smoke animation
+        for (let i = 1 ; i < 8 ; i++) {
             this.addKeySpriteName('smoke_' + i, './assets/upgrade/smoke' + i + '.png');
         }
+
 
         this.onAssetsLoaded();
     }
