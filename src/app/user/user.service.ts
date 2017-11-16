@@ -57,7 +57,8 @@ export class UserService {
     this.currentUser.mineRateLvl = snapshot.mineRateLvl;
     this.currentUser.storageLvl = snapshot.storageLvl;
 
-    this.currentUser.numAsteroid = snapshot.numAsteroid;
+    this.currentUser.numAsteroid = snapshot.asteroid.numAsteroid;
+    this.currentUser.seedAsteroid = snapshot.asteroid.seed;
 
     this.currentUser.quest = new Quest(snapshot.quest.name, snapshot.quest.type, snapshot.quest.values,
        snapshot.quest.num, snapshot.quest.gain);
