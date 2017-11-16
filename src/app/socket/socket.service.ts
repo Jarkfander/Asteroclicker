@@ -53,4 +53,12 @@ export class SocketService {
     this.socket.emit("buyOre",json);
   }
 
+  searchAsteroid(){
+    let json={};
+
+    json["user"]=this.userS.currentUser.uid;
+
+    this.socket.emit("searchAster",json);
+  }
+
 }

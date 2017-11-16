@@ -11,6 +11,7 @@ export class User {
     public storageLvl: number;
     public currentMineRate: number;
     public numAsteroid: number;
+    public seedAsteroid: string;
 
     public quest: Quest;
 
