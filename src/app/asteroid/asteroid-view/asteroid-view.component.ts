@@ -7,6 +7,7 @@ import { User } from '../../user/user';
 import { UpgradeService } from '../../upgrade/upgrade.service';
 import { ParticleBase } from '../../pixiVisual/particleBase';
 import { AsteroidService } from '../asteroid.service';
+import { SocketService } from '../../socket/socket.service';
 
 
 @Component({
@@ -17,7 +18,7 @@ import { AsteroidService } from '../asteroid.service';
 
 export class AsteroidViewComponent implements AfterViewInit {
   constructor(private el: ElementRef, private render: Renderer2, private userS: UserService,
-    private upgradeS: UpgradeService, private asteroidS: AsteroidService) { }
+    private upgradeS: UpgradeService, private asteroidS: AsteroidService, private socketS: SocketService) { }
 
   private app: PIXI.Application;
   private aster: AsteroidSprite;
@@ -37,33 +38,41 @@ export class AsteroidViewComponent implements AfterViewInit {
     background.height = this.app.renderer.height;
     this.app.stage.addChild(background);
 
-    this.aster = new AsteroidSprite(0.25, 0.25, this.app, this.userS.currentUser.numAsteroid, this.asteroidS.asteroidTypes.length);
+    this.aster = new AsteroidSprite(0.25, 0.25, this.app, this.asteroidS.asteroidTypes
+      [this.userS.currentUser.numAsteroid].ore, this.asteroidS.asteroidTypes.length);
 
-    this.aster.asteroid.on('click', (event) => {
-      this.asteroidClick();
-    });
+    for (let i = 0; i < this.aster.asteroid.length; i++) {
+      this.aster.asteroid[i].on('click', (event) => {
+        this.asteroidClick();
+      });
+    }
 
-    this.drone = new Drone(0.25, 0.25, this.app);
+    this.drone = new Drone(0.20, 0.20, this.app);
 
-    this.drone.laserFirstState=this.userS.currentUser.getOreAmountFromString(this.asteroidS.asteroidTypes[this.userS.currentUser.numAsteroid].ore) < this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity;
-    
+    this.drone.laserFirstState = this.userS.currentUser.getOreAmountFromString(this.asteroidS.asteroidTypes
+      [this.userS.currentUser.numAsteroid].ore) < this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity;
+
     this.initializeEmmiter();
     setInterval(() => {
-      if(this.drone.laser.visible){
+      /*if (this.drone.laser.visible) {
         this.emitter.emit = true;
-      }
-      this.userS.IncrementUserOre(this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity,
-        this.asteroidS.asteroidTypes[this.userS.currentUser.numAsteroid].ore);
+        this.emitter.updateOwnerPos(this.aster.asteroid[0].x, this.aster.asteroid[0].y);
+      }*/
+      /*this.userS.IncrementUserOre(this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity,
+        this.asteroidS.asteroidTypes[this.userS.currentUser.numAsteroid].ore);*/
+        this.socketS.incrementOre(this.asteroidS.asteroidTypes[this.userS.currentUser.numAsteroid].ore,
+        parseFloat((this.userS.currentUser.currentMineRate *
+         this.asteroidS.asteroidTypes[this.userS.currentUser.numAsteroid].mineRate/100).toFixed(2)));
     }, 1000);
     setInterval(() => { this.resetClick() }, 200);
 
     this.userS.userSubject.subscribe((user: User) => {
-        this.aster.changeSprite(user.numAsteroid);
-        if(this.drone.laser!=null){
-          this.drone.laser.visible=user.getOreAmountFromString(this.asteroidS.asteroidTypes[user.numAsteroid].ore) < this.upgradeS.storage[user.storageLvl].capacity;
-          console.log(this.drone.laser.visible);
-        }
-   });
+      this.aster.changeSprite(this.asteroidS.asteroidTypes[user.numAsteroid].ore);
+      if (this.drone.laser != null) {
+        this.drone.laser.visible = user.getOreAmountFromString(this.asteroidS.asteroidTypes[user.numAsteroid].ore) <
+         this.upgradeS.storage[user.storageLvl].capacity;
+     }
+    });
   }
 
   @HostListener('window:resize') onResize() {
@@ -103,55 +112,55 @@ export class AsteroidViewComponent implements AfterViewInit {
 
   initializeEmmiter() {
     const config = {
-        'alpha': {
-          'start': 1,
-          'end': 1
-        },
-        'scale': {
-          'start': 1,
-          'end': 0
-        },
-        'color': {
-          'start': 'ffffff',
-          'end': 'ffffff'
-        },
-        'speed': {
-          'start': 300,
-          'end': 100
-        },
-        'startRotation': {
-          'min': 0,
-          'max': 360
-        },
-        'rotationSpeed': {
-          'min': 0,
-          'max': 0
-        },
-        'lifetime': {
-          'min': 0.5,
-          'max': 0.5
-        },
-        'frequency': 0.008,
-        'emitterLifetime': 0.20,
-        'maxParticles': 1000,
-        'pos': {
-          'x': 0,
-          'y': 0
-        },
-        'addAtBack': false,
-        'spawnType': 'circle',
-        'spawnCircle': {
-          'x': 0,
-          'y': 0,
-          'r': 0
-        }
-      };
+      'alpha': {
+        'start': 1,
+        'end': 1
+      },
+      'scale': {
+        'start': 1,
+        'end': 0
+      },
+      'color': {
+        'start': 'ffffff',
+        'end': 'ffffff'
+      },
+      'speed': {
+        'start': 300,
+        'end': 100
+      },
+      'startRotation': {
+        'min': 0,
+        'max': 360
+      },
+      'rotationSpeed': {
+        'min': 0,
+        'max': 0
+      },
+      'lifetime': {
+        'min': 0.5,
+        'max': 0.5
+      },
+      'frequency': 0.008,
+      'emitterLifetime': 0.20,
+      'maxParticles': 1000,
+      'pos': {
+        'x': 0,
+        'y': 0
+      },
+      'addAtBack': false,
+      'spawnType': 'circle',
+      'spawnCircle': {
+        'x': 0,
+        'y': 0,
+        'r': 0
+      }
+    };
 
     this.emitter = new ParticleBase(
       this.app.stage,
       PIXI.Texture.fromImage('assets/smallRock.png'),
       config
     );
-    this.emitter.updateOwnerPos(this.aster.asteroid.x - 85, this.aster.asteroid.y - 45);
+    this.emitter.updateOwnerPos(this.aster.asteroid[0].x, this.aster.asteroid[0].y);
   }
 }

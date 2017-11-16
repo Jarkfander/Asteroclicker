@@ -4,6 +4,7 @@ import { User } from '../../user/user';
 import { UpgradeService } from '../../upgrade/upgrade.service';
 import { Storage } from '../../upgrade/Storage';
 import { MineRate } from '../../upgrade/MineRate';
+import { SocketService } from '../../socket/socket.service';
 
 
 @Component({
@@ -16,7 +17,8 @@ export class UpgradeViewComponent implements AfterViewInit {
     public stock: Storage[];
     public mineRate: MineRate[];
 
-    constructor(private el: ElementRef, private render: Renderer2, private userS: UserService, private upgradeS: UpgradeService) {
+    constructor(private el: ElementRef, private render: Renderer2, private userS: UserService,
+         private upgradeS: UpgradeService,private socketS: SocketService) {
         this.stock = upgradeS.storage;
         this.user = userS.currentUser;
         this.mineRate = upgradeS.mineRate;
@@ -38,13 +40,13 @@ export class UpgradeViewComponent implements AfterViewInit {
 
     stockLvlUp() {
         if (this.userS.currentUser.credit > this.stock[this.user.storageLvl + 1].cost) {
-            this.userS.stockLvlUp(this.stock[this.user.storageLvl + 1].cost);
+            this.socketS.upgradeShip("storage");
         }
     }
 
     mineRateLvlUp() {
         if (this.userS.currentUser.credit > this.mineRate[this.user.mineRateLvl + 1].cost) {
-            this.userS.mineRateLvlUp(this.mineRate[this.user.mineRateLvl + 1].cost);
+            this.socketS.upgradeShip("mineRate")
         }
     }
 }
