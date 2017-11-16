@@ -8,6 +8,18 @@
   </div>
   <h1 class="credit-count"> {{ user.credit }} cr</h1>
   <ul>
+
+  <li>  
+      <div *ngIf="userS.currentUser.quest.gain != 0">
+        {{ userS.currentUser.quest.name }}:
+        {{ questS.questTab[userS.currentUser.quest.num].values - userS.currentUser.quest.values }} / {{questS.questTab[userS.currentUser.quest.num].values}}    
+      </div>
+  
+      <div *ngIf="userS.currentUser.quest.gain === 0">
+        
+      </div>
+    </li>
+        
     <li><a href="#" (click)="OpenModal()">Quest</a></li>
     <li><a href="#">My profile</a></li>
     <li><a href="#">Configuration</a></li>
