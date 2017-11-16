@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TopbarComponent } from './topbar/topbar.component';
 import { SharedModule} from '../shared/shared.module';
 import { UserService } from '../user/user.service';
+import { QuestService } from './quest.service';
 
 @NgModule({
   imports: [
@@ -13,6 +14,6 @@ import { UserService } from '../user/user.service';
     TopbarComponent
   ],
   declarations: [TopbarComponent],
-  providers: [UserService]
+  providers: [UserService, QuestService]
 })
 export class TopbarModule { }

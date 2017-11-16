@@ -16,7 +16,6 @@ export class QuestService {
     this.db.object('quest').valueChanges().take(1).subscribe(
       (snapshot: any) => {
         this.FillQuest(snapshot);
-        // this.randomQuestUser();
     });
   }
 
@@ -26,8 +25,4 @@ export class QuestService {
     }
   }
 
-  public randomQuestUser() {
-    const randomQuest = Math.floor((Math.random() * this.questTab.length));
-    this.userS.randomQuestUser(this.questTab[randomQuest]);
-  }
 }
