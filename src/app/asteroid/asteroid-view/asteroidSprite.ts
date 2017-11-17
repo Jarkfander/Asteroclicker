@@ -8,7 +8,7 @@ export class AsteroidSprite {
     asteroid: PIXI.Sprite[];
     app: PIXI.Application;
     emitter: ParticleBase;
-    asteroidOre: string;
+    asteroidSeed: string;
     delta = 0;
 
     xBaseAsteroid: number;
@@ -22,7 +22,7 @@ export class AsteroidSprite {
         this.asteroid = new Array<PIXI.Sprite>();
         this.asteroidFolders = { "carbon": new Array<PIXI.Texture>(), "titanium": new Array<PIXI.Texture>() };
 
-        this.asteroidOre = asteroidOre;
+        this.asteroidSeed = seed;
         this.initAsteroidSprites();
         this.generateAsteroid(asteroidOre,seed);
 
@@ -89,6 +89,7 @@ export class AsteroidSprite {
     }
 
     generateAsteroid(asteroidType: string, seed: string) {
+        console.log(seed);
         let seedNum=[];
         let nums = [1, 2, 3, 4];
         let comb = [[1, 1], [1, -1], [-1, -1], [-1, 1]];
@@ -129,8 +130,8 @@ export class AsteroidSprite {
     }
     // Change the sprite of asteroid when the user change 
     changeSprite(asteroidOre: string, seed:string) {
-        if (this.asteroidOre !== asteroidOre) {
-            this.asteroidOre = asteroidOre;
+        if (this.asteroidSeed !== seed) {
+            this.asteroidSeed = seed;
             this.generateAsteroid(asteroidOre, seed);
         }
     }

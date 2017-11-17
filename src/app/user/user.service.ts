@@ -61,7 +61,7 @@ export class UserService {
     this.currentUser.seedAsteroid = snapshot.asteroid.seed;
 
     this.currentUser.quest = new Quest(snapshot.quest.name, snapshot.quest.type, snapshot.quest.values,
-       snapshot.quest.num, snapshot.quest.gain);
+      snapshot.quest.num, snapshot.quest.gain);
 
     this.userSubject.next(this.currentUser);
     this.userLoad = true;
