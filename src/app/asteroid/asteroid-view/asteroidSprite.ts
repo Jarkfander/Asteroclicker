@@ -106,7 +106,7 @@ export class AsteroidSprite {
             this.asteroid.push(new PIXI.Sprite());
         }
         else {
-            this.app.stage.removeChild();
+            this.app.stage.removeChild(this.asteroid[0]);
             for (let i = 1; i < this.asteroid.length; i++) {
                 this.asteroid[0].removeChild(this.asteroid[i]);
             }
