@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, Renderer2, ElementRef } from '@angular/core';
 import { UserService } from '../../user/user.service';
 import { User } from '../../user/user';
+import { QuestService } from '../quest.service';
 
 @Component({
   selector: 'app-topbar',
@@ -10,7 +11,7 @@ import { User } from '../../user/user';
 export class TopbarComponent implements AfterViewInit {
   public user: User;
   public isModalOpen: boolean;
-  constructor(private userS: UserService) {
+  constructor(private userS: UserService, private questS: QuestService) {
       this.user = userS.currentUser;
    }
 

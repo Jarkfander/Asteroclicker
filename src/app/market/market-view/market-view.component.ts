@@ -50,11 +50,11 @@ export class MarketViewComponent implements AfterViewInit {
   }
 
   public SellOre/*moon*/(amount: number, oreName: string) {
-    this.socketS.sellOre(oreName,amount);
+    this.socketS.sellOre(oreName, amount);
   }
 
   public BuyOre(amount: number, oreName: string) {
-    this.socketS.sellOre(oreName,amount);
+    this.socketS.buyOre(oreName, amount);
   }
 
   subjectOre() {
@@ -68,7 +68,7 @@ export class MarketViewComponent implements AfterViewInit {
 
     this.marketS.OreCostsSubjectTitanium.subscribe((tab: number[]) => {
       this.valuesCreditTitanium10 = this.marketS.currentOresCosts.titaniumCosts[Object.keys(
-                                    this.marketS.currentOresCosts.titaniumCosts)[29]];
+        this.marketS.currentOresCosts.titaniumCosts)[29]];
       this.chartTitanium.addNew(tab);
 
       this.valuesCreditTitanium10 = parseFloat((this.valuesCreditTitanium10 * 10).toFixed(2));

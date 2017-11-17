@@ -39,7 +39,7 @@ export class AsteroidViewComponent implements AfterViewInit {
     this.app.stage.addChild(background);
 
     this.aster = new AsteroidSprite(0.25, 0.25, this.app, this.asteroidS.asteroidTypes
-      [this.userS.currentUser.numAsteroid].ore, this.asteroidS.asteroidTypes.length);
+      [this.userS.currentUser.numAsteroid].ore, this.asteroidS.asteroidTypes.length,this.userS.currentUser.seedAsteroid);
 
     for (let i = 0; i < this.aster.asteroid.length; i++) {
       this.aster.asteroid[i].on('click', (event) => {
@@ -67,7 +67,7 @@ export class AsteroidViewComponent implements AfterViewInit {
     setInterval(() => { this.resetClick() }, 200);
 
     this.userS.userSubject.subscribe((user: User) => {
-      this.aster.changeSprite(this.asteroidS.asteroidTypes[user.numAsteroid].ore);
+      this.aster.changeSprite(this.asteroidS.asteroidTypes[user.numAsteroid].ore,user.seedAsteroid);
       if (this.drone.laser != null) {
         this.drone.laser.visible = user.getOreAmountFromString(this.asteroidS.asteroidTypes[user.numAsteroid].ore) <
          this.upgradeS.storage[user.storageLvl].capacity;
