@@ -4,7 +4,7 @@
         <h1>Storage</h1>
         <p>Current Level: {{user.storageLvl}} : Capacity: {{ stock[user.storageLvl].capacity }}</p>
         <p>Next Level: {{ user.storageLvl + 1 }} : Capacity: {{ stock[user.storageLvl + 1].capacity }}</p>
-        <p>Cost: {{ stock[user.storageLvl + 1].cost }} Credit</p>
+        <p>Cost: <b class="credit">{{ stock[user.storageLvl + 1].cost }} cr</b></p>
     </div>
     <button class="btn-upgrade" (click)="stockLvlUp()">Upgrade</button>
 </div>
@@ -15,7 +15,7 @@
         <h1>Mining drones</h1>
         <p>Current Level: {{user.mineRateLvl}} : Base Rate: {{ mineRate[user.mineRateLvl].baseRate }} , Max Rate: {{ mineRate[user.mineRateLvl].maxRate}}</p>
         <p>Next Level: {{ user.mineRateLvl + 1 }} : Base Rate: {{ mineRate[user.mineRateLvl + 1].baseRate }}, Max Rate: {{ mineRate[user.mineRateLvl + 1].maxRate }}</p>
-        <p>Cost: {{ mineRate[user.mineRateLvl + 1].cost }} Credit</p>
+        <p>Cost: <b class="credit">{{ mineRate[user.mineRateLvl + 1].cost }} cr</b></p>
     </div>
     <button class="btn-upgrade" (click)="mineRateLvlUp()">Upgrade</button>
 </div>
