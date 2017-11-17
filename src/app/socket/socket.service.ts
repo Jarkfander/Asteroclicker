@@ -6,8 +6,8 @@ import { UserService } from '../user/user.service';
 @Injectable()
 export class SocketService {
 
-  private url = 'http://localhost:4000';
-  //private url = 'http://192.168.0.252:4000';
+  //private url = 'http://localhost:4000';
+  private url = 'http://192.168.0.252:4000';
   private socket;
 
   constructor(private userS: UserService) {
