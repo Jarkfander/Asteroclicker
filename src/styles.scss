@@ -146,3 +146,66 @@ h1,h2,h3,h4,h5,h6 {
 .credit{
     color: $credit-font-color;
 }
+
+.btn{
+    border: 0;
+    padding: 5px;
+    margin: 5px;
+
+    font-family: $main-font;
+    color: #EEEEEE;
+}
+
+.btn-upgrade{
+    @extend .btn;
+    background-color: rgb(59, 99, 172);
+    border-bottom: 5px rgb(35, 60, 102) solid;
+}
+
+.btn-upgrade:hover{
+    background-color: rgb(93, 121, 168);
+    border-bottom: 5px rgb(54, 73, 104) solid;
+}
+
+.btn-upgrade:active{
+    border-bottom: none;
+    margin-top: 10px;
+}
+
+.btn-sell{
+    @extend .btn;
+    background-color: rgb(49, 124, 49);
+    border-bottom: 5px rgb(27, 68, 27) solid;
+}
+
+.btn-sell:hover{
+    background-color: rgb(83, 133, 83);
+    border-bottom: 5px rgb(44, 66, 44) solid;
+}
+
+.btn-sell:active{
+    border-bottom: none;
+    margin-top: 10px;
+}
+
+.btn-buy{
+    @extend .btn;
+    background-color: rgb(141, 47, 47);
+    border-bottom: 5px rgb(83, 28, 28) solid;
+}
+
+.btn-buy:hover{
+    
+    background-color: rgb(145, 84, 84);
+    border-bottom: 5px rgb(83, 46, 46) solid;
+}
+
+.btn-buy:active{
+    border-bottom: none;
+    margin-top: 10px;
+}
+
+.btn:disabled{
+    background-color: rgb(155, 155, 155);
+    border-bottom: 5px rgb(78, 78, 78) solid;
+}
