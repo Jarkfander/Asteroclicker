@@ -1,4 +1,42 @@
-a {
-    padding: 0 10px;
-    font-size: 0.9em;
+:host{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-content: center;
+
+    h1{
+        font-family: "Montserrat-SemiBoldItalic", sans-serif;
+        font-size: 2em;
+        text-align: center;
+        font-variant: small-caps;
+    }
+
+    .market-list{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .market-item{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            padding: 5px;
+            margin: 5px;
+            border: 1px solid white;
+
+            .button-list{
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+                width: 30%;
+            }
+    
+            .curve{
+                width: 70%;
+                height: 100%;
+            }
+        }
+        
+    }
 }
+

@@ -1,0 +1,17 @@
+:host {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+}
+
+.upgrade {
+    height: 20%;
+
+}
+
+.upgrade-icon{
+    border-radius:50%;
+    height: 100%;
+}
