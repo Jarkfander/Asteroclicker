@@ -18,6 +18,7 @@ import { MarketModule } from './market/market.module';
 import { MarketService } from './market/market.service';
 import { AsteroidService } from './asteroid/asteroid.service';
 import { QuestService } from './topbar/quest.service';
+import { RankingService } from './topbar/ranking.service';
 
 
 @NgModule({
@@ -35,9 +36,9 @@ import { QuestService } from './topbar/quest.service';
     SigninModule,
     TopbarModule,
     SharedModule,
-    MarketModule,
+    MarketModule
   ],
-  providers: [UserService,UpgradeService, MarketService, AsteroidService, QuestService],
+  providers: [UserService, UpgradeService, MarketService, AsteroidService, QuestService, RankingService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
