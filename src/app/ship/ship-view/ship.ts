@@ -89,7 +89,6 @@ export class Ship {
 
 
     }
-
     // Move the ship each tick 
     initMoveXY(upgradeAnimation, xVariation: number, yVariation: number, multiplicateurDetlta: number) {
         upgradeAnimation.tabAnimation[0].y = upgradeAnimation.posY + Math.sin(multiplicateurDetlta) * yVariation;
