@@ -8,12 +8,13 @@ export class SocketService {
 
   //private url = 'http://localhost:4000';
   //private url = 'http://192.168.0.252:4000';
-  private url = 'http://78:192:54:38:4000';
+  private url = 'http://78.192.54.38:4000';
 
   private socket;
 
   constructor(private userS: UserService) {
     this.socket = io(this.url);
+    console.log(this.socket);
    }
     
    incrementOre(oreName : string, delta : number){
