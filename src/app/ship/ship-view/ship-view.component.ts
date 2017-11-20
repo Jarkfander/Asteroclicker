@@ -15,13 +15,27 @@ export class ShipViewComponent implements AfterViewInit {
   private v: number;
   private ship: Ship;
 
+
   constructor(private el: ElementRef, private render: Renderer2, private userS: UserService) {}
 
     ngAfterViewInit() {
+      this.initPixi();
+    }
+
+    @HostListener('window:resize') onResize() {
+      this.app.stage.removeChildren();
+      this.render.removeChild(this.el.nativeElement, this.app.view);
+      delete this.ship;
+      this.app.destroy();
+
+      this.initPixi();
+    }
+
+
+    initPixi() {
       const w = this.el.nativeElement.parentElement.offsetWidth;
       const h = this.el.nativeElement.parentElement.offsetHeight;
-
-      this.app = new PIXI.Application(w, h, {backgroundColor : 0x1099bb});
+      this.app = new PIXI.Application(w, h, {backgroundColor : 0xffffff});
       this.render.appendChild(this.el.nativeElement, this.app.view);
 
       const background = PIXI.Sprite.fromImage('assets/Ciel.jpg');
@@ -40,13 +54,5 @@ export class ShipViewComponent implements AfterViewInit {
           this.ship.autoUpgrade(user.mineRateLvl, this.ship.radarUpgrade);
           this.ship.autoUpgrade(user.mineRateLvl + 2, this.ship.smokeRadarUpgrade);
       });
-
     }
-
-    @HostListener('window:resize') onResize() {
-      const w = this.el.nativeElement.parentElement.offsetWidth;
-      const h = this.el.nativeElement.parentElement.offsetHeight;
-      this.app.renderer.resize(w, h);
-    }
-
 }
