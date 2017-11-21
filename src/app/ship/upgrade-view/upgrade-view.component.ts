@@ -5,6 +5,7 @@ import { UpgradeService } from '../../upgrade/upgrade.service';
 import { Storage } from '../../upgrade/Storage';
 import { MineRate } from '../../upgrade/MineRate';
 import { SocketService } from '../../socket/socket.service';
+import { Research } from '../../upgrade/research';
 
 
 @Component({
@@ -16,26 +17,20 @@ export class UpgradeViewComponent implements AfterViewInit {
     public user: User;
     public stock: Storage[];
     public mineRate: MineRate[];
+    public research: Research[];
 
     constructor(private el: ElementRef, private render: Renderer2, private userS: UserService,
-         private upgradeS: UpgradeService,private socketS: SocketService) {
+        private upgradeS: UpgradeService, private socketS: SocketService) {
         this.stock = upgradeS.storage;
         this.user = userS.currentUser;
         this.mineRate = upgradeS.mineRate;
+        this.research = upgradeS.research;
     }
 
     ngAfterViewInit() {
         this.userS.userSubject.subscribe((user: User) => {
             this.user = user;
         });
-        this.upgradeS.upgradeStockSubject.subscribe((tabStock: Storage[]) => {
-            this.stock = tabStock;
-        });
-
-        this.upgradeS.upgradeMineRateSubject.subscribe((tabMineRate: MineRate[]) => {
-            this.mineRate = tabMineRate;
-        });
-
     }
 
     stockLvlUp() {

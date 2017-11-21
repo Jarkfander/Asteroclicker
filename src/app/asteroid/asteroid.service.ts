@@ -24,7 +24,7 @@ export class AsteroidService {
 
   FillAsteroid(snapshot) {
     for(var i =0;i<snapshot.length;i++){
-      this.asteroidTypes.push(new Asteroid(snapshot[i].maxstock, snapshot[i].mineRate,snapshot[i].ore));
+      this.asteroidTypes.push(new Asteroid(snapshot[i].maxstock, snapshot[i].mineRate,snapshot[i].ore,"01230123",0));
     }
     this.AsteroidSubject.next( this.asteroidTypes );
   }

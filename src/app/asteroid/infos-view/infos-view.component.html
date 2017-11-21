@@ -33,5 +33,10 @@
 
 <br>
 
+<app-modal *ngIf="isModalOpen">
+    <a href="#" (click)="closeModal()">Close</a>
+</app-modal>
 
-<button class="btn-upgrade" (click)="searchNewAster()">Search Another Asteroid</button>
+<button *ngIf="user.asteroidSearch.timer!=0 && user.asteroidSearch.results.length!=0" class="btn-upgrade" (click)="showResult()">See search result</button>
+<button *ngIf="user.asteroidSearch.timer!=0 && user.asteroidSearch.results.length==0" class="btn-upgrade">Searching : {{timer}}</button>
+<button *ngIf="user.asteroidSearch.timer==0" class="btn-upgrade" (click)="searchNewAster()">Search Another Asteroid</button>

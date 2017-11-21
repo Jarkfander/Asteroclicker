@@ -1,6 +1,7 @@
 import { MineRate } from '../upgrade/mineRate';
 import { Storage } from '../upgrade/storage';
 import { Quest } from '../topbar/quest';
+import { AsteroidSearch } from '../asteroid/asteroidSearch';
 
 export class User {
 
@@ -9,9 +10,12 @@ export class User {
     public email: string;
     public mineRateLvl: number;
     public storageLvl: number;
+    public researchLvl: number;
     public currentMineRate: number;
     public numAsteroid: number;
     public seedAsteroid: string;
+
+    public asteroidSearch: AsteroidSearch;
 
     public quest: Quest;
 

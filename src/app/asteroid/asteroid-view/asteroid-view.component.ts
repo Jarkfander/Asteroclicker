@@ -75,7 +75,7 @@ export class AsteroidViewComponent implements AfterViewInit {
         this.asteroidS.asteroidTypes[this.userS.currentUser.numAsteroid].ore);*/
         this.socketS.incrementOre(this.asteroidS.asteroidTypes[this.userS.currentUser.numAsteroid].ore,
         parseFloat((this.userS.currentUser.currentMineRate *
-         this.asteroidS.asteroidTypes[this.userS.currentUser.numAsteroid].mineRate/100).toFixed(2)));
+         this.asteroidS.asteroidTypes[this.userS.currentUser.numAsteroid].purity/100).toFixed(2)));
     }, 1000);
     setInterval(() => { this.resetClick() }, 200);
 
