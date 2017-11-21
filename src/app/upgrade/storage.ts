@@ -4,8 +4,8 @@ export class Storage extends Upgrade {
 
     public capacity: number;
 
-    constructor(level: number, _cost: number, _capacity: number) {
-        super(level, _cost);
-        this.capacity = _capacity;
+    constructor(level: number, cost: number, capacity: number) {
+        super(level, cost);
+        this.capacity = capacity;
     }
 }

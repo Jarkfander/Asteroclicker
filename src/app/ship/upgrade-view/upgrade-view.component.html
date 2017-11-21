@@ -20,6 +20,17 @@
     <button class="btn-upgrade" (click)="mineRateLvlUp()">Upgrade</button>
 </div>
 
+<div class="upgrade row justify-between">
+    <img  class="upgrade-icon" src="../../../assets/upgrade-icons/icone_radar.png"/>
+    <div class="column justify-between">
+        <h1>Scanner</h1>
+        <p>Current Level: {{user.researchLvl}} : Speed: {{ research[user.researchLvl].speed }}</p>
+        <p>Next Level: {{ user.researchLvl + 1 }} : Speed: {{ research[user.researchLvl + 1].speed }}</p>
+        <p>Cost: <b class="credit">{{ research[user.researchLvl + 1].cost }} cr</b></p>
+    </div>
+    <button class="btn-upgrade" (click)="mineRateLvlUp()" disabled>Upgrade</button>
+</div>
+
 <!--
 <div class="upgrade row justify-between">
     <img class="upgrade-icon" src="../../../assets/upgrade-icons/icone_engine.png"/>
@@ -29,16 +40,6 @@
     </div>
     <button class="btn-upgrade" (click)="stockLvlUp()" disabled>Upgrade</button>
 </div>
-
-<div class="upgrade row justify-between">
-    <img  class="upgrade-icon" src="../../../assets/upgrade-icons/icone_radar.png"/>
-    <div class="column justify-between">
-        <h1>Scanner</h1>
-        <p>Not available yet</p>
-    </div>
-    <button class="btn-upgrade" (click)="mineRateLvlUp()" disabled>Upgrade</button>
-</div>
-
 
 <div class="upgrade row justify-between">
     <img  class="upgrade-icon" src="http://placehold.it/200x200"/>
