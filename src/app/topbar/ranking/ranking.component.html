@@ -1,3 +1,11 @@
-<li *ngFor="let ranked of ranking">
-  {{ ranked.id }} - {{ ranked.name }} : {{ ranked.score }}
+<li *ngFor="let ranked of rankingBtw">
+   
+        {{ ranked.id }} - {{ ranked.name }} : {{ ranked.score }}
+  
+  <!--   <div *ngIf=" iUser % 10 === ranked.id">
+      </div>
+    <div *ngIf=" iUser % 10 != ranked.id">
+        {{ ranked.id }} - {{ ranked.name }} : {{ ranked.score }}
+    </div>
+  -->
 </li>

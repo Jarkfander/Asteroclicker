@@ -5,6 +5,7 @@ export class Quest {
     public values: number;
     public num: number;
     public gain: number;
+    public valuesFinal: number;
 
     constructor(_name: string, _type: string, _values: number, _num: number, _gain: number) {
         this.name = _name;

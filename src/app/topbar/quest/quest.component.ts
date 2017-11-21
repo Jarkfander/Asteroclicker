@@ -14,7 +14,6 @@ export class QuestComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-
   }
 
 }

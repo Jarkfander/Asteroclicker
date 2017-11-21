@@ -10,5 +10,17 @@
 <div *ngIf="userS.currentUser.quest.gain === 0">
   Nothing more !
 </div>
+<br> <br>
+<div *ngIf="questS.questGroup.values != 0">
+  Quest group: <br> <br>
+  {{ questS.questGroup.name }} <br>
+  {{ (questS.questGroup.valuesFinal - questS.questGroup.values).toFixed(2) }} / {{questS.questGroup.valuesFinal}}    
+  <br> <br>
+  You Win: {{questS.questGroup.gain}}
+</div>
+
+<div *ngIf="questS.questGroup.values === 0">
+Nothing more !
+</div>
 
 <br>
