@@ -1,8 +1,9 @@
 
 <div *ngIf="userS.currentUser.quest.gain != 0">
     Quest: <br> <br>
-    {{ userS.currentUser.quest.name }}:
-    {{ (questS.questTab[userS.currentUser.quest.num].values - userS.currentUser.quest.values).toFixed(2) }} / {{questS.questTab[userS.currentUser.quest.num].values}}    
+    {{ userS.currentUser.quest.text }} <br>
+    {{ userS.currentUser.quest.name }} :
+    {{ (userS.currentUser.quest.valuesFinal - userS.currentUser.quest.values).toFixed(2) }} / {{userS.currentUser.quest.valuesFinal}}    
     <br> <br>
     You Win: {{ userS.currentUser.quest.gain }} Credit.
 </div>

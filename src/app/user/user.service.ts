@@ -66,6 +66,8 @@ export class UserService {
 
     this.currentUser.quest = new Quest(snapshot.quest.name, snapshot.quest.type, snapshot.quest.values,
       snapshot.quest.num, snapshot.quest.gain);
+    this.currentUser.quest.text = snapshot.quest.text;
+    this.currentUser.quest.valuesFinal = snapshot.quest.valuesFinal;
 
     let resultTab = new Array<Asteroid>();
     if (snapshot.search.result != 0) {
