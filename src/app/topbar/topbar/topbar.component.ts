@@ -21,6 +21,7 @@ export class TopbarComponent implements AfterViewInit {
       this.user = user;
     });
     this.socketS.connectionEstablished();
+    this.calculeMoneyWithSpace();
   }
 
   public LogOut() {
@@ -33,5 +34,15 @@ export class TopbarComponent implements AfterViewInit {
 
   public CloseModal() {
     this.isModalOpen = false;
+  }
+
+  calculeMoneyWithSpace() {
+/*    const creditString = this.userS.currentUser.credit.toString();
+
+    for (let i = 0 ; i < creditString.length ; i++) {
+      if (i + 1 % 3 === 0) {
+        console.log(creditString.charAt(i));
+      }
+    }*/
   }
 }
