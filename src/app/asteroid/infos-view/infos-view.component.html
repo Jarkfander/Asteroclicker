@@ -33,10 +33,24 @@
 
 <br>
 
-<app-modal *ngIf="isModalOpen">
+<app-modal class="col" *ngIf="isModalOpen">
+
+  <div class="closeLine">
     <a href="#" (click)="closeModal()">Close</a>
+  </div>
+
+  <div class="result row">
+      <app-search-result *ngFor="let aste of user.asteroidSearch.results; let i = index" [num]="i" [asteroid]="aste"></app-search-result>      
+  </div>
+
+  <div class="rejectLine">
+    <a href="#" (click)="closeModal()">Close</a>
+  </div>
+
+
 </app-modal>
 
-<button *ngIf="user.asteroidSearch.timer!=0 && user.asteroidSearch.results.length!=0" class="btn-upgrade" (click)="showResult()">See search result</button>
+<button *ngIf="user.asteroidSearch.timer!=0 && user.asteroidSearch.results.length==3" class="btn-upgrade" (click)="showResult()">See search result</button>
 <button *ngIf="user.asteroidSearch.timer!=0 && user.asteroidSearch.results.length==0" class="btn-upgrade">Searching : {{timer}}</button>
+<button *ngIf="user.asteroidSearch.timer!=0 && user.asteroidSearch.results.length==1" class="btn-upgrade" >Time before arriving : {{timer}}</button>
 <button *ngIf="user.asteroidSearch.timer==0" class="btn-upgrade" (click)="searchNewAster()">Search Another Asteroid</button>

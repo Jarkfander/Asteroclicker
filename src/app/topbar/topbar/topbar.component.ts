@@ -21,7 +21,6 @@ export class TopbarComponent implements AfterViewInit {
       this.user = user;
     });
     this.socketS.connectionEstablished();
-    console.log("Connection established");
   }
 
   public LogOut() {

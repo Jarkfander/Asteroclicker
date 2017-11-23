@@ -5,18 +5,19 @@ import { UserService } from '../user/user.service';
 import { MiningPanelComponent } from './mining-panel/mining-panel.component';
 import { InfosViewComponent } from './infos-view/infos-view.component';
 import { UpgradeService } from '../upgrade/upgrade.service';
-import { AsteroidService } from './asteroid.service';
 import { SocketService } from '../socket/socket.service';
 import { ModalComponent } from '../shared/modal/modal.component';
 import { SharedModule } from '../shared/shared.module';
+import { SearchResultComponent } from './search-result/search-result.component';
+import { OreInfoService } from './ore-info.service';
 
 @NgModule({
   imports: [
     CommonModule,
     SharedModule
   ],
-  declarations: [AsteroidViewComponent, InfosViewComponent, MiningPanelComponent],
+  declarations: [AsteroidViewComponent, InfosViewComponent, MiningPanelComponent, SearchResultComponent],
   exports: [AsteroidViewComponent, InfosViewComponent],
-  providers: [UserService, UpgradeService, AsteroidService,SocketService]
+  providers: [UserService, UpgradeService, SocketService, OreInfoService]
 })
 export class AsteroidModule { }

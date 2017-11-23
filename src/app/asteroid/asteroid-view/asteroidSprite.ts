@@ -89,7 +89,6 @@ export class AsteroidSprite {
     }
 
     generateAsteroid(asteroidType: string, seed: string) {
-        console.log(seed);
         let seedNum=[];
         let nums = [1, 2, 3, 4];
         let comb = [[1, 1], [1, -1], [-1, -1], [-1, 1]];
