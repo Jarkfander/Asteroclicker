@@ -27,6 +27,19 @@ export class AsteroidViewComponent implements AfterViewInit {
   clicked: boolean;
 
   ngAfterViewInit() {
+   this.initAsteroid();
+  }
+
+  @HostListener('window:resize') onResize() {
+    this.app.stage.removeChildren();
+    this.render.removeChild(this.el.nativeElement, this.app.view);
+    delete this.aster;
+    this.app.destroy();
+
+    this.initAsteroid();
+  }
+
+  initAsteroid() {
     const w = this.el.nativeElement.parentElement.offsetWidth;
     const h = this.el.nativeElement.parentElement.offsetHeight;
 
@@ -74,12 +87,6 @@ export class AsteroidViewComponent implements AfterViewInit {
          this.upgradeS.storage[user.storageLvl].capacity;
      }
     });
-  }
-
-  @HostListener('window:resize') onResize() {
-    const w = this.el.nativeElement.parentElement.offsetWidth;
-    const h = this.el.nativeElement.parentElement.offsetHeight;
-    this.app.renderer.resize(w, h);
   }
 
   asteroidClick() {
