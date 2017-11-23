@@ -71,6 +71,23 @@ export class SocketService {
     this.socket.emit("researchFinished", json);
   }
 
+  chooseAsteroid(ind : number) {
+    let json = {};
+
+    json["user"] = this.userS.currentUser.uid;
+    json["ind"] = ind;
+
+    this.socket.emit("chooseAsteroid", json);
+  }
+
+  arrivedToAsteroid() {
+    let json = {};
+
+    json["user"] = this.userS.currentUser.uid;
+
+    this.socket.emit("arrivedToAsteroid", json);
+  }
+
   connectionEstablished() {
     let json = {};
 
@@ -78,5 +95,6 @@ export class SocketService {
 
     this.socket.emit("userLogged", json);
   }
+
 
 }

@@ -7,7 +7,6 @@ import { Storage } from '../upgrade/storage';
 import { MineRate } from '../upgrade/mineRate';
 import { UpgradeService } from '../upgrade/upgrade.service';
 import { MarketService } from '../market/market.service';
-import { AsteroidService } from '../asteroid/asteroid.service';
 import { Quest } from '../topbar/quest';
 import { AsteroidSearch } from '../asteroid/asteroidSearch';
 import { Asteroid } from '../asteroid/asteroid';
@@ -23,7 +22,7 @@ export class UserService {
   userSubject = new Subject<User>();
 
   constructor(db: AngularFireDatabase, afAuth: AngularFireAuth,
-    private upgradeS: UpgradeService, private marketS: MarketService, private asteroidS: AsteroidService) {
+    private upgradeS: UpgradeService, private marketS: MarketService) {
     this.db = db;
     this.afAuth = afAuth;
     afAuth.authState.subscribe((auth) => {
@@ -60,8 +59,8 @@ export class UserService {
     this.currentUser.storageLvl = snapshot.storageLvl;
     this.currentUser.researchLvl = snapshot.researchLvl;
 
-    this.currentUser.numAsteroid = snapshot.asteroid.numAsteroid;
-    this.currentUser.seedAsteroid = snapshot.asteroid.seed;
+    this.currentUser.asteroid=new Asteroid(snapshot.asteroid.capacity, snapshot.asteroid.purity,
+      snapshot.asteroid.ore, snapshot.asteroid.seed,0);
 
     this.currentUser.quest = new Quest(snapshot.quest.name, snapshot.quest.type, snapshot.quest.values,
       snapshot.quest.num, snapshot.quest.gain);
@@ -69,8 +68,8 @@ export class UserService {
     let resultTab = new Array<Asteroid>();
     if (snapshot.search.result != 0) {
       for (let i = 0; i < snapshot.search.result.length; i++) {
-        resultTab.push(new Asteroid(snapshot.search.result[0].capacity, snapshot.search.result[0].purity,
-          snapshot.search.result[0].ore, snapshot.search.result[0].seed, snapshot.search.result[0].timeToGo));
+        resultTab.push(new Asteroid(snapshot.search.result[i].capacity, snapshot.search.result[i].purity,
+          snapshot.search.result[i].ore, snapshot.search.result[i].seed, snapshot.search.result[i].timeToGo));
       }
     }
     this.currentUser.asteroidSearch = new AsteroidSearch(resultTab, snapshot.search.timer);

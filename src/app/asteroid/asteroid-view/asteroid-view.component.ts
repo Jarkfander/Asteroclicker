@@ -6,8 +6,8 @@ import { Drone } from './drone';
 import { User } from '../../user/user';
 import { UpgradeService } from '../../upgrade/upgrade.service';
 import { ParticleBase } from '../../pixiVisual/particleBase';
-import { AsteroidService } from '../asteroid.service';
 import { SocketService } from '../../socket/socket.service';
+import { OreInfoService } from '../ore-info.service';
 
 
 @Component({
@@ -18,7 +18,7 @@ import { SocketService } from '../../socket/socket.service';
 
 export class AsteroidViewComponent implements AfterViewInit {
   constructor(private el: ElementRef, private render: Renderer2, private userS: UserService,
-    private upgradeS: UpgradeService, private asteroidS: AsteroidService, private socketS: SocketService) { }
+    private upgradeS: UpgradeService, private socketS: SocketService, private oreInfoS:OreInfoService) { }
 
   private app: PIXI.Application;
   private aster: AsteroidSprite;
@@ -51,8 +51,8 @@ export class AsteroidViewComponent implements AfterViewInit {
     background.height = this.app.renderer.height;
     this.app.stage.addChild(background);
 
-    this.aster = new AsteroidSprite(0.25, 0.25, this.app, this.asteroidS.asteroidTypes
-      [this.userS.currentUser.numAsteroid].ore, this.asteroidS.asteroidTypes.length,this.userS.currentUser.seedAsteroid);
+    this.aster = new AsteroidSprite(0.25, 0.25,this.app,this.userS.currentUser.asteroid.ore,
+      this.oreInfoS.oreInfo.length,this.userS.currentUser.asteroid.seed);
 
     for (let i = 0; i < this.aster.asteroid.length; i++) {
       this.aster.asteroid[i].on('click', (event) => {
@@ -62,8 +62,8 @@ export class AsteroidViewComponent implements AfterViewInit {
 
     this.drone = new Drone(0.20, 0.20, this.app);
 
-    this.drone.laserFirstState = this.userS.currentUser.getOreAmountFromString(this.asteroidS.asteroidTypes
-      [this.userS.currentUser.numAsteroid].ore) < this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity;
+    this.drone.laserFirstState = this.userS.currentUser.getOreAmountFromString(this.userS.currentUser.asteroid.ore) 
+    < this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity;
 
     this.initializeEmmiter();
     setInterval(() => {
@@ -73,16 +73,17 @@ export class AsteroidViewComponent implements AfterViewInit {
       }*/
       /*this.userS.IncrementUserOre(this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity,
         this.asteroidS.asteroidTypes[this.userS.currentUser.numAsteroid].ore);*/
-        this.socketS.incrementOre(this.asteroidS.asteroidTypes[this.userS.currentUser.numAsteroid].ore,
+        this.socketS.incrementOre(this.userS.currentUser.asteroid.ore,
         parseFloat((this.userS.currentUser.currentMineRate *
-         this.asteroidS.asteroidTypes[this.userS.currentUser.numAsteroid].purity/100).toFixed(2)));
+         this.userS.currentUser.asteroid.purity/100 *
+         this.oreInfoS.getOreInfoByString(this.userS.currentUser.asteroid.ore).miningSpeed).toFixed(2)));
     }, 1000);
     setInterval(() => { this.resetClick() }, 200);
 
     this.userS.userSubject.subscribe((user: User) => {
-      this.aster.changeSprite(this.asteroidS.asteroidTypes[user.numAsteroid].ore,user.seedAsteroid);
+      this.aster.changeSprite(user.asteroid.ore,user.asteroid.seed);
       if (this.drone.laser != null) {
-        this.drone.laser.visible = user.getOreAmountFromString(this.asteroidS.asteroidTypes[user.numAsteroid].ore) <
+        this.drone.laser.visible = user.getOreAmountFromString(user.asteroid.ore) <
          this.upgradeS.storage[user.storageLvl].capacity;
      }
     });

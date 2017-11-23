@@ -2,7 +2,9 @@
 <app-signin ></app-signin>
 </div>
 
-<div *ngIf="upgradeS && userS && userS.userLoad && upgradeS.storageLoad && upgradeS.mineRateLoad && upgradeS.researchLoaded && marketS && marketS.marketLoad && asteroidS && asteroidS.asteroidLoad && loadAnimation.boolFinishLoad">
+<div *ngIf="upgradeS && userS && userS.userLoad && upgradeS.storageLoad && upgradeS.mineRateLoad
+ && upgradeS.researchLoaded && marketS && marketS.marketLoad && loadAnimation.boolFinishLoad
+ && oreInfoS && oreInfoS.oreInfoLoaded">
     <header>
         <app-topbar></app-topbar>
       </header>
