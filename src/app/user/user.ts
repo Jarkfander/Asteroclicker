@@ -9,6 +9,7 @@ export class User {
     public uid: string;
     public credit: number;
     public email: string;
+    public name: string;
     public mineRateLvl: number;
     public storageLvl: number;
     public researchLvl: number;
