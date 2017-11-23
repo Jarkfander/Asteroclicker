@@ -15,6 +15,7 @@ export class User {
     public currentMineRate: number;
 
     public asteroid: Asteroid;
+    public score: number;
 
     public asteroidSearch: AsteroidSearch;
 

@@ -14,7 +14,7 @@ class UpgradeShip {
     }
 
     spriteAdd(newlvl: number) {
-        const lvlModulo = newlvl; // ; (newlvl <= 5 ? 1 : Math.floor(newlvl / 5) + 1);
+        const lvlModulo = (newlvl <= 5 ? 1 : Math.floor(newlvl / 5) + 1);
         if (newlvl === 0 || lvlModulo === this.currentLevel) {
             return null;
         }

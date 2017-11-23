@@ -6,17 +6,25 @@
         <p class="player-title">Explorer</p>
     </div>
   </div>
+
   <h1 class="credit-count credit"> {{ user.credit }} cr</h1>
   <ul>
-
-  <li>  
-      <div *ngIf="userS.currentUser.quest.gain != 0">
-        {{ userS.currentUser.quest.name }}:
-        {{ (questS.questTab[userS.currentUser.quest.num].values - userS.currentUser.quest.values).toFixed(2) }} / {{questS.questTab[userS.currentUser.quest.num].values}}    
+    <li>
+        <a href="#" (click)="OpenModal()">Glory quest</a> <br>  
+      <div *ngIf="questS.questGroup.values > 0">
+        {{ (questS.questGroup.valuesFinal - questS.questGroup.values).toFixed(2) }} / {{questS.questGroup.valuesFinal}} {{questS.questGroup.type}}
       </div>
-  
-      <div *ngIf="userS.currentUser.quest.gain === 0">
-        
+      <div *ngIf="questS.questGroup.values <= 0">
+          No quest for now.
+      </div>
+    </li> 
+    <li>  
+        <a href="#" (click)="OpenModal()">Daily quest</a> <br>  
+      <div *ngIf="userS.currentUser.quest.gain != 0">
+        {{ (userS.currentUser.quest.valuesFinal - userS.currentUser.quest.values).toFixed(2) }} / {{userS.currentUser.quest.valuesFinal}} {{userS.currentUser.quest.type}}    
+      </div>
+      <div *ngIf="userS.currentUser.quest.gain == 0">
+          No quest for now.
       </div>
     </li>
         
