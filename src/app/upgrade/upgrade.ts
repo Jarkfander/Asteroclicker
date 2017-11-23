@@ -7,4 +7,9 @@ export class Upgrade {
             this.lvl = level;
             this.cost = _cost;
         }
+
+        public display() {
+            let text = 'level : ' + this.lvl;
+            text = 'cost ' +  this.cost;
+        }
     }

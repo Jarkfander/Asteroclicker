@@ -12,10 +12,10 @@
 <div class="upgrade row justify-between">
     <img  class="upgrade-icon" src="../../../assets/upgrade-icons/icone_drone.png"/>
     <div class="column justify-between">
-        <h1>Mining drones</h1>
-        <p>Current Level: {{mineRateLvl}} : Base Rate: {{ mineRate[mineRateLvl].baseRate }} , Max Rate: {{ mineRate[mineRateLvl].maxRate}}</p>
-        <p>Next Level: {{ mineRateLvl + 1 }} : Base Rate: {{ mineRate[mineRateLvl + 1].baseRate }}, Max Rate: {{ mineRate[mineRateLvl + 1].maxRate }}</p>
-        <p>Cost: <b class="credit">{{ mineRate[mineRateLvl + 1].cost }} cr</b></p>
+        <h1>Mining drone</h1>
+        <p>Current Level: {{user.mineRateLvl}} : Base Rate: {{ mineRate[user.mineRateLvl].baseRate }} , Max Rate: {{ mineRate[user.mineRateLvl].maxRate}}</p>
+        <p>Next Level: {{ user.mineRateLvl + 1 }} : Base Rate: {{ mineRate[user.mineRateLvl + 1].baseRate }}, Max Rate: {{ mineRate[user.mineRateLvl + 1].maxRate }}</p>
+        <p>Cost: <b class="credit">{{ mineRate[user.mineRateLvl + 1].cost }} cr</b></p>
     </div>
     <button class="btn-upgrade" (click)="mineRateLvlUp()">Upgrade</button>
 </div>

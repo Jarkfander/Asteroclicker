@@ -11,8 +11,11 @@ import { SocketService } from '../../socket/socket.service';
 })
 export class TopbarComponent implements AfterViewInit {
   public name:string;
-  public isModalOpen: boolean;
   public credit:number;
+
+  public user: User;
+  public isModalOpenQuest: boolean;
+  public isModalOpenRank: boolean;
   constructor(private userS: UserService, private questS: QuestService, private socketS: SocketService) {
     this.name=userS.currentUser.name;
     this.credit = userS.currentUser.credit;
@@ -26,28 +29,27 @@ export class TopbarComponent implements AfterViewInit {
       this.credit = user.credit;
     });
     this.socketS.connectionEstablished();
-    this.calculeMoneyWithSpace();
+
   }
 
   public LogOut() {
     this.userS.LogOut();
   }
 
-  public OpenModal() {
-    this.isModalOpen = true;
+  public openQuestModal() {
+    this.isModalOpenQuest = true;
   }
 
-  public CloseModal() {
-    this.isModalOpen = false;
+  public closeQuestModal() {
+    this.isModalOpenQuest = false;
   }
 
-  calculeMoneyWithSpace() {
-/*    const creditString = this.userS.currentUser.credit.toString();
-
-    for (let i = 0 ; i < creditString.length ; i++) {
-      if (i + 1 % 3 === 0) {
-        console.log(creditString.charAt(i));
-      }
-    }*/
+  public openRankModal() {
+    this.isModalOpenRank = true;
   }
+
+  public closeRankModal() {
+    this.isModalOpenRank = false;
+  }
+
 }

@@ -2,15 +2,15 @@
   <div class="player-info">
     <img src="http://placehold.it/400x400" class="avatar" />
     <div class="player-info-text">
-        <h1 class="player-name">Cpt. John Doe</h1>
+        <h1 class="player-name">Cpt. {{user.name}}</h1>
         <p class="player-title">Explorer</p>
     </div>
   </div>
 
-  <h1 class="credit-count credit"> {{ credit }} cr</h1>
+  <h1 class="credit-count credit"> {{ user.calculeMoneyWithSpace() }} cr</h1>
   <ul>
     <li>
-        <a href="#" (click)="OpenModal()">Glory quest</a> <br>  
+        <a href="#" (click)="openQuestModal()">Glory quest</a> <br>  
       <div *ngIf="questS.questGroup.values > 0">
         {{ (questS.questGroup.valuesFinal - questS.questGroup.values).toFixed(2) }} / {{questS.questGroup.valuesFinal}} {{questS.questGroup.type}}
       </div>
@@ -19,7 +19,7 @@
       </div>
     </li> 
     <li>  
-        <a href="#" (click)="OpenModal()">Daily quest</a> <br>  
+        <a href="#" (click)="openQuestModal()">Daily quest</a> <br>  
       <div *ngIf="userS.currentUser.quest.gain != 0">
         {{ (userS.currentUser.quest.valuesFinal - userS.currentUser.quest.values).toFixed(2) }} / {{userS.currentUser.quest.valuesFinal}} {{userS.currentUser.quest.type}}    
       </div>
@@ -28,14 +28,20 @@
       </div>
     </li>
         
-    <li><a href="#" (click)="OpenModal()">Quest</a></li>
+    <li><a href="#" (click)="openQuestModal()">Quest</a></li>
+    <li><a href="#" (click)="openRankModal()">Ranking</a></li>
     <li><a href="#">My profile</a></li>
     <li><a href="#">Configuration</a></li>
     <li><a href="#" (click)="LogOut();">Sign out</a></li>
   </ul>
 </div>
 
-<app-modal *ngIf="isModalOpen">
-    <a href="#" (click)="CloseModal()">Close</a>
+<app-modal *ngIf="isModalOpenQuest">
+    <a href="#" (click)="closeQuestModal()">Close</a>
     <app-quest></app-quest>
+</app-modal>
+
+<app-modal *ngIf="isModalOpenRank">
+  <a href="#" (click)="closeRankModal()">Close</a>
+  <app-ranking></app-ranking>
 </app-modal>
