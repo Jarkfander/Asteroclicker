@@ -8,14 +8,14 @@ export class Drone {
     laserFirstState:boolean;
 
     delta: number;
-    asteroidDone: boolean;
+    public isMining: boolean;
     xBaseDrone: number;
     yBaseDrone: number;
     laserAnim: PIXI.extras.AnimatedSprite;
 
     constructor(x: number , y: number, app: PIXI.Application) {
         this.app = app;
-        this.asteroidDone = true;
+        this.isMining = true;
         this.delta = 0;
         this.drone = PIXI.Sprite.fromImage('assets/drone.png');
         this.drone.texture.baseTexture.mipmap = true;
@@ -45,11 +45,12 @@ export class Drone {
                     this.delta = 0;
                 }
                 this.delta += (2 * Math.PI) / 1000;
-                if (this.asteroidDone) {
+                if (this.isMining) {
                     this.drone.x = this.xBaseDrone;
                     this.drone.y = this.yBaseDrone;
                     this.drone.rotation = 0;
                     this.laserAnim.visible = false;
+                    this.delta = 0;
                 } else {
                     this.laserAnim.visible = true;
                     this.drone.x = this.xBaseDrone + Math.cos(this.delta) * 50;
