@@ -18,7 +18,7 @@
       <img src="assets/smallRock.png" alt="carbonIcon">
     </td>
     <td align="left" [ngStyle]="{'color': carbonOverload ? 'red' : 'white'}"> Carbon : {{ carbonQuantity }}</td>
-    <td *ngIf="asteroid.ore=='carbon'" align="right">{{(carbonInfo.miningSpeed*(asteroid.purity/100)*mineRate).toFixed(2)}} carbon/s</td>
+    <td *ngIf="asteroid.ore=='carbon' && asteroid.currentCapacity>0" align="right">{{(carbonInfo.miningSpeed*(asteroid.purity/100)*mineRate).toFixed(2)}} carbon/s</td>
 
   </tr>
 
@@ -28,7 +28,7 @@
       <img src="assets/smallRockTita.png" alt="titanIcon">
     </td>
     <td align="left" [ngStyle]="{'color': titaniumOverload ? 'red' : 'white'}"> Titanium : {{ titaniumQuantity }}</td>
-    <td *ngIf="asteroid.ore=='titanium'" align="right">{{(titaniumInfo.miningSpeed*(asteroid.purity/100)*mineRate).toFixed(2)}} titanium/s</td>
+    <td *ngIf="asteroid.ore=='titanium' && asteroid.currentCapacity>0" align="right">{{(titaniumInfo.miningSpeed*(asteroid.purity/100)*mineRate).toFixed(2)}} titanium/s</td>
   </tr>
 </table>
 <br>
