@@ -2,8 +2,8 @@ import { Component, AfterViewInit, Renderer2, ElementRef } from '@angular/core';
 import { UserService } from '../../user/user.service';
 import { User } from '../../user/user';
 import { UpgradeService } from '../../upgrade/upgrade.service';
-import { Storage } from '../../upgrade/Storage';
-import { MineRate } from '../../upgrade/MineRate';
+import { Storage } from '../../upgrade/storage';
+import { MineRate } from '../../upgrade/mineRate';
 import { SocketService } from '../../socket/socket.service';
 import { Research } from '../../upgrade/research';
 
