@@ -25,23 +25,23 @@ export class UpgradeViewComponent implements AfterViewInit {
     constructor(private el: ElementRef, private render: Renderer2, private userS: UserService,
         private upgradeS: UpgradeService, private socketS: SocketService) {
         this.stock = upgradeS.storage;
-        this.storageLvl=userS.currentUser.storageLvl;
-        this.mineRateLvl=userS.currentUser.mineRateLvl;
+        this.storageLvl = userS.currentUser.storageLvl;
+        this.mineRateLvl = userS.currentUser.mineRateLvl;
         this.mineRate = upgradeS.mineRate;
         this.research = upgradeS.research;
     }
 
     ngAfterViewInit() {
         this.userS.upgradeSubject.subscribe((user: User) => {
-            this.storageLvl=user.storageLvl;
-            this.mineRateLvl=user.mineRateLvl;
+            this.storageLvl = user.storageLvl;
+            this.mineRateLvl = user.mineRateLvl;
         });
         setInterval(() => {
             this.updateTimer(this.userS.currentUser.timerRate, this.timerMine, this.mineRateLvlUp,
-            this.upgradeS.mineRate[this.user.mineRateLvl].time);
+                this.upgradeS.mineRate[this.userS.currentUser.mineRateLvl].time);
             this.updateTimer(this.userS.currentUser.timerStock, this.timerStock, this.stockLvlUp,
-            this.upgradeS.storage[this.user.storageLvl].time);
-         }, 1000);
+                this.upgradeS.storage[this.userS.currentUser.storageLvl].time);
+        }, 1000);
     }
 
     stockLvlUp() {
@@ -52,7 +52,7 @@ export class UpgradeViewComponent implements AfterViewInit {
 
     mineRateLvlUp() {
         if (this.userS.currentUser.credit > this.mineRate[this.mineRateLvl + 1].cost) {
-            this.socketS.upgradeShip('mineRate')
+            this.socketS.upgradeShip('mineRate');
         }
     }
 

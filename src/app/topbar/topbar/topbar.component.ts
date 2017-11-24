@@ -10,14 +10,13 @@ import { SocketService } from '../../socket/socket.service';
   styleUrls: ['./topbar.component.scss']
 })
 export class TopbarComponent implements AfterViewInit {
-  public name:string;
-  public credit:number;
+  public name: string;
+  public credit: number;
 
-  public user: User;
   public isModalOpenQuest: boolean;
   public isModalOpenRank: boolean;
   constructor(private userS: UserService, private questS: QuestService, private socketS: SocketService) {
-    this.name=userS.currentUser.name;
+    this.name = userS.currentUser.name;
     this.credit = userS.currentUser.credit;
   }
 

@@ -133,11 +133,11 @@ export class UserService {
   }
 
   FillUpgrade(snapshot) {
-    this.currentUser.mineRateLvl = snapshot.upgrade.mineRateLvl;
-    this.currentUser.timerRate = snapshot.upgrade.timerRate;
-    
-    this.currentUser.storageLvl = snapshot.upgrade.storageLvl;
-    this.currentUser.researchLvl = snapshot.upgrade.researchLvl;
+    this.currentUser.mineRateLvl = snapshot.mineRateLvl;
+    this.currentUser.timerRate = snapshot.timerRate;
+
+    this.currentUser.storageLvl = snapshot.storageLvl;
+    this.currentUser.timerStock = snapshot.timerStock;
 
     this.currentUser.researchLvl = snapshot.researchLvl;
     this.currentUser.score = snapshot.score;

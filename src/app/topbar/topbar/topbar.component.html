@@ -2,12 +2,12 @@
   <div class="player-info">
     <img src="http://placehold.it/400x400" class="avatar" />
     <div class="player-info-text">
-        <h1 class="player-name">Cpt. {{user.name}}</h1>
+        <h1 class="player-name">Cpt. {{name}}</h1>
         <p class="player-title">Explorer</p>
     </div>
   </div>
 
-  <h1 class="credit-count credit"> {{ user.calculeMoneyWithSpace() }} cr</h1>
+  <h1 class="credit-count credit"> {{ userS.currentUser.calculeMoneyWithSpace() }} cr</h1>
   <ul>
     <li>
         <a href="#" (click)="openQuestModal()">Glory quest</a> <br>  
