@@ -96,6 +96,7 @@ export class UserService {
 
   FillOre(snapshot) {
     this.currentUser.carbon = snapshot.carbon;
+
     this.currentUser.titanium = snapshot.titanium;
     this.oreSubject.next(this.currentUser);
     this.incrementCounter();
@@ -133,7 +134,11 @@ export class UserService {
 
   FillUpgrade(snapshot) {
     this.currentUser.mineRateLvl = snapshot.mineRateLvl;
+    this.currentUser.timerRate = snapshot.timerRate;
+
     this.currentUser.storageLvl = snapshot.storageLvl;
+    this.currentUser.timerStock = snapshot.timerStock;
+
     this.currentUser.researchLvl = snapshot.researchLvl;
     this.currentUser.score = snapshot.score;
     this.upgradeSubject.next(this.currentUser);

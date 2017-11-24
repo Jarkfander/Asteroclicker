@@ -26,7 +26,7 @@ export class QuestService {
   }
 
   FillQuestGroup(snapshot) {
-      this.questGroup = new Quest(snapshot.name, snapshot.type, snapshot.values, 0 , snapshot.gain);
+      this.questGroup = new Quest(snapshot.name, snapshot.type, snapshot.values, 0 , Math.floor(this.userS.currentUser.score * 0.05));
       this.questGroup.valuesFinal = snapshot.valuesFinal;
   }
 

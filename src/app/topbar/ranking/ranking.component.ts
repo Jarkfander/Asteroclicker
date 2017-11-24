@@ -28,7 +28,7 @@ export class RankingComponent implements AfterViewInit {
   searchPlayerRanking() {
     this.rankingBtw = new Array<Ranking>();
     for (let i = 0; i < this.ranking.length; i++) {
-      if (this.userS.currentUser.email === this.ranking[i].name) {
+      if (this.userS.currentUser.name === this.ranking[i].name) {
         this.iUser = i;
         break;
       }
