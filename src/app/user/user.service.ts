@@ -14,12 +14,22 @@ import { Asteroid } from '../asteroid/asteroid';
 @Injectable()
 export class UserService {
 
+  loadedTrigger: number = 7;
+  loadedCounter: number = 0;
+
   db: AngularFireDatabase;
   currentUser: User;
   userLoad: boolean = false;
   afAuth: AngularFireAuth;
 
-  userSubject = new Subject<User>();
+  asteroidSubject = new Subject<User>();
+  creditSubject = new Subject<User>();
+  oreSubject = new Subject<User>();
+  profileSubject = new Subject<User>();
+  questSubject = new Subject<User>();
+  searchSubject = new Subject<User>();
+  upgradeSubject = new Subject<User>();
+  mineRateSubject = new Subject<User>();
 
   constructor(db: AngularFireDatabase, afAuth: AngularFireAuth,
     private upgradeS: UpgradeService, private marketS: MarketService) {
@@ -28,9 +38,34 @@ export class UserService {
     afAuth.authState.subscribe((auth) => {
       if (auth != null) {
         this.currentUser = new User();
-        this.db.object('users/' + auth.uid).valueChanges().subscribe(
+        this.currentUser.uid = auth.uid;
+        this.db.object('users/' + auth.uid + '/asteroid').valueChanges().subscribe(
           (snapshot: any) => {
-            this.FillUser(auth.uid, snapshot);
+            this.FillAsteroid(snapshot);
+          });
+        this.db.object('users/' + auth.uid + '/credit').valueChanges().subscribe(
+          (snapshot: any) => {
+            this.FillCredit(snapshot);
+          });
+        this.db.object('users/' + auth.uid + '/ore').valueChanges().subscribe(
+          (snapshot: any) => {
+            this.FillOre(snapshot);
+          });
+        this.db.object('users/' + auth.uid + '/profile').valueChanges().subscribe(
+          (snapshot: any) => {
+            this.FillProfile(snapshot);
+          });
+        this.db.object('users/' + auth.uid + '/quest').valueChanges().subscribe(
+          (snapshot: any) => {
+            this.FillQuest(snapshot);
+          });
+        this.db.object('users/' + auth.uid + '/search').valueChanges().subscribe(
+          (snapshot: any) => {
+            this.FillSearch(snapshot);
+          });
+        this.db.object('users/' + auth.uid + '/upgrade').valueChanges().subscribe(
+          (snapshot: any) => {
+            this.FillUpgrade(snapshot);
           });
       }
     });
@@ -46,43 +81,76 @@ export class UserService {
     this.afAuth.auth.signOut();
   }
 
-  FillUser(uid, snapshot) {
-    this.currentUser.uid = uid;
+  FillAsteroid(snapshot) {
+    this.currentUser.asteroid = new Asteroid(snapshot.currentCapacity, snapshot.capacity, snapshot.purity,
+      snapshot.ore, snapshot.seed, 0);
+    this.asteroidSubject.next(this.currentUser);
+    this.incrementCounter();
+  }
 
-    this.currentUser.carbon = snapshot.ore.carbon;
-    this.currentUser.titanium = snapshot.ore.titanium;
+  FillCredit(snapshot) {
+    this.currentUser.credit = snapshot;
+    this.creditSubject.next(this.currentUser);
+    this.incrementCounter();
+  }
 
-    this.currentUser.credit = snapshot.credit;
-    this.currentUser.email = snapshot.profile.email;
-    this.currentUser.name = snapshot.profile.name;
+  FillOre(snapshot) {
+    this.currentUser.carbon = snapshot.carbon;
+    this.currentUser.titanium = snapshot.titanium;
+    this.oreSubject.next(this.currentUser);
+    this.incrementCounter();
+  }
 
-    this.currentUser.mineRateLvl = snapshot.upgrade.mineRateLvl;
-    this.currentUser.storageLvl = snapshot.upgrade.storageLvl;
-    this.currentUser.researchLvl = snapshot.upgrade.researchLvl;
+  FillProfile(snapshot) {
+    this.currentUser.email = snapshot.email;
+    this.currentUser.name = snapshot.name;
+    this.profileSubject.next(this.currentUser);
+    this.incrementCounter();
+  }
 
-    this.currentUser.asteroid = new Asteroid(snapshot.asteroid.currentCapacity, snapshot.asteroid.capacity, snapshot.asteroid.purity,
-      snapshot.asteroid.ore, snapshot.asteroid.seed, 0);
+  FillQuest(snapshot) {
+    this.currentUser.quest = new Quest(snapshot.name, snapshot.type, snapshot.values,
+      snapshot.num, snapshot.gain);
+    this.currentUser.quest.text = snapshot.text;
+    this.currentUser.quest.valuesFinal = snapshot.valuesFinal;
+    this.questSubject.next(this.currentUser);
+    this.incrementCounter();
+  }
 
-    this.currentUser.score = snapshot.upgrade.score;
-
-    this.currentUser.quest = new Quest(snapshot.quest.name, snapshot.quest.type, snapshot.quest.values,
-      snapshot.quest.num, snapshot.quest.gain);
-    this.currentUser.quest.text = snapshot.quest.text;
-    this.currentUser.quest.valuesFinal = snapshot.quest.valuesFinal;
+  FillSearch(snapshot) {
 
     let resultTab = new Array<Asteroid>();
-    if (snapshot.search.result != 0) {
-      for (let i = 0; i < snapshot.search.result.length; i++) {
-        resultTab.push(new Asteroid(snapshot.search.result[i].capacity, snapshot.search.result[i].capacity, snapshot.search.result[i].purity,
-          snapshot.search.result[i].ore, snapshot.search.result[i].seed, snapshot.search.result[i].timeToGo));
+    if (snapshot.result != 0) {
+      for (let i = 0; i < snapshot.result.length; i++) {
+        resultTab.push(new Asteroid(snapshot.result[i].capacity, snapshot.result[i].capacity, snapshot.result[i].purity,
+          snapshot.result[i].ore, snapshot.result[i].seed, snapshot.result[i].timeToGo));
       }
     }
-    this.currentUser.asteroidSearch = new AsteroidSearch(resultTab, snapshot.search.timer);
-    this.userSubject.next(this.currentUser);
-    this.userLoad = true;
-  }
-  searchNewAsteroid(num: number) {
-    this.db.object('users/' + this.currentUser.uid + '/numAsteroid').set(num);
+    this.currentUser.asteroidSearch = new AsteroidSearch(resultTab, snapshot.timer);
+    this.searchSubject.next(this.currentUser);
+    this.incrementCounter();
   }
 
+  FillUpgrade(snapshot) {
+    this.currentUser.mineRateLvl = snapshot.mineRateLvl;
+    this.currentUser.storageLvl = snapshot.storageLvl;
+    this.currentUser.researchLvl = snapshot.researchLvl;
+    this.currentUser.score = snapshot.score;
+    this.upgradeSubject.next(this.currentUser);
+    this.incrementCounter();
+  }
+
+  incrementCounter() {
+    if (!this.userLoad && this.loadedCounter < this.loadedTrigger) {
+      this.loadedCounter++;
+      if (this.loadedCounter == this.loadedTrigger) {
+        this.userLoad = true;
+      }
+    }
+  }
+
+  modifyCurrentMineRate(value: number) {
+    this.currentUser.currentMineRate = value;
+    this.mineRateSubject.next(this.currentUser);
+  }
 }

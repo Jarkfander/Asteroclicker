@@ -49,7 +49,7 @@ export class ShipViewComponent implements AfterViewInit {
       this.ship.autoUpgrade(this.userS.currentUser.mineRateLvl, this.ship.radarUpgrade);
       this.ship.autoUpgrade(this.userS.currentUser.mineRateLvl + 2, this.ship.smokeRadarUpgrade);
 
-      this.userS.userSubject.subscribe( (user: User) => {
+      this.userS.upgradeSubject.subscribe( (user: User) => {
           this.ship.autoUpgrade(user.storageLvl, this.ship.stockUpgrade);
           this.ship.autoUpgrade(user.mineRateLvl, this.ship.radarUpgrade);
           this.ship.autoUpgrade(user.mineRateLvl + 2, this.ship.smokeRadarUpgrade);

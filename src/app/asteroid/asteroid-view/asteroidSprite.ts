@@ -3,6 +3,7 @@ import * as TWEEN from 'tween.js';
 import { UserService } from '../../user/user.service';
 import * as PIXIParticles from 'pixi-particles';
 import { ParticleBase } from '../../pixiVisual/particleBase';
+import { Asteroid } from '../asteroid';
 
 export class AsteroidSprite {
     asteroid: PIXI.Sprite[];
@@ -16,15 +17,15 @@ export class AsteroidSprite {
 
     spriteAsteroidCarbon: PIXI.Texture[];
     asteroidFolders;
-    constructor(x: number, y: number, app: PIXI.Application, asteroidOre: string, numberOfSprite: number, seed:string) {
+    constructor(x: number, y: number, app: PIXI.Application, asteroid:Asteroid, numberOfSprite: number) {
 
         this.app = app;
         this.asteroid = new Array<PIXI.Sprite>();
         this.asteroidFolders = { "carbon": new Array<PIXI.Texture>(), "titanium": new Array<PIXI.Texture>() };
 
-        this.asteroidSeed = seed;
+        //this.asteroidSeed = seed;
         this.initAsteroidSprites();
-        this.generateAsteroid(asteroidOre,seed);
+        this.generateAsteroid(asteroid);
 
         this.InitializeEmitter();
 
@@ -88,13 +89,15 @@ export class AsteroidSprite {
         }
     }
 
-    generateAsteroid(asteroidType: string, seed: string) {
+    generateAsteroid(asteroid : Asteroid) {
+        const state=asteroid.currentCapacity==asteroid.capacity?4:
+        Math.floor((asteroid.currentCapacity/asteroid.capacity)*5);
         let seedNum=[];
         let nums = [1, 2, 3, 4];
         let comb = [[1, 1], [1, -1], [-1, -1], [-1, 1]];
 
-        for (let i = 0; i < seed.length; i++) {
-            seedNum.push(parseInt(seed[i]));
+        for (let i = 0; i < asteroid.seed.length; i++) {
+            seedNum.push(parseInt(asteroid.seed[i]));
         }
 
         if (this.asteroid.length == 0) {
@@ -111,27 +114,25 @@ export class AsteroidSprite {
             }
         }
 
-        this.asteroid[0].texture = this.asteroidFolders[asteroidType][0];
+        this.asteroid[0].texture = this.asteroidFolders[asteroid.ore][0];
 
-        this.asteroid[1].texture = this.asteroidFolders[asteroidType][nums[seedNum[0]]];
-        this.asteroid[2].texture = this.asteroidFolders[asteroidType][nums[seedNum[1]]];
-        this.asteroid[3].texture = this.asteroidFolders[asteroidType][nums[seedNum[2]]];
-        this.asteroid[4].texture = this.asteroidFolders[asteroidType][nums[seedNum[3]]];
+        for(let i=0;i<state;i++){
+            this.asteroid[i+1].texture = this.asteroidFolders[asteroid.ore][nums[seedNum[i]]];
+        }
+
 
         this.addSpriteToScene(this.asteroid[0], 0, 0);
-
         const offSet = 60;
-        this.addSpriteToScene(this.asteroid[1], comb[seedNum[4]][0] * offSet, comb[seedNum[4]][1] * offSet);
-        this.addSpriteToScene(this.asteroid[2], comb[seedNum[5]][0] * offSet, comb[seedNum[5]][1] * offSet);
-        this.addSpriteToScene(this.asteroid[3], comb[seedNum[6]][0] * offSet, comb[seedNum[6]][1] * offSet);
-        this.addSpriteToScene(this.asteroid[4], comb[seedNum[7]][0] * offSet, comb[seedNum[7]][1] * offSet);
 
+        for(let i=0;i<state;i++){
+            this.addSpriteToScene(this.asteroid[i+1], comb[seedNum[i+4]][0] * offSet, comb[seedNum[i+4]][1] * offSet);
+        }
     }
     // Change the sprite of asteroid when the user change 
-    changeSprite(asteroidOre: string, seed:string) {
-        if (this.asteroidSeed !== seed) {
-            this.asteroidSeed = seed;
-            this.generateAsteroid(asteroidOre, seed);
+    changeSprite(asteroid:Asteroid) {
+        if (asteroid.seed !== this.asteroidSeed) {
+            this.asteroidSeed = asteroid.seed;
+            this.generateAsteroid(asteroid);
         }
     }
 

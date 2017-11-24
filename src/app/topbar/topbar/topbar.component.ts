@@ -10,15 +10,20 @@ import { SocketService } from '../../socket/socket.service';
   styleUrls: ['./topbar.component.scss']
 })
 export class TopbarComponent implements AfterViewInit {
-  public user: User;
+  public name:string;
   public isModalOpen: boolean;
+  public credit:number;
   constructor(private userS: UserService, private questS: QuestService, private socketS: SocketService) {
-    this.user = userS.currentUser;
+    this.name=userS.currentUser.name;
+    this.credit = userS.currentUser.credit;
   }
 
   ngAfterViewInit() {
-    this.userS.userSubject.subscribe((user: User) => {
-      this.user = user;
+    this.userS.profileSubject.subscribe((user: User) => {
+      this.name = user.name;
+    });
+    this.userS.creditSubject.subscribe((user: User) => {
+      this.credit = user.credit;
     });
     this.socketS.connectionEstablished();
     this.calculeMoneyWithSpace();

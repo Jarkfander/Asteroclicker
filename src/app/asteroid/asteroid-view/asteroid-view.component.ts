@@ -28,6 +28,16 @@ export class AsteroidViewComponent implements AfterViewInit {
 
   ngAfterViewInit() {
    this.initAsteroid();
+
+
+   setInterval(() => {
+       this.socketS.incrementOre(this.userS.currentUser.asteroid.ore,
+       parseFloat((this.userS.currentUser.currentMineRate *
+        this.userS.currentUser.asteroid.purity/100 *
+        this.oreInfoS.getOreInfoByString(this.userS.currentUser.asteroid.ore).miningSpeed).toFixed(2)));
+   }, 1000);
+   setInterval(() => { this.resetClick() }, 200);
+
   }
 
   @HostListener('window:resize') onResize() {
@@ -51,8 +61,8 @@ export class AsteroidViewComponent implements AfterViewInit {
     background.height = this.app.renderer.height;
     this.app.stage.addChild(background);
 
-    this.aster = new AsteroidSprite(0.25, 0.25,this.app,this.userS.currentUser.asteroid.ore,
-      this.oreInfoS.oreInfo.length,this.userS.currentUser.asteroid.seed);
+    this.aster = new AsteroidSprite(0.25, 0.25,this.app,this.userS.currentUser.asteroid,
+      this.oreInfoS.oreInfo.length);
 
     for (let i = 0; i < this.aster.asteroid.length; i++) {
       this.aster.asteroid[i].on('click', (event) => {
@@ -65,28 +75,15 @@ export class AsteroidViewComponent implements AfterViewInit {
     this.drone.laserFirstState = this.userS.currentUser.getOreAmountFromString(this.userS.currentUser.asteroid.ore) 
     < this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity;
 
-    this.initializeEmmiter();
-    setInterval(() => {
-      /*if (this.drone.laser.visible) {
-        this.emitter.emit = true;
-        this.emitter.updateOwnerPos(this.aster.asteroid[0].x, this.aster.asteroid[0].y);
-      }*/
-      /*this.userS.IncrementUserOre(this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity,
-        this.asteroidS.asteroidTypes[this.userS.currentUser.numAsteroid].ore);*/
-        this.socketS.incrementOre(this.userS.currentUser.asteroid.ore,
-        parseFloat((this.userS.currentUser.currentMineRate *
-         this.userS.currentUser.asteroid.purity/100 *
-         this.oreInfoS.getOreInfoByString(this.userS.currentUser.asteroid.ore).miningSpeed).toFixed(2)));
-    }, 1000);
-    setInterval(() => { this.resetClick() }, 200);
-
-    this.userS.userSubject.subscribe((user: User) => {
-      this.aster.changeSprite(user.asteroid.ore,user.asteroid.seed);
+    this.userS.asteroidSubject.subscribe((user: User) => {
+      this.aster.changeSprite(user.asteroid);
       if (this.drone.laser != null) {
         this.drone.laser.visible = user.getOreAmountFromString(user.asteroid.ore) <
          this.upgradeS.storage[user.storageLvl].capacity;
      }
     });
+
+    this.initializeEmmiter();
   }
 
   asteroidClick() {
@@ -94,8 +91,8 @@ export class AsteroidViewComponent implements AfterViewInit {
     this.clicked = true;
     const max = this.upgradeS.mineRate[this.userS.currentUser.mineRateLvl].maxRate;
     if (this.userS.currentUser.currentMineRate < max) {
-      this.userS.currentUser.currentMineRate = this.userS.currentUser.currentMineRate + max * 0.1 > max ? max :
-        this.userS.currentUser.currentMineRate + max * 0.1;
+      this.userS.modifyCurrentMineRate( this.userS.currentUser.currentMineRate + max * 0.1 > max ? max :
+        this.userS.currentUser.currentMineRate + max * 0.1);
       // this.updateLaserSpeed();
     }
   }
@@ -106,10 +103,10 @@ export class AsteroidViewComponent implements AfterViewInit {
 
     if (!this.clicked) {
       if (this.userS.currentUser.currentMineRate > base) {
-        this.userS.currentUser.currentMineRate = this.userS.currentUser.currentMineRate - (0.1 * max) <
-          base ? base : this.userS.currentUser.currentMineRate - (0.1 * max);
+        this.userS.modifyCurrentMineRate( this.userS.currentUser.currentMineRate - (0.1 * max) <
+          base ? base : this.userS.currentUser.currentMineRate - (0.1 * max));
       } else {
-        this.userS.currentUser.currentMineRate = base;
+        this.userS.modifyCurrentMineRate(base);
       }
     } else {
       this.clicked = false;
