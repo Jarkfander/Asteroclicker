@@ -12,7 +12,11 @@ export class User {
     public email: string;
     public name: string;
     public mineRateLvl: number;
+    public timerRate: number;
+
     public storageLvl: number;
+    public timerStock: number;
+
     public researchLvl: number;
     public currentMineRate: number;
 

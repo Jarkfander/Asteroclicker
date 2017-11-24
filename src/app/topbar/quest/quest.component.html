@@ -9,7 +9,8 @@
 </div>
 
 <div *ngIf="userS.currentUser.quest.gain === 0">
-  New quest Evry 3 hours ! 
+  Daily Quest: <br> <br>
+  New quest evry 3 hours ! 
 </div>
 <br> <br>
 <div *ngIf="questS.questGroup.values != 0">
@@ -17,11 +18,12 @@
   {{ questS.questGroup.name }} <br>
   {{ (questS.questGroup.valuesFinal - questS.questGroup.values).toFixed(2) }} / {{questS.questGroup.valuesFinal}}    
   <br> <br>
-  You Win: {{userS.currentUser.score * 0.05}} Credit.
+  You Win: {{userS.currentUser.score * 0.20 + 10000 }} Credit.
 </div>
 
 <div *ngIf="questS.questGroup.values === 0">
-Wait new information !
+  Glory Quest: <br> <br>
+  Wait new information !
 </div>
 
 <br>

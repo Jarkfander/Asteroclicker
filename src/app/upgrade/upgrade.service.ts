@@ -42,7 +42,7 @@ export class UpgradeService {
   // create the tab of stock
   FillStock(snapshot) {
     for (let i = 0; i < snapshot.length; i++) {
-      this.storage.push(new Storage(i, snapshot[i].cost, snapshot[i].capacity));
+      this.storage.push(new Storage(i, snapshot[i].cost, snapshot[i].capacity, snapshot[i].time === undefined ? 10 : snapshot[i].time));
     }
     this.storageLoad = true;
   }
@@ -50,7 +50,8 @@ export class UpgradeService {
   // create the tab of MineRate
   FillMineRate(snapshot) {
     for (let i = 0; i < snapshot.length; i++) {
-      this.mineRate.push(new MineRate(i, snapshot[i].cost, snapshot[i].baseRate, snapshot[i].maxRate));
+      this.mineRate.push(new MineRate(i, snapshot[i].cost, snapshot[i].baseRate,
+         snapshot[i].maxRate, snapshot[i].time === undefined ? 10 : snapshot[i].time));
     }
     this.mineRateLoad = true;
   }
