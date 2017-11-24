@@ -51,6 +51,7 @@ export class Ship {
     constructor(app: PIXI.Application) {
         this.app = app;
         this.deltaSum = 0;
+
         this.deltaSumShip = 0;
         this.iTourelle = 1;
         this.initShip('ship', 500, 500);
@@ -80,10 +81,11 @@ export class Ship {
                 }
                 this.deltaSumShip += (2 * Math.PI) / 1500;
 
-                this.ship.x = this.transformShipX + Math.cos(this.deltaSumShip) * 5;
                 this.ship.y = this.transformShipY + Math.sin(this.deltaSumShip) * 17;
-
+                this.ship.x = this.transformShipX + Math.cos(this.deltaSumShip) * 5;
                 this.initMoveXY(this.stockUpgrade, 30, 20, this.deltaSum);
+            
+
             }
         });
 
