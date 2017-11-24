@@ -8,6 +8,7 @@ import { UpgradeService } from '../../upgrade/upgrade.service';
 import { ParticleBase } from '../../pixiVisual/particleBase';
 import { SocketService } from '../../socket/socket.service';
 import { OreInfoService } from '../ore-info.service';
+import { Asteroid } from '../asteroid';
 
 
 @Component({
@@ -18,10 +19,16 @@ import { OreInfoService } from '../ore-info.service';
 
 export class AsteroidViewComponent implements AfterViewInit {
   constructor(private el: ElementRef, private render: Renderer2, private userS: UserService,
-    private upgradeS: UpgradeService, private socketS: SocketService, private oreInfoS:OreInfoService) { }
+    private upgradeS: UpgradeService, private socketS: SocketService, private oreInfoS:OreInfoService) {
+      this.asteroid=this.userS.currentUser.asteroid;
+      this.state=this.asteroid.currentCapacity==this.asteroid.capacity?4:
+      Math.floor((this.asteroid.currentCapacity/this.asteroid.capacity)*5);
+     }
 
   private app: PIXI.Application;
-  private aster: AsteroidSprite;
+  private asteroidSprite: AsteroidSprite;
+  private asteroid: Asteroid;
+  private state:number;
   private drone: Drone;
   private emitter: ParticleBase;
   clicked: boolean;
@@ -43,7 +50,7 @@ export class AsteroidViewComponent implements AfterViewInit {
   @HostListener('window:resize') onResize() {
     this.app.stage.removeChildren();
     this.render.removeChild(this.el.nativeElement, this.app.view);
-    delete this.aster;
+    delete this.asteroidSprite;
     this.app.destroy();
 
     this.initAsteroid();
@@ -61,11 +68,11 @@ export class AsteroidViewComponent implements AfterViewInit {
     background.height = this.app.renderer.height;
     this.app.stage.addChild(background);
 
-    this.aster = new AsteroidSprite(0.25, 0.25,this.app,this.userS.currentUser.asteroid,
+    this.asteroidSprite = new AsteroidSprite(0.25, 0.25,this.app,this.userS.currentUser.asteroid,
       this.oreInfoS.oreInfo.length);
 
-    for (let i = 0; i < this.aster.asteroid.length; i++) {
-      this.aster.asteroid[i].on('click', (event) => {
+    for (let i = 0; i < this.asteroidSprite.asteroid.length; i++) {
+      this.asteroidSprite.asteroid[i].on('click', (event) => {
         this.asteroidClick();
       });
     }
@@ -76,11 +83,31 @@ export class AsteroidViewComponent implements AfterViewInit {
     < this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity;
 
     this.userS.asteroidSubject.subscribe((user: User) => {
-      this.aster.changeSprite(user.asteroid);
+
+      const state=this.asteroid.currentCapacity==this.asteroid.capacity?4:
+      Math.floor((this.asteroid.currentCapacity/this.asteroid.capacity)*5);
+
+      if(user.asteroid.currentCapacity==0 && this.asteroid.currentCapacity!=0){
+        this.asteroidSprite.destructBase();
+      }
+      if(state<this.state){
+        this.asteroidSprite.destructOnePart();
+        this.state=state;
+      }
+
+      if(state>this.state){
+        this.state=state;
+      }
+
+
+      if(user.asteroid.currentCapacity>this.asteroid.currentCapacity){
+        this.asteroidSprite.changeSprite(user.asteroid);
+      }
       if (this.drone.laser != null) {
         this.drone.laser.visible = user.getOreAmountFromString(user.asteroid.ore) <
          this.upgradeS.storage[user.storageLvl].capacity;
      }
+     this.asteroid=user.asteroid;
     });
 
     this.initializeEmmiter();
@@ -166,6 +193,6 @@ export class AsteroidViewComponent implements AfterViewInit {
       PIXI.Texture.fromImage('assets/smallRock.png'),
       config
     );
-    this.emitter.updateOwnerPos(this.aster.asteroid[0].x, this.aster.asteroid[0].y);
+    this.emitter.updateOwnerPos(this.asteroidSprite.asteroid[0].x, this.asteroidSprite.asteroid[0].y);
   }
 }

@@ -4,7 +4,8 @@
   <tr style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;"
     unselectable="on" onselectstart="return false;" onmousedown="return false;">
     <td align="left">Type of Asteroid : {{ asteroid.ore }} </td>
-    <td align="right">{{ asteroid.currentCapacity }}/{{ asteroid.capacity }} </td>
+    <td *ngIf="asteroid.currentCapacity>0" align="right">{{ asteroid.currentCapacity }}/{{ asteroid.capacity }} </td>
+    <td *ngIf="asteroid.currentCapacity==0" style="color:red" align="right">EMPTY</td>    
   </tr>
 </table>
 
@@ -41,7 +42,7 @@
   </div>
 
   <div class="result row">
-      <app-search-result *ngFor="let aste of user.asteroidSearch.results; let i = index" [num]="i" [asteroid]="aste"></app-search-result>      
+      <app-search-result *ngFor="let aste of search.results; let i = index" [num]="i" [asteroid]="aste"></app-search-result>      
   </div>
 
   <div class="rejectLine">

@@ -92,7 +92,7 @@ export class InfosViewComponent implements AfterViewInit {
 
       if (this.search.results.length == 0) {
 
-        const timeLeft = (this.upgradeS.research[this.researchLvl].time * 60 * 1000)
+        const timeLeft = (this.upgradeS.research[this.researchLvl].time * 1000)
           - (Date.now() - this.search.timer);
         if (timeLeft < 0) {
           this.socketS.researchFinished();
@@ -103,7 +103,7 @@ export class InfosViewComponent implements AfterViewInit {
 
       }
       else if (this.search.results.length == 1) {
-        const timeLeft = (this.search.results[0].timeToGo * 60 * 1000)
+        const timeLeft = (this.search.results[0].timeToGo * 1000)
           - (Date.now() - this.search.timer);
         if (timeLeft < 0) {
           this.socketS.arrivedToAsteroid();
