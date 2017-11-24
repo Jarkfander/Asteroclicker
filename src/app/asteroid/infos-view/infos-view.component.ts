@@ -4,6 +4,9 @@ import { User } from '../../user/user';
 import { UpgradeService } from '../../upgrade/upgrade.service';
 import { SocketService } from '../../socket/socket.service';
 import { OreInfoService } from '../ore-info.service';
+import { Asteroid } from '../asteroid';
+import { AsteroidSearch } from '../asteroidSearch';
+import { OreInfo } from '../oreInfo';
 
 @Component({
   selector: 'app-infos-view',
@@ -12,47 +15,103 @@ import { OreInfoService } from '../ore-info.service';
 })
 export class InfosViewComponent implements AfterViewInit {
 
-  public user: User;
+  public storageLvl: number;
+  public researchLvl: number;
+
+  public asteroid: Asteroid;
+
+  public search: AsteroidSearch;
+
+  public carbonQuantity;
+  public titaniumQuantity;
+
   public carbonOverload: boolean = false;
   public titaniumOverload: boolean = false;
-  public Asteroidname: string;
-  public AsteroidRate: number;
-  public timer: string;
+
+  public timer: string = "00:00:00";
 
   public isModalOpen: boolean = false;
 
+  public mineRate;
+
+  public carbonInfo:OreInfo;
+  public titaniumInfo:OreInfo;
+
   constructor(private userS: UserService, private upgradeS: UpgradeService,
     private socketS: SocketService, private oreInfoS: OreInfoService) {
-    this.fillInfos(this.userS.currentUser);
+      this.carbonQuantity = userS.currentUser.carbon;
+      this.titaniumQuantity = userS.currentUser.titanium;
+
+      this.storageLvl = userS.currentUser.storageLvl;
+      this.researchLvl = userS.currentUser.researchLvl;
+
+      this.carbonOverload = userS.currentUser.carbon >= this.upgradeS.storage[this.storageLvl].capacity;
+      this.titaniumOverload = userS.currentUser.titanium >= this.upgradeS.storage[this.storageLvl].capacity;
+
+      this.asteroid = userS.currentUser.asteroid;
+
+      this.search = userS.currentUser.asteroidSearch;
+
+      this.mineRate=userS.currentUser.currentMineRate;
+
+      this.carbonInfo=oreInfoS.getOreInfoByString("carbon");
+      this.titaniumInfo=oreInfoS.getOreInfoByString("titanium");
   }
 
   ngAfterViewInit() {
-    this.userS.userSubject.subscribe((user: User) => {
-      this.fillInfos(user);
+    this.userS.oreSubject.subscribe((user: User) => {
+      this.carbonQuantity = user.carbon;
+      this.titaniumQuantity = user.titanium;
+
+      this.carbonOverload = user.carbon >= this.upgradeS.storage[this.storageLvl].capacity;
+      this.titaniumOverload = user.titanium >= this.upgradeS.storage[this.storageLvl].capacity;
     });
+    this.userS.asteroidSubject.subscribe((user: User) => {
+      this.asteroid = user.asteroid;
+    });
+    this.userS.upgradeSubject.subscribe((user: User) => {
+      this.storageLvl = user.storageLvl;
+      this.researchLvl = user.researchLvl;
+    });
+    this.userS.searchSubject.subscribe((user: User) => {
+      this.search = user.asteroidSearch;
+      if (user.asteroidSearch.results.length != 3) {
+        this.isModalOpen = false;
+      }
+    });
+    this.userS.mineRateSubject.subscribe((user: User) => {
+      this.mineRate=user.currentMineRate;
+    });
+    
+
     setInterval(() => { this.updateTimer(); }, 1000);
   }
 
   updateTimer() {
-    //console.log(this.user.asteroidSearch.timer);
-    if (this.user.asteroidSearch.timer != 0 && this.user.asteroidSearch.results.length == 0 || this.user.asteroidSearch.results.length == 0) {
-      const timeLeft = (this.upgradeS.research[this.user.researchLvl].time * 60 * 1000)
-        - (Date.now() - this.user.asteroidSearch.timer);
+    if (this.search.timer != 0) {
 
-      if (timeLeft < 0) {
-        //console.log("0");
-        if (this.user.asteroidSearch.results.length == 0) {
-          //console.log("finished");
+      if (this.search.results.length == 0) {
+
+        const timeLeft = (this.upgradeS.research[this.researchLvl].time * 60 * 1000)
+          - (Date.now() - this.search.timer);
+        if (timeLeft < 0) {
           this.socketS.researchFinished();
         }
-        else if (this.user.asteroidSearch.results.length == 1) {
-          //console.log("arrived");
-          this.socketS.arrivedToAsteroid();
+        else {
+          this.timer = this.secondsToHHMMSS(timeLeft / 1000);
         }
 
       }
-      else {
-        this.timer = this.secondsToHHMMSS(timeLeft / 1000);
+      else if (this.search.results.length == 1) {
+        const timeLeft = (this.search.results[0].timeToGo * 60 * 1000)
+          - (Date.now() - this.search.timer);
+        if (timeLeft < 0) {
+          this.socketS.arrivedToAsteroid();
+        }
+        else {
+          this.timer = this.secondsToHHMMSS(timeLeft / 1000);
+        }
+
       }
     }
   }
@@ -62,14 +121,14 @@ export class InfosViewComponent implements AfterViewInit {
     this.socketS.searchAsteroid();
   }
 
+  rejectResults() {
+    this.socketS.rejectResults();
+  }
+
   fillInfos(user: User) {
-    this.user = user;
-    this.carbonOverload = this.user.carbon >= this.upgradeS.storage[this.user.storageLvl].capacity;
-    this.titaniumOverload = this.user.titanium >= this.upgradeS.storage[this.user.storageLvl].capacity;
-    const name = this.user.asteroid.ore;
-    this.Asteroidname = name.charAt(0).toUpperCase() + name.substring(1).toLowerCase();
-    this.AsteroidRate = this.oreInfoS.getOreInfoByString(this.user.asteroid.ore).miningSpeed *
-      this.user.asteroid.purity / 100;
+
+    //this.AsteroidRate = this.oreInfoS.getOreInfoByString(this.user.asteroid.ore).miningSpeed *
+    //  this.user.asteroid.purity / 100;
   }
 
   secondsToHHMMSS(time: number) {

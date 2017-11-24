@@ -88,6 +88,14 @@ export class SocketService {
     this.socket.emit("arrivedToAsteroid", json);
   }
 
+  rejectResults() {
+    let json = {};
+
+    json["user"] = this.userS.currentUser.uid;
+
+    this.socket.emit("rejectResults", json);
+  }
+
   connectionEstablished() {
     let json = {};
 

@@ -3,7 +3,8 @@
 <table style="width:100%">
   <tr style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;"
     unselectable="on" onselectstart="return false;" onmousedown="return false;">
-    <td align="left">Type of Asteroid : {{ Asteroidname }}</td>
+    <td align="left">Type of Asteroid : {{ asteroid.ore }} </td>
+    <td align="right">{{ asteroid.currentCapacity }}/{{ asteroid.capacity }} </td>
   </tr>
 </table>
 
@@ -15,18 +16,18 @@
     <td align="left">
       <img src="assets/smallRock.png" alt="carbonIcon">
     </td>
-    <td align="left" [ngStyle]="{'color': carbonOverload ? 'red' : 'white'}"> Carbon : {{ user.carbon }}</td>
-    <td *ngIf="Asteroidname=='Carbon'" align="right">{{(AsteroidRate*user.currentMineRate).toFixed(2)}} carbon/s</td>
+    <td align="left" [ngStyle]="{'color': carbonOverload ? 'red' : 'white'}"> Carbon : {{ carbonQuantity }}</td>
+    <td *ngIf="asteroid.ore=='carbon'" align="right">{{(carbonInfo.miningSpeed*(asteroid.purity/100)*mineRate).toFixed(2)}} carbon/s</td>
 
   </tr>
 
   <tr style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;"
     unselectable="on" onselectstart="return false;" onmousedown="return false;">
     <td align="left">
-      <img src="assets/smallRockTita.png" alt="carbonIcon">
+      <img src="assets/smallRockTita.png" alt="titanIcon">
     </td>
-    <td align="left" [ngStyle]="{'color': titaniumOverload ? 'red' : 'white'}"> Titanium : {{ user.titanium }}</td>
-    <td *ngIf="Asteroidname=='Titanium'" align="right">{{(AsteroidRate*user.currentMineRate).toFixed(2)}} titanium/s</td>
+    <td align="left" [ngStyle]="{'color': titaniumOverload ? 'red' : 'white'}"> Titanium : {{ titaniumQuantity }}</td>
+    <td *ngIf="asteroid.ore=='titanium'" align="right">{{(titaniumInfo.miningSpeed*(asteroid.purity/100)*mineRate).toFixed(2)}} titanium/s</td>
   </tr>
 </table>
 <br>
@@ -44,13 +45,13 @@
   </div>
 
   <div class="rejectLine">
-    <a href="#" (click)="closeModal()">Close</a>
+    <button class="btn-upgrade" (click)="rejectResults()">Reject</button>
   </div>
 
 
 </app-modal>
 
-<button *ngIf="user.asteroidSearch.timer!=0 && user.asteroidSearch.results.length==3" class="btn-upgrade" (click)="showResult()">See search result</button>
-<button *ngIf="user.asteroidSearch.timer!=0 && user.asteroidSearch.results.length==0" class="btn-upgrade">Searching : {{timer}}</button>
-<button *ngIf="user.asteroidSearch.timer!=0 && user.asteroidSearch.results.length==1" class="btn-upgrade" >Time before arriving : {{timer}}</button>
-<button *ngIf="user.asteroidSearch.timer==0" class="btn-upgrade" (click)="searchNewAster()">Search Another Asteroid</button>
+<button *ngIf="search.timer!=0 && search.results.length==3" class="btn-upgrade" (click)="showResult()">See search result</button>
+<button *ngIf="search.timer!=0 && search.results.length==0" disabled="true" class="btn-upgrade">Searching : {{timer}}</button>
+<button *ngIf="search.timer!=0 && search.results.length==1" disabled="true" class="btn-upgrade" >Time before arriving : {{timer}}</button>
+<button *ngIf="search.timer==0" class="btn-upgrade" (click)="searchNewAster()">Search Another Asteroid</button>

@@ -14,7 +14,8 @@ import { Research } from '../../upgrade/research';
     styleUrls: ['./upgrade-view.component.scss']
 })
 export class UpgradeViewComponent implements AfterViewInit {
-    public user: User;
+    public storageLvl: number;
+    public mineRateLvl: number;
     public stock: Storage[];
     public mineRate: MineRate[];
     public research: Research[];
@@ -22,25 +23,27 @@ export class UpgradeViewComponent implements AfterViewInit {
     constructor(private el: ElementRef, private render: Renderer2, private userS: UserService,
         private upgradeS: UpgradeService, private socketS: SocketService) {
         this.stock = upgradeS.storage;
-        this.user = userS.currentUser;
+        this.storageLvl=userS.currentUser.storageLvl;
+        this.mineRateLvl=userS.currentUser.mineRateLvl;
         this.mineRate = upgradeS.mineRate;
         this.research = upgradeS.research;
     }
 
     ngAfterViewInit() {
-        this.userS.userSubject.subscribe((user: User) => {
-            this.user = user;
+        this.userS.upgradeSubject.subscribe((user: User) => {
+            this.storageLvl=user.storageLvl;
+            this.mineRateLvl=user.mineRateLvl;
         });
     }
 
     stockLvlUp() {
-        if (this.userS.currentUser.credit > this.stock[this.user.storageLvl + 1].cost) {
+        if (this.userS.currentUser.credit > this.stock[this.storageLvl + 1].cost) {
             this.socketS.upgradeShip("storage");
         }
     }
 
     mineRateLvlUp() {
-        if (this.userS.currentUser.credit > this.mineRate[this.user.mineRateLvl + 1].cost) {
+        if (this.userS.currentUser.credit > this.mineRate[this.mineRateLvl + 1].cost) {
             this.socketS.upgradeShip("mineRate")
         }
     }
