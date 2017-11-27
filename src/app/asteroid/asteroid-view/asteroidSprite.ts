@@ -10,8 +10,12 @@ export class AsteroidSprite {
     app: PIXI.Application;
     clickEmitter: ParticleBase;
     destructionEmitter: ParticleBase;
+
+    checkAstero: boolean;
+    checkAsteroComp: boolean;
     asteroidSeed: string;
     delta = 0;
+    deltaCompteur = 0;
 
     xBaseAsteroid: number;
     yBaseAsteroid: number;
@@ -23,7 +27,7 @@ export class AsteroidSprite {
         this.app = app;
         this.asteroid = new Array<PIXI.Sprite>();
         this.asteroidFolders = { "carbon": new Array<PIXI.Texture>(), "titanium": new Array<PIXI.Texture>() };
-
+        this.checkAstero = false;
         //this.asteroidSeed = seed;
         this.initAsteroidSprites();
 
@@ -35,6 +39,8 @@ export class AsteroidSprite {
         this.xBaseAsteroid = this.app.renderer.width / 2;
         this.yBaseAsteroid = this.app.renderer.height / 2;
 
+        let shakeAstex = 1;
+        let shakeAstey = 1;
         // Listen for animate update
         this.app.ticker.add((delta) => {
             if (this.asteroid[0]) {
@@ -43,8 +49,20 @@ export class AsteroidSprite {
                 }
                 this.delta += (2 * Math.PI) / 1000;
 
-                this.asteroid[0].x = this.xBaseAsteroid + Math.cos(this.delta) * -5;
-                this.asteroid[0].y = this.yBaseAsteroid + Math.sin(this.delta) * -15;
+                if (this.checkAstero) {
+                    this.deltaCompteur++;
+                } else {
+                    this.deltaCompteur = 0;
+                }
+                if (this.deltaCompteur > 20) {
+                    shakeAstex = 150 * this.delta;
+                    shakeAstey = 1 * this.delta;
+                } else {
+                    shakeAstex = this.delta;
+                    shakeAstey = this.delta;
+                }
+                this.asteroid[0].x = this.xBaseAsteroid + Math.cos(shakeAstex) * -5;
+                this.asteroid[0].y = this.yBaseAsteroid + Math.sin(shakeAstey) * -15;
             }
         });
 
@@ -66,8 +84,8 @@ export class AsteroidSprite {
         sprite.anchor.set(0.5);
 
         if (x === 0 && y === 0) {
-            sprite.x = this.app.renderer.width / 2 ;
-            sprite.y = this.app.renderer.height / 2 ;
+            sprite.x = this.app.renderer.width / 2;
+            sprite.y = this.app.renderer.height / 2;
             this.app.stage.addChildAt(sprite, 1);
         } else {
             this.asteroid[0].addChild(sprite);
