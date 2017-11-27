@@ -13,6 +13,10 @@ export class Drone {
     yBaseDrone: number;
     laserAnim: PIXI.extras.AnimatedSprite;
 
+    laserAnim_actif1: PIXI.extras.AnimatedSprite;
+    laserAnim_actif2: PIXI.extras.AnimatedSprite;
+    laserAnim_actif3: PIXI.extras.AnimatedSprite;
+    
     constructor(x: number , y: number, app: PIXI.Application) {
         this.app = app;
         this.isMining = true;
@@ -29,14 +33,14 @@ export class Drone {
         this.xBaseDrone = this.drone.x;
         this.yBaseDrone = this.drone.y;
 
-
         this.laserAnim = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(PIXI.loader.resources['laser'].texture, 946, 964));
         this.laserAnim.gotoAndPlay(0);
         this.laserAnim.anchor.set(0.5, 0.04);
         this.laserAnim.animationSpeed = 0.35;
-        this.laserAnim.visible = true;
+        this.laserAnim.visible = false;
 
         this.drone.addChild(this.laserAnim);
+        this.initLaser();
 
         // Listen for animate update
         this.app.ticker.add((delta) => {
@@ -59,5 +63,38 @@ export class Drone {
                 }
             }
         });
+    }
+
+    initLaser() {
+        this.laserAnim_actif1 = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(PIXI.loader.resources['laserMinage1'].texture,
+         946, 946));
+        this.laserAnim_actif1.gotoAndPlay(0);
+        this.laserAnim_actif1.anchor.set(0.5, 0.04);
+        this.laserAnim_actif1.animationSpeed = 0.25;
+        this.laserAnim_actif1.visible = false;
+
+        this.drone.addChild(this.laserAnim_actif1);
+
+        this.laserAnim_actif2 = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(PIXI.loader.resources['laserMinage2'].texture,
+        946, 946));
+        this.laserAnim_actif2.gotoAndPlay(0);
+        this.laserAnim_actif2.anchor.set(0.5, 0.04);
+        this.laserAnim_actif2.animationSpeed = 0.35;
+        this.laserAnim_actif2.visible = false;
+
+        this.drone.addChild(this.laserAnim_actif2);
+
+        this.laserAnim_actif3 = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(PIXI.loader.resources['laserMinage3'].texture,
+        946, 946));
+        this.laserAnim_actif3.gotoAndPlay(0);
+        this.laserAnim_actif3.anchor.set(0.5, 0.04);
+        this.laserAnim_actif3.animationSpeed = 0.35;
+        this.laserAnim_actif3.visible = false;
+
+        this.drone.addChild(this.laserAnim_actif3);
+    }
+
+    activeLaser() {
+        
     }
 }
