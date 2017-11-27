@@ -20,13 +20,14 @@ export class QuestService {
     this.db.object('questGroup').valueChanges().subscribe(
       (snapshot: any) => {
         this.questGroup.values = snapshot.values;
-        this.questGroup.gain = snapshot.gain + this.userS.currentUser.score * 0.05;
+        this.questGroup.gain = snapshot.gain + (this.userS.currentUser ? this.userS.currentUser.score  : 1) * 0.05;
     });
 
   }
 
   FillQuestGroup(snapshot) {
-      this.questGroup = new Quest(snapshot.name, snapshot.type, snapshot.values, 0 , Math.floor(this.userS.currentUser.score * 0.05));
+      this.questGroup = new Quest(snapshot.name, snapshot.type, snapshot.values, 0 ,
+         Math.floor((this.userS.currentUser ? this.userS.currentUser.score  : 1) * 0.05));
       this.questGroup.valuesFinal = snapshot.valuesFinal;
   }
 
