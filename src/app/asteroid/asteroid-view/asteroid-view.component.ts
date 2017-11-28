@@ -100,10 +100,10 @@ export class AsteroidViewComponent implements AfterViewInit {
         this.state = state;
       }
 
-
       if (user.asteroid.currentCapacity > this.asteroid.currentCapacity) {
         this.asteroidSprite.changeSprite(user.asteroid);
         this.drone.isMining = false;
+        this.drone.laserAnim.visible = true;
       }
       if (this.drone.laser != null) {
         this.drone.laser.visible = user.getOreAmountFromString(user.asteroid.ore) <
@@ -122,7 +122,11 @@ export class AsteroidViewComponent implements AfterViewInit {
     if (this.userS.currentUser.currentMineRate < max) {
       this.userS.modifyCurrentMineRate(this.userS.currentUser.currentMineRate + max * 0.1 > max ? max :
         this.userS.currentUser.currentMineRate + max * 0.1);
-      // this.updateLaserSpeed();
+    }
+
+    if (this.userS.currentUser.currentMineRate === max) {
+      this.drone.activeLaser();
+      this.asteroidSprite.checkAstero = true;
     }
   }
 
@@ -136,6 +140,8 @@ export class AsteroidViewComponent implements AfterViewInit {
           base ? base : this.userS.currentUser.currentMineRate - (0.1 * max));
       } else {
         this.userS.modifyCurrentMineRate(base);
+        this.drone.desactivLaser();
+        this.asteroidSprite.checkAstero = false;
       }
     } else {
       this.clicked = false;
