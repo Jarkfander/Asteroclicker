@@ -27,22 +27,9 @@ export class User {
 
     public quest: Quest;
 
-    public carbon: number;
-    public titanium: number;
+    public oreAmounts: JSON;
 
     constructor() {
-    }
-
-    public getOreAmountFromString(oreName: string) {
-        switch (oreName) {
-            case 'carbon':
-                return this.carbon;
-            case 'titanium':
-                 return this.titanium;
-            default:
-                console.log('unknown material (user)' + oreName);
-                break;
-        }
     }
 
     // 1000000 => 1 000 000
