@@ -78,7 +78,9 @@ export class UserService {
   public LogOut() {
     this.userLoad = false;
     this.currentUser = null;
-    this.afAuth.auth.signOut();
+    this.afAuth.auth.signOut().then(()=>{
+      location.reload();
+    });
   }
 
   FillAsteroid(snapshot) {
@@ -127,7 +129,7 @@ export class UserService {
           snapshot.result[i].ore, snapshot.result[i].seed, snapshot.result[i].timeToGo));
       }
     }
-    this.currentUser.asteroidSearch = new AsteroidSearch(resultTab, snapshot.timer);
+    this.currentUser.asteroidSearch = new AsteroidSearch(resultTab, snapshot.timer,snapshot.start);
     this.searchSubject.next(this.currentUser);
     this.incrementCounter();
   }

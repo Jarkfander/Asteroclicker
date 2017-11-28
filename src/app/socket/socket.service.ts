@@ -6,9 +6,9 @@ import { UserService } from '../user/user.service';
 @Injectable()
 export class SocketService {
 
-  //private url = 'http://localhost:4000';
+  private url = 'http://localhost:4000';
   //private url = 'http://192.168.0.252:4000';
-  private url = 'http://78.192.54.38:4000';
+  //private url = 'http://78.192.54.38:4000';
 
   private socket;
 
@@ -63,14 +63,6 @@ export class SocketService {
     this.socket.emit("searchAster", json);
   }
 
-  researchFinished() {
-    let json = {};
-
-    json["user"] = this.userS.currentUser.uid;
-
-    this.socket.emit("researchFinished", json);
-  }
-
   chooseAsteroid(ind : number) {
     let json = {};
 
@@ -80,12 +72,12 @@ export class SocketService {
     this.socket.emit("chooseAsteroid", json);
   }
 
-  arrivedToAsteroid() {
+  updateAsteroidTimer() {
     let json = {};
 
     json["user"] = this.userS.currentUser.uid;
 
-    this.socket.emit("arrivedToAsteroid", json);
+    this.socket.emit("updateAsteroidTimer", json);
   }
 
   rejectResults() {
