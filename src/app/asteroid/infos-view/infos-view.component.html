@@ -52,7 +52,7 @@
 
 </app-modal>
 
-<button *ngIf="search.timer!=0 && search.results.length==3" class="btn-upgrade" (click)="showResult()">See search result</button>
-<button *ngIf="search.timer!=0 && search.results.length==0" disabled="true" class="btn-upgrade">Searching : {{timer}}</button>
-<button *ngIf="search.timer!=0 && search.results.length==1" disabled="true" class="btn-upgrade" >Time before arriving : {{timer}}</button>
-<button *ngIf="search.timer==0" class="btn-upgrade" (click)="searchNewAster()">Search Another Asteroid</button>
+<button *ngIf="search.start!=0 && search.results.length==3" class="btn-upgrade" (click)="showResult()">See search result</button>
+<button *ngIf="search.start!=0 && search.results.length==0" disabled="true" class="btn-upgrade">Searching : {{timer}}</button>
+<button *ngIf="search.start!=0 && search.results.length==1" disabled="true" class="btn-upgrade" >Time before arriving : {{timer}}</button>
+<button *ngIf="search.start==0" class="btn-upgrade" (click)="searchNewAster()">Search Another Asteroid</button>

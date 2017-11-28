@@ -63,14 +63,6 @@ export class SocketService {
     this.socket.emit("searchAster", json);
   }
 
-  researchFinished() {
-    let json = {};
-
-    json["user"] = this.userS.currentUser.uid;
-
-    this.socket.emit("researchFinished", json);
-  }
-
   chooseAsteroid(ind : number) {
     let json = {};
 
@@ -80,12 +72,12 @@ export class SocketService {
     this.socket.emit("chooseAsteroid", json);
   }
 
-  arrivedToAsteroid() {
+  updateAsteroidTimer() {
     let json = {};
 
     json["user"] = this.userS.currentUser.uid;
 
-    this.socket.emit("arrivedToAsteroid", json);
+    this.socket.emit("updateAsteroidTimer", json);
   }
 
   rejectResults() {
