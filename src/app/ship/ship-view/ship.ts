@@ -48,6 +48,9 @@ export class Ship {
     stockUpgrade: UpgradeShip;
     currentLevelStock: number;
 
+    droneUpgrade: UpgradeShip;
+    currentLevelDrone: number;
+
     constructor(app: PIXI.Application) {
         this.app = app;
         this.deltaSum = 0;
@@ -64,6 +67,9 @@ export class Ship {
 
         this.currentLevelStock = 0;
         this.stockUpgrade = this.initTabSprite(7, 'shipStock_', this.currentLevelStock, 500, 500, 30, 0, false);
+
+        this.currentLevelDrone = 0;
+        this.droneUpgrade = this.initTabSprite(5, 'droneUpdate_', this.currentLevelDrone, 500, 500, 30, 0, true);
 
         this.transformShipY = this.ship.y;
         this.transformShipX = this.ship.x;
@@ -84,8 +90,6 @@ export class Ship {
                 this.ship.y = this.transformShipY + Math.sin(this.deltaSumShip) * 17;
                 this.ship.x = this.transformShipX + Math.cos(this.deltaSumShip) * 5;
                 this.initMoveXY(this.stockUpgrade, 30, 20, this.deltaSum);
-            
-
             }
         });
 
@@ -184,4 +188,5 @@ export class Ship {
         }
         this.tourelle.gotoAndPlay(0);
     }
+
 }

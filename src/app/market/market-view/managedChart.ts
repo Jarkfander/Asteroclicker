@@ -39,14 +39,14 @@ export class ManagedChart {
     public initTab(tab: any[]) {
         const tabKey = Object.keys(tab);
         for (let i = 0; i < this.numberOfvalues ; i++) {
-            this.addData(new Date(parseFloat(tabKey[i])).getMinutes(), tab[ tabKey[i] ]);
+            this.addData(new Date(parseFloat(tabKey[i])).getSeconds(), tab[ tabKey[i] ]);
         }
         this.myChart.update();
     }
 
     public addNew(tab: any[]) {
         const tabKey = Object.keys(tab);
-        this.removeDataAndAddData(new Date(parseFloat(tabKey[this.numberOfvalues - 1])).getMinutes(),
+        this.removeDataAndAddData(new Date(parseFloat(tabKey[this.numberOfvalues - 1])).getSeconds(),
                                   tab[ tabKey[this.numberOfvalues - 1] ]);
     }
 

@@ -20,18 +20,11 @@ export class MarketViewComponent implements AfterViewInit {
   public chartTitanium: ManagedChart;
 
   public valuesCreditCarbon10: number;
-  public valuesCreditCarbon100: number;
   public valuesCreditTitanium10: number;
-  public valuesCreditTitanium100: number;
 
   constructor(private userS: UserService, private marketS: MarketService, private socketS: SocketService) {
     this.valuesCreditCarbon10 = this.marketS.currentOresCosts.carbonCosts[Object.keys(this.marketS.currentOresCosts.carbonCosts)[29]];
     this.valuesCreditTitanium10 = this.marketS.currentOresCosts.titaniumCosts[Object.keys(this.marketS.currentOresCosts.titaniumCosts)[29]];
-
-    this.valuesCreditCarbon10 = parseFloat((this.valuesCreditCarbon10 * 10).toFixed(2));
-    this.valuesCreditCarbon100 = parseFloat((this.valuesCreditCarbon10 * 10).toFixed(2));
-    this.valuesCreditTitanium10 = parseFloat((this.valuesCreditTitanium10 * 10).toFixed(2));
-    this.valuesCreditTitanium100 = parseFloat((this.valuesCreditTitanium10 * 10).toFixed(2));
   }
 
   ngAfterViewInit() {
@@ -61,18 +54,12 @@ export class MarketViewComponent implements AfterViewInit {
     this.marketS.OreCostsSubjectCarbon.subscribe((tab: number[]) => {
       this.valuesCreditCarbon10 = this.marketS.currentOresCosts.carbonCosts[Object.keys(this.marketS.currentOresCosts.carbonCosts)[29]];
       this.chartCarbon.addNew(tab);
-
-      this.valuesCreditCarbon10 = parseFloat((this.valuesCreditCarbon10 * 10).toFixed(2));
-      this.valuesCreditCarbon100 = parseFloat((this.valuesCreditCarbon10 * 10).toFixed(2));
     });
 
     this.marketS.OreCostsSubjectTitanium.subscribe((tab: number[]) => {
       this.valuesCreditTitanium10 = this.marketS.currentOresCosts.titaniumCosts[Object.keys(
         this.marketS.currentOresCosts.titaniumCosts)[29]];
       this.chartTitanium.addNew(tab);
-
-      this.valuesCreditTitanium10 = parseFloat((this.valuesCreditTitanium10 * 10).toFixed(2));
-      this.valuesCreditTitanium100 = parseFloat((this.valuesCreditTitanium10 * 10).toFixed(2));
     });
 
   }

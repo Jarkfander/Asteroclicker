@@ -6,19 +6,19 @@
       <h2>Carbon</h2>
       <div>
         <button type="button" class="btn-sell" (click)="SellOre(10,'carbon');">Sell 10</button>
-        for <b class="credit">{{ valuesCreditCarbon10 }} cr</b>
+        for <b class="credit">{{ (this.valuesCreditCarbon10 * 10).toFixed(1) }} cr</b>
       </div>
       <div>
         <button type="button" class="btn-sell" (click)="SellOre(100,'carbon');">Sell 100</button>
-        for <b class="credit">{{ valuesCreditCarbon100 }} cr</b>
+        for <b class="credit">{{ (this.valuesCreditCarbon10 * 100).toFixed(1) }} cr</b>
       </div>
       <div>
         <button type="button" class="btn-buy" (click)="BuyOre(10,'carbon');">Buy 10</button>
-        for <b class="credit">{{ valuesCreditCarbon10 }} cr</b>
+        for <b class="credit">{{ (this.valuesCreditCarbon10 * 10).toFixed(1) }} cr</b>
       </div>
       <div>
         <button type="button" class="btn-buy" (click)="BuyOre(100,'carbon');">Buy 100</button>
-        for <b class="credit">{{ valuesCreditCarbon100 }} cr</b>
+        for <b class="credit">{{ (this.valuesCreditCarbon10 * 100).toFixed(1) }} cr</b>
       </div>
     </div>
     <div class="curve">
@@ -31,19 +31,19 @@
       <h2>Titanium</h2>
       <div>
         <button type="button" class="btn-sell" (click)="SellOre(10,'titanium');">Sell 10</button>
-        for <b class="credit">{{ valuesCreditTitanium10 }} cr</b>
+        for <b class="credit">{{ (this.valuesCreditTitanium10 * 10).toFixed(1) }} cr</b>
       </div>
       <div>
         <button type="button" class="btn-sell" (click)="SellOre(100,'titanium');">Sell 100</button>
-        for <b class="credit">{{ valuesCreditTitanium100 }} cr</b>
+        for <b class="credit">{{ (this.valuesCreditTitanium10 * 100).toFixed(1) }} cr</b>
       </div>
       <div>
         <button type="button" class="btn-buy" (click)="BuyOre(10,'titanium');">Buy 10</button>
-        for <b class="credit">{{ valuesCreditTitanium10 }} cr</b>
+        for <b class="credit">{{ (this.valuesCreditTitanium10 * 10).toFixed(1) }} cr</b>
       </div>
       <div>
         <button type="button" class="btn-buy" (click)="BuyOre(100,'titanium');">Buy 100</button>
-        for <b class="credit">{{ valuesCreditTitanium100 }} cr</b>
+        for <b class="credit">{{ (this.valuesCreditTitanium10 * 100).toFixed(1) }} cr</b>
       </div>
     </div>
     <div class="curve">
