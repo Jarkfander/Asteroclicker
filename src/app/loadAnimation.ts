@@ -46,6 +46,11 @@ export class LoadAnimation {
             this.addKeySpriteName('laserMinage' + i, './assets/laser_minage' + i + '.png');
         }
 
+        // laser animation
+        for (let i = 1 ; i < 6 ; i++) {
+            this.addKeySpriteName('droneUpdate_' + i, './assets/upgrade/drone_' + i + '.png');
+        }
+
         this.addKeySpriteName('Boum', './assets/Boum.png');
         this.addKeySpriteName('krash', './assets/krash.png');
         this.addKeySpriteName('kaboom', './assets/kaboom.png');

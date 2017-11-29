@@ -18,6 +18,7 @@ export class Drone {
     laserAnim_actif1: PIXI.extras.AnimatedSprite;
     laserAnim_actif2: PIXI.extras.AnimatedSprite;
     laserAnim_actif3: PIXI.extras.AnimatedSprite;
+    
     constructor(x: number , y: number, app: PIXI.Application) {
         this.app = app;
         this.isMining = true;
