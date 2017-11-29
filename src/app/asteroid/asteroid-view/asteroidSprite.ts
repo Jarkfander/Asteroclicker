@@ -4,6 +4,7 @@ import { UserService } from '../../user/user.service';
 import * as PIXIParticles from 'pixi-particles';
 import { ParticleBase } from '../../pixiVisual/particleBase';
 import { Asteroid } from '../asteroid';
+import { getFramesFromSpriteSheet } from '../../loadAnimation';
 
 export class AsteroidSprite {
     asteroid: PIXI.Sprite[];
@@ -19,14 +20,19 @@ export class AsteroidSprite {
 
     xBaseAsteroid: number;
     yBaseAsteroid: number;
+    compteurBoom: number;
 
     spriteAsteroidCarbon: PIXI.Texture[];
+    boomAnim: PIXI.extras.AnimatedSprite;
+    krashAnim: PIXI.extras.AnimatedSprite;
+    kaboomAnim: PIXI.extras.AnimatedSprite;
+    woomAnim: PIXI.extras.AnimatedSprite;
     asteroidFolders;
     constructor(x: number, y: number, app: PIXI.Application, asteroid: Asteroid, numberOfSprite: number) {
 
         this.app = app;
         this.asteroid = new Array<PIXI.Sprite>();
-        this.asteroidFolders = { "carbon": new Array<PIXI.Texture>(), "titanium": new Array<PIXI.Texture>() };
+        this.asteroidFolders = { 'carbon': new Array<PIXI.Texture>(), 'titanium': new Array<PIXI.Texture>() };
         this.checkAstero = false;
         //this.asteroidSeed = seed;
         this.initAsteroidSprites();
@@ -35,6 +41,8 @@ export class AsteroidSprite {
 
         this.InitializeClickEmitter();
         this.InitializeDestructionEmitter();
+        this.compteurBoom = 0;
+        this.initAnimationBoomKrash();
 
         this.xBaseAsteroid = this.app.renderer.width / 2;
         this.yBaseAsteroid = this.app.renderer.height / 2;
@@ -65,7 +73,6 @@ export class AsteroidSprite {
                 this.asteroid[0].y = this.yBaseAsteroid + Math.sin(shakeAstey) * -15;
             }
         });
-
     }
 
     emitClickParticle(data) {
@@ -100,6 +107,22 @@ export class AsteroidSprite {
 
         sprite.on('click', (event) => {
             this.emitClickParticle(event.data);
+
+            let tempAnim = this.boomAnim;
+            let xTemp = event.data.global.x;
+            const yTemp = event.data.global.y;
+
+            const random = Math.floor(Math.random() * 4) + 1;
+            if (random === 1) {
+                tempAnim = this.krashAnim;
+                xTemp += 50;
+            } else if (random === 2) {
+                tempAnim = this.kaboomAnim;
+                xTemp += 50;
+            } else if (random === 3) {
+                tempAnim = this.woomAnim;
+            }
+            this.animBoomOnClick(xTemp, yTemp, tempAnim);
         });
     }
 
@@ -162,6 +185,10 @@ export class AsteroidSprite {
         if (this.asteroid[0].children.length > 0) {
             this.emitDestructionParticle(this.asteroid[0].children[this.asteroid[0].children.length - 1].worldTransform.tx,
                 this.asteroid[0].children[this.asteroid[0].children.length - 1].worldTransform.ty);
+            this.boomAnim.scale.set(2, 2);
+            this.animBoomOnClick(this.asteroid[0].children[this.asteroid[0].children.length - 1].worldTransform.tx,
+                this.asteroid[0].children[this.asteroid[0].children.length - 1].worldTransform.ty , this.boomAnim, true);
+            this.boomAnim.scale.set(1, 1);
             this.asteroid[0].removeChild(this.asteroid[0].children[this.asteroid[0].children.length - 1]);
         }
     }
@@ -169,7 +196,11 @@ export class AsteroidSprite {
     destructBase() {
         this.emitDestructionParticle(this.asteroid[0].worldTransform.tx,
             this.asteroid[0].worldTransform.ty);
-        this.app.stage.removeChild(this.asteroid[0])
+        this.woomAnim.scale.set(4, 4);
+        this.animBoomOnClick(this.asteroid[0].worldTransform.tx,
+            this.asteroid[0].worldTransform.ty, this.woomAnim, true);
+        this.woomAnim.scale.set(1, 1);
+        this.app.stage.removeChild(this.asteroid[0]);
     }
     // Change the sprite of asteroid when the user change 
     changeSprite(asteroid: Asteroid) {
@@ -211,7 +242,7 @@ export class AsteroidSprite {
             },
             'frequency': 0.008,
             'emitterLifetime': 0.20,
-            'maxParticles': 1000,
+            'maxParticles': 10,
             'pos': {
                 'x': 0,
                 'y': 0
@@ -264,7 +295,7 @@ export class AsteroidSprite {
             },
             'frequency': 0.008,
             'emitterLifetime': 0.2,
-            'maxParticles': 1000,
+            'maxParticles': 10,
             'pos': {
                 'x': 0,
                 'y': 0
@@ -285,4 +316,55 @@ export class AsteroidSprite {
         );
     }
 
+    initAnimationBoomKrash() {
+        this.boomAnim = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(PIXI.loader.resources['Boum'].texture, 236, 236));
+        this.boomAnim.gotoAndPlay(0);
+        this.boomAnim.anchor.set(0.5, 0.04);
+        this.boomAnim.scale.set(1, 1);
+        this.boomAnim.animationSpeed = 0.36;
+        this.boomAnim.visible = false;
+        this.boomAnim.loop = false;
+        this.app.stage.addChildAt(this.boomAnim, 4);
+
+        this.krashAnim = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(PIXI.loader.resources['krash'].texture, 236, 236));
+        this.krashAnim.gotoAndPlay(0);
+        this.krashAnim.anchor.set(0.5, 0.04);
+        this.krashAnim.scale.set(1, 1);
+        this.krashAnim.animationSpeed = 0.35;
+        this.krashAnim.visible = false;
+        this.krashAnim.loop = false;
+        this.app.stage.addChildAt(this.krashAnim, 4);
+
+        this.kaboomAnim = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(PIXI.loader.resources['kaboom'].texture, 236, 236));
+        this.kaboomAnim.gotoAndPlay(0);
+        this.kaboomAnim.anchor.set(0.5, 0.04);
+        this.kaboomAnim.scale.set(1, 1);
+        this.kaboomAnim.animationSpeed = 0.28;
+        this.kaboomAnim.visible = false;
+        this.kaboomAnim.loop = false;
+        this.app.stage.addChildAt(this.kaboomAnim, 4);
+
+        this.woomAnim = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(PIXI.loader.resources['woom'].texture, 236, 236));
+        this.woomAnim.gotoAndPlay(0);
+        this.woomAnim.anchor.set(0.5, 0.04);
+        this.woomAnim.scale.set(1, 1);
+        this.woomAnim.animationSpeed = 0.28;
+        this.woomAnim.visible = false;
+        this.woomAnim.loop = false;
+        this.app.stage.addChildAt(this.woomAnim, 4);
+    }
+
+    animBoomOnClick(x: number, y: number, pixiAnimate: PIXI.extras.AnimatedSprite , boolForce = false) {
+        if (this.compteurBoom % 25 === 0 || boolForce) {
+            this.compteurBoom = 1 + Math.floor(Math.random() * 12);
+            pixiAnimate.position.set(x + 50, y - 100);
+            pixiAnimate.visible = true;
+            pixiAnimate.gotoAndPlay(0);
+            pixiAnimate.onComplete = () => {
+                pixiAnimate.visible = false;
+            };
+        } else {
+            this.compteurBoom++;
+        }
+    }
 }

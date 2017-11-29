@@ -46,7 +46,10 @@ export class LoadAnimation {
             this.addKeySpriteName('laserMinage' + i, './assets/laser_minage' + i + '.png');
         }
 
-
+        this.addKeySpriteName('Boum', './assets/Boum.png');
+        this.addKeySpriteName('krash', './assets/krash.png');
+        this.addKeySpriteName('kaboom', './assets/kaboom.png');
+        this.addKeySpriteName('woom', './assets/woom.png');
         this.onAssetsLoaded();
     }
 

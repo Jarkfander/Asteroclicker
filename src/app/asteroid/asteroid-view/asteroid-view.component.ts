@@ -67,6 +67,9 @@ export class AsteroidViewComponent implements AfterViewInit {
     background.height = this.app.renderer.height;
     this.app.stage.addChild(background);
 
+    this.drone = new Drone(0.20, 0.20, this.app);
+    this.drone.isMining = this.asteroid.currentCapacity === 0;
+
     this.asteroidSprite = new AsteroidSprite(0.25, 0.25, this.app, this.userS.currentUser.asteroid,
       this.oreInfoS.oreInfo.length);
 
@@ -80,11 +83,10 @@ export class AsteroidViewComponent implements AfterViewInit {
     this.drone.isMining = this.asteroid.currentCapacity === 0;
 
     this.drone.laserFirstState = this.userS.currentUser.oreAmounts[this.userS.currentUser.asteroid.ore]
-      < this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity;
 
     this.userS.asteroidSubject.subscribe((user: User) => {
 
-      const state = this.asteroid.currentCapacity == this.asteroid.capacity ? 4 :
+      const state = this.asteroid.currentCapacity === this.asteroid.capacity ? 4 :
         Math.floor((this.asteroid.currentCapacity / this.asteroid.capacity) * 5);
 
       if (user.asteroid.currentCapacity === 0 && this.asteroid.currentCapacity !== 0) {

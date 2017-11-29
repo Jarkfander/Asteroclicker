@@ -184,4 +184,5 @@ export class Ship {
         }
         this.tourelle.gotoAndPlay(0);
     }
+
 }

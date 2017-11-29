@@ -9,6 +9,7 @@ export class Drone {
     isBeginClick: boolean;
 
     delta: number;
+    deltaGo: number;
     public isMining: boolean;
     xBaseDrone: number;
     yBaseDrone: number;
@@ -17,7 +18,6 @@ export class Drone {
     laserAnim_actif1: PIXI.extras.AnimatedSprite;
     laserAnim_actif2: PIXI.extras.AnimatedSprite;
     laserAnim_actif3: PIXI.extras.AnimatedSprite;
-    
     constructor(x: number , y: number, app: PIXI.Application) {
         this.app = app;
         this.isMining = true;
@@ -40,9 +40,11 @@ export class Drone {
         this.laserAnim.animationSpeed = 0.35;
         this.laserAnim.visible = true;
 
+        this.deltaGo = 0;
+
         this.isBeginClick = true;
         this.drone.addChild(this.laserAnim);
-        this.initLaser();   
+        this.initLaser();
 
         // Listen for animate update
         this.app.ticker.add((delta) => {
@@ -52,16 +54,32 @@ export class Drone {
                 }
                 this.delta += (2 * Math.PI) / 1000;
 
+
                 if (this.isMining) {
-                    this.drone.x = this.xBaseDrone;
-                    this.drone.y = this.yBaseDrone;
-                    this.drone.rotation = 0;
-                    this.laserAnim.visible = false;
+                    if (this.deltaGo < 8) {
+                        this.deltaGo += 0.08;
+                        this.drone.x = this.drone.x - this.deltaGo;
+                        this.drone.y = this.drone.y - Math.sin(this.deltaGo);
+                        this.laserAnim.visible = false;
+                        this.laserAnim_actif1.visible = false;
+                        this.laserAnim_actif2.visible = false;
+                        this.laserAnim_actif3.visible = false;
+                        this.drone.rotation = 0;
+                        this.delta = 0;
+                    }
                     this.delta = 0;
                 } else {
-                    this.drone.x = this.xBaseDrone + Math.cos(this.delta) * 50;
-                    this.drone.y = this.yBaseDrone + Math.sin(this.delta) * 50;
-                    this.drone.rotation = Math.sin(this.delta) * 0.25;
+                    if (this.deltaGo >= 0) {
+                        this.deltaGo -= 0.08;
+                        this.drone.x = this.drone.x + this.deltaGo;
+                        this.drone.y = this.drone.y + Math.sin(this.deltaGo);
+                        this.delta = 0;
+                        this.laserAnim.visible = this.deltaGo <= 1 ? true : false;
+                    } else  {
+                        this.drone.x = this.xBaseDrone + Math.cos(this.delta) * 50;
+                        this.drone.y = this.yBaseDrone + Math.sin(this.delta) * 50;
+                        this.drone.rotation = Math.sin(this.delta) * 0.25;
+                    }
                 }
             }
         });
@@ -73,7 +91,9 @@ export class Drone {
         this.laserAnim_actif1.gotoAndPlay(0);
         this.laserAnim_actif1.anchor.set(0.5, 0.04);
         this.laserAnim_actif1.animationSpeed = 0.30;
-        this.laserAnim_actif1.visible = false;
+        this.laserAnim_actif1.position.set(3000, 3000);
+
+        this.laserAnim_actif1.visible = true;
         this.laserAnim_actif1.loop = false;
 
         this.drone.addChild(this.laserAnim_actif1);
@@ -82,8 +102,9 @@ export class Drone {
         946, 946));
         this.laserAnim_actif2.gotoAndPlay(0);
         this.laserAnim_actif2.anchor.set(0.5, 0.04);
+        this.laserAnim_actif2.position.set(3000, 3000);
         this.laserAnim_actif2.animationSpeed = 0.35;
-        this.laserAnim_actif2.visible = false;
+        this.laserAnim_actif2.visible = true;
 
         this.drone.addChild(this.laserAnim_actif2);
 
@@ -92,7 +113,8 @@ export class Drone {
         this.laserAnim_actif3.gotoAndPlay(0);
         this.laserAnim_actif3.anchor.set(0.5, 0.04);
         this.laserAnim_actif3.animationSpeed = 0.25;
-        this.laserAnim_actif3.visible = false;
+        this.laserAnim_actif3.position.set(3000, 3000);
+        this.laserAnim_actif3.visible = true;
         this.laserAnim_actif3.loop = false;
 
         this.drone.addChild(this.laserAnim_actif3);
@@ -100,6 +122,12 @@ export class Drone {
 
     activeLaser() {
         if (this.isBeginClick) {
+            this.laserAnim_actif1.position.set(0, 0);
+            this.laserAnim_actif2.position.set(0, 0);
+            this.laserAnim_actif3.position.set(0, 0);
+            this.laserAnim_actif2.visible = false;
+            this.laserAnim_actif3.visible = false;
+
             this.laserAnim.visible = false;
             this.laserAnim_actif1.visible = true;
             this.laserAnim_actif1.stop();
@@ -126,4 +154,6 @@ export class Drone {
             };
         }
     }
+
+
 }
