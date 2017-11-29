@@ -1,18 +1,19 @@
 export class Upgrade {
 
-        public lvl: number;
-        public cost: number;
-        public time: number;
+    public lvl: number;
+    public cost: number;
+    public time: number;
+    public name: string;
+    public displayName: string;
 
-        constructor(level: number, _cost: number, _time: number) {
-            this.lvl = level;
-            this.cost = _cost;
-            this.time = _time;
-        }
-
-        public display() {
-            let text = 'level : ' + this.lvl;
-            text = 'cost ' +  this.cost;
-            return text;
-        }
+    public cara;
+    constructor(level: number, _cost: number, _time: number, name: string, displayName: string) {
+        this.displayName = displayName;
+        this.name = name;
+        this.lvl = level;
+        this.cost = _cost;
+        this.time = _time;
+        this.cara = {};
     }
+
+}

@@ -1,4 +1,8 @@
-<div class="upgrade row justify-between">
+<app-upgrade-info [upgrade]=stock[storageLvl] [nextUpgrade]=stock[storageLvl+1]></app-upgrade-info>
+<app-upgrade-info [upgrade]=mineRate[mineRateLvl] [nextUpgrade]=mineRate[mineRateLvl+1]></app-upgrade-info>
+
+
+<!--<div class="upgrade row justify-between">
     <img class="upgrade-icon" src="../../../assets/upgrade-icons/icone_stockage.png"/>
     <div class="column justify-between">
         <h1>Storage</h1>
@@ -20,7 +24,7 @@
     <button class="btn-upgrade" (click)="mineRateLvlUp()">Upgrade</button>
 </div>
 
-<!--
+
 <div class="upgrade row justify-between">
     <img  class="upgrade-icon" src="../../../assets/upgrade-icons/icone_radar.png"/>
     <div class="column justify-between">

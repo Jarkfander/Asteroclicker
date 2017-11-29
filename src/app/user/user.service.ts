@@ -97,9 +97,7 @@ export class UserService {
   }
 
   FillOre(snapshot) {
-    this.currentUser.carbon = snapshot.carbon;
-
-    this.currentUser.titanium = snapshot.titanium;
+    this.currentUser.oreAmounts = snapshot;
     this.oreSubject.next(this.currentUser);
     this.incrementCounter();
   }

@@ -10,13 +10,14 @@ import { ModalComponent } from '../shared/modal/modal.component';
 import { SharedModule } from '../shared/shared.module';
 import { SearchResultComponent } from './search-result/search-result.component';
 import { OreInfoService } from './ore-info.service';
+import { OreInfosViewComponent } from './infos-view/ore-infos-view/ore-infos-view.component';
 
 @NgModule({
   imports: [
     CommonModule,
     SharedModule
   ],
-  declarations: [AsteroidViewComponent, InfosViewComponent, MiningPanelComponent, SearchResultComponent],
+  declarations: [AsteroidViewComponent, InfosViewComponent, MiningPanelComponent, SearchResultComponent, OreInfosViewComponent],
   exports: [AsteroidViewComponent, InfosViewComponent],
   providers: [UserService, UpgradeService, SocketService, OreInfoService]
 })

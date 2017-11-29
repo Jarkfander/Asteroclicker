@@ -1,0 +1,8 @@
+<div class="row justify-between">
+  <p >
+    <img src="assets/oreIcon/{{name}}Icon.png" alt="{{name}}Icon">
+  </p>
+  <p  [ngStyle]="{'color': amount>=capacity ? 'red' : 'white'}"> {{name}} : {{ amount }} </p>
+  <p >{{rate}} {{name}}/s</p>
+
+</div>
