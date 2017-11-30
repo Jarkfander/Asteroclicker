@@ -9,13 +9,13 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { environment } from '../environments/environment';
 import { SigninModule } from './signin/signin.module';
-import { TopbarModule } from './topbar/topbar.module';
+import { TopbarModule } from './market/topbar/topbar.module';
 import { SharedModule } from './shared/shared.module';
 import { CommonModule } from '@angular/common';
 import { MarketModule } from './market/market.module';
 import { MarketService } from './market/market.service';
-import { QuestService } from './topbar/quest.service';
-import { RankingService } from './topbar/ranking.service';
+import { QuestService } from './market/topbar/quest.service';
+import { RankingService } from './market/topbar/ranking.service';
 import { UserService } from './shared/user/user.service';
 import { UpgradeService } from './ship/upgrade-list/upgrade.service';
 
