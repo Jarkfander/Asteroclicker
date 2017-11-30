@@ -1,14 +1,16 @@
 import { Component, AfterViewInit, ElementRef, Renderer2, HostListener } from '@angular/core';
 import * as PIXI from 'pixi.js';
-import { UserService } from '../../user/user.service';
+
 import { AsteroidSprite } from './asteroidSprite';
 import { Drone } from './drone';
-import { User } from '../../user/user';
-import { UpgradeService } from '../../upgrade/upgrade.service';
-import { ParticleBase } from '../../pixiVisual/particleBase';
-import { SocketService } from '../../socket/socket.service';
-import { OreInfoService } from '../ore-info.service';
-import { Asteroid } from '../asteroid';
+import { UpgradeService } from '../../ship/upgrade-list/upgrade.service';
+import { SocketService } from '../../shared/socket/socket.service';
+import { UserService } from '../../shared/user/user.service';
+import { OreInfoService } from '../ore-info-view/ore-info.service';
+import { Asteroid } from './asteroid';
+import { ParticleBase } from '../../shared/pixiVisual/particleBase';
+import { User } from '../../shared/user/user';
+
 
 
 @Component({

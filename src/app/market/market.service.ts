@@ -47,15 +47,28 @@ export class MarketService {
     this.OreCostsSubjectCarbon.next(this.currentOresCosts.carbonCosts);
   }
 
-    // create the tab of stock
-    FillOreCostsInitTitanium(snapshot) {
-      this.currentOresCosts.titaniumCosts = snapshot;
-      this.OreCostsSubjectTitanium.next(this.currentOresCosts.titaniumCosts);
-    }
+  // create the tab of stock
+  FillOreCostsInitTitanium(snapshot) {
+    this.currentOresCosts.titaniumCosts = snapshot;
+    this.OreCostsSubjectTitanium.next(this.currentOresCosts.titaniumCosts);
+  }
 
   UpdateOreTrend(delta: number, oreName: string) {
     this.db.object('trend/' + oreName).set(this.oreTrends.getTrendFromString(oreName) + delta);
   }
+
+  public getCostsSubjectFromString(oreName: string) {
+    switch (oreName) {
+        case 'carbon':
+            return this.OreCostsSubjectCarbon;
+        case 'titanium':
+            return this.OreCostsSubjectTitanium;
+        default:
+            console.log('unknown material (subject)');
+            break;
+    }
+}
+
 }
 
 

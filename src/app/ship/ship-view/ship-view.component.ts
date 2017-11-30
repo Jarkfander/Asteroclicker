@@ -1,8 +1,8 @@
 import { Component, AfterViewInit, ElementRef, Renderer2, HostListener } from '@angular/core';
 import * as PIXI from 'pixi.js';
 import { Ship } from './ship';
-import { UserService } from '../../user/user.service';
-import { User } from '../../user/user';
+import { UserService } from '../../shared/user/user.service';
+import { User } from '../../shared/user/user';
 
 @Component({
   selector: 'app-ship-view',

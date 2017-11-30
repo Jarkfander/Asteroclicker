@@ -1,0 +1,58 @@
+<app-upgrade-view [upgrade]=stock[storageLvl] [nextUpgrade]=stock[storageLvl+1]></app-upgrade-view>
+<app-upgrade-view [upgrade]=mineRate[mineRateLvl] [nextUpgrade]=mineRate[mineRateLvl+1]></app-upgrade-view>
+
+
+<!--<div class="upgrade row justify-between">
+    <img class="upgrade-icon" src="../../../assets/upgrade-icons/icone_stockage.png"/>
+    <div class="column justify-between">
+        <h1>Storage</h1>
+        <p>Current Level: {{storageLvl}} : Capacity: {{ stock[storageLvl].capacity }}</p>
+        <p>Next Level: {{ storageLvl + 1 }} : Capacity: {{ stock[storageLvl + 1].capacity }}</p>
+        <p>Cost: <b class="credit">{{ stock[storageLvl + 1].cost }} cr</b></p>
+    </div>
+    <button class="btn-upgrade" (click)="stockLvlUp()">Upgrade</button>
+</div>
+
+<div class="upgrade row justify-between">
+    <img  class="upgrade-icon" src="../../../assets/upgrade-icons/icone_drone.png"/>
+    <div class="column justify-between">
+        <h1>Mining drone</h1>
+        <p>Current Level: {{mineRateLvl}} : Base Rate: {{ mineRate[mineRateLvl].baseRate }} , Max Rate: {{ mineRate[mineRateLvl].maxRate}}</p>
+        <p>Next Level: {{ mineRateLvl + 1 }} : Base Rate: {{ mineRate[mineRateLvl + 1].baseRate }}, Max Rate: {{ mineRate[mineRateLvl + 1].maxRate }}</p>
+        <p>Cost: <b class="credit">{{ mineRate[mineRateLvl + 1].cost }} cr</b></p>
+    </div>
+    <button class="btn-upgrade" (click)="mineRateLvlUp()">Upgrade</button>
+</div>
+
+
+<div class="upgrade row justify-between">
+    <img  class="upgrade-icon" src="../../../assets/upgrade-icons/icone_radar.png"/>
+    <div class="column justify-between">
+        <h1>Scanner</h1>
+        <p>Current Level: {{researchLvl}} : Speed: {{ research[researchLvl].time }}</p>
+        <p>Next Level: {{ researchLvl + 1 }} : Speed: {{ research[researchLvl + 1].time }}</p>
+        <p>Cost: <b class="credit">{{ research[researchLvl + 1].cost }} cr</b></p>
+    </div>
+    <button class="btn-upgrade" (click)="mineRateLvlUp()" disabled>Upgrade</button>
+</div>
+
+
+<div class="upgrade row justify-between">
+    <img class="upgrade-icon" src="../../../assets/upgrade-icons/icone_engine.png"/>
+    <div class="column justify-between">
+        <h1>Engine</h1>
+        <p>Not available yet</p>
+    </div>
+    <button class="btn-upgrade" (click)="stockLvlUp()" disabled>Upgrade</button>
+</div>
+
+<div class="upgrade row justify-between">
+    <img  class="upgrade-icon" src="http://placehold.it/200x200"/>
+    <div class="column justify-between">
+        <h1>TBD</h1>
+        <p>Not available yet</p>
+    </div>
+    <button class="btn-upgrade" (click)="mineRateLvlUp()" disabled>Upgrade</button>
+</div>
+
+-->

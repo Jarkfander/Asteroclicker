@@ -1,8 +1,9 @@
 import { Component, AfterViewInit, Renderer2, ElementRef } from '@angular/core';
-import { UserService } from '../../user/user.service';
-import { User } from '../../user/user';
 import { QuestService } from '../quest.service';
-import { SocketService } from '../../socket/socket.service';
+import { UserService } from '../../shared/user/user.service';
+import { User } from '../../shared/user/user';
+import { SocketService } from '../../shared/socket/socket.service';
+
 
 @Component({
   selector: 'app-topbar',

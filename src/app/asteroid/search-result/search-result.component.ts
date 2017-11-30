@@ -1,8 +1,7 @@
 import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
-import { UserService } from '../../user/user.service';
-import { User } from '../../user/user';
-import { Asteroid } from '../asteroid';
-import { SocketService } from '../../socket/socket.service';
+import { SocketService } from '../../shared/socket/socket.service';
+import { Asteroid } from '../asteroid-view/asteroid';
+
 
 @Component({
   selector: 'app-search-result',
