@@ -39,6 +39,10 @@ export class Ship {
     deltaSumShip: number;
     deltaSum: number;
 
+    spriteChest: PIXI.extras.AnimatedSprite;
+    spriteChestTab: Array<PIXI.extras.AnimatedSprite>;
+    numberOfChest: number;
+
     app: PIXI.Application;
 
     radarUpgrade: UpgradeShip;
@@ -63,6 +67,8 @@ export class Ship {
 
         this.boolNewTourelle = false;
 
+        this.spriteChestTab = new Array<PIXI.extras.AnimatedSprite>();
+        
         this.deltaSumShip = 0;
         this.iTourelle = 1;
 
@@ -82,6 +88,7 @@ export class Ship {
 
         this.stockUpgradeLvl = 0;
         this.stockUpgrade = this.initTabSprite(1, 'stockage_', this.stockUpgradeLvl, 500, 500, 30, 0, true);
+        //this.spriteChestTab = this.spritesheetAnimation('');
 
         this.transformShipY = this.ship.y;
         this.transformShipX = this.ship.x;
@@ -229,5 +236,40 @@ export class Ship {
             this.newTourelle.textures[i] = tempTourelle[i];
         }
         this.newTourelle.gotoAndPlay(0);
+    }
+    
+    // Chest managed - - - - - - - -- - - - - - - -- - -
+    initAnimatedChest() {
+        this.spriteChest = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
+            PIXI.loader.resources['chestCargo'].texture, 500, 500));
+        this.spriteChest.gotoAndPlay(0);
+        this.spriteChest.animationSpeed = 0.10;
+        this.spriteChest.visible = true;
+        this.spriteChest.texture.baseTexture.mipmap = true;
+        this.spriteChest.anchor.set(0.5);
+
+        this.spriteChest.x = this.app.renderer.width / 2 - 20;
+        this.spriteChest.y = this.app.renderer.height / 2;
+        this.ship.addChild(this.spriteChest);
+        console.log(this.ship);
+    }
+
+    initChest() {
+        // this.initAnimatedChest();
+        /*
+        for (let i = 0; i < this.numberOfChest; i++) {
+            this.spriteChestTab.push(this.spriteChest);
+            this.ship.addChild(this.spriteChestTab[i]);
+        }
+        console.log(this.ship);*/
+
+    }
+
+    addChest() {
+        // this.spriteChestTab.push(PIXI.Texture.fromImage('assets/ship.png'));
+    }
+
+    supChest() {
+        this.spriteChestTab.pop();
     }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User, UserUpgrade } from './user';
+import { User, UserUpgrade, Chest } from './user';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Subject } from 'rxjs/Subject';
@@ -23,6 +23,7 @@ export class UserService {
   afAuth: AngularFireAuth;
 
   asteroidSubject = new Subject<User>();
+  chestSubject = new Subject<User>();
   creditSubject = new Subject<User>();
   oreSubject = new Subject<User>();
   profileSubject = new Subject<User>();
@@ -42,6 +43,10 @@ export class UserService {
         this.db.object('users/' + auth.uid + '/asteroid').valueChanges().subscribe(
           (snapshot: any) => {
             this.FillAsteroid(snapshot);
+          });
+        this.db.object('users/' + auth.uid + '/chest').valueChanges().subscribe(
+          (snapshot: any) => {
+            this.FillChest(snapshot);
           });
         this.db.object('users/' + auth.uid + '/credit').valueChanges().subscribe(
           (snapshot: any) => {
@@ -87,6 +92,16 @@ export class UserService {
     this.currentUser.asteroid = new Asteroid(snapshot.currentCapacity, snapshot.capacity, snapshot.purity,
       snapshot.ore, snapshot.seed, 0);
     this.asteroidSubject.next(this.currentUser);
+    this.incrementCounter();
+  }
+
+  FillChest(snapshot) {
+    this.currentUser.numberOfChest = snapshot.numberOfChest;
+    for (let i = 1; i < snapshot.numberOfChest + 1; i++) {
+      const tempString = 'chest' + i;
+      this.currentUser.chest.push(new Chest(snapshot[tempString][0], snapshot[tempString][1], snapshot[tempString][2]));
+    }
+    this.chestSubject.next(this.currentUser);
     this.incrementCounter();
   }
 
