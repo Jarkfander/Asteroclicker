@@ -1,7 +1,7 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { RankingService } from '../ranking.service';
 import { Ranking } from '../ranking';
-import { UserService } from '../../shared/user/user.service';
+import { UserService } from '../../../shared/user/user.service';
 
 
 @Component({

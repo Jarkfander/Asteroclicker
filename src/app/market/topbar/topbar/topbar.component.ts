@@ -1,8 +1,8 @@
 import { Component, AfterViewInit, Renderer2, ElementRef } from '@angular/core';
 import { QuestService } from '../quest.service';
-import { UserService } from '../../shared/user/user.service';
-import { User } from '../../shared/user/user';
-import { SocketService } from '../../shared/socket/socket.service';
+import { UserService } from '../../../shared/user/user.service';
+import { User } from '../../../shared/user/user';
+import { SocketService } from '../../../shared/socket/socket.service';
 
 
 @Component({

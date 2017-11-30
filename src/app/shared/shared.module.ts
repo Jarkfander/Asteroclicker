@@ -1,20 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LightboxDirective } from './lightbox.directive';
 import { ModalComponent } from './modal/modal.component';
-import { QuestComponent } from '../topbar/quest/quest.component';
-import { RankingComponent } from '../topbar/ranking/ranking.component';
+import { QuestComponent } from '../market/topbar/quest/quest.component';
+import { RankingComponent } from '../market/topbar/ranking/ranking.component';
 
 @NgModule({
   imports: [
     CommonModule
   ],
   exports: [
-    LightboxDirective,
     ModalComponent,
     QuestComponent,
     RankingComponent
   ],
-  declarations: [LightboxDirective, ModalComponent, QuestComponent, RankingComponent]
+  declarations: [ModalComponent, QuestComponent, RankingComponent]
 })
 export class SharedModule { }

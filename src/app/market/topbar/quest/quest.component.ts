@@ -1,6 +1,6 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { QuestService } from '../quest.service';
-import { UserService } from '../../shared/user/user.service';
+import { UserService } from '../../../shared/user/user.service';
 
 
 @Component({

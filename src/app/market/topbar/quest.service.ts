@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { Subject } from 'rxjs/Subject';
 import { Quest } from './quest';
-import { UserService } from '../shared/user/user.service';
+import { UserService } from '../../shared/user/user.service';
 
 @Injectable()
 export class QuestService {
