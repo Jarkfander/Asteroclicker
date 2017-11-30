@@ -1,8 +1,8 @@
-import { MineRate } from '../upgrade/mineRate';
-import { Storage } from '../upgrade/storage';
-import { Quest } from '../topbar/quest';
-import { AsteroidSearch } from '../asteroid/asteroidSearch';
-import { Asteroid } from '../asteroid/asteroid';
+import { Asteroid } from "../../asteroid/asteroid-view/asteroid";
+import { SearchResult } from "../../asteroid/search-result/SearchResult";
+import { Quest } from "../../topbar/quest";
+
+
 
 export class User {
 
@@ -23,7 +23,7 @@ export class User {
     public asteroid: Asteroid;
     public score: number;
 
-    public asteroidSearch: AsteroidSearch;
+    public asteroidSearch: SearchResult;
 
     public quest: Quest;
 

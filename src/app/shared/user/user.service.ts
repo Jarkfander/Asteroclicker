@@ -3,13 +3,12 @@ import { User } from './user';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Subject } from 'rxjs/Subject';
-import { Storage } from '../upgrade/storage';
-import { MineRate } from '../upgrade/mineRate';
-import { UpgradeService } from '../upgrade/upgrade.service';
-import { MarketService } from '../market/market.service';
-import { Quest } from '../topbar/quest';
-import { AsteroidSearch } from '../asteroid/asteroidSearch';
-import { Asteroid } from '../asteroid/asteroid';
+import { UpgradeService } from '../../ship/upgrade-list/upgrade.service';
+import { MarketService } from '../../market/market.service';
+import { Asteroid } from '../../asteroid/asteroid-view/asteroid';
+import { Quest } from '../../topbar/quest';
+import { SearchResult } from '../../asteroid/search-result/SearchResult';
+
 
 @Injectable()
 export class UserService {
@@ -127,7 +126,7 @@ export class UserService {
           snapshot.result[i].ore, snapshot.result[i].seed, snapshot.result[i].timeToGo));
       }
     }
-    this.currentUser.asteroidSearch = new AsteroidSearch(resultTab, snapshot.timer,snapshot.start);
+    this.currentUser.asteroidSearch = new SearchResult(resultTab, snapshot.timer,snapshot.start);
     this.searchSubject.next(this.currentUser);
     this.incrementCounter();
   }

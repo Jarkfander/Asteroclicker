@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
-import { UserService } from './user/user.service';
 import { BrowserModule } from '@angular/platform-browser';
-import { UpgradeService } from './upgrade/upgrade.service';
 import { MarketService } from './market/market.service';
 import { LoadAnimation } from './loadAnimation';
 import { QuestService } from './topbar/quest.service';
 import { RankingService } from './topbar/ranking.service';
-import { OreInfoService } from './asteroid/ore-info.service';
+import { UserService } from './shared/user/user.service';
+import { UpgradeService } from './ship/upgrade-list/upgrade.service';
+import { OreInfoService } from './asteroid/ore-info-view/ore-info.service';
+
 
 @Component({
   selector: 'app-root',

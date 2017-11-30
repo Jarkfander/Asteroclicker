@@ -1,17 +1,18 @@
 import { Component, AfterViewInit } from '@angular/core';
-import { UserService } from '../../user/user.service';
-import { User } from '../../user/user';
-import { UpgradeService } from '../../upgrade/upgrade.service';
-import { SocketService } from '../../socket/socket.service';
-import { OreInfoService } from '../ore-info.service';
-import { Asteroid } from '../asteroid';
-import { AsteroidSearch } from '../asteroidSearch';
-import { OreInfo } from '../oreInfo';
+import { Asteroid } from '../asteroid-view/asteroid';
+import { SearchResult } from '../search-result/SearchResult';
+import { OreInfo } from '../ore-info-view/oreInfo';
+import { UserService } from '../../shared/user/user.service';
+import { SocketService } from '../../shared/socket/socket.service';
+import { OreInfoService } from '../ore-info-view/ore-info.service';
+import { UpgradeService } from '../../ship/upgrade-list/upgrade.service';
+import { User } from '../../shared/user/user';
+
 
 @Component({
-  selector: 'app-infos-view',
-  templateUrl: './infos-view.component.html',
-  styleUrls: ['./infos-view.component.scss']
+  selector: 'app-infos-list',
+  templateUrl: './infos-list.component.html',
+  styleUrls: ['./infos-list.component.scss']
 })
 export class InfosViewComponent implements AfterViewInit {
 
@@ -19,7 +20,7 @@ export class InfosViewComponent implements AfterViewInit {
 
   public asteroid: Asteroid;
 
-  public search: AsteroidSearch;
+  public search: SearchResult;
 
   public timer: string = "00:00:00";
 

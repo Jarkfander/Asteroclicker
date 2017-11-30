@@ -1,10 +1,7 @@
-import { Component, AfterViewInit, ElementRef, Renderer2, ViewChild } from '@angular/core';
-import { UserService } from '../../user/user.service';
-import { ManagedChart } from './managedChart';
-import { User } from '../../user/user';
-import { OreCosts } from '../oreCosts';
+import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { ManagedChart } from '../market-list/managedChart';
 import { MarketService } from '../market.service';
-import { SocketService } from '../../socket/socket.service';
+import { SocketService } from '../../shared/socket/socket.service';
 
 
 @Component({
@@ -12,55 +9,47 @@ import { SocketService } from '../../socket/socket.service';
   templateUrl: './market-view.component.html',
   styleUrls: ['./market-view.component.scss']
 })
-export class MarketViewComponent implements AfterViewInit {
-  @ViewChild('carbon') carbonCanvas: ElementRef;
-  @ViewChild('titanium') titaniumCanvas: ElementRef;
+export class MarketInfoComponent implements OnInit {
 
-  public chartCarbon: ManagedChart;
-  public chartTitanium: ManagedChart;
+  @Input('oreName') oreName: string;
+  @Input('color') color: string;
 
-  public valuesCreditCarbon10: number;
-  public valuesCreditTitanium10: number;
+  @ViewChild('canvas') canvas: ElementRef;
 
-  constructor(private userS: UserService, private marketS: MarketService, private socketS: SocketService) {
-    this.valuesCreditCarbon10 = this.marketS.currentOresCosts.carbonCosts[Object.keys(this.marketS.currentOresCosts.carbonCosts)[29]];
-    this.valuesCreditTitanium10 = this.marketS.currentOresCosts.titaniumCosts[Object.keys(this.marketS.currentOresCosts.titaniumCosts)[29]];
+  public chart: ManagedChart;
+  public value: number;
+
+  constructor(private marketS: MarketService, private socketS: SocketService) {
+    
   }
 
-  ngAfterViewInit() {
-    const lineCarbon = this.carbonCanvas.nativeElement.getContext('2d');
-    const lineTitanium = this.titaniumCanvas.nativeElement.getContext('2d');
-    // draw line chart
-    this.chartCarbon = new ManagedChart(lineCarbon, 30, 'rgba(125,125,75,1)');
-    this.chartTitanium = new ManagedChart(lineTitanium, 30, 'rgba(175,175,175,1)');
+  ngOnInit() {
 
-    // for update each tick
+    const line = this.canvas.nativeElement.getContext('2d');
+    this.chart = new ManagedChart(line, 30, 'rgba('+this.color+')');
+
+    this.value = this.marketS.currentOresCosts.getCostsFromString(this.oreName)
+    [Object.keys(this.marketS.currentOresCosts.getCostsFromString(this.oreName))[29]];
+
     this.subjectOre();
 
-    this.chartCarbon.initTab(this.marketS.currentOresCosts.carbonCosts);
-    this.chartTitanium.initTab(this.marketS.currentOresCosts.titaniumCosts);
-
+    this.chart.initTab(this.marketS.currentOresCosts.getCostsFromString(this.oreName));
   }
 
-  public SellOre/*moon*/(amount: number, oreName: string) {
-    this.socketS.sellOre(oreName, amount);
+  public SellOre/*moon*/(amount: number) {
+    this.socketS.sellOre(this.oreName, amount);
   }
 
-  public BuyOre(amount: number, oreName: string) {
-    this.socketS.buyOre(oreName, amount);
+  public BuyOre(amount: number) {
+    this.socketS.buyOre(this.oreName, amount);
   }
 
   subjectOre() {
-    this.marketS.OreCostsSubjectCarbon.subscribe((tab: number[]) => {
-      this.valuesCreditCarbon10 = this.marketS.currentOresCosts.carbonCosts[Object.keys(this.marketS.currentOresCosts.carbonCosts)[29]];
-      this.chartCarbon.addNew(tab);
+    this.marketS.getCostsSubjectFromString(this.oreName).subscribe((tab: number[]) => {
+      this.value = this.marketS.currentOresCosts.getCostsFromString(this.oreName)
+      [Object.keys(this.marketS.currentOresCosts.getCostsFromString(this.oreName))[29]];
+      this.chart.addNew(tab);
     });
-
-    this.marketS.OreCostsSubjectTitanium.subscribe((tab: number[]) => {
-      this.valuesCreditTitanium10 = this.marketS.currentOresCosts.titaniumCosts[Object.keys(
-        this.marketS.currentOresCosts.titaniumCosts)[29]];
-      this.chartTitanium.addNew(tab);
-    });
-
   }
+
 }

@@ -1,10 +1,9 @@
 import * as PIXI from 'pixi.js';
 import * as TWEEN from 'tween.js';
-import { UserService } from '../../user/user.service';
 import * as PIXIParticles from 'pixi-particles';
-import { ParticleBase } from '../../pixiVisual/particleBase';
-import { Asteroid } from '../asteroid';
 import { getFramesFromSpriteSheet } from '../../loadAnimation';
+import { ParticleBase } from '../../shared/pixiVisual/particleBase';
+import { Asteroid } from './asteroid';
 
 export class AsteroidSprite {
     asteroid: PIXI.Sprite[];

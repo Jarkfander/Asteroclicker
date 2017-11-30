@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from 'angularfire2/database';
-import { UserService } from '../user/user.service';
 import { Ranking } from './ranking';
+import { UserService } from '../shared/user/user.service';
 
 @Injectable()
 export class RankingService {

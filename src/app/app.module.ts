@@ -8,16 +8,16 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { environment } from '../environments/environment';
-import { UserService } from './user/user.service';
 import { SigninModule } from './signin/signin.module';
 import { TopbarModule } from './topbar/topbar.module';
 import { SharedModule } from './shared/shared.module';
 import { CommonModule } from '@angular/common';
-import { UpgradeService } from './upgrade/upgrade.service';
 import { MarketModule } from './market/market.module';
 import { MarketService } from './market/market.service';
 import { QuestService } from './topbar/quest.service';
 import { RankingService } from './topbar/ranking.service';
+import { UserService } from './shared/user/user.service';
+import { UpgradeService } from './ship/upgrade-list/upgrade.service';
 
 
 @NgModule({

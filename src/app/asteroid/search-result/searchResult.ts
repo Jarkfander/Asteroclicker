@@ -1,6 +1,6 @@
-import { Asteroid } from "./asteroid";
+import { Asteroid } from "../asteroid-view/asteroid";
 
-export class AsteroidSearch {
+export class SearchResult {
     public results: Asteroid[];
     public timer: number;
     public start: number;
