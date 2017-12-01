@@ -82,9 +82,6 @@ export class AsteroidViewComponent implements AfterViewInit {
       });
     }
 
-    this.drone = new Drone(0.20, 0.20, this.app);
-    this.drone.isMining = this.asteroid.currentCapacity === 0;
-
     this.drone.laserFirstState = this.userS.currentUser.oreAmounts[this.userS.currentUser.asteroid.ore]
 
     this.userS.asteroidSubject.subscribe((user: User) => {
@@ -131,6 +128,7 @@ export class AsteroidViewComponent implements AfterViewInit {
 
     if (this.userS.currentUser.currentMineRate === max) {
       this.drone.activeLaser();
+      this.drone.laserAnim.visible = false;
       this.asteroidSprite.checkAstero = true;
     }
   }
