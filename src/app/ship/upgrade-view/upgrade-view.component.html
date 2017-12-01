@@ -9,10 +9,10 @@
     <br>
     <p>Next Level: {{userUpgradeLvl+1}}</p>
     <p *ngFor="let nextkey of nextUpgradeCaraKeys">
-        {{nextkey}} : {{upgradeLvls.lvls[userUpgradeLvl].cara[nextkey]}}
+        {{nextkey}} : {{upgradeLvls.lvls[userUpgradeLvl+1].cara[nextkey]}}
     </p>
     <p>Cost:
-        <b class="credit">{{upgradeLvls.lvls[userUpgradeLvl].cost}} cr</b>
+        <b class="credit">{{upgradeLvls.lvls[userUpgradeLvl+1].cost}} cr</b>
     </p>
 </div>
 <button class="btn-upgrade" (click)="levelUp()">Upgrade</button>
