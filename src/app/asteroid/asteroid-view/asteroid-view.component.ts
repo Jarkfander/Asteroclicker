@@ -6,7 +6,7 @@ import { Drone } from './drone';
 import { UpgradeService } from '../../ship/upgrade-list/upgrade.service';
 import { SocketService } from '../../shared/socket/socket.service';
 import { UserService } from '../../shared/user/user.service';
-import { OreInfoService } from '../ore-info-view/ore-info.service';
+import { OreInfosService } from '../ore-infos-view/ore-infos.service';
 import { Asteroid } from './asteroid';
 import { ParticleBase } from '../../shared/pixiVisual/particleBase';
 import { User } from '../../shared/user/user';
@@ -20,10 +20,14 @@ import { User } from '../../shared/user/user';
 })
 
 export class AsteroidViewComponent implements AfterViewInit {
-  constructor(private el: ElementRef, private render: Renderer2, private userS: UserService,
-    private upgradeS: UpgradeService, private socketS: SocketService, private oreInfoS: OreInfoService) {
+  constructor(private el: ElementRef,
+              private render: Renderer2,
+              private userS: UserService,
+              private upgradeS: UpgradeService,
+              private socketS: SocketService,
+              private oreInfoS: OreInfosService) {
     this.asteroid = this.userS.currentUser.asteroid;
-    this.state = this.asteroid.currentCapacity == this.asteroid.capacity ? 4 :
+    this.state = this.asteroid.currentCapacity === this.asteroid.capacity ? 4 :
       Math.floor((this.asteroid.currentCapacity / this.asteroid.capacity) * 5);
   }
 
@@ -45,7 +49,7 @@ export class AsteroidViewComponent implements AfterViewInit {
           this.userS.currentUser.asteroid.purity / 100 *
           this.oreInfoS.getOreInfoByString(this.userS.currentUser.asteroid.ore).miningSpeed).toFixed(2)));
     }, 1000);
-    setInterval(() => { this.resetClick() }, 200);
+    setInterval(() => { this.resetClick(); }, 200);
 
   }
 
@@ -59,8 +63,8 @@ export class AsteroidViewComponent implements AfterViewInit {
   }
 
   initAsteroid() {
-    const w = this.el.nativeElement.parentElement.offsetWidth;
-    const h = this.el.nativeElement.parentElement.offsetHeight;
+    const w = this.el.nativeElement.offsetWidth;
+    const h = this.el.nativeElement.offsetHeight;
     this.app = new PIXI.Application(w, h, { backgroundColor: 0x1079bb });
     this.render.appendChild(this.el.nativeElement, this.app.view);
 
@@ -73,7 +77,7 @@ export class AsteroidViewComponent implements AfterViewInit {
     this.drone.isMining = this.asteroid.currentCapacity === 0;
 
     this.asteroidSprite = new AsteroidSprite(0.25, 0.25, this.app, this.userS.currentUser.asteroid,
-      this.oreInfoS.oreInfo.length);
+      this.oreInfoS.oreInfos.length);
 
     for (let i = 0; i < this.asteroidSprite.asteroid.length; i++) {
       this.asteroidSprite.asteroid[i].on('click', (event) => {

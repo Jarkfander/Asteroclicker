@@ -16,7 +16,7 @@ export class UpgradeInfoComponent implements OnInit {
   private _nextUpgrade: Upgrade;
   private _nextupgradeCaraKeys: string[];
 
-  constructor(private socketS:SocketService) { }
+  constructor(private socketS: SocketService) { }
 
   ngOnInit() {
   }

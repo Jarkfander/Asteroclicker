@@ -1,20 +1,26 @@
-<div class="upgrade row justify-between">
-<img class="upgrade-icon" src="../../../assets/upgrade-icons/icon_{{upgrade.name}}.gif" />
-<div class="column justify-between">
-    <h1>{{upgrade.displayName}}</h1><br>
-    <p>Current Level: {{upgrade.lvl}}</p>
-    <p *ngFor="let key of upgradeCaraKeys">
-        {{key}} : {{upgrade.cara[key]}}
-    </p>
-    <br>
-    <p>Next Level: {{nextUpgrade.lvl}}</p>
-    <p *ngFor="let nextkey of nextUpgradeCaraKeys">
-        {{nextkey}} : {{nextUpgrade.cara[nextkey]}}
-    </p>
-    <p>Cost:
-        <b class="credit">{{nextUpgrade.cost}} cr</b>
-    </p>
-</div>
-<button disabled="true" class="btn-upgrade" (click)="levelUp()">Upgrade</button>
-</div>
-<br>
+<button disabled="true" class="btn-upgrade" (click)="levelUp()">
+    Upgrade <br/>
+    <b class="credit">{{nextUpgrade.cost}} cr</b>
+</button>    
+
+<article class="upgrade-description col align-center">
+    <header>
+        <h1>{{upgrade.displayName}} - lvl {{upgrade.lvl}}</h1>
+    </header>
+    <div class="row">
+        <div class="upgrade-data col">
+            <img src="../../../assets/upgrade-icons/icon_{{upgrade.name}}.gif" />    
+        </div>
+        <div class="upgrade-data col">
+            <p *ngFor="let key of upgradeCaraKeys">
+                {{key}} : {{upgrade.cara[key]}}
+            </p>
+        </div>
+        <div class="upgrade-data col">
+            <p>Next Level: {{nextUpgrade.lvl}}</p>
+            <p *ngFor="let nextkey of nextUpgradeCaraKeys">
+                {{nextkey}} : {{nextUpgrade.cara[nextkey]}}
+            </p>
+        </div>
+    </div>
+</article>

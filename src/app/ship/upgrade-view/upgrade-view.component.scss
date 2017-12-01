@@ -1,5 +1,56 @@
-.upgrade-icon{
-    border-radius:50%;
-    width: 30%;
-    height: 30%;
+:host {
+    height: 100%;
+    width: 25%;
+    position: relative;
+    z-index: 0;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    background-color: gray;
+
+    button {
+        margin-bottom: 10%;
+        cursor: pointer;
+        transform: translateY(200px);
+        transition: transform 0.3s 0.2s ease-in-out;
+    }
+
+    .upgrade-description {
+        display: none;
+        position : absolute;
+        top: -10%;
+        right: -50%;
+        z-index: 1;
+        padding: 15px;
+        background-color: white;
+        border: solid 2px black;
+        color : black;
+
+        header {
+            padding: 5px;
+        }
+
+        img{
+            border-radius: 50%;
+            height : 100px;
+            width : 100px;
+        }
+
+        .upgrade-data {
+            margin: 10px;
+        }
+        
+    }
+    
+}
+
+:host:hover {
+
+    button {
+        transform: translateY(0);
+    }
+
+    .upgrade-description {
+        display: flex;
+    }
 }

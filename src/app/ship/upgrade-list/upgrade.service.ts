@@ -16,9 +16,9 @@ export class UpgradeService {
   mineRate: MineRate[];
   research: Research[];
 
-  storageLoad: boolean = false;
-  mineRateLoad: boolean = false;
-  researchLoaded: boolean = false;
+  storageLoad: boolean;
+  mineRateLoad: boolean;
+  researchLoaded: boolean;
 
   constructor(db: AngularFireDatabase) {
     this.storage = new Array();

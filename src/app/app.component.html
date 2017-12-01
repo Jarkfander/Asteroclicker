@@ -2,6 +2,25 @@
 <app-signin ></app-signin>
 </div>
 
+<main class="row" *ngIf="upgradeS && userS && userS.userLoad && upgradeS.storageLoad && upgradeS.mineRateLoad
+&& upgradeS.researchLoaded && marketS && marketS.marketLoad && loadAnimation.boolFinishLoad
+&& oreInfoS && oreInfoS.oreInfoLoaded">
+
+ <section class="col">
+   <app-ship-view></app-ship-view>
+   <app-upgrade-list></app-upgrade-list>
+ </section>
+ <section class="col">
+   <app-asteroid-view></app-asteroid-view>
+   <app-infos-list></app-infos-list>
+ </section>
+ <section class="col">
+   <app-topbar></app-topbar>
+   <app-market-list></app-market-list>
+ </section>
+</main>
+<!--
+
 <div *ngIf="upgradeS && userS && userS.userLoad && upgradeS.storageLoad && upgradeS.mineRateLoad
  && upgradeS.researchLoaded && marketS && marketS.marketLoad && loadAnimation.boolFinishLoad
  && oreInfoS && oreInfoS.oreInfoLoaded">
@@ -33,3 +52,4 @@
 
 </div>
 
+-->

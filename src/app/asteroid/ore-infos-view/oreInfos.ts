@@ -1,4 +1,4 @@
-export class OreInfo {
+export class OreInfos {
 
     public name: string;
     public maxValue: number;

@@ -1,0 +1,5 @@
+<img src="assets/oreIcon/{{ore.name}}Icon.png" alt="{{ore.name}}Icon">
+<div class="col">
+    <p  [ngStyle]="{'color': amount>=capacity ? 'red' : 'white'}"> {{ore.name}} : {{ oreAmount[ore.name] }} </p>
+    <p *ngIf="hasRate()">{{rate}} {{ore.name}}/s</p>
+</div>

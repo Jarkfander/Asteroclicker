@@ -1,5 +1,19 @@
 @import '../../../../config';
 
+header {
+    height: 60px;
+}
+
+.quests, .rank, .stats {
+    height: 100%;
+    width : 60px; // TO Change
+}
+
+.profile {
+    flex: 1;
+}
+
+/*
 .topbar{
     width: calc(100vw - 2px);
     height: 5%;
@@ -69,3 +83,4 @@
     }
     
 }
+*/

@@ -33,8 +33,8 @@ export class ShipViewComponent implements AfterViewInit {
 
 
     initPixi() {
-      const w = this.el.nativeElement.parentElement.offsetWidth;
-      const h = this.el.nativeElement.parentElement.offsetHeight;
+      const w = this.el.nativeElement.offsetWidth;
+      const h = this.el.nativeElement.offsetHeight;
       this.app = new PIXI.Application(w, h, {backgroundColor : 0xffffff});
       this.render.appendChild(this.el.nativeElement, this.app.view);
 

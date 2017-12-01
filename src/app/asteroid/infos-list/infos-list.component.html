@@ -1,5 +1,15 @@
-<br>
+<!-- Ore list -->
+<section class="col justify-around">
+  <app-ore-infos-view *ngFor="let ore of allOreInfos" [ore]="ore"></app-ore-infos-view>
+</section>
 
+<!-- Mining and Search Panel -->
+<section>
+  <app-mining-panel></app-mining-panel>
+  <app-search-panel></app-search-panel>
+</section>
+
+<!--
 <table style="width:100%">
   <tr style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;"
     unselectable="on" onselectstart="return false;" onmousedown="return false;">
@@ -42,3 +52,4 @@
 <button *ngIf="search.start!=0 && search.results.length==0" disabled="true" class="btn-upgrade">Searching : {{timer}}</button>
 <button *ngIf="search.start!=0 && search.results.length==1" disabled="true" class="btn-upgrade">Time before arriving : {{timer}}</button>
 <button *ngIf="search.start==0" class="btn-upgrade" (click)="searchNewAster()">Search Another Asteroid</button>
+-->

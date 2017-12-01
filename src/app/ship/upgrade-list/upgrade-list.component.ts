@@ -7,14 +7,15 @@ import { SocketService } from '../../shared/socket/socket.service';
 import { UserService } from '../../shared/user/user.service';
 import { User } from '../../shared/user/user';
 
-
-
 @Component({
     selector: 'app-upgrade-list',
     templateUrl: './upgrade-list.component.html',
     styleUrls: ['./upgrade-list.component.scss']
 })
 export class UpgradeViewComponent implements AfterViewInit {
+
+    public selectedUpdate;
+
     public storageLvl: number;
     public mineRateLvl: number;
     public stock: Storage[];
@@ -23,8 +24,11 @@ export class UpgradeViewComponent implements AfterViewInit {
     public timerMine: string;
     public timerStock: string;
 
-    constructor(private el: ElementRef, private render: Renderer2, private userS: UserService,
-        private upgradeS: UpgradeService, private socketS: SocketService) {
+    constructor(private el: ElementRef,
+                private render: Renderer2,
+                private userS: UserService,
+                private upgradeS: UpgradeService,
+                private socketS: SocketService) {
         this.stock = upgradeS.storage;
         this.storageLvl = userS.currentUser.storageLvl;
         this.mineRateLvl = userS.currentUser.mineRateLvl;

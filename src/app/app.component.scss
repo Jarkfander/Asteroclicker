@@ -1,5 +1,32 @@
 @import '../config';
 
+main {
+    width : 100%;
+    height: 100%;
+}
+
+section {
+    height: 100%;
+    flex: 1;
+}
+
+app-ship-view {
+    height: 50%;
+}
+app-upgrade-list {
+    height: 50%;
+}
+app-asteroid-view {
+    height: 60%;
+}
+app-infos-list {
+    height: 40%;
+}
+app-topbar {
+    height: 60px;
+}
+
+/*
 .game-content {
     position: absolute;
     top: 6%;
@@ -46,3 +73,4 @@
     overflow-x: hidden;
     overflow-y: auto;
 }
+*/
