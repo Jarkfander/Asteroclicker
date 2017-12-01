@@ -3,7 +3,6 @@ import { SearchResult } from "../../asteroid/search-result/SearchResult";
 import { Quest } from "../../market/topbar/quest";
 
 
-
 export class User {
 
     public uid: string;
@@ -11,13 +10,9 @@ export class User {
 
     public email: string;
     public name: string;
-    public mineRateLvl: number;
+
     public timerRate: number;
-
-    public storageLvl: number;
     public timerStock: number;
-
-    public researchLvl: number;
     public currentMineRate: number;
 
     public asteroid: Asteroid;
@@ -29,7 +24,10 @@ export class User {
 
     public oreAmounts: JSON;
 
+    public upgradesLvl:number[]; 
+
     constructor() {
+        this.upgradesLvl=Array();
     }
 
     // 1000000 => 1 000 000

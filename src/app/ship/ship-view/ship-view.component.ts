@@ -3,6 +3,7 @@ import * as PIXI from 'pixi.js';
 import { Ship } from './ship';
 import { UserService } from '../../shared/user/user.service';
 import { User } from '../../shared/user/user';
+import { UpgradeType } from '../upgrade-class/upgrade';
 
 @Component({
   selector: 'app-ship-view',
@@ -45,16 +46,16 @@ export class ShipViewComponent implements AfterViewInit {
 
       this.ship = new Ship(this.app);
       // init
-      this.ship.autoUpgrade(this.userS.currentUser.storageLvl, this.ship.stockUpgrade);
+      this.ship.autoUpgrade(this.userS.currentUser.upgradesLvl[UpgradeType.storage], this.ship.stockUpgrade);
       // this.ship.autoUpgrade(this.userS.currentUser.mineRateLvl, this.ship.radarUpgrade);
-      this.ship.autoUpgrade(this.userS.currentUser.mineRateLvl, this.ship.droneUpgrade);
-      this.ship.autoUpgrade(this.userS.currentUser.mineRateLvl + 2, this.ship.smokeRadarUpgrade);
+      this.ship.autoUpgrade(this.userS.currentUser.upgradesLvl[UpgradeType.mineRate], this.ship.droneUpgrade);
+      this.ship.autoUpgrade(this.userS.currentUser.upgradesLvl[UpgradeType.mineRate] + 2, this.ship.smokeRadarUpgrade);
 
       this.userS.upgradeSubject.subscribe( (user: User) => {
-          this.ship.autoUpgrade(user.storageLvl, this.ship.stockUpgrade);
+          this.ship.autoUpgrade(user.upgradesLvl[UpgradeType.storage], this.ship.stockUpgrade);
           // this.ship.autoUpgrade(user.mineRateLvl, this.ship.radarUpgrade);
-          this.ship.autoUpgrade(this.userS.currentUser.mineRateLvl, this.ship.droneUpgrade);
-          this.ship.autoUpgrade(user.mineRateLvl + 2, this.ship.smokeRadarUpgrade);
+          this.ship.autoUpgrade(this.userS.currentUser.upgradesLvl[UpgradeType.mineRate], this.ship.droneUpgrade);
+          this.ship.autoUpgrade(user.upgradesLvl[UpgradeType.mineRate] + 2, this.ship.smokeRadarUpgrade);
       });
     }
 }

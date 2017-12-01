@@ -1,18 +1,18 @@
 <div class="upgrade row justify-between">
-<img class="upgrade-icon" src="../../../assets/upgrade-icons/icon_{{upgrade.name}}.gif" />
+<img class="upgrade-icon" src="../../../assets/upgrade-icons/icon_{{upgradeLvls.lvls[userUpgradeLvl].name}}.gif" />
 <div class="column justify-between">
-    <h1>{{upgrade.displayName}}</h1><br>
-    <p>Current Level: {{upgrade.lvl}}</p>
+    <h1>{{upgradeLvls.lvls[userUpgradeLvl].displayName}}</h1><br>
+    <p>Current Level: {{userUpgradeLvl}}</p>
     <p *ngFor="let key of upgradeCaraKeys">
-        {{key}} : {{upgrade.cara[key]}}
+        {{key}} : {{upgradeLvls.lvls[userUpgradeLvl].cara[key]}}
     </p>
     <br>
-    <p>Next Level: {{nextUpgrade.lvl}}</p>
+    <p>Next Level: {{userUpgradeLvl+1}}</p>
     <p *ngFor="let nextkey of nextUpgradeCaraKeys">
-        {{nextkey}} : {{nextUpgrade.cara[nextkey]}}
+        {{nextkey}} : {{upgradeLvls.lvls[userUpgradeLvl].cara[nextkey]}}
     </p>
     <p>Cost:
-        <b class="credit">{{nextUpgrade.cost}} cr</b>
+        <b class="credit">{{upgradeLvls.lvls[userUpgradeLvl].cost}} cr</b>
     </p>
 </div>
 <button class="btn-upgrade" (click)="levelUp()">Upgrade</button>

@@ -10,6 +10,7 @@ import { OreInfoService } from '../ore-info-view/ore-info.service';
 import { Asteroid } from './asteroid';
 import { ParticleBase } from '../../shared/pixiVisual/particleBase';
 import { User } from '../../shared/user/user';
+import { UpgradeType } from '../../ship/upgrade-class/upgrade';
 
 
 
@@ -111,7 +112,7 @@ export class AsteroidViewComponent implements AfterViewInit {
       }
       if (this.drone.laser != null) {
         this.drone.laser.visible = user[user.asteroid.ore] <
-          this.upgradeS.storage[user.storageLvl].capacity;
+          this.upgradeS.storage[user.upgradesLvl[UpgradeType.storage]].capacity;
       }
       this.asteroid = user.asteroid;
     });
@@ -122,7 +123,7 @@ export class AsteroidViewComponent implements AfterViewInit {
   asteroidClick() {
     // ga('asteroid.send', 'event', 'buttons', 'click', 'asteroid');
     this.clicked = true;
-    const max = this.upgradeS.mineRate[this.userS.currentUser.mineRateLvl].maxRate;
+    const max = this.upgradeS.mineRate[this.userS.currentUser.upgradesLvl[UpgradeType.mineRate]].maxRate;
     if (this.userS.currentUser.currentMineRate < max) {
       this.userS.modifyCurrentMineRate(this.userS.currentUser.currentMineRate + max * 0.1 > max ? max :
         this.userS.currentUser.currentMineRate + max * 0.1);
@@ -135,8 +136,8 @@ export class AsteroidViewComponent implements AfterViewInit {
   }
 
   resetClick() {
-    const max = this.upgradeS.mineRate[this.userS.currentUser.mineRateLvl].maxRate;
-    const base = this.upgradeS.mineRate[this.userS.currentUser.mineRateLvl].baseRate;
+    const max = this.upgradeS.mineRate[this.userS.currentUser.upgradesLvl[UpgradeType.mineRate]].maxRate;
+    const base = this.upgradeS.mineRate[this.userS.currentUser.upgradesLvl[UpgradeType.mineRate]].baseRate;
 
     if (!this.clicked) {
       if (this.userS.currentUser.currentMineRate > base) {

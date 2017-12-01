@@ -8,6 +8,7 @@ import { MarketService } from '../../market/market.service';
 import { Asteroid } from '../../asteroid/asteroid-view/asteroid';
 import { Quest } from '../../market/topbar/quest';
 import { SearchResult } from '../../asteroid/search-result/SearchResult';
+import { UpgradeType } from '../../ship/upgrade-class/upgrade';
 
 
 @Injectable()
@@ -132,14 +133,14 @@ export class UserService {
   }
 
   FillUpgrade(snapshot) {
-    this.currentUser.mineRateLvl = snapshot.mineRateLvl;
+    this.currentUser.upgradesLvl[UpgradeType.mineRate]=snapshot.mineRateLvl;
+    this.currentUser.upgradesLvl[UpgradeType.storage]=snapshot.storageLvl;
+    this.currentUser.upgradesLvl[UpgradeType.research]=snapshot.researchLvl;
+
     this.currentUser.timerRate = snapshot.timerRate;
-
-    this.currentUser.storageLvl = snapshot.storageLvl;
     this.currentUser.timerStock = snapshot.timerStock;
-
-    this.currentUser.researchLvl = snapshot.researchLvl;
     this.currentUser.score = snapshot.score;
+
     this.upgradeSubject.next(this.currentUser);
     this.incrementCounter();
   }

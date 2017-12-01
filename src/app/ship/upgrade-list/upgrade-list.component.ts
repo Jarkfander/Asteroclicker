@@ -6,6 +6,7 @@ import { UpgradeService } from './upgrade.service';
 import { SocketService } from '../../shared/socket/socket.service';
 import { UserService } from '../../shared/user/user.service';
 import { User } from '../../shared/user/user';
+import { Upgrade, UpgradeType } from '../upgrade-class/upgrade';
 
 
 
@@ -15,46 +16,30 @@ import { User } from '../../shared/user/user';
     styleUrls: ['./upgrade-list.component.scss']
 })
 export class UpgradeViewComponent implements AfterViewInit {
-    public storageLvl: number;
-    public mineRateLvl: number;
-    public stock: Storage[];
-    public mineRate: MineRate[];
-    public research: Research[];
+
+    public UpgradeType = UpgradeType;
+
     public timerMine: string;
     public timerStock: string;
 
+    public allUpgrades: UpgradeLvls[];
+
     constructor(private el: ElementRef, private render: Renderer2, private userS: UserService,
         private upgradeS: UpgradeService, private socketS: SocketService) {
-        this.stock = upgradeS.storage;
-        this.storageLvl = userS.currentUser.storageLvl;
-        this.mineRateLvl = userS.currentUser.mineRateLvl;
-        this.mineRate = upgradeS.mineRate;
-        this.research = upgradeS.research;
+        this.allUpgrades = new Array();
+        this.allUpgrades[UpgradeType.mineRate] = new UpgradeLvls(UpgradeType.mineRate, upgradeS.mineRate);
+        this.allUpgrades[UpgradeType.research] = new UpgradeLvls(UpgradeType.research, upgradeS.research);
+        this.allUpgrades[UpgradeType.storage] = new UpgradeLvls(UpgradeType.storage, upgradeS.storage);
     }
 
     ngAfterViewInit() {
-        this.userS.upgradeSubject.subscribe((user: User) => {
-            this.storageLvl = user.storageLvl;
-            this.mineRateLvl = user.mineRateLvl;
-        });
-        setInterval(() => {
+
+        /*setInterval(() => {
             this.updateTimer(this.userS.currentUser.timerRate, this.timerMine, this.mineRateLvlUp,
                 this.upgradeS.mineRate[this.userS.currentUser.mineRateLvl].time);
             this.updateTimer(this.userS.currentUser.timerStock, this.timerStock, this.stockLvlUp,
                 this.upgradeS.storage[this.userS.currentUser.storageLvl].time);
-        }, 1000);
-    }
-
-    stockLvlUp() {
-        if (this.userS.currentUser.credit > this.stock[this.storageLvl + 1].cost) {
-            this.socketS.upgradeShip('storage');
-        }
-    }
-
-    mineRateLvlUp() {
-        if (this.userS.currentUser.credit > this.mineRate[this.mineRateLvl + 1].cost) {
-            this.socketS.upgradeShip('mineRate');
-        }
+        }, 1000);*/
     }
 
     // Managed time 
@@ -81,5 +66,15 @@ export class UpgradeViewComponent implements AfterViewInit {
         out += seconds < 10 ? ':0' + seconds : ':' + seconds;
 
         return out;
+    }
+}
+
+export class UpgradeLvls {
+    public type: UpgradeType;
+    public lvls: Upgrade[];
+
+    constructor(type: UpgradeType, lvls: Upgrade[]) {
+        this.type = type;
+        this.lvls = lvls;
     }
 }
