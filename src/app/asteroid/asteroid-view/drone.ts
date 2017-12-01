@@ -54,8 +54,6 @@ export class Drone {
                     this.delta = 0;
                 }
                 this.delta += (2 * Math.PI) / 1000;
-
-
                 if (this.isMining) {
                     if (this.deltaGo < 8) {
                         this.deltaGo += 0.08;
@@ -128,8 +126,6 @@ export class Drone {
             this.laserAnim_actif3.position.set(0, 0);
             this.laserAnim_actif2.visible = false;
             this.laserAnim_actif3.visible = false;
-
-            this.laserAnim.visible = false;
             this.laserAnim_actif1.visible = true;
             this.laserAnim_actif1.stop();
             this.laserAnim_actif1.gotoAndPlay(0);

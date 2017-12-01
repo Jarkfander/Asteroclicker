@@ -51,6 +51,16 @@ export class LoadAnimation {
             this.addKeySpriteName('droneUpdate_' + i, './assets/upgrade/drone_' + i + '.png');
         }
 
+          // newTourelle animation
+        for (let i = 1 ; i < 7 ; i++) {
+            this.addKeySpriteName('newTourelle_' + i, './assets/upgrade/storage/newTourelle_' + i + '.png');
+        }
+
+         // stock animation
+         for (let i = 1 ; i < 2 ; i++) {
+            this.addKeySpriteName('stockage_' + i, './assets/upgrade/storage/stockage' + i + '.png');
+        }
+
         this.addKeySpriteName('Boum', './assets/Boum.png');
         this.addKeySpriteName('krash', './assets/krash.png');
         this.addKeySpriteName('kaboom', './assets/kaboom.png');
