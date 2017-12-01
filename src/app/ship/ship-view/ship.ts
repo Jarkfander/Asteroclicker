@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { getFramesFromSpriteSheet } from '../../loadAnimation';
+import { UserService } from '../../shared/user/user.service';
 class UpgradeShip {
     posX: number;
     posY: number;
@@ -40,6 +41,7 @@ export class Ship {
     deltaSum: number;
 
     spriteChest: PIXI.extras.AnimatedSprite;
+    spriteChestParent: PIXI.Container;
     spriteChestTab: Array<PIXI.extras.AnimatedSprite>;
     numberOfChest: number;
 
@@ -68,7 +70,7 @@ export class Ship {
         this.boolNewTourelle = false;
 
         this.spriteChestTab = new Array<PIXI.extras.AnimatedSprite>();
-        
+
         this.deltaSumShip = 0;
         this.iTourelle = 1;
 
@@ -109,10 +111,11 @@ export class Ship {
                 this.ship.y = this.transformShipY + Math.sin(this.deltaSumShip) * 17;
                 this.ship.x = this.transformShipX + Math.cos(this.deltaSumShip) * 5;
                 this.initMoveXY(this.reacteur, 30, 20, this.deltaSum);
+                this.initMoveXY(this.stockUpgrade, 30, 20, this.deltaSum);
+
+                this.spriteChestParent.x = Math.sin(this.deltaSum * 100) * -5;
             }
         });
-
-
     }
     // Move the ship each tick 
     initMoveXY(upgradeAnimation, xVariation: number, yVariation: number, multiplicateurDetlta: number) {
@@ -240,36 +243,33 @@ export class Ship {
     
     // Chest managed - - - - - - - -- - - - - - - -- - -
     initAnimatedChest() {
-        this.spriteChest = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
+        const spriteChest = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
             PIXI.loader.resources['chestCargo'].texture, 500, 500));
-        this.spriteChest.gotoAndPlay(0);
-        this.spriteChest.animationSpeed = 0.10;
-        this.spriteChest.visible = true;
-        this.spriteChest.texture.baseTexture.mipmap = true;
-        this.spriteChest.anchor.set(0.5);
-
-        this.spriteChest.x = this.app.renderer.width / 2 - 20;
-        this.spriteChest.y = this.app.renderer.height / 2;
-        this.ship.addChild(this.spriteChest);
-        console.log(this.ship);
+        spriteChest.gotoAndPlay(0);
+        spriteChest.animationSpeed = 0.35;
+        spriteChest.texture.baseTexture.mipmap = true;
+        spriteChest.visible = true;
+        spriteChest.anchor.set(0.5);
+        return spriteChest;
     }
 
     initChest() {
-        // this.initAnimatedChest();
-        /*
+        this.spriteChestParent = new PIXI.Container();
+        this.ship.addChild(this.spriteChestParent);
         for (let i = 0; i < this.numberOfChest; i++) {
-            this.spriteChestTab.push(this.spriteChest);
-            this.ship.addChild(this.spriteChestTab[i]);
+            this.spriteChestTab.push(this.initAnimatedChest());
+            this.spriteChestTab[i].x = Math.cos(((Math.PI * 2) / this.numberOfChest) * i) * 200 - 20;
+            this.spriteChestTab[i].y = Math.sin(((Math.PI * 2) / this.numberOfChest) * i) * 175 - 100;
+            this.spriteChestParent.addChild(this.spriteChestTab[i]);
         }
-        console.log(this.ship);*/
-
-    }
-
-    addChest() {
-        // this.spriteChestTab.push(PIXI.Texture.fromImage('assets/ship.png'));
     }
 
     supChest() {
-        this.spriteChestTab.pop();
+        for (let i = 0 ; i < this.spriteChestParent.children.length ; i++) {
+            this.spriteChestParent.removeChildAt(i);
+        }
+        this.spriteChestParent.destroy();
+        this.initChest();
     }
+
 }

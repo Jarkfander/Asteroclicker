@@ -1,7 +1,6 @@
-import { Asteroid } from "../../asteroid/asteroid-view/asteroid";
-import { SearchResult } from "../../asteroid/search-result/searchResult";
-import { Quest } from "../../market/topbar/quest";
-
+import { Asteroid } from '../../asteroid/asteroid-view/asteroid';
+import { SearchResult } from '../../asteroid/search-result/SearchResult';
+import { Quest } from '../../market/topbar/quest';
 
 export class UserUpgrade {
     public lvl: number;
@@ -69,6 +68,12 @@ export class User {
             }
         }
         return newCredit;
+    }
+
+    public destroyChest() {
+        for (let i = 0; i < this.chest.length; i++) {
+            this.chest.pop();
+        }
     }
 
 }

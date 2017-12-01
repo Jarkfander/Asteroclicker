@@ -50,61 +50,67 @@ export class SocketService {
 
     json["user"] = this.userS.currentUser.uid;
     json["ore"] = oreName;
-    json["amount"] = amount;
+    json['amount'] = amount;
 
-    this.socket.emit("sellOre", json);
+    this.socket.emit('sellOre', json);
   }
 
   buyOre(oreName: string, amount: number) {
     let json = {};
 
-    json["user"] = this.userS.currentUser.uid;
-    json["ore"] = oreName;
-    json["amount"] = amount;
+    json['user'] = this.userS.currentUser.uid;
+    json['ore'] = oreName;
+    json['amount'] = amount;
 
-    this.socket.emit("buyOre", json);
+    this.socket.emit('buyOre', json);
   }
 
   searchAsteroid() {
     let json = {};
 
-    json["user"] = this.userS.currentUser.uid;
+    json['user'] = this.userS.currentUser.uid;
 
-    this.socket.emit("searchAster", json);
+    this.socket.emit('searchAster', json);
   }
 
   chooseAsteroid(ind : number) {
     let json = {};
 
-    json["user"] = this.userS.currentUser.uid;
-    json["ind"] = ind;
+    json['user'] = this.userS.currentUser.uid;
+    json['ind'] = ind;
 
-    this.socket.emit("chooseAsteroid", json);
+    this.socket.emit('chooseAsteroid', json);
   }
 
   updateAsteroidTimer() {
     let json = {};
 
-    json["user"] = this.userS.currentUser.uid;
+    json['user'] = this.userS.currentUser.uid;
 
-    this.socket.emit("updateAsteroidTimer", json);
+    this.socket.emit('updateAsteroidTimer', json);
   }
 
   rejectResults() {
     let json = {};
 
-    json["user"] = this.userS.currentUser.uid;
+    json['user'] = this.userS.currentUser.uid;
 
-    this.socket.emit("rejectResults", json);
+    this.socket.emit('rejectResults', json);
   }
 
   connectionEstablished() {
     let json = {};
 
-    json["user"] = this.userS.currentUser.uid;
+    json['user'] = this.userS.currentUser.uid;
 
-    this.socket.emit("userLogged", json);
+    this.socket.emit('userLogged', json);
   }
 
+  removeChest() {
+    const json = {};
+    json['numberOfChest'] = this.userS.currentUser.numberOfChest - 1;
+    json['user'] = this.userS.currentUser.uid;
 
+    this.socket.emit('removeChest', json);
+  }
 }

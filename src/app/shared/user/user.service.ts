@@ -97,7 +97,8 @@ export class UserService {
 
   FillChest(snapshot) {
     this.currentUser.numberOfChest = snapshot.numberOfChest;
-    for (let i = 1; i < snapshot.numberOfChest + 1; i++) {
+    this.currentUser.destroyChest();
+    for (let i = 0; i < snapshot.numberOfChest; i++) {
       const tempString = 'chest' + i;
       this.currentUser.chest.push(new Chest(snapshot[tempString][0], snapshot[tempString][1], snapshot[tempString][2]));
     }

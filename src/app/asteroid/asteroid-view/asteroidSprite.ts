@@ -103,7 +103,6 @@ export class AsteroidSprite {
 
         sprite.interactive = true;
         sprite.buttonMode = true;
-
         sprite.on('click', (event) => {
             this.emitClickParticle(event.data);
 

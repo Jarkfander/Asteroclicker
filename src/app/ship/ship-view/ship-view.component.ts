@@ -5,6 +5,7 @@ import { UserService } from '../../shared/user/user.service';
 import { User } from '../../shared/user/user';
 import { UpgradeType } from '../upgrade-class/upgrade';
 import { getFramesFromSpriteSheet } from '../../loadAnimation';
+import { SocketService } from '../../shared/socket/socket.service';
 
 @Component({
   selector: 'app-ship-view',
@@ -20,8 +21,8 @@ export class ShipViewComponent implements AfterViewInit {
   private backgroundSky: PIXI.extras.AnimatedSprite;
   private numberOfSky: number;
 
-  constructor(private el: ElementRef, private render: Renderer2, private userS: UserService) { }
-
+  constructor(private el: ElementRef, private render: Renderer2, private userS: UserService, private socketS: SocketService) {}
+  
   ngAfterViewInit() {
     this.initPixi();
   }
@@ -61,7 +62,7 @@ export class ShipViewComponent implements AfterViewInit {
       this.ship = new Ship(this.app);
       this.ship.numberOfChest = this.userS.currentUser.numberOfChest;
       this.ship.initChest();
-      
+
       // this.ship.autoUpgrade(user.mineRateLvl, this.ship.radarUpgrade);
       this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl, this.ship.droneUpgrade);
       this.ship.autoUpgrade(user.upgrades[UpgradeType.mineRate].lvl + 2, this.ship.smokeRadarUpgrade);
@@ -109,20 +110,26 @@ export class ShipViewComponent implements AfterViewInit {
 
     for (let i = 0; i < this.backgroundSky.textures.length; i++) {
       this.backgroundSky.textures[i] = tempBackground[i];
-      this.ship.autoUpgrade(this.userS.currentUser.upgradesLvl[UpgradeType.mineRate] + 2, this.ship.smokeRadarUpgrade);
-
-      this.userS.upgradeSubject.subscribe( (user: User) => {
-          this.ship.autoUpgrade(user.upgradesLvl[UpgradeType.storage], this.ship.stockUpgrade);
-          // this.ship.autoUpgrade(user.mineRateLvl, this.ship.radarUpgrade);
-          this.ship.autoUpgrade(this.userS.currentUser.upgradesLvl[UpgradeType.mineRate], this.ship.droneUpgrade);
-          this.ship.autoUpgrade(user.upgradesLvl[UpgradeType.mineRate] + 2, this.ship.smokeRadarUpgrade);
-      });
-
-      this.userS.chestSubject.subscribe((user: User) => {
-        this.ship.numberOfChest = this.userS.currentUser.numberOfChest;
-      });
     }
     this.backgroundSky.gotoAndPlay(0);
   }
+
+  clickChest() {
+    for (let i = 0; i < this.ship.numberOfChest; i++) {
+      let sprite = new PIXI.Sprite;
+      sprite = this.ship.spriteChestTab[i];
+      sprite.interactive = true;
+      sprite.buttonMode = true;
+      sprite.on('click', (event) => {
+          console.log('open chest' + i);
+
+          // FAIRE OUVERTURE COFFRE i ICI et faire en sorte que quand c'est fini oncomplete ça fait le socket.removeChest 
+          this.socketS.removeChest();
+      });
+    }
+  }
+
+
+
 
 }
