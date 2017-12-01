@@ -13,8 +13,8 @@ export class MarketService {
 
   OreCostsSubjectCarbon = new Subject<number[]>();
   OreCostsSubjectTitanium = new Subject<number[]>();
+  OreCostsSubjectFer= new Subject<number[]>();
   marketLoad: boolean = false;
-
 
   constructor(db: AngularFireDatabase) {
     this.db = db;
@@ -29,6 +29,12 @@ export class MarketService {
     this.db.object('trading/titanium').valueChanges().subscribe(
       (snapshot: any) => {
         this.FillOreCostsInitTitanium(snapshot);
+        this.marketLoad = true;
+      });
+
+    this.db.object('trading/fer').valueChanges().subscribe(
+      (snapshot: any) => {
+        this.FillOreCostsInitFer(snapshot);
         this.marketLoad = true;
       });
 
@@ -53,6 +59,12 @@ export class MarketService {
     this.OreCostsSubjectTitanium.next(this.currentOresCosts.titaniumCosts);
   }
 
+  // create the tab of stock
+  FillOreCostsInitFer(snapshot) {
+    this.currentOresCosts.ferCosts = snapshot;
+    this.OreCostsSubjectFer.next(this.currentOresCosts.ferCosts);
+  }
+
   UpdateOreTrend(delta: number, oreName: string) {
     this.db.object('trend/' + oreName).set(this.oreTrends.getTrendFromString(oreName) + delta);
   }
@@ -63,6 +75,8 @@ export class MarketService {
             return this.OreCostsSubjectCarbon;
         case 'titanium':
             return this.OreCostsSubjectTitanium;
+        case 'fer':
+            return this.OreCostsSubjectFer;
         default:
             console.log('unknown material (subject)');
             break;

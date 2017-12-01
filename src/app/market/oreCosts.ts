@@ -1,6 +1,7 @@
 export class OreCosts {
     public carbonCosts: number[];
     public titaniumCosts: number[];
+    public ferCosts: number[];
     constructor() {
     }
 
@@ -10,6 +11,8 @@ export class OreCosts {
                 return this.carbonCosts;
             case 'titanium':
                 return this.titaniumCosts;
+            case 'fer':
+                return this.ferCosts;
             default:
                 console.log('unknown material (costs)');
                 break;
