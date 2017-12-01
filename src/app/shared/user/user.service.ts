@@ -7,7 +7,7 @@ import { UpgradeService } from '../../ship/upgrade-list/upgrade.service';
 import { MarketService } from '../../market/market.service';
 import { Asteroid } from '../../asteroid/asteroid-view/asteroid';
 import { Quest } from '../../market/topbar/quest';
-import { SearchResult } from '../../asteroid/search-result/SearchResult';
+import { SearchResult } from '../../asteroid/search-result/searchResult';
 import { UpgradeType } from '../../ship/upgrade-class/upgrade';
 
 

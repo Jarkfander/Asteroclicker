@@ -1,5 +1,5 @@
 import { Asteroid } from "../../asteroid/asteroid-view/asteroid";
-import { SearchResult } from "../../asteroid/search-result/SearchResult";
+import { SearchResult } from "../../asteroid/search-result/searchResult";
 import { Quest } from "../../market/topbar/quest";
 
 

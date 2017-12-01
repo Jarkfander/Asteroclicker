@@ -1,6 +1,6 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { Asteroid } from '../asteroid-view/asteroid';
-import { SearchResult } from '../search-result/SearchResult';
+import { SearchResult } from '../search-result/searchResult';
 import { OreInfo } from '../ore-info-view/oreInfo';
 import { UserService } from '../../shared/user/user.service';
 import { SocketService } from '../../shared/socket/socket.service';
