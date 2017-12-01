@@ -1,6 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Upgrade } from '../upgrade-class/upgrade';
+import { Upgrade, UpgradeType } from '../upgrade-class/upgrade';
 import { SocketService } from '../../shared/socket/socket.service';
+import { User } from '../../shared/user/user';
+import { UserService } from '../../shared/user/user.service';
+import { UpgradeLvls } from '../upgrade-list/upgrade-list.component';
 
 
 @Component({
@@ -10,45 +13,32 @@ import { SocketService } from '../../shared/socket/socket.service';
 })
 export class UpgradeInfoComponent implements OnInit {
 
-  private _upgrade: Upgrade;
-  private _upgradeCaraKeys: string[];
+  private upgradeCaraKeys: string[];
+  private nextupgradeCaraKeys: string[];
 
-  private _nextUpgrade: Upgrade;
-  private _nextupgradeCaraKeys: string[];
+  public userUpgradeLvl: number = 0;
 
-  constructor(private socketS:SocketService) { }
+  @Input("UpgradeLvls") upgradeLvls: UpgradeLvls;
+
+  constructor(private socketS: SocketService, private userS: UserService) {
+  }
 
   ngOnInit() {
+    this.updateData(this.userS.currentUser);
+    this.userS.upgradeSubject.subscribe((user: User) => {
+      this.updateData(user);
+    });
   }
 
-  @Input() set upgrade(upgrade: Upgrade) {
-    this._upgrade = upgrade;
-    this._upgradeCaraKeys = Object.keys(this._upgrade.cara);
-  }
-
-  @Input() set nextUpgrade(upgrade: Upgrade) {
-    this._nextUpgrade = upgrade;
-    this._nextupgradeCaraKeys = Object.keys(this._nextUpgrade.cara);
-  }
-
-  get upgrade(): Upgrade {
-    return this._upgrade;
-  }
-
-  get nextUpgrade(): Upgrade {
-    return this._nextUpgrade;
-  }
-
-  get upgradeCaraKeys(): String[] {
-    return this._upgradeCaraKeys;
-  }
-
-  get nextUpgradeCaraKeys(): String[] {
-    return this._nextupgradeCaraKeys;
+  updateData(user: User) {
+    this.userUpgradeLvl = user.upgradesLvl[this.upgradeLvls.type];
+    this.upgradeCaraKeys = Object.keys(this.upgradeLvls.lvls[this.userUpgradeLvl].cara);
+    this.nextupgradeCaraKeys = Object.keys(this.upgradeLvls.lvls[this.userUpgradeLvl + 1].cara);
+    this.upgradeLvls.lvls[this.userUpgradeLvl].displayName;
   }
 
   levelUp() {
-    this.socketS.upgradeShip(this.upgrade.name);
+    this.socketS.upgradeShip(this.upgradeLvls.lvls[this.userUpgradeLvl].name);
   }
 
 }

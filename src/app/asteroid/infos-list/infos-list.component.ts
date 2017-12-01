@@ -7,6 +7,7 @@ import { SocketService } from '../../shared/socket/socket.service';
 import { OreInfoService } from '../ore-info-view/ore-info.service';
 import { UpgradeService } from '../../ship/upgrade-list/upgrade.service';
 import { User } from '../../shared/user/user';
+import { UpgradeType } from '../../ship/upgrade-class/upgrade';
 
 
 @Component({
@@ -36,7 +37,7 @@ export class InfosViewComponent implements AfterViewInit {
     private socketS: SocketService, private oreInfoS: OreInfoService) {
     this.oreAmount = userS.currentUser.oreAmounts;
 
-    this.capacity =upgradeS.storage[userS.currentUser.storageLvl].capacity;
+    this.capacity =upgradeS.storage[userS.currentUser.upgradesLvl[UpgradeType.storage]].capacity;
 
     this.asteroid = userS.currentUser.asteroid;
 
@@ -59,7 +60,7 @@ export class InfosViewComponent implements AfterViewInit {
       this.asteroid = user.asteroid;
     });
     this.userS.upgradeSubject.subscribe((user: User) => {
-      this.capacity =this.upgradeS.storage[this.userS.currentUser.storageLvl].capacity;
+      this.capacity =this.upgradeS.storage[this.userS.currentUser.upgradesLvl[UpgradeType.storage]].capacity;
     });
     this.userS.searchSubject.subscribe((user: User) => {
       this.search = user.asteroidSearch;
