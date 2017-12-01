@@ -31,15 +31,15 @@ export class AsteroidSprite {
 
         this.app = app;
         this.asteroid = new Array<PIXI.Sprite>();
-        this.asteroidFolders = { 'carbon': new Array<PIXI.Texture>(), 'titanium': new Array<PIXI.Texture>(),'fer': new Array<PIXI.Texture>() };
+        this.asteroidFolders = { 'carbon': new Array<PIXI.Texture>(), 'titanium': new Array<PIXI.Texture>(), 'fer': new Array<PIXI.Texture>() };
         this.checkAstero = false;
         //this.asteroidSeed = seed;
         this.initAsteroidSprites();
 
         this.generateAsteroid(asteroid);
 
-        this.InitializeClickEmitter();
-        this.InitializeDestructionEmitter();
+        this.InitializeClickEmitter(asteroid.ore);
+        this.InitializeDestructionEmitter(asteroid.ore);
         this.compteurBoom = 0;
         this.initAnimationBoomKrash();
 
@@ -186,7 +186,7 @@ export class AsteroidSprite {
                 this.asteroid[0].children[this.asteroid[0].children.length - 1].worldTransform.ty);
             this.boomAnim.scale.set(2, 2);
             this.animBoomOnClick(this.asteroid[0].children[this.asteroid[0].children.length - 1].worldTransform.tx,
-                this.asteroid[0].children[this.asteroid[0].children.length - 1].worldTransform.ty , this.boomAnim, true);
+                this.asteroid[0].children[this.asteroid[0].children.length - 1].worldTransform.ty, this.boomAnim, true);
             this.boomAnim.scale.set(1, 1);
             this.asteroid[0].removeChild(this.asteroid[0].children[this.asteroid[0].children.length - 1]);
         }
@@ -203,20 +203,21 @@ export class AsteroidSprite {
     }
     // Change the sprite of asteroid when the user change 
     changeSprite(asteroid: Asteroid) {
-        if (asteroid.seed !== this.asteroidSeed) {
-            this.asteroidSeed = asteroid.seed;
-            this.generateAsteroid(asteroid);
-        }
+
+        this.InitializeDestructionEmitter(asteroid.ore);
+        this.InitializeClickEmitter(asteroid.ore);
+        this.asteroidSeed = asteroid.seed;
+        this.generateAsteroid(asteroid);
     }
 
-    InitializeClickEmitter() {
+    InitializeClickEmitter(asteroidType: string) {
         const config = {
             'alpha': {
                 'start': 1,
                 'end': 1
             },
             'scale': {
-                'start': 1,
+                'start': 0.4,
                 'end': 0
             },
             'color': {
@@ -232,8 +233,8 @@ export class AsteroidSprite {
                 'max': 360
             },
             'rotationSpeed': {
-                'min': 0,
-                'max': 0
+                'min': 1000,
+                'max': 1000
             },
             'lifetime': {
                 'min': 0.5,
@@ -257,19 +258,19 @@ export class AsteroidSprite {
 
         this.clickEmitter = new ParticleBase(
             this.app.stage,
-            PIXI.Texture.fromImage('assets/smallRock.png'),
+            PIXI.Texture.fromImage('assets/AsteroidParticle/' + asteroidType + 'Particle.png'),
             config
         );
     }
 
-    InitializeDestructionEmitter() {
+    InitializeDestructionEmitter(asteroidType: string) {
         const config = {
             'alpha': {
                 'start': 1,
                 'end': 1
             },
             'scale': {
-                'start': 1.5,
+                'start': 0.8,
                 'end': 0
             },
             'color': {
@@ -285,8 +286,8 @@ export class AsteroidSprite {
                 'max': 360
             },
             'rotationSpeed': {
-                'min': 0,
-                'max': 0
+                'min': 1000,
+                'max': 1000
             },
             'lifetime': {
                 'min': 1,
@@ -310,7 +311,7 @@ export class AsteroidSprite {
 
         this.destructionEmitter = new ParticleBase(
             this.app.stage,
-            PIXI.Texture.fromImage('assets/smallRock.png'),
+            PIXI.Texture.fromImage('assets/AsteroidParticle/' + asteroidType + 'Particle.png'),
             config
         );
     }
@@ -353,7 +354,7 @@ export class AsteroidSprite {
         this.app.stage.addChildAt(this.woomAnim, 4);
     }
 
-    animBoomOnClick(x: number, y: number, pixiAnimate: PIXI.extras.AnimatedSprite , boolForce = false) {
+    animBoomOnClick(x: number, y: number, pixiAnimate: PIXI.extras.AnimatedSprite, boolForce = false) {
         if (this.compteurBoom % 25 === 0 || boolForce) {
             this.compteurBoom = 1 + Math.floor(Math.random() * 12);
             pixiAnimate.position.set(x + 50, y - 100);
