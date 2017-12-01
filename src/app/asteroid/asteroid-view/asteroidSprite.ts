@@ -31,7 +31,7 @@ export class AsteroidSprite {
 
         this.app = app;
         this.asteroid = new Array<PIXI.Sprite>();
-        this.asteroidFolders = { 'carbon': new Array<PIXI.Texture>(), 'titanium': new Array<PIXI.Texture>() };
+        this.asteroidFolders = { 'carbon': new Array<PIXI.Texture>(), 'titanium': new Array<PIXI.Texture>(),'fer': new Array<PIXI.Texture>() };
         this.checkAstero = false;
         //this.asteroidSeed = seed;
         this.initAsteroidSprites();
