@@ -28,7 +28,7 @@ export class LoadAnimation {
         }
         // Stock animation
         for (let i = 1 ; i < 8 ; i++) {
-            this.addKeySpriteName('shipStock_' + i, './assets/upgrade/shipStock_' + i + '.png');
+            this.addKeySpriteName('shipReacteur_' + i, './assets/upgrade/shipStock_' + i + '.png');
         }
 
         // Radar animation
@@ -58,7 +58,7 @@ export class LoadAnimation {
 
          // stock animation
          for (let i = 1 ; i < 2 ; i++) {
-            this.addKeySpriteName('stockage_' + i, './assets/upgrade/storage/stockage' + i + '.png');
+            this.addKeySpriteName('stockage_' + i, './assets/upgrade/storage/stockage_' + i + '.png');
         }
 
         this.addKeySpriteName('Boum', './assets/Boum.png');

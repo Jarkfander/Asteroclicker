@@ -15,7 +15,7 @@ export class ShipViewComponent implements AfterViewInit {
   private app: PIXI.Application;
   private v: number;
   private ship: Ship;
-
+  private boolShipTourelle: boolean;
 
   constructor(private el: ElementRef, private render: Renderer2, private userS: UserService) {}
 
@@ -39,6 +39,8 @@ export class ShipViewComponent implements AfterViewInit {
       this.app = new PIXI.Application(w, h, {backgroundColor : 0xffffff});
       this.render.appendChild(this.el.nativeElement, this.app.view);
 
+      this.boolShipTourelle = false;
+
       const background = PIXI.Sprite.fromImage('assets/Ciel.jpg');
       background.width = this.app.renderer.width;
       background.height = this.app.renderer.height;
@@ -46,16 +48,29 @@ export class ShipViewComponent implements AfterViewInit {
 
       this.ship = new Ship(this.app);
       // init
+      //this.ship.autoUpgrade(this.userS.currentUser.upgradesLvl[UpgradeType.storage], this.ship.reacteur);
       this.ship.autoUpgrade(this.userS.currentUser.upgradesLvl[UpgradeType.storage], this.ship.stockUpgrade);
       // this.ship.autoUpgrade(this.userS.currentUser.mineRateLvl, this.ship.radarUpgrade);
       this.ship.autoUpgrade(this.userS.currentUser.upgradesLvl[UpgradeType.mineRate], this.ship.droneUpgrade);
       this.ship.autoUpgrade(this.userS.currentUser.upgradesLvl[UpgradeType.mineRate] + 2, this.ship.smokeRadarUpgrade);
+      if (this.userS.currentUser.upgradesLvl[UpgradeType.storage] > 0 && !this.boolShipTourelle) {
+        this.ship.iNewTourelle = 4;
+        this.ship.initNewTourelle('newTourelle_4', 500, 500);
+        this.boolShipTourelle = true;
+      }
 
       this.userS.upgradeSubject.subscribe( (user: User) => {
-          this.ship.autoUpgrade(user.upgradesLvl[UpgradeType.storage], this.ship.stockUpgrade);
+          // this.ship.autoUpgrade(user.upgradesLvl[UpgradeType.storage], this.ship.reacteur);
+          this.ship.autoUpgrade(this.userS.currentUser.upgradesLvl[UpgradeType.storage], this.ship.stockUpgrade);
           // this.ship.autoUpgrade(user.mineRateLvl, this.ship.radarUpgrade);
           this.ship.autoUpgrade(this.userS.currentUser.upgradesLvl[UpgradeType.mineRate], this.ship.droneUpgrade);
           this.ship.autoUpgrade(user.upgradesLvl[UpgradeType.mineRate] + 2, this.ship.smokeRadarUpgrade);
+
+          if (this.userS.currentUser.upgradesLvl[UpgradeType.storage] > 0 && !this.boolShipTourelle) {
+            this.ship.iNewTourelle = 4;
+            this.ship.initNewTourelle('newTourelle_4', 500, 500);
+            this.boolShipTourelle = true; 
+          }
       });
     }
 }
