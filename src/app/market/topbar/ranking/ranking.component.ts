@@ -19,10 +19,14 @@ export class RankingComponent implements AfterViewInit {
     this.ranking = new Array<Ranking>();
     this.ranking = rankingS.rankingTab;
     this.searchPlayerRanking();
+
   }
 
   ngAfterViewInit(): void {
-
+      this.rankingS.rankSubject.subscribe((ranking) => {
+        this.ranking = ranking;
+        this.searchPlayerRanking();
+      });
   }
 
   searchPlayerRanking() {

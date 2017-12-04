@@ -11,6 +11,7 @@ import { Asteroid } from './asteroid';
 import { ParticleBase } from '../../shared/pixiVisual/particleBase';
 import { User } from '../../shared/user/user';
 import { UpgradeType } from '../../ship/upgrade-class/upgrade';
+import { getFramesFromSpriteSheet } from '../../loadAnimation';
 
 
 
@@ -34,6 +35,10 @@ export class AsteroidViewComponent implements AfterViewInit {
   private state: number;
   private drone: Drone;
   private emitter: ParticleBase;
+
+  private backgroundSky: PIXI.extras.AnimatedSprite;
+  private numberOfSky: number;
+
   clicked: boolean;
 
   ngAfterViewInit() {
@@ -65,10 +70,9 @@ export class AsteroidViewComponent implements AfterViewInit {
     this.app = new PIXI.Application(w, h, { backgroundColor: 0x1079bb });
     this.render.appendChild(this.el.nativeElement, this.app.view);
 
-    const background = PIXI.Sprite.fromImage('assets/Ciel.jpg');
-    background.width = this.app.renderer.width;
-    background.height = this.app.renderer.height;
-    this.app.stage.addChild(background);
+    // skyV1
+    this.numberOfSky = 1;
+    this.initSky('skyV1_1', 500, 500, w, h);
 
     this.drone = new Drone(0.20, 0.20, this.app);
     this.drone.isMining = this.asteroid.currentCapacity === 0;
@@ -205,5 +209,42 @@ export class AsteroidViewComponent implements AfterViewInit {
       config
     );
     this.emitter.updateOwnerPos(this.asteroidSprite.asteroid[0].x, this.asteroidSprite.asteroid[0].y);
+  }
+
+  // initial sky animated Sprite
+  initSky(spriteName: string, width: number, height: number, w, h) {
+    this.backgroundSky = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
+      PIXI.loader.resources[spriteName].texture, width, height));
+    this.backgroundSky.gotoAndPlay(0);
+    this.backgroundSky.animationSpeed = 0.32;
+    this.backgroundSky.visible = true;
+    this.backgroundSky.loop = false;
+
+    this.backgroundSky.texture.baseTexture.mipmap = true;
+    this.backgroundSky.anchor.set(0.5);
+
+    this.backgroundSky.x = w / 2;
+    this.backgroundSky.y = h / 2;
+
+    this.backgroundSky.width = w;
+    this.backgroundSky.height = h;
+
+    this.app.stage.addChild(this.backgroundSky);
+
+    this.backgroundSky.onComplete = () => {
+      this.skyAfterAnimation();
+    };
+  }
+
+  skyAfterAnimation() {
+    this.numberOfSky = ((this.numberOfSky + 1) % 7) === 0 ? 1 : ((this.numberOfSky + 1) % 7);
+    const stringSky: string = 'skyV1_' + this.numberOfSky;
+
+    const tempBackground = getFramesFromSpriteSheet(PIXI.loader.resources[stringSky].texture, 500, 500);
+
+    for (let i = 0; i < this.backgroundSky.textures.length; i++) {
+      this.backgroundSky.textures[i] = tempBackground[i];
+    }
+    this.backgroundSky.gotoAndPlay(0);
   }
 }

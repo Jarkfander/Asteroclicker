@@ -65,9 +65,12 @@ export class Drone {
                         this.laserAnim_actif3.visible = false;
                         this.drone.rotation = 0;
                         this.delta = 0;
+                    } else {
+                        this.drone.visible = false;
                     }
                     this.delta = 0;
                 } else {
+                    this.drone.visible = true;
                     if (this.deltaGo >= 0) {
                         this.deltaGo -= 0.08;
                         this.drone.x = this.drone.x + this.deltaGo;
