@@ -17,81 +17,99 @@ export class ShipViewComponent implements AfterViewInit {
   private v: number;
   private ship: Ship;
   private boolShipTourelle: boolean;
+  private backgroundSky: PIXI.extras.AnimatedSprite;
+  private numberOfSky: number;
+
+  constructor(private el: ElementRef, private render: Renderer2, private userS: UserService) { }
+
+  ngAfterViewInit() {
+    this.initPixi();
+  }
+
+  @HostListener('window:resize') onResize() {
+    this.app.stage.removeChildren();
+    this.render.removeChild(this.el.nativeElement, this.app.view);
+    delete this.ship;
+    this.app.destroy();
+    this.initPixi();
+  }
 
 
-  constructor(private el: ElementRef, private render: Renderer2, private userS: UserService) {}
+  initPixi() {
+    const w = this.el.nativeElement.parentElement.offsetWidth;
+    const h = this.el.nativeElement.parentElement.offsetHeight;
+    this.app = new PIXI.Application(w, h, { backgroundColor: 0xffffff });
+    this.render.appendChild(this.el.nativeElement, this.app.view);
 
-    ngAfterViewInit() {
-      this.initPixi();
+    this.boolShipTourelle = false;
+
+    // skyV1
+    this.numberOfSky = 1;
+    this.initSky('skyV0_1', 500, 500, w, h);
+
+    this.ship = new Ship(this.app);
+    // init
+    // this.ship.autoUpgrade(this.userS.currentUser.upgradesLvl[UpgradeType.storage], this.ship.reacteur);
+    this.ship.autoUpgrade(this.userS.currentUser.upgradesLvl[UpgradeType.storage], this.ship.stockUpgrade);
+    // this.ship.autoUpgrade(this.userS.currentUser.mineRateLvl, this.ship.radarUpgrade);
+    this.ship.autoUpgrade(this.userS.currentUser.upgradesLvl[UpgradeType.mineRate], this.ship.droneUpgrade);
+    this.ship.autoUpgrade(this.userS.currentUser.upgradesLvl[UpgradeType.mineRate] + 2, this.ship.smokeRadarUpgrade);
+    if (this.userS.currentUser.upgradesLvl[UpgradeType.storage] > 0 && !this.boolShipTourelle) {
+      this.ship.iNewTourelle = 4;
+      this.ship.initNewTourelle('newTourelle_4', 500, 500);
+      this.boolShipTourelle = true;
     }
 
-    @HostListener('window:resize') onResize() {
-      this.app.stage.removeChildren();
-      this.render.removeChild(this.el.nativeElement, this.app.view);
-      delete this.ship;
-      this.app.destroy();
-
-      this.initPixi();
-    }
-
-
-    initPixi() {
-      const w = this.el.nativeElement.parentElement.offsetWidth;
-      const h = this.el.nativeElement.parentElement.offsetHeight;
-      this.app = new PIXI.Application(w, h, {backgroundColor : 0xffffff});
-      this.render.appendChild(this.el.nativeElement, this.app.view);
-
-      this.boolShipTourelle = false;
-
-      const background = PIXI.Sprite.fromImage('assets/Ciel.jpg');
-      background.width = this.app.renderer.width;
-      background.height = this.app.renderer.height;
-      this.app.stage.addChild(background);
-      // skyV1
-      // this.initSky('skyV1', 500, 500);
-      
-      this.ship = new Ship(this.app);
-      // init
-      //this.ship.autoUpgrade(this.userS.currentUser.upgradesLvl[UpgradeType.storage], this.ship.reacteur);
+    this.userS.upgradeSubject.subscribe((user: User) => {
+      // this.ship.autoUpgrade(user.upgradesLvl[UpgradeType.storage], this.ship.reacteur);
       this.ship.autoUpgrade(this.userS.currentUser.upgradesLvl[UpgradeType.storage], this.ship.stockUpgrade);
-      // this.ship.autoUpgrade(this.userS.currentUser.mineRateLvl, this.ship.radarUpgrade);
+      // this.ship.autoUpgrade(user.mineRateLvl, this.ship.radarUpgrade);
       this.ship.autoUpgrade(this.userS.currentUser.upgradesLvl[UpgradeType.mineRate], this.ship.droneUpgrade);
-      this.ship.autoUpgrade(this.userS.currentUser.upgradesLvl[UpgradeType.mineRate] + 2, this.ship.smokeRadarUpgrade);
+      this.ship.autoUpgrade(user.upgradesLvl[UpgradeType.mineRate] + 2, this.ship.smokeRadarUpgrade);
+
       if (this.userS.currentUser.upgradesLvl[UpgradeType.storage] > 0 && !this.boolShipTourelle) {
         this.ship.iNewTourelle = 4;
         this.ship.initNewTourelle('newTourelle_4', 500, 500);
         this.boolShipTourelle = true;
       }
+    });
+  }
 
-      this.userS.upgradeSubject.subscribe( (user: User) => {
-          // this.ship.autoUpgrade(user.upgradesLvl[UpgradeType.storage], this.ship.reacteur);
-          this.ship.autoUpgrade(this.userS.currentUser.upgradesLvl[UpgradeType.storage], this.ship.stockUpgrade);
-          // this.ship.autoUpgrade(user.mineRateLvl, this.ship.radarUpgrade);
-          this.ship.autoUpgrade(this.userS.currentUser.upgradesLvl[UpgradeType.mineRate], this.ship.droneUpgrade);
-          this.ship.autoUpgrade(user.upgradesLvl[UpgradeType.mineRate] + 2, this.ship.smokeRadarUpgrade);
+  // initial ship animated Sprite
+  initSky(spriteName: string, width: number, height: number, w, h) {
+    this.backgroundSky = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
+      PIXI.loader.resources[spriteName].texture, width, height));
+    this.backgroundSky.gotoAndPlay(0);
+    this.backgroundSky.animationSpeed = 0.32;
+    this.backgroundSky.visible = true;
+    this.backgroundSky.loop = false;
 
-          if (this.userS.currentUser.upgradesLvl[UpgradeType.storage] > 0 && !this.boolShipTourelle) {
-            this.ship.iNewTourelle = 4;
-            this.ship.initNewTourelle('newTourelle_4', 500, 500);
-            this.boolShipTourelle = true; 
-          }
-      });
+    this.backgroundSky.texture.baseTexture.mipmap = true;
+    this.backgroundSky.anchor.set(0.5);
+
+    this.backgroundSky.x = w / 2;
+    this.backgroundSky.y = h / 2;
+
+    this.backgroundSky.width = w;
+    this.backgroundSky.height = h;
+
+    this.app.stage.addChild(this.backgroundSky);
+
+    this.backgroundSky.onComplete = () => {
+      this.skyAfterAnimation();
+    };
+  }
+
+  skyAfterAnimation() {
+    this.numberOfSky = ((this.numberOfSky + 1) % 7) === 0 ? 1 : ((this.numberOfSky + 1) % 7);
+    const stringSky: string = 'skyV0_' + this.numberOfSky;
+
+    const tempBackground = getFramesFromSpriteSheet(PIXI.loader.resources[stringSky].texture, 500, 500);
+
+    for (let i = 0; i < this.backgroundSky.textures.length; i++) {
+      this.backgroundSky.textures[i] = tempBackground[i];
     }
-
-    // initial ship animated Sprite
-    initSky(spriteName: string, width: number, height: number) {
-      const backgroundSky = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
-          PIXI.loader.resources[spriteName].texture, width, height));
-      backgroundSky.gotoAndPlay(0);
-      backgroundSky.animationSpeed = 0.35;
-      backgroundSky.visible = true;
-      backgroundSky.texture.baseTexture.mipmap = true;
-      backgroundSky.anchor.set(0.5);
-
-      backgroundSky.x = this.app.renderer.width;
-      backgroundSky.y = this.app.renderer.height;
-
-      this.app.stage.addChild(backgroundSky);
+    this.backgroundSky.gotoAndPlay(0);
   }
 
 }

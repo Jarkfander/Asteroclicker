@@ -1,8 +1,8 @@
 import * as PIXI from 'pixi.js';
 export function getFramesFromSpriteSheet(texture: PIXI.Texture, frameWidth: number, frameHeight: number) {
     const frames = [];
-    for (let j = 0; j < texture.height - frameHeight; j += frameHeight) {
-        for (let i = 0; i < texture.width - frameWidth; i += frameWidth) {
+    for (let j = 0; j < texture.height - frameHeight + 1; j += frameHeight) {
+        for (let i = 0; i < texture.width - frameWidth + 1; i += frameWidth) {
             frames.push(new PIXI.Texture(texture.baseTexture, new PIXI.Rectangle(i, j, frameWidth, frameHeight)));
         }
     }
@@ -19,7 +19,16 @@ export class LoadAnimation {
         this.tabKeyName = new Array<String>();
         this.tabSpriteName = new Array<String>();
 
-       // this.addKeySpriteName('skyV1', './assets/cielV1.png');
+        // ciel animation
+        for (let i = 1 ; i < 7 ; i++) {
+            this.addKeySpriteName('skyV0_' + i, './assets/sky/ciel_niv0_p' + i + '.png');
+        }
+
+        // ciel animation V1
+        for (let i = 1 ; i < 7 ; i++) {
+            this.addKeySpriteName('skyV1_' + i, './assets/sky/Cielv1_p' + i + '.png');
+        }
+    
 
         // Laser
         this.addKeySpriteName('laser', './assets/laser_(n2).png');
