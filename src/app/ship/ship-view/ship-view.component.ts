@@ -4,6 +4,7 @@ import { Ship } from './ship';
 import { UserService } from '../../shared/user/user.service';
 import { User } from '../../shared/user/user';
 import { UpgradeType } from '../upgrade-class/upgrade';
+import { getFramesFromSpriteSheet } from '../../loadAnimation';
 
 @Component({
   selector: 'app-ship-view',
@@ -16,6 +17,7 @@ export class ShipViewComponent implements AfterViewInit {
   private v: number;
   private ship: Ship;
   private boolShipTourelle: boolean;
+
 
   constructor(private el: ElementRef, private render: Renderer2, private userS: UserService) {}
 
@@ -45,7 +47,9 @@ export class ShipViewComponent implements AfterViewInit {
       background.width = this.app.renderer.width;
       background.height = this.app.renderer.height;
       this.app.stage.addChild(background);
-
+      // skyV1
+      // this.initSky('skyV1', 500, 500);
+      
       this.ship = new Ship(this.app);
       // init
       //this.ship.autoUpgrade(this.userS.currentUser.upgradesLvl[UpgradeType.storage], this.ship.reacteur);
@@ -73,4 +77,21 @@ export class ShipViewComponent implements AfterViewInit {
           }
       });
     }
+
+    // initial ship animated Sprite
+    initSky(spriteName: string, width: number, height: number) {
+      const backgroundSky = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
+          PIXI.loader.resources[spriteName].texture, width, height));
+      backgroundSky.gotoAndPlay(0);
+      backgroundSky.animationSpeed = 0.35;
+      backgroundSky.visible = true;
+      backgroundSky.texture.baseTexture.mipmap = true;
+      backgroundSky.anchor.set(0.5);
+
+      backgroundSky.x = this.app.renderer.width;
+      backgroundSky.y = this.app.renderer.height;
+
+      this.app.stage.addChild(backgroundSky);
+  }
+
 }

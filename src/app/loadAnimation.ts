@@ -19,6 +19,8 @@ export class LoadAnimation {
         this.tabKeyName = new Array<String>();
         this.tabSpriteName = new Array<String>();
 
+       // this.addKeySpriteName('skyV1', './assets/cielV1.png');
+
         // Laser
         this.addKeySpriteName('laser', './assets/laser_(n2).png');
         this.addKeySpriteName('ship', './assets/upgrade/ship.png');

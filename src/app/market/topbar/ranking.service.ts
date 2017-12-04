@@ -2,11 +2,14 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { Ranking } from './ranking';
 import { UserService } from '../../shared/user/user.service';
+import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class RankingService {
   db: AngularFireDatabase;
   rankingTab: Array<Ranking>;
+  rankSubject = new Subject<Array<Ranking>>();
+  
 
   constructor(db: AngularFireDatabase, private userS: UserService) {
     this.db = db;
@@ -14,13 +17,19 @@ export class RankingService {
 
     this.db.object('ranking').valueChanges().take(1).subscribe(
       (snapshot: any) => {
-        this.FillQuest(snapshot);
+        this.FillRank(snapshot);
+    });
+    this.db.object('ranking').valueChanges().subscribe(
+    (snapshot: any) => {
+        this.FillRank(snapshot);
     });
   }
 
-  FillQuest(snapshot) {
+  FillRank(snapshot) {
+    this.rankingTab = [];
     for (let i = 0 ; i < snapshot.length ; i++) {
       this.rankingTab.push(new Ranking(snapshot[i].name, snapshot[i].score, i));
     }
+    this.rankSubject.next(this.rankingTab);
   }
 }
