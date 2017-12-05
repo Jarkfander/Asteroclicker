@@ -20,19 +20,19 @@ export class MarketService {
     this.db = db;
     this.currentOresCosts = new OreCosts();
     this.oreTrends = new OreTrends();
-    this.db.object('trading/carbon').valueChanges().subscribe(
+    this.db.object('trading/carbon/recent').valueChanges().subscribe(
       (snapshot: any) => {
         this.FillOreCostsInitCarbon(snapshot);
         this.marketLoad = true;
       });
 
-    this.db.object('trading/titanium').valueChanges().subscribe(
+    this.db.object('trading/titanium/recent').valueChanges().subscribe(
       (snapshot: any) => {
         this.FillOreCostsInitTitanium(snapshot);
         this.marketLoad = true;
       });
 
-    this.db.object('trading/fer').valueChanges().subscribe(
+    this.db.object('trading/fer/recent').valueChanges().subscribe(
       (snapshot: any) => {
         this.FillOreCostsInitFer(snapshot);
         this.marketLoad = true;
