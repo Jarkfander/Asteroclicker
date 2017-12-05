@@ -1,9 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Upgrade, UpgradeType } from '../upgrade-class/upgrade';
 import { SocketService } from '../../shared/socket/socket.service';
-import { User } from '../../shared/user/user';
+import { User, UserUpgrade } from '../../shared/user/user';
 import { UserService } from '../../shared/user/user.service';
 import { UpgradeLvls } from '../upgrade-list/upgrade-list.component';
+import { Utils } from '../../shared/utils';
 
 
 @Component({
@@ -16,7 +17,9 @@ export class UpgradeInfoComponent implements OnInit {
   private upgradeCaraKeys: string[];
   private nextupgradeCaraKeys: string[];
 
-  public userUpgradeLvl: number = 0;
+  public userUpgrade: UserUpgrade;
+
+  public timer: string = "00:00:00";
 
   @Input("UpgradeLvls") upgradeLvls: UpgradeLvls;
 
@@ -28,17 +31,25 @@ export class UpgradeInfoComponent implements OnInit {
     this.userS.upgradeSubject.subscribe((user: User) => {
       this.updateData(user);
     });
+    setInterval(() => { this.updateTimer(); }, 1000);
+  }
+
+  updateTimer() {
+    if (this.userUpgrade.start != 0) {
+        this.socketS.updateUpgradeTimer(this.upgradeLvls.lvls[0].name);
+    }
   }
 
   updateData(user: User) {
-    this.userUpgradeLvl = user.upgradesLvl[this.upgradeLvls.type];
-    this.upgradeCaraKeys = Object.keys(this.upgradeLvls.lvls[this.userUpgradeLvl].cara);
-    this.nextupgradeCaraKeys = Object.keys(this.upgradeLvls.lvls[this.userUpgradeLvl + 1].cara);
-    this.upgradeLvls.lvls[this.userUpgradeLvl].displayName;
+    this.userUpgrade = user.upgrades[this.upgradeLvls.type];
+    this.timer = Utils.secondsToHHMMSS(this.userUpgrade.timer / 1000);
+    this.upgradeCaraKeys = Object.keys(this.upgradeLvls.lvls[this.userUpgrade.lvl].cara);
+    this.nextupgradeCaraKeys = Object.keys(this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].cara);
+    this.upgradeLvls.lvls[this.userUpgrade.lvl].displayName;
   }
 
   levelUp() {
-    this.socketS.upgradeShip(this.upgradeLvls.lvls[this.userUpgradeLvl].name);
+    this.socketS.upgradeShip(this.upgradeLvls.lvls[this.userUpgrade.lvl].name);
   }
 
 }

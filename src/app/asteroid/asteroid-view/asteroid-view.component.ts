@@ -109,7 +109,7 @@ export class AsteroidViewComponent implements AfterViewInit {
       }
       if (this.drone.laser != null) {
         this.drone.laser.visible = user[user.asteroid.ore] <
-          this.upgradeS.storage[user.upgradesLvl[UpgradeType.storage]].capacity;
+          this.upgradeS.storage[user.upgrades[UpgradeType.storage].lvl].capacity;
       }
       this.asteroid = user.asteroid;
     });
@@ -120,7 +120,7 @@ export class AsteroidViewComponent implements AfterViewInit {
   asteroidClick() {
     // ga('asteroid.send', 'event', 'buttons', 'click', 'asteroid');
     this.clicked = true;
-    const max = this.upgradeS.mineRate[this.userS.currentUser.upgradesLvl[UpgradeType.mineRate]].maxRate;
+    const max = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].maxRate;
     if (this.userS.currentUser.currentMineRate < max) {
       this.userS.modifyCurrentMineRate(this.userS.currentUser.currentMineRate + max * 0.1 > max ? max :
         this.userS.currentUser.currentMineRate + max * 0.1);
@@ -134,8 +134,8 @@ export class AsteroidViewComponent implements AfterViewInit {
   }
 
   resetClick() {
-    const max = this.upgradeS.mineRate[this.userS.currentUser.upgradesLvl[UpgradeType.mineRate]].maxRate;
-    const base = this.upgradeS.mineRate[this.userS.currentUser.upgradesLvl[UpgradeType.mineRate]].baseRate;
+    const max = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].maxRate;
+    const base = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].baseRate;
 
     if (!this.clicked) {
       if (this.userS.currentUser.currentMineRate > base) {

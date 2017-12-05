@@ -46,16 +46,16 @@ export class ShipViewComponent implements AfterViewInit {
 
       this.ship = new Ship(this.app);
       // init
-      this.ship.autoUpgrade(this.userS.currentUser.upgradesLvl[UpgradeType.storage], this.ship.stockUpgrade);
+      this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.storage].lvl, this.ship.stockUpgrade);
       // this.ship.autoUpgrade(this.userS.currentUser.mineRateLvl, this.ship.radarUpgrade);
-      this.ship.autoUpgrade(this.userS.currentUser.upgradesLvl[UpgradeType.mineRate], this.ship.droneUpgrade);
-      this.ship.autoUpgrade(this.userS.currentUser.upgradesLvl[UpgradeType.mineRate] + 2, this.ship.smokeRadarUpgrade);
+      this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl, this.ship.droneUpgrade);
+      this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl + 2, this.ship.smokeRadarUpgrade);
 
       this.userS.upgradeSubject.subscribe( (user: User) => {
-          this.ship.autoUpgrade(user.upgradesLvl[UpgradeType.storage], this.ship.stockUpgrade);
+          this.ship.autoUpgrade(user.upgrades[UpgradeType.storage].lvl, this.ship.stockUpgrade);
           // this.ship.autoUpgrade(user.mineRateLvl, this.ship.radarUpgrade);
-          this.ship.autoUpgrade(this.userS.currentUser.upgradesLvl[UpgradeType.mineRate], this.ship.droneUpgrade);
-          this.ship.autoUpgrade(user.upgradesLvl[UpgradeType.mineRate] + 2, this.ship.smokeRadarUpgrade);
+          this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl, this.ship.droneUpgrade);
+          this.ship.autoUpgrade(user.upgrades[UpgradeType.mineRate].lvl + 2, this.ship.smokeRadarUpgrade);
       });
     }
 }
