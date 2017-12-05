@@ -45,8 +45,14 @@ export class Ship {
     currentLevelRadar: number;
     smokeRadarUpgrade: UpgradeShip;
 
+    reacteur: UpgradeShip;
+    reacteurLvl: number;
+
     stockUpgrade: UpgradeShip;
-    currentLevelStock: number;
+    stockUpgradeLvl: number;
+    boolNewTourelle: boolean;
+    newTourelle: PIXI.extras.AnimatedSprite;
+    iNewTourelle: number;
 
     droneUpgrade: UpgradeShip;
     currentLevelDrone: number;
@@ -55,8 +61,11 @@ export class Ship {
         this.app = app;
         this.deltaSum = 0;
 
+        this.boolNewTourelle = false;
+
         this.deltaSumShip = 0;
         this.iTourelle = 1;
+
         this.initShip('ship', 500, 500);
         this.initTourelle('tourelle_1', 500, 500);
 
@@ -65,11 +74,14 @@ export class Ship {
         this.radarUpgrade = this.initTabSprite(5, 'shipRadar_', this.currentLevelRadar, 500, 500, -20, 0, true);
         this.smokeRadarUpgrade = this.initTabSprite(7, 'smoke_', this.currentLevelRadar, 500, 500, -20, 0, true);
 
-        this.currentLevelStock = 0;
-        this.stockUpgrade = this.initTabSprite(7, 'shipStock_', this.currentLevelStock, 500, 500, 30, 0, false);
+        this.reacteurLvl = 0;
+        this.reacteur = this.initTabSprite(7, 'shipReacteur_', this.reacteurLvl, 500, 500, 30, 0, false);
 
         this.currentLevelDrone = 0;
         this.droneUpgrade = this.initTabSprite(5, 'droneUpdate_', this.currentLevelDrone, 500, 500, 30, 0, true);
+
+        this.stockUpgradeLvl = 0;
+        this.stockUpgrade = this.initTabSprite(1, 'stockage_', this.stockUpgradeLvl, 500, 500, 30, 0, true);
 
         this.transformShipY = this.ship.y;
         this.transformShipX = this.ship.x;
@@ -89,7 +101,7 @@ export class Ship {
 
                 this.ship.y = this.transformShipY + Math.sin(this.deltaSumShip) * 17;
                 this.ship.x = this.transformShipX + Math.cos(this.deltaSumShip) * 5;
-                this.initMoveXY(this.stockUpgrade, 30, 20, this.deltaSum);
+                this.initMoveXY(this.reacteur, 30, 20, this.deltaSum);
             }
         });
 
@@ -149,6 +161,7 @@ export class Ship {
         return spriteAnim;
     }
 
+    // initial ship animated Sprite
     initShip(spriteName: string, width: number, height: number) {
         this.ship = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
             PIXI.loader.resources[spriteName].texture, width, height));
@@ -164,6 +177,7 @@ export class Ship {
         this.app.stage.addChild(this.ship);
     }
 
+    // First Tourelle
     initTourelle(spriteName: string, width: number, height: number) {
         this.tourelle = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
             PIXI.loader.resources[spriteName].texture, width, height));
@@ -177,6 +191,7 @@ export class Ship {
         this.ship.addChild(this.tourelle);
     }
 
+    // Change tourelle
     changeTourelleSprite() {
         this.iTourelle = ((this.iTourelle + 1) % 4) === 0 ? 1 : ((this.iTourelle + 1) % 4);
         const stringTourelle: string = 'tourelle_' + this.iTourelle;
@@ -189,4 +204,30 @@ export class Ship {
         this.tourelle.gotoAndPlay(0);
     }
 
+    initNewTourelle(spriteName: string, width: number, height: number) {
+            this.boolNewTourelle = true;
+            this.newTourelle = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
+                PIXI.loader.resources[spriteName].texture, width, height));
+            this.newTourelle.gotoAndPlay(0);
+            this.newTourelle.animationSpeed = 0.15;
+            this.newTourelle.loop = false;
+            this.newTourelle.visible = true;
+            this.newTourelle.texture.baseTexture.mipmap = true;
+            this.newTourelle.anchor.set(0.5);
+            this.newTourelle.onComplete = () => { this.changeNewTourelleSprite(); };
+            this.ship.addChild(this.newTourelle);
+    }
+
+    // Change tourelle
+    changeNewTourelleSprite() {
+        this.iNewTourelle = ((this.iNewTourelle + 1) % 7) === 0 ? 1 : ((this.iNewTourelle + 1) % 7);
+        const stringTourelle: string = 'newTourelle_' + this.iNewTourelle;
+
+        const tempTourelle = getFramesFromSpriteSheet(PIXI.loader.resources[stringTourelle].texture, 500, 500);
+
+        for ( let i = 0 ; i < this.newTourelle.textures.length ; i++) {
+            this.newTourelle.textures[i] = tempTourelle[i];
+        }
+        this.newTourelle.gotoAndPlay(0);
+    }
 }
