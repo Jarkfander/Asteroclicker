@@ -3,6 +3,18 @@ import { SearchResult } from "../../asteroid/search-result/searchResult";
 import { Quest } from "../../market/topbar/quest";
 
 
+export class UserUpgrade {
+    public lvl: number;
+    public timer: number;
+    public start: number;
+
+    constructor(lvl: number, timer: number, start: number) {
+        this.lvl = lvl;
+        this.timer = timer;
+        this.start = start;
+    }
+}
+
 export class User {
 
     public uid: string;
@@ -24,10 +36,10 @@ export class User {
 
     public oreAmounts: JSON;
 
-    public upgradesLvl:number[]; 
+    public upgrades: UserUpgrade[];
 
     constructor() {
-        this.upgradesLvl=Array();
+        this.upgrades = Array();
     }
 
     // 1000000 => 1 000 000
@@ -36,7 +48,7 @@ export class User {
         let newCredit = '';
         let boolVirgule = true;
         let tempi = 0;
-        for (let j = 0 ; j < (temp.length - 3) % 3  ; j++) {
+        for (let j = 0; j < (temp.length - 3) % 3; j++) {
             newCredit = newCredit + temp[j];
             tempi = j + 1;
         }
@@ -44,7 +56,7 @@ export class User {
             newCredit = newCredit + ' ';
         }
 
-        for (let i = tempi ; i < temp.length ; i++) {
+        for (let i = tempi; i < temp.length; i++) {
             if (temp[i + 1] === '.') {
                 boolVirgule = false;
             }

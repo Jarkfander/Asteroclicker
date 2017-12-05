@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User } from './user';
+import { User, UserUpgrade } from './user';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Subject } from 'rxjs/Subject';
@@ -133,12 +133,24 @@ export class UserService {
   }
 
   FillUpgrade(snapshot) {
-    this.currentUser.upgradesLvl[UpgradeType.mineRate]=snapshot.mineRateLvl;
-    this.currentUser.upgradesLvl[UpgradeType.storage]=snapshot.storageLvl;
-    this.currentUser.upgradesLvl[UpgradeType.research]=snapshot.researchLvl;
+    
+    this.currentUser.upgrades[UpgradeType.storage]=new UserUpgrade(
+      snapshot.storage.lvl,
+      snapshot.storage.timer,
+      snapshot.storage.start
+    );
+    
+    this.currentUser.upgrades[UpgradeType.mineRate]=new UserUpgrade(
+      snapshot.mineRate.lvl,
+      snapshot.mineRate.timer,
+      snapshot.mineRate.start
+    );
+    this.currentUser.upgrades[UpgradeType.research]=new UserUpgrade(
+      snapshot.research.lvl,
+      snapshot.research.timer,
+      snapshot.research.start
+    );
 
-    this.currentUser.timerRate = snapshot.timerRate;
-    this.currentUser.timerStock = snapshot.timerStock;
     this.currentUser.score = snapshot.score;
 
     this.upgradeSubject.next(this.currentUser);

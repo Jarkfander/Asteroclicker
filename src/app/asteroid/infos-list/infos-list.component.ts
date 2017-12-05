@@ -8,6 +8,7 @@ import { OreInfoService } from '../ore-info-view/ore-info.service';
 import { UpgradeService } from '../../ship/upgrade-list/upgrade.service';
 import { User } from '../../shared/user/user';
 import { UpgradeType } from '../../ship/upgrade-class/upgrade';
+import { Utils } from '../../shared/utils';
 
 
 @Component({
@@ -37,7 +38,7 @@ export class InfosViewComponent implements AfterViewInit {
     private socketS: SocketService, private oreInfoS: OreInfoService) {
     this.oreAmount = userS.currentUser.oreAmounts;
 
-    this.capacity =upgradeS.storage[userS.currentUser.upgradesLvl[UpgradeType.storage]].capacity;
+    this.capacity =upgradeS.storage[userS.currentUser.upgrades[UpgradeType.storage].lvl].capacity;
 
     this.asteroid = userS.currentUser.asteroid;
 
@@ -60,11 +61,11 @@ export class InfosViewComponent implements AfterViewInit {
       this.asteroid = user.asteroid;
     });
     this.userS.upgradeSubject.subscribe((user: User) => {
-      this.capacity =this.upgradeS.storage[this.userS.currentUser.upgradesLvl[UpgradeType.storage]].capacity;
+      this.capacity =this.upgradeS.storage[this.userS.currentUser.upgrades[UpgradeType.storage].lvl].capacity;
     });
     this.userS.searchSubject.subscribe((user: User) => {
       this.search = user.asteroidSearch;
-      this.timer = this.secondsToHHMMSS(this.search.timer / 1000);
+      this.timer = Utils.secondsToHHMMSS(this.search.timer / 1000);
       if (user.asteroidSearch.results.length != 3) {
         this.isModalOpen = false;
       }
@@ -94,17 +95,7 @@ export class InfosViewComponent implements AfterViewInit {
     this.socketS.rejectResults();
   }
 
-  secondsToHHMMSS(time: number) {
-    let hours = Math.floor(time / 3600);
-    let minutes = Math.floor((time - (hours * 3600)) / 60);
-    let seconds = Math.floor(time - (hours * 3600) - (minutes * 60));
 
-    let out = hours < 10 ? "0" + hours : "" + hours;
-    out += minutes < 10 ? ":0" + minutes : ":" + minutes;
-    out += seconds < 10 ? ":0" + seconds : ":" + seconds;
-
-    return out;
-  }
 
   showResult() {
     this.isModalOpen = true;
