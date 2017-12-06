@@ -21,8 +21,8 @@ export class ShipViewComponent implements AfterViewInit {
   private backgroundSky: PIXI.extras.AnimatedSprite;
   private numberOfSky: number;
 
-  constructor(private el: ElementRef, private render: Renderer2, private userS: UserService, private socketS: SocketService) {}
-  
+  constructor(private el: ElementRef, private render: Renderer2, private userS: UserService, private socketS: SocketService) { }
+
   ngAfterViewInit() {
     this.initPixi();
   }
@@ -49,6 +49,10 @@ export class ShipViewComponent implements AfterViewInit {
     this.initSky('skyV0_1', 500, 500, w, h);
 
     this.ship = new Ship(this.app);
+
+    this.ship.numberOfChest = this.userS.currentUser.numberOfChest;
+    this.ship.initChest();
+    this.clickChest();
     // init
     this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.storage].lvl, this.ship.stockUpgrade);
     // this.ship.autoUpgrade(this.userS.currentUser.mineRateLvl, this.ship.radarUpgrade);
@@ -59,9 +63,12 @@ export class ShipViewComponent implements AfterViewInit {
       this.ship.autoUpgrade(user.upgrades[UpgradeType.storage].lvl, this.ship.stockUpgrade);
 
       // this.ship.autoUpgrade(user.upgradesLvl[UpgradeType.storage], this.ship.reacteur);
+<<<<<<< HEAD
       this.ship = new Ship(this.app);
       this.ship.numberOfChest = this.userS.currentUser.numberOfChest;
       this.ship.initChest();
+=======
+>>>>>>> new chest
 
       // this.ship.autoUpgrade(user.mineRateLvl, this.ship.radarUpgrade);
       this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl, this.ship.droneUpgrade);
@@ -75,7 +82,17 @@ export class ShipViewComponent implements AfterViewInit {
 
     });
 
+<<<<<<< HEAD
+=======
+    this.userS.chestSubject.subscribe((user: User) => {
+      this.ship.numberOfChest = user.numberOfChest;
+      this.ship.supChest();
+      this.clickChest();
+    });
+>>>>>>> new chest
   }
+
+
 
   // initial ship animated Sprite
   initSky(spriteName: string, width: number, height: number, w, h) {
@@ -121,15 +138,27 @@ export class ShipViewComponent implements AfterViewInit {
       sprite.interactive = true;
       sprite.buttonMode = true;
       sprite.on('click', (event) => {
-          console.log('open chest' + i);
+        const tempAnimate = this.ship.animatedChestOpen(i);
+        tempAnimate.onComplete = () => {
 
-          // FAIRE OUVERTURE COFFRE i ICI et faire en sorte que quand c'est fini oncomplete ça fait le socket.removeChest 
-          this.socketS.removeChest();
+          let tempChest = this.userS.currentUser.chest[i].chest1;
+          this.ship.openChest(0, 0, Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
+
+          tempChest = this.userS.currentUser.chest[i].chest2;
+          this.ship.openChest(200, 0, Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
+
+          tempChest = this.userS.currentUser.chest[i].chest3;
+          this.ship.openChest(400, 0, Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
+
+          tempAnimate.interactive = true;
+          tempAnimate.buttonMode = true;
+          tempAnimate.on('click', () => {
+            this.socketS.removeChest();
+          });
+        };
       });
     }
   }
-
-
-
-
 }
+
+

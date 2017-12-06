@@ -79,11 +79,11 @@ export class User {
 }
 
 export class Chest {
-    chest1: number;
-    chest2: number;
-    chest3: number;
+    chest1: any;
+    chest2: any;
+    chest3: any;
 
-    constructor(_chest1: number, _chest2: number, _chest3: number) {
+    constructor(_chest1, _chest2, _chest3) {
         this.chest1 = _chest1;
         this.chest2 = _chest2;
         this.chest3 = _chest3;

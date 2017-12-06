@@ -77,6 +77,7 @@ export class LoadAnimation {
         this.addKeySpriteName('kaboom', './assets/kaboom.png');
         this.addKeySpriteName('woom', './assets/woom.png');
         this.addKeySpriteName('chestCargo', './assets/upgrade/shipRadar_1.png');
+        this.addKeySpriteName('chestCargo2', './assets/upgrade/shipRadar_2.png');
 
         this.onAssetsLoaded();
     }
