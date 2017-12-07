@@ -37,8 +37,7 @@ export class InfosViewComponent implements AfterViewInit {
   constructor(private userS: UserService, private upgradeS: UpgradeService,
     private socketS: SocketService, private oreInfoS: OreInfoService) {
     this.oreAmount = userS.currentUser.oreAmounts;
-
-    this.capacity =upgradeS.storage[userS.currentUser.upgrades[UpgradeType.storage].lvl].capacity;
+    this.capacity = upgradeS.storage[userS.currentUser.upgrades[UpgradeType.storage].lvl].capacity;
 
     this.asteroid = userS.currentUser.asteroid;
 

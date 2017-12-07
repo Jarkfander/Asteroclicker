@@ -5,21 +5,32 @@ class UpgradeShip {
     posX: number;
     posY: number;
     currentLevel: number;
+    tabLevel: Array<number>;
     tabAnimation: PIXI.extras.AnimatedSprite[];
 
     constructor(lvl: number, tabAnimation, posx: number, posy: number) {
+        this.tabLevel = [10, 20, 40, 65, 100, 150];
         this.tabAnimation = tabAnimation;
         this.posX = posx;
         this.posY = posy;
         this.currentLevel = lvl;
     }
 
+    lvlSelection(newlvl: number) {
+        for (let i = 0; i < this.tabLevel.length; i++) {
+            if (newlvl <= this.tabLevel[i]) {
+                return i + 1;
+            }
+        }
+
+    }
+
     spriteAdd(newlvl: number) {
-        const lvlModulo = (newlvl <= 5 ? 1 : Math.floor(newlvl / 5) + 1);
-        if (newlvl === 0 || lvlModulo === this.currentLevel) {
+        const lvltemp = this.lvlSelection(newlvl);
+        if (newlvl === 0 || lvltemp === this.currentLevel) {
             return null;
         }
-        this.currentLevel = lvlModulo;
+        this.currentLevel = lvltemp;
 
         for (let i = 0; i < this.currentLevel + 1; i++) {
             if (!this.tabAnimation[i]) {
@@ -43,6 +54,7 @@ export class Ship {
     spriteChest: PIXI.extras.AnimatedSprite;
     spriteChestParent: PIXI.Container;
     spriteChestTab: Array<PIXI.extras.AnimatedSprite>;
+    spriteTextChest: PIXI.Container;
     numberOfChest: number;
 
     app: PIXI.Application;
@@ -136,7 +148,7 @@ export class Ship {
     }
 
     spritesheetFirstAnimation(spriteName: string, width: number, height: number, decalagex: number,
-         decalagey: number, boolShipParent: boolean) {
+        decalagey: number, boolShipParent: boolean) {
         const spriteAnim = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
             PIXI.loader.resources[spriteName].texture, width, height));
         spriteAnim.gotoAndPlay(0);
@@ -204,24 +216,24 @@ export class Ship {
 
         const tempTourelle = getFramesFromSpriteSheet(PIXI.loader.resources[stringTourelle].texture, 500, 500);
 
-        for ( let i = 0 ; i < this.tourelle.textures.length ; i++) {
+        for (let i = 0; i < this.tourelle.textures.length; i++) {
             this.tourelle.textures[i] = tempTourelle[i];
         }
         this.tourelle.gotoAndPlay(0);
     }
 
     initNewTourelle(spriteName: string, width: number, height: number) {
-            this.boolNewTourelle = true;
-            this.newTourelle = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
-                PIXI.loader.resources[spriteName].texture, width, height));
-            this.newTourelle.gotoAndPlay(0);
-            this.newTourelle.animationSpeed = 0.15;
-            this.newTourelle.loop = false;
-            this.newTourelle.visible = true;
-            this.newTourelle.texture.baseTexture.mipmap = true;
-            this.newTourelle.anchor.set(0.5);
-            this.newTourelle.onComplete = () => { this.changeNewTourelleSprite(); };
-            this.ship.addChild(this.newTourelle);
+        this.boolNewTourelle = true;
+        this.newTourelle = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
+            PIXI.loader.resources[spriteName].texture, width, height));
+        this.newTourelle.gotoAndPlay(0);
+        this.newTourelle.animationSpeed = 0.15;
+        this.newTourelle.loop = false;
+        this.newTourelle.visible = true;
+        this.newTourelle.texture.baseTexture.mipmap = true;
+        this.newTourelle.anchor.set(0.5);
+        this.newTourelle.onComplete = () => { this.changeNewTourelleSprite(); };
+        this.ship.addChild(this.newTourelle);
     }
 
     // Change tourelle
@@ -231,7 +243,7 @@ export class Ship {
 
         const tempTourelle = getFramesFromSpriteSheet(PIXI.loader.resources[stringTourelle].texture, 500, 500);
 
-        for ( let i = 0 ; i < this.newTourelle.textures.length ; i++) {
+        for (let i = 0; i < this.newTourelle.textures.length; i++) {
             this.newTourelle.textures[i] = tempTourelle[i];
         }
         this.newTourelle.gotoAndPlay(0);
@@ -240,18 +252,19 @@ export class Ship {
     // Chest managed - - - - - - - -- - - - - - - -- - -
     initAnimatedChest() {
         const spriteChest = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
-            PIXI.loader.resources['chestCargo'].texture, 500, 500));
+            PIXI.loader.resources['coffre_anim1'].texture, 192, 250));
         spriteChest.gotoAndPlay(0);
         spriteChest.animationSpeed = 0.35;
         spriteChest.texture.baseTexture.mipmap = true;
         spriteChest.visible = true;
         spriteChest.anchor.set(0.5);
+        spriteChest.scale.set(0.45);
         return spriteChest;
     }
 
-    initAnimatedChestOpen() {
+    initAnimatedChestOpen(spriteName, w, h) {
         const spriteChest = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
-            PIXI.loader.resources['chestCargo2'].texture, 500, 500));
+            PIXI.loader.resources[spriteName].texture, w, h)); 
         spriteChest.gotoAndPlay(0);
         spriteChest.animationSpeed = 0.35;
         spriteChest.loop = false;
@@ -261,22 +274,44 @@ export class Ship {
         return spriteChest;
     }
 
+     initBulle(bulleName) {
+        const bulle = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
+            PIXI.loader.resources[bulleName].texture, 250, 162));
+        bulle.gotoAndPlay(0);
+        bulle.animationSpeed = 0.50;
+        bulle.texture.baseTexture.mipmap = true;
+        bulle.visible = true;
+        bulle.loop = false;
+        bulle.anchor.set(0.5);
+        bulle.scale.set(3);
+        bulle.y = -225;
+        return bulle;
+    }
+
+    animatedBulleOpen(i: number, bulleName) {
+        if (bulleName === 'bulle2') {
+            this.spriteChestTab[i].children[0].visible = false;
+        }
+        return this.spriteChestTab[i].addChild(this.initBulle(bulleName));
+    }
+
     // init all of chest
     initChest() {
         this.spriteChestParent = new PIXI.Container();
+        this.spriteTextChest = new PIXI.Container();
         this.spriteChestTab = new Array<PIXI.extras.AnimatedSprite>();
         this.ship.addChildAt(this.spriteChestParent, 5);
-        for (let i = 0; i < this.numberOfChest; i++) {
+        if (this.numberOfChest > 0) {
             this.spriteChestTab.push(this.initAnimatedChest());
-            this.spriteChestTab[i].x = Math.cos(((Math.PI * 2) / this.numberOfChest) * i) * 200 - 20;
-            this.spriteChestTab[i].y = Math.sin(((Math.PI * 2) / this.numberOfChest) * i) * 175 - 100;
-            this.spriteChestParent.addChild(this.spriteChestTab[i]);
+            this.spriteChestTab[0].x = 0;
+            this.spriteChestTab[0].y = 150;
+            this.spriteChestParent.addChild(this.spriteChestTab[0]);
         }
     }
 
     // remove chest for initChest
     supChest() {
-        for (let i = 0 ; i < this.spriteChestParent.children.length ; i++) {
+        for (let i = 0; i < this.spriteChestParent.children.length; i++) {
             this.spriteChestParent.removeChildAt(i);
         }
         delete this.spriteChestTab;
@@ -284,28 +319,32 @@ export class Ship {
         this.initChest();
     }
 
-    animatedChestOpen(i: number) {
-        return this.spriteChestTab[i].addChild(this.initAnimatedChestOpen());
+    animatedChestOpen(i: number, spriteName, w, h) {
+
+        return this.spriteChestTab[i].addChild(this.initAnimatedChestOpen(spriteName, w, h));
     }
 
-    openChest(x, y, textString: string, values) {
-        console.log(textString);
+    openChest(i, x, y, textString: string, values) {
         const sprite = PIXI.Sprite.fromImage('./assets/oreIcon/' + textString + 'Icon.png');
         if (textString === 'fer') {
             textString = 'IRON';
         } else {
             textString = textString.toUpperCase();
         }
-        const text = new PIXI.Text(textString + ' : ' + values, {fontFamily : 'Arial', fontSize: 17, fill : 0x0000000, align : 'center'});
-        text.x += x - 200;
-        text.y += y + 125;
+        const text = new PIXI.Text(textString +  ' :\n' + values,
+         { fontFamily: 'Montserrat-Black', fontSize: 23, fill: 0x0000000, align: 'center' });
+        text.x += x;
+        text.y += y;
 
-        sprite.x += x - 200;
-        sprite.y += y + 150;
-        sprite.scale.set(0.5);
+        if (textString === 'CREDIT') {
+            sprite.x += 20;
+        }
+        sprite.x += x;
+        sprite.y += y + 75;
+        sprite.scale.set(0.40);
 
-        this.spriteChestParent.addChildAt(sprite, 0);
-        this.spriteChestParent.addChildAt(text, 0);
+        this.spriteTextChest.addChild(sprite);
+        this.spriteTextChest.addChild(text);
     }
 
 }

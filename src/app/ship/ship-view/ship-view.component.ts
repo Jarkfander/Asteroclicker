@@ -59,22 +59,18 @@ export class ShipViewComponent implements AfterViewInit {
     this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl, this.ship.droneUpgrade);
     this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl + 2, this.ship.smokeRadarUpgrade);
 
+    if (this.userS.currentUser.upgrades[UpgradeType.storage].lvl >= 1 && !this.boolShipTourelle) {
+      this.ship.iNewTourelle = 4;
+      this.ship.initNewTourelle('newTourelle_4', 500, 500);
+      this.boolShipTourelle = true;
+    }
+
     this.userS.upgradeSubject.subscribe((user: User) => {
       this.ship.autoUpgrade(user.upgrades[UpgradeType.storage].lvl, this.ship.stockUpgrade);
-
-      // this.ship.autoUpgrade(user.upgradesLvl[UpgradeType.storage], this.ship.reacteur);
-<<<<<<< HEAD
-      this.ship = new Ship(this.app);
-      this.ship.numberOfChest = this.userS.currentUser.numberOfChest;
-      this.ship.initChest();
-=======
->>>>>>> new chest
-
-      // this.ship.autoUpgrade(user.mineRateLvl, this.ship.radarUpgrade);
       this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl, this.ship.droneUpgrade);
       this.ship.autoUpgrade(user.upgrades[UpgradeType.mineRate].lvl + 2, this.ship.smokeRadarUpgrade);
 
-      if (this.userS.currentUser.upgrades[UpgradeType.storage].lvl > 0 && !this.boolShipTourelle) {
+      if (this.userS.currentUser.upgrades[UpgradeType.storage].lvl >= 1 && !this.boolShipTourelle) {
         this.ship.iNewTourelle = 4;
         this.ship.initNewTourelle('newTourelle_4', 500, 500);
         this.boolShipTourelle = true;
@@ -82,14 +78,11 @@ export class ShipViewComponent implements AfterViewInit {
 
     });
 
-<<<<<<< HEAD
-=======
     this.userS.chestSubject.subscribe((user: User) => {
       this.ship.numberOfChest = user.numberOfChest;
       this.ship.supChest();
       this.clickChest();
     });
->>>>>>> new chest
   }
 
 
@@ -131,30 +124,51 @@ export class ShipViewComponent implements AfterViewInit {
     this.backgroundSky.gotoAndPlay(0);
   }
 
+  // Animation when you click on chest
   clickChest() {
-    for (let i = 0; i < this.ship.numberOfChest; i++) {
+    if (this.ship.numberOfChest > 0) {
       let sprite = new PIXI.Sprite;
-      sprite = this.ship.spriteChestTab[i];
+      sprite = this.ship.spriteChestTab[0];
       sprite.interactive = true;
       sprite.buttonMode = true;
       sprite.on('click', (event) => {
-        const tempAnimate = this.ship.animatedChestOpen(i);
+        this.ship.spriteChestTab[0].loop = false;
+        this.ship.animatedBulleOpen(0, 'bulle1');
+        this.ship.spriteChestTab[0].buttonMode = false;
+        this.ship.spriteChestTab[0].interactive = false;
+
+        const tempAnimate = this.ship.animatedChestOpen(0, 'coffre_anim2', 192, 250);
         tempAnimate.onComplete = () => {
+          let tempChest = this.userS.currentUser.chest[0].chest1;
+          this.ship.spriteChestTab[0].addChild(this.ship.spriteTextChest);
 
-          let tempChest = this.userS.currentUser.chest[i].chest1;
-          this.ship.openChest(0, 0, Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
+          const xTemp = -230;
+          const yTemp = -300;
+          this.ship.openChest(0, xTemp - 30, yTemp + 12,
+             Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
 
-          tempChest = this.userS.currentUser.chest[i].chest2;
-          this.ship.openChest(200, 0, Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
+          tempChest = this.userS.currentUser.chest[0].chest2;
+          this.ship.openChest(0, xTemp + 180 , yTemp - 75, Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
 
-          tempChest = this.userS.currentUser.chest[i].chest3;
-          this.ship.openChest(400, 0, Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
+          tempChest = this.userS.currentUser.chest[0].chest3;
+          this.ship.openChest(0, xTemp + 360, yTemp + 20, Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
 
           tempAnimate.interactive = true;
           tempAnimate.buttonMode = true;
           tempAnimate.on('click', () => {
-            this.socketS.removeChest();
+            this.ship.spriteTextChest.destroy();
+            this.ship.animatedBulleOpen(0, 'bulle2').onComplete = () => {
+              delete this.ship.spriteTextChest;
+              this.ship.animatedChestOpen(0, 'coffre_anim3', 192, 250).onComplete = () => {
+
+              };
+
+              this.ship.animatedChestOpen(0, 'explosionBulle', 350, 348).onComplete = () => {
+                this.socketS.removeChest();
+              };
+            };
           });
+
         };
       });
     }

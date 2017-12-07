@@ -99,7 +99,7 @@ export class SocketService {
   }
 
   connectionEstablished() {
-    let json = {};
+    const json = {};
 
     json['user'] = this.userS.currentUser.uid;
 
@@ -112,5 +112,13 @@ export class SocketService {
     json['user'] = this.userS.currentUser.uid;
 
     this.socket.emit('removeChest', json);
+  }
+
+  newChest() {
+    const json = {};
+    json['currentUser'] = this.userS.currentUser;
+    json['userID'] = this.userS.currentUser.uid;
+
+    this.socket.emit('newChest', json);
   }
 }
