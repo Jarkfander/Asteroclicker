@@ -14,26 +14,28 @@ export class MarketInfoComponent implements OnInit {
   @Input('oreName') oreName: string;
   @Input('color') color: string;
 
-  @ViewChild('canvas') canvas: ElementRef;
-
-  public chart: ManagedChart;
   public value: number;
+  public isModalOpen: boolean = false;
+  public recentValues: number[];
+  public histoValues: number[];
 
   constructor(private marketS: MarketService, private socketS: SocketService) {
-    
+
   }
 
   ngOnInit() {
 
-    const line = this.canvas.nativeElement.getContext('2d');
-    this.chart = new ManagedChart(line, 30, 'rgba('+this.color+')');
+    this.value = this.marketS.oreCosts[this.oreName]
+    [Object.keys(this.marketS.oreCosts[this.oreName])[29]];
 
-    this.value = this.marketS.currentOresCosts.getCostsFromString(this.oreName)
-    [Object.keys(this.marketS.currentOresCosts.getCostsFromString(this.oreName))[29]];
+    this.marketS.oreCostsSubject[this.oreName].subscribe((tab: number[]) => {
+      this.value = tab[Object.keys(tab)[29]];
+      this.recentValues=tab;
+    });
 
-    this.subjectOre();
-
-    this.chart.initTab(this.marketS.currentOresCosts.getCostsFromString(this.oreName));
+    this.marketS.oreHistorySubject[this.oreName].subscribe((tab: number[]) => {
+      this.histoValues=tab;
+    });
   }
 
   public SellOre/*moon*/(amount: number) {
@@ -44,12 +46,12 @@ export class MarketInfoComponent implements OnInit {
     this.socketS.buyOre(this.oreName, amount);
   }
 
-  subjectOre() {
-    this.marketS.getCostsSubjectFromString(this.oreName).subscribe((tab: number[]) => {
-      this.value = this.marketS.currentOresCosts.getCostsFromString(this.oreName)
-      [Object.keys(this.marketS.currentOresCosts.getCostsFromString(this.oreName))[29]];
-      this.chart.addNew(tab);
-    });
+  OpenHistory() {
+    this.isModalOpen = true;
+  }
+
+  CloseHistory() {
+    this.isModalOpen = false;
   }
 
 }

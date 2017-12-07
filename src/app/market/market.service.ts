@@ -1,41 +1,47 @@
 import { Injectable } from '@angular/core';
-import { OreCosts } from './oreCosts';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { Subject } from 'rxjs/Subject';
-import { OreTrends } from './oreTrends';
 
 @Injectable()
 export class MarketService {
 
   db: AngularFireDatabase;
-  currentOresCosts: OreCosts;
-  oreTrends: OreTrends;
 
-  OreCostsSubjectCarbon = new Subject<number[]>();
-  OreCostsSubjectTitanium = new Subject<number[]>();
-  OreCostsSubjectFer= new Subject<number[]>();
-  marketLoad: boolean = false;
+  oreCosts: {};
+  oreHistory: {};
+
+  oreTrends: {};
+
+  oreCostsSubject = {};
+  oreHistorySubject = {};
+
+  marketLoad: boolean;
 
   constructor(db: AngularFireDatabase) {
+
     this.db = db;
-    this.currentOresCosts = new OreCosts();
-    this.oreTrends = new OreTrends();
-    this.db.object('trading/carbon/recent').valueChanges().subscribe(
-      (snapshot: any) => {
-        this.FillOreCostsInitCarbon(snapshot);
-        this.marketLoad = true;
-      });
+    this.oreCosts = {};
+    this.oreHistory = {};
+    this.oreTrends = {};
 
-    this.db.object('trading/titanium/recent').valueChanges().subscribe(
+    this.db.object('trading').valueChanges().take(1).subscribe(
       (snapshot: any) => {
-        this.FillOreCostsInitTitanium(snapshot);
-        this.marketLoad = true;
-      });
-
-    this.db.object('trading/fer/recent').valueChanges().subscribe(
-      (snapshot: any) => {
-        this.FillOreCostsInitFer(snapshot);
-        this.marketLoad = true;
+        const keys = Object.keys(snapshot);
+        for (let i = 0; i < keys.length; i++) {
+          this.oreCostsSubject[keys[i]] = new Subject();
+          this.oreHistorySubject[keys[i]] = new Subject();
+          this.db.object('trading/' + keys[i] + "/recent").valueChanges().subscribe(
+            (trad: any) => {
+              this.FillOreCosts(keys[i], trad);
+              if (i == keys.length - 1) {
+                this.marketLoad = true;
+              }
+            });
+          this.db.object('trading/' + keys[i] + "/history").valueChanges().subscribe(
+            (histo: any) => {
+              this.FillOreHistory(keys[i], histo);
+            });
+        }
       });
 
     this.db.object('trend').valueChanges().subscribe(
@@ -45,43 +51,19 @@ export class MarketService {
   }
 
   FillOreTrends(snapshot) {
-    this.oreTrends.carbonTrend = snapshot.carbon;
-  }
-  // create the tab of stock
-  FillOreCostsInitCarbon(snapshot) {
-    this.currentOresCosts.carbonCosts = snapshot;
-    this.OreCostsSubjectCarbon.next(this.currentOresCosts.carbonCosts);
+    this.oreTrends = snapshot;
   }
 
-  // create the tab of stock
-  FillOreCostsInitTitanium(snapshot) {
-    this.currentOresCosts.titaniumCosts = snapshot;
-    this.OreCostsSubjectTitanium.next(this.currentOresCosts.titaniumCosts);
+
+  FillOreCosts(oreName, snapshot) {
+    this.oreCosts[oreName] = snapshot;
+    this.oreCostsSubject[oreName].next(snapshot);
   }
 
-  // create the tab of stock
-  FillOreCostsInitFer(snapshot) {
-    this.currentOresCosts.ferCosts = snapshot;
-    this.OreCostsSubjectFer.next(this.currentOresCosts.ferCosts);
+  FillOreHistory(oreName, snapshot) {
+    this.oreHistory[oreName] = snapshot;
+    this.oreHistorySubject[oreName].next(snapshot);
   }
-
-  UpdateOreTrend(delta: number, oreName: string) {
-    this.db.object('trend/' + oreName).set(this.oreTrends.getTrendFromString(oreName) + delta);
-  }
-
-  public getCostsSubjectFromString(oreName: string) {
-    switch (oreName) {
-        case 'carbon':
-            return this.OreCostsSubjectCarbon;
-        case 'titanium':
-            return this.OreCostsSubjectTitanium;
-        case 'fer':
-            return this.OreCostsSubjectFer;
-        default:
-            console.log('unknown material (subject)');
-            break;
-    }
-}
 
 }
 

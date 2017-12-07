@@ -1,8 +1,23 @@
+<app-modal class="col" *ngIf="isModalOpen">
 
-  <div class="market-item">
-    <div class="button-list">
+  <div class="closeLine">
+    <a href="#" (click)="CloseHistory()">Close</a>
+  </div>
+
+  History for {{oreName.toUpperCase()}} values
+  <app-curve-view *ngIf="historyValues!=null" [color]='color' [size]='30' [tab]='historyValues'></app-curve-view>
+
+</app-modal>
+
+<div class="market-item">
+  <div class="col">
+    <div class="row">
       <h2>{{oreName.toUpperCase()}}</h2>
-      <div>
+      <img class="button-info" (click)="OpenHistory();" src="../../../assets/icon/information.png" />
+    </div>
+    <div class="row">
+      <div class="button-list">
+
         <button type="button" class="btn-sell" (click)="SellOre(10);">Sell 10</button>
         for
         <b class="credit">{{ (value * 10).toFixed(1) }} cr</b>
@@ -22,8 +37,8 @@
         for
         <b class="credit">{{ (value * 100).toFixed(1) }} cr</b>
       </div>
-    </div>
-    <div class="curve">
-      <canvas #canvas></canvas>
+      <app-curve-view *ngIf="recentValues!=null" [color]='color' [size]='30' [tab]='recentValues'></app-curve-view>
+      
     </div>
   </div>
+</div>
