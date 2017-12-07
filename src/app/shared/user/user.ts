@@ -1,7 +1,6 @@
-import { Asteroid } from "../../asteroid/asteroid-view/asteroid";
-import { SearchResult } from "../../asteroid/search-result/searchResult";
-import { Quest } from "../../market/topbar/quest";
-
+import { Asteroid } from '../../asteroid/asteroid-view/asteroid';
+import { SearchResult } from '../../asteroid/search-result/SearchResult';
+import { Quest } from '../../market/topbar/quest';
 
 export class UserUpgrade {
     public lvl: number;
@@ -33,6 +32,8 @@ export class User {
     public asteroidSearch: SearchResult;
 
     public quest: Quest;
+    public chest: Array<Chest>;
+    public numberOfChest: number;
 
     public oreAmounts: JSON;
 
@@ -40,6 +41,7 @@ export class User {
 
     constructor() {
         this.upgrades = Array();
+        this.chest = new Array<Chest>();
     }
 
     // 1000000 => 1 000 000
@@ -68,4 +70,25 @@ export class User {
         return newCredit;
     }
 
+    public destroyChest() {
+        for (let i = 0; i < this.chest.length; i++) {
+            this.chest.pop();
+        }
+    }
+
 }
+
+export class Chest {
+    chest1: any;
+    chest2: any;
+    chest3: any;
+
+    constructor(_chest1, _chest2, _chest3) {
+        this.chest1 = _chest1;
+        this.chest2 = _chest2;
+        this.chest3 = _chest3;
+    }
+}
+
+
+

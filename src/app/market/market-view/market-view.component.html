@@ -5,7 +5,7 @@
   </div>
 
   History for {{oreName.toUpperCase()}} values
-  <app-curve-view *ngIf="historyValues!=null" [color]='color' [size]='30' [tab]='historyValues'></app-curve-view>
+  <app-curve-view *ngIf="histoValues!=null" [color]='color' [size]='60' [tab]='histoValues'></app-curve-view>
 
 </app-modal>
 
@@ -16,29 +16,21 @@
       <img class="button-info" (click)="OpenHistory();" src="../../../assets/icon/information.png" />
     </div>
     <div class="row">
-      <div class="button-list">
+      <div class="col">
+        <div >
 
-        <button type="button" class="btn-sell" (click)="SellOre(10);">Sell 10</button>
-        for
-        <b class="credit">{{ (value * 10).toFixed(1) }} cr</b>
-      </div>
-      <div>
-        <button type="button" class="btn-sell" (click)="SellOre(100);">Sell 100</button>
-        for
-        <b class="credit">{{ (value * 100).toFixed(1) }} cr</b>
-      </div>
-      <div>
-        <button type="button" class="btn-buy" (click)="BuyOre(10);">Buy 10</button>
-        for
-        <b class="credit">{{ (value* 10).toFixed(1) }} cr</b>
-      </div>
-      <div>
-        <button type="button" class="btn-buy" (click)="BuyOre(100);">Buy 100</button>
-        for
-        <b class="credit">{{ (value * 100).toFixed(1) }} cr</b>
+          <button type="button" class="btn-sell" (click)="SellOre(valuesMultiplicateur);">Sell {{valuesMultiplicateur.toFixed(1)}}</button>
+          for
+          <b class="credit">{{ (valuesTotal).toFixed(1) }} cr</b>
+        </div>
+        <div>
+          <button type="button" class="btn-buy" (click)="BuyOre(valuesMultiplicateur);">Buy {{valuesMultiplicateur.toFixed(1)}}</button>
+          for
+          <b class="credit">{{ (valuesTotal).toFixed(1) }} cr</b>
+        </div>
       </div>
       <app-curve-view *ngIf="recentValues!=null" [color]='color' [size]='30' [tab]='recentValues'></app-curve-view>
-      
+
     </div>
   </div>
 </div>
