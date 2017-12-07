@@ -1,19 +1,36 @@
+<app-modal class="col" *ngIf="isModalOpen">
 
-  <div class="market-item">
-    <div class="button-list">
+  <div class="closeLine">
+    <a href="#" (click)="CloseHistory()">Close</a>
+  </div>
+
+  History for {{oreName.toUpperCase()}} values
+  <app-curve-view *ngIf="histoValues!=null" [color]='color' [size]='60' [tab]='histoValues'></app-curve-view>
+
+</app-modal>
+
+<div class="market-item">
+  <div class="col">
+    <div class="row">
       <h2>{{oreName.toUpperCase()}}</h2>
-      <div>
-        <button type="button" class="btn-sell" (click)="SellOre(valuesMultiplicateur);">Sell {{valuesMultiplicateur.toFixed(1)}}</button>
-        for
-        <b class="credit">{{ (valuesTotal).toFixed(1) }} cr</b>
-      </div>
-      <div>
-        <button type="button" class="btn-buy" (click)="BuyOre(valuesMultiplicateur);">Buy {{valuesMultiplicateur.toFixed(1)}}</button>
-        for
-        <b class="credit">{{ (valuesTotal).toFixed(1) }} cr</b>
-      </div>
+      <img class="button-info" (click)="OpenHistory();" src="../../../assets/icon/information.png" />
     </div>
-    <div class="curve">
-      <canvas #canvas></canvas>
+    <div class="row">
+      <div class="col">
+        <div >
+
+          <button type="button" class="btn-sell" (click)="SellOre(valuesMultiplicateur);">Sell {{valuesMultiplicateur.toFixed(1)}}</button>
+          for
+          <b class="credit">{{ (valuesTotal).toFixed(1) }} cr</b>
+        </div>
+        <div>
+          <button type="button" class="btn-buy" (click)="BuyOre(valuesMultiplicateur);">Buy {{valuesMultiplicateur.toFixed(1)}}</button>
+          for
+          <b class="credit">{{ (valuesTotal).toFixed(1) }} cr</b>
+        </div>
+      </div>
+      <app-curve-view *ngIf="recentValues!=null" [color]='color' [size]='30' [tab]='recentValues'></app-curve-view>
+
     </div>
   </div>
+</div>

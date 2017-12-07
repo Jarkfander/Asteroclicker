@@ -18,33 +18,48 @@ export class MarketInfoComponent implements OnInit {
   @Input('oreName') oreName: string;
   @Input('color') color: string;
 
-  @ViewChild('canvas') canvas: ElementRef;
-
-  public chart: ManagedChart;
   public value: number;
+
+  public isModalOpen: boolean = false;
+  public recentValues: number[];
+  public histoValues: number[];
+
   public valuesMultiplicateur: number;
   public valuesTotal: any;
 
   constructor(private marketS: MarketService, private socketS: SocketService,
      private userS: UserService, private upgradeS: UpgradeService, private oreInfoS: OreInfoService) {
+
   }
 
   ngOnInit() {
 
-    const line = this.canvas.nativeElement.getContext('2d');
-    this.chart = new ManagedChart(line, 30, 'rgba(' + this.color + ')');
+    this.value = this.marketS.oreCosts[this.oreName]
+    [Object.keys(this.marketS.oreCosts[this.oreName])[29]];
 
-    const valueMarket = this.marketS.currentOresCosts.getCostsFromString(this.oreName)
-    [Object.keys(this.marketS.currentOresCosts.getCostsFromString(this.oreName))[29]];
-
-    this.value = valueMarket;
     this.valuesMultiplicateur = this.upgradeS.storage[this.userS.currentUser.upgrades[UpgradeType.storage].lvl].capacity * 0.02
-                                * this.oreInfoS.oreInfo[this.valuesOreInfo(this.oreName)].miningSpeed;
+                                * this.oreInfoS.getOreInfoByString(this.oreName).miningSpeed;
     this.valuesTotal = this.value * this.valuesMultiplicateur;
 
-    this.subjectOre();
+    this.recentValues=this.marketS.oreCosts[this.oreName];
+    this.histoValues=this.marketS.oreHistory[this.oreName];
 
-    this.chart.initTab(this.marketS.currentOresCosts.getCostsFromString(this.oreName));
+    this.marketS.oreCostsSubject[this.oreName].subscribe((tab: number[]) => {
+      this.value = tab[Object.keys(tab)[29]];
+      this.valuesTotal = this.value * this.valuesMultiplicateur;
+      this.recentValues=tab;
+    });
+
+    this.marketS.oreHistorySubject[this.oreName].subscribe((tab: number[]) => {
+      this.histoValues=tab;
+    });
+
+    this.userS.upgradeSubject.subscribe((user) => {
+      this.valuesMultiplicateur = this.upgradeS.storage[user.upgrades[UpgradeType.storage].lvl].capacity * 0.02
+      * this.oreInfoS.getOreInfoByString(this.oreName).miningSpeed;
+      this.valuesTotal = this.value * this.valuesMultiplicateur;
+    });
+
   }
 
   public SellOre/*moon*/(amount: number) {
@@ -55,29 +70,12 @@ export class MarketInfoComponent implements OnInit {
     this.socketS.buyOre(this.oreName, amount);
   }
 
-  public valuesOreInfo(stringName: string) {
-    if (stringName === 'carbon') {
-      return 0;
-    } else if (stringName === 'fer') {
-      return 1;
-    } else if (stringName === 'titanium') {
-      return 2;
-    }
+  OpenHistory() {
+    this.isModalOpen = true;
   }
 
-  subjectOre() {
-    this.marketS.getCostsSubjectFromString(this.oreName).subscribe((tab: number[]) => {
-      this.value = this.marketS.currentOresCosts.getCostsFromString(this.oreName)
-      [Object.keys(this.marketS.currentOresCosts.getCostsFromString(this.oreName))[29]];
-      this.valuesTotal = this.value * this.valuesMultiplicateur;
-      this.chart.addNew(tab);
-    });
-
-    this.userS.upgradeSubject.subscribe((user) => {
-      this.valuesMultiplicateur = this.upgradeS.storage[user.upgrades[UpgradeType.storage].lvl].capacity * 0.02
-      * this.oreInfoS.oreInfo[this.valuesOreInfo(this.oreName)].miningSpeed;
-      this.valuesTotal = this.value * this.valuesMultiplicateur;
-    });
+  CloseHistory() {
+    this.isModalOpen = false;
   }
 
 }

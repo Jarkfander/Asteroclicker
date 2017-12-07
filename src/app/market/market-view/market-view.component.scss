@@ -1,21 +1,16 @@
 
 .market-item{
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
     padding: 5px;
     margin: 5px;
     border: 1px solid white;
 
     .button-list{
         display: flex;
-        flex-direction: column;
-        justify-content: space-around;
         width: 30%;
     }
-
-    .curve{
-        width: 70%;
-        height: 100%;
-    }
+}
+.button-info{
+    height: 5%;
+    width: 5%;
 }
