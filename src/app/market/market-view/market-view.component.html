@@ -3,24 +3,14 @@
     <div class="button-list">
       <h2>{{oreName.toUpperCase()}}</h2>
       <div>
-        <button type="button" class="btn-sell" (click)="SellOre(10);">Sell 10</button>
+        <button type="button" class="btn-sell" (click)="SellOre(valuesMultiplicateur);">Sell {{valuesMultiplicateur.toFixed(1)}}</button>
         for
-        <b class="credit">{{ (value * 10).toFixed(1) }} cr</b>
+        <b class="credit">{{ (valuesTotal).toFixed(1) }} cr</b>
       </div>
       <div>
-        <button type="button" class="btn-sell" (click)="SellOre(100);">Sell 100</button>
+        <button type="button" class="btn-buy" (click)="BuyOre(valuesMultiplicateur);">Buy {{valuesMultiplicateur.toFixed(1)}}</button>
         for
-        <b class="credit">{{ (value * 100).toFixed(1) }} cr</b>
-      </div>
-      <div>
-        <button type="button" class="btn-buy" (click)="BuyOre(10);">Buy 10</button>
-        for
-        <b class="credit">{{ (value* 10).toFixed(1) }} cr</b>
-      </div>
-      <div>
-        <button type="button" class="btn-buy" (click)="BuyOre(100);">Buy 100</button>
-        for
-        <b class="credit">{{ (value * 100).toFixed(1) }} cr</b>
+        <b class="credit">{{ (valuesTotal).toFixed(1) }} cr</b>
       </div>
     </div>
     <div class="curve">

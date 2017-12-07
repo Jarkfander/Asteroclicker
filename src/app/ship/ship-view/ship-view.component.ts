@@ -5,6 +5,7 @@ import { UserService } from '../../shared/user/user.service';
 import { User } from '../../shared/user/user';
 import { UpgradeType } from '../upgrade-class/upgrade';
 import { getFramesFromSpriteSheet } from '../../loadAnimation';
+import { SocketService } from '../../shared/socket/socket.service';
 
 @Component({
   selector: 'app-ship-view',
@@ -20,7 +21,7 @@ export class ShipViewComponent implements AfterViewInit {
   private backgroundSky: PIXI.extras.AnimatedSprite;
   private numberOfSky: number;
 
-  constructor(private el: ElementRef, private render: Renderer2, private userS: UserService) { }
+  constructor(private el: ElementRef, private render: Renderer2, private userS: UserService, private socketS: SocketService) { }
 
   ngAfterViewInit() {
     this.initPixi();
@@ -48,19 +49,28 @@ export class ShipViewComponent implements AfterViewInit {
     this.initSky('skyV0_1', 500, 500, w, h);
 
     this.ship = new Ship(this.app);
+
+    this.ship.numberOfChest = this.userS.currentUser.numberOfChest;
+    this.ship.initChest();
+    this.clickChest();
     // init
     this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.storage].lvl, this.ship.stockUpgrade);
     // this.ship.autoUpgrade(this.userS.currentUser.mineRateLvl, this.ship.radarUpgrade);
     this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl, this.ship.droneUpgrade);
     this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl + 2, this.ship.smokeRadarUpgrade);
 
+    if (this.userS.currentUser.upgrades[UpgradeType.storage].lvl >= 1 && !this.boolShipTourelle) {
+      this.ship.iNewTourelle = 4;
+      this.ship.initNewTourelle('newTourelle_4', 500, 500);
+      this.boolShipTourelle = true;
+    }
+
     this.userS.upgradeSubject.subscribe((user: User) => {
       this.ship.autoUpgrade(user.upgrades[UpgradeType.storage].lvl, this.ship.stockUpgrade);
-      // this.ship.autoUpgrade(user.mineRateLvl, this.ship.radarUpgrade);
       this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl, this.ship.droneUpgrade);
       this.ship.autoUpgrade(user.upgrades[UpgradeType.mineRate].lvl + 2, this.ship.smokeRadarUpgrade);
 
-      if (this.userS.currentUser.upgrades[UpgradeType.storage].lvl > 0 && !this.boolShipTourelle) {
+      if (this.userS.currentUser.upgrades[UpgradeType.storage].lvl >= 1 && !this.boolShipTourelle) {
         this.ship.iNewTourelle = 4;
         this.ship.initNewTourelle('newTourelle_4', 500, 500);
         this.boolShipTourelle = true;
@@ -68,7 +78,14 @@ export class ShipViewComponent implements AfterViewInit {
 
     });
 
+    this.userS.chestSubject.subscribe((user: User) => {
+      this.ship.numberOfChest = user.numberOfChest;
+      this.ship.supChest();
+      this.clickChest();
+    });
   }
+
+
 
   // initial ship animated Sprite
   initSky(spriteName: string, width: number, height: number, w, h) {
@@ -107,4 +124,55 @@ export class ShipViewComponent implements AfterViewInit {
     this.backgroundSky.gotoAndPlay(0);
   }
 
+  // Animation when you click on chest
+  clickChest() {
+    if (this.ship.numberOfChest > 0) {
+      let sprite = new PIXI.Sprite;
+      sprite = this.ship.spriteChestTab[0];
+      sprite.interactive = true;
+      sprite.buttonMode = true;
+      sprite.on('click', (event) => {
+        this.ship.spriteChestTab[0].loop = false;
+        this.ship.animatedBulleOpen(0, 'bulle1');
+        this.ship.spriteChestTab[0].buttonMode = false;
+        this.ship.spriteChestTab[0].interactive = false;
+
+        const tempAnimate = this.ship.animatedChestOpen(0, 'coffre_anim2', 192, 250);
+        tempAnimate.onComplete = () => {
+          let tempChest = this.userS.currentUser.chest[0].chest1;
+          this.ship.spriteChestTab[0].addChild(this.ship.spriteTextChest);
+
+          const xTemp = -230;
+          const yTemp = -300;
+          this.ship.openChest(0, xTemp - 30, yTemp + 12,
+             Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
+
+          tempChest = this.userS.currentUser.chest[0].chest2;
+          this.ship.openChest(0, xTemp + 180 , yTemp - 75, Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
+
+          tempChest = this.userS.currentUser.chest[0].chest3;
+          this.ship.openChest(0, xTemp + 360, yTemp + 20, Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
+
+          tempAnimate.interactive = true;
+          tempAnimate.buttonMode = true;
+          tempAnimate.on('click', () => {
+            this.ship.spriteTextChest.destroy();
+            this.ship.animatedBulleOpen(0, 'bulle2').onComplete = () => {
+              delete this.ship.spriteTextChest;
+              this.ship.animatedChestOpen(0, 'coffre_anim3', 192, 250).onComplete = () => {
+
+              };
+
+              this.ship.animatedChestOpen(0, 'explosionBulle', 350, 348).onComplete = () => {
+                this.socketS.removeChest();
+              };
+            };
+          });
+
+        };
+      });
+    }
+  }
 }
+
+
