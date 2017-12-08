@@ -127,43 +127,59 @@ export class ShipViewComponent implements AfterViewInit {
   // Animation when you click on chest
   clickChest() {
     if (this.ship.numberOfChest > 0) {
-      let sprite = new PIXI.Sprite;
-      sprite = this.ship.spriteChestTab[0];
-      sprite.interactive = true;
-      sprite.buttonMode = true;
-      sprite.on('click', (event) => {
-        this.ship.spriteChestTab[0].loop = false;
-        this.ship.animatedBulleOpen(0, 'bulle1');
-        this.ship.spriteChestTab[0].buttonMode = false;
-        this.ship.spriteChestTab[0].interactive = false;
+      const tempSprite: any = this.ship.spriteChestParent.children;
+      tempSprite[0].interactive = true;
+      tempSprite[0].buttonMode = true;
+      tempSprite[0].on('click', (event) => {
+        tempSprite[0].visible = false;
+        tempSprite[0].buttonMode = false;
+        tempSprite[0].interactive = false;
 
-        const tempAnimate = this.ship.animatedChestOpen(0, 'coffre_anim2', 192, 250);
-        tempAnimate.onComplete = () => {
+        tempSprite[1].visible = true;
+        tempSprite[3].visible = true;
+        tempSprite[1].gotoAndPlay(0);
+        tempSprite[3].gotoAndPlay(0);
+        
+        tempSprite[1].onComplete = () => {
+          tempSprite[3].addChild(this.ship.spriteTextChest);
+          const xTemp = -50;
+          const yTemp = -10;
+
           let tempChest = this.userS.currentUser.chest[0].chest1;
-          this.ship.spriteChestTab[0].addChild(this.ship.spriteTextChest);
-
-          const xTemp = -230;
-          const yTemp = -300;
-          this.ship.openChest(0, xTemp - 30, yTemp + 12,
+          this.ship.openChestText(0, xTemp - 40, yTemp + 12,
              Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
 
           tempChest = this.userS.currentUser.chest[0].chest2;
-          this.ship.openChest(0, xTemp + 180 , yTemp - 75, Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
+          this.ship.openChestText(0, xTemp + 29 , yTemp - 25, Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
 
           tempChest = this.userS.currentUser.chest[0].chest3;
-          this.ship.openChest(0, xTemp + 360, yTemp + 20, Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
+          this.ship.openChestText(0, xTemp + 90, yTemp + 20, Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
 
-          tempAnimate.interactive = true;
-          tempAnimate.buttonMode = true;
-          tempAnimate.on('click', () => {
+          tempSprite[1].interactive = true;
+          tempSprite[1].buttonMode = true;
+          tempSprite[1].on('click', () => {
             this.ship.spriteTextChest.destroy();
-            this.ship.animatedBulleOpen(0, 'bulle2').onComplete = () => {
+            tempSprite[3].visible = false;
+
+            tempSprite[4].visible = true;
+            tempSprite[4].gotoAndPlay(0);
+
+            tempSprite[4].onComplete = () => {
+              tempSprite[4].visible = false;
+              tempSprite[1].visible = false;
+
+              tempSprite[5].visible = true;
+              tempSprite[5].gotoAndPlay(0);
+              tempSprite[2].visible = true;
+              tempSprite[2].gotoAndPlay(0);
+
               delete this.ship.spriteTextChest;
-              this.ship.animatedChestOpen(0, 'coffre_anim3', 192, 250).onComplete = () => {
+
+              tempSprite[2].onComplete = () => {
 
               };
 
-              this.ship.animatedChestOpen(0, 'explosionBulle', 350, 348).onComplete = () => {
+              tempSprite[5].onComplete = () => {
                 this.socketS.removeChest();
               };
             };

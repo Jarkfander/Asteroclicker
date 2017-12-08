@@ -5,12 +5,12 @@
     {{ userS.currentUser.quest.name }} :
     {{ (userS.currentUser.quest.valuesFinal - userS.currentUser.quest.values).toFixed(2) }} / {{userS.currentUser.quest.valuesFinal}}    
     <br> <br>
-    You Win: {{ userS.currentUser.quest.gain }} Credit.
+    You Win: {{ userS.currentUser.quest.gain }} Chest.
 </div>
 
 <div *ngIf="userS.currentUser.quest.gain === 0">
   Daily Quest: <br> <br>
-  New quest every 3 hours ! 
+  New quest every 1 hours ! 
 </div>
 <br> <br>
 <div *ngIf="questS.questGroup.values != 0">
