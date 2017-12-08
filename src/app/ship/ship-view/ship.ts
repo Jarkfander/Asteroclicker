@@ -51,9 +51,7 @@ export class Ship {
     deltaSumShip: number;
     deltaSum: number;
 
-    spriteChest: PIXI.extras.AnimatedSprite;
     spriteChestParent: PIXI.Container;
-    spriteChestTab: Array<PIXI.extras.AnimatedSprite>;
     spriteTextChest: PIXI.Container;
     numberOfChest: number;
 
@@ -79,6 +77,14 @@ export class Ship {
         this.app = app;
         this.deltaSum = 0;
 
+        // Init the font 
+        const text = new PIXI.Text(' ',
+        {
+            fontFamily: 'Montserrat-Black',
+            fontSize: '1px'
+        });
+        this.app.stage.addChild(text);
+
         this.boolNewTourelle = false;
 
         this.deltaSumShip = 0;
@@ -103,7 +109,7 @@ export class Ship {
 
         this.transformShipY = this.ship.y;
         this.transformShipX = this.ship.x;
-
+        
         // Listen for animate update
         this.app.ticker.add((delta) => {
             if (this.ship) {
@@ -250,81 +256,31 @@ export class Ship {
     }
 
     // Chest managed - - - - - - - -- - - - - - - -- - -
-    initAnimatedChest() {
-        const spriteChest = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
-            PIXI.loader.resources['coffre_anim1'].texture, 192, 250));
-        spriteChest.gotoAndPlay(0);
-        spriteChest.animationSpeed = 0.35;
-        spriteChest.texture.baseTexture.mipmap = true;
-        spriteChest.visible = true;
-        spriteChest.anchor.set(0.5);
-        spriteChest.scale.set(0.45);
-        return spriteChest;
-    }
-
-    initAnimatedChestOpen(spriteName, w, h) {
-        const spriteChest = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
-            PIXI.loader.resources[spriteName].texture, w, h)); 
-        spriteChest.gotoAndPlay(0);
-        spriteChest.animationSpeed = 0.35;
-        spriteChest.loop = false;
-        spriteChest.texture.baseTexture.mipmap = true;
-        spriteChest.visible = true;
-        spriteChest.anchor.set(0.5);
-        return spriteChest;
-    }
-
-     initBulle(bulleName) {
-        const bulle = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
-            PIXI.loader.resources[bulleName].texture, 250, 162));
-        bulle.gotoAndPlay(0);
-        bulle.animationSpeed = 0.50;
-        bulle.texture.baseTexture.mipmap = true;
-        bulle.visible = true;
-        bulle.loop = false;
-        bulle.anchor.set(0.5);
-        bulle.scale.set(3);
-        bulle.y = -225;
-        return bulle;
-    }
-
-    animatedBulleOpen(i: number, bulleName) {
-        if (bulleName === 'bulle2') {
-            this.spriteChestTab[i].children[0].visible = false;
-        }
-        return this.spriteChestTab[i].addChild(this.initBulle(bulleName));
-    }
-
     // init all of chest
     initChest() {
-        this.spriteChestParent = new PIXI.Container();
-        this.spriteTextChest = new PIXI.Container();
-        this.spriteChestTab = new Array<PIXI.extras.AnimatedSprite>();
-        this.ship.addChildAt(this.spriteChestParent, 5);
         if (this.numberOfChest > 0) {
-            this.spriteChestTab.push(this.initAnimatedChest());
-            this.spriteChestTab[0].x = 0;
-            this.spriteChestTab[0].y = 150;
-            this.spriteChestParent.addChild(this.spriteChestTab[0]);
+            this.spriteChestParent = new PIXI.Container();
+            this.spriteChestParent.x = 0;
+            this.spriteChestParent.y = 150;
+            this.initAnimationChest();
+            this.spriteChestParent.children[0].visible = true;
+            this.spriteTextChest = new PIXI.Container();
+            this.ship.addChildAt(this.spriteChestParent, 5);
         }
     }
 
     // remove chest for initChest
     supChest() {
-        for (let i = 0; i < this.spriteChestParent.children.length; i++) {
-            this.spriteChestParent.removeChildAt(i);
+        if (this.spriteChestParent) {
+            for (let i = 0 ; i < this.spriteChestParent.children.length; i++) {
+                this.spriteChestParent.children[i].destroy();
+            }
+            this.spriteChestParent.destroy(); // A VOIR SI BESOIn DE LE DETRUIRE !
+            this.initChest();
         }
-        delete this.spriteChestTab;
-        this.spriteChestParent.destroy();
-        this.initChest();
     }
 
-    animatedChestOpen(i: number, spriteName, w, h) {
-
-        return this.spriteChestTab[i].addChild(this.initAnimatedChestOpen(spriteName, w, h));
-    }
-
-    openChest(i, x, y, textString: string, values) {
+    openChestText(i, x, y, textString: string, values) {
         const sprite = PIXI.Sprite.fromImage('./assets/oreIcon/' + textString + 'Icon.png');
         if (textString === 'fer') {
             textString = 'IRON';
@@ -332,19 +288,55 @@ export class Ship {
             textString = textString.toUpperCase();
         }
         const text = new PIXI.Text(textString +  ' :\n' + values,
-         { fontFamily: 'Montserrat-Black', fontSize: 23, fill: 0x0000000, align: 'center' });
-        text.x += x;
+        {
+            fontFamily: 'Montserrat-Black',
+            fontSize: 8, fill: 0x0000000,
+            align: 'center'
+        });
+        text.x += x + 5;
         text.y += y;
 
         if (textString === 'CREDIT') {
-            sprite.x += 20;
+            sprite.x += 15;
         }
         sprite.x += x;
-        sprite.y += y + 75;
-        sprite.scale.set(0.40);
+        sprite.y += y - 20;
+        sprite.scale.set(0.15);
 
         this.spriteTextChest.addChild(sprite);
         this.spriteTextChest.addChild(text);
+    }
+
+
+    initAnimationChest() {
+        this.spriteChestParent.addChild(this.initAnimationFromSpriteName('coffre_anim1', 192, 250, true));
+        this.spriteChestParent.addChild(this.initAnimationFromSpriteName('coffre_anim2', 192, 250, false));
+        this.spriteChestParent.addChild(this.initAnimationFromSpriteName('coffre_anim3', 192, 250, false));
+        this.spriteChestParent.addChild(this.initAnimationFromSpriteName('bulle1', 250, 162, false));
+        this.initBull(3);
+        this.spriteChestParent.addChild(this.initAnimationFromSpriteName('bulle2', 250, 162, false));
+        this.initBull(4);
+        this.spriteChestParent.addChild(this.initAnimationFromSpriteName('explosionBulle', 350, 348, false));
+    }
+
+    initBull(i: number) {
+        const temp: any = this.spriteChestParent.children[i];
+        temp.animationSpeed = 0.50;
+        temp.anchor.set(0.5);
+        temp.scale.set(1);
+        temp.y = -100;
+    }
+    initAnimationFromSpriteName(spriteName, w, h, isLoop) {
+        const tempAnim = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
+            PIXI.loader.resources[spriteName].texture, w, h));
+        tempAnim.gotoAndPlay(0);
+        tempAnim.animationSpeed = 0.35;
+        tempAnim.loop = isLoop;
+        tempAnim.texture.baseTexture.mipmap = true;
+        tempAnim.visible = false;
+        tempAnim.anchor.set(0.5);
+        tempAnim.scale.set(0.45);
+        return tempAnim;
     }
 
 }
