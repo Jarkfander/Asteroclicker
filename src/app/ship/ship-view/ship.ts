@@ -127,7 +127,7 @@ export class Ship {
                 this.ship.x = this.transformShipX + Math.cos(this.deltaSumShip) * 5;
                 this.initMoveXY(this.reacteur, 30, 20, this.deltaSum);
 
-                // this.spriteChestParent.x = Math.sin(this.deltaSum * 100) * -5;
+                this.spriteChestParent.x = Math.sin(this.deltaSum * 100) * -5;
             }
         });
     }
