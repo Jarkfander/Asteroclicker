@@ -18,6 +18,7 @@ export class ManagedChart {
                 }]
             },
             options: {
+                maintainAspectRatio:false,
                 legend: {
                     display: false
                 },
