@@ -79,10 +79,10 @@ export class Ship {
 
         // Init the font 
         const text = new PIXI.Text(' ',
-        {
-            fontFamily: 'Montserrat-Black',
-            fontSize: '1px'
-        });
+            {
+                fontFamily: 'Montserrat-Black',
+                fontSize: '1px'
+            });
         this.app.stage.addChild(text);
 
         this.boolNewTourelle = false;
@@ -109,7 +109,7 @@ export class Ship {
 
         this.transformShipY = this.ship.y;
         this.transformShipX = this.ship.x;
-        
+
         // Listen for animate update
         this.app.ticker.add((delta) => {
             if (this.ship) {
@@ -127,7 +127,10 @@ export class Ship {
                 this.ship.x = this.transformShipX + Math.cos(this.deltaSumShip) * 5;
                 this.initMoveXY(this.reacteur, 30, 20, this.deltaSum);
 
-                this.spriteChestParent.x = Math.sin(this.deltaSum * 100) * -5;
+                if (this.spriteChestParent != null) {
+                    this.spriteChestParent.x = Math.sin(this.deltaSum * 100) * -5;
+                }
+
             }
         });
     }
@@ -272,7 +275,7 @@ export class Ship {
     // remove chest for initChest
     supChest() {
         if (this.spriteChestParent) {
-            for (let i = 0 ; i < this.spriteChestParent.children.length; i++) {
+            for (let i = 0; i < this.spriteChestParent.children.length; i++) {
                 this.spriteChestParent.children[i].destroy();
             }
             this.spriteChestParent.destroy(); // A VOIR SI BESOIn DE LE DETRUIRE !
@@ -287,12 +290,12 @@ export class Ship {
         } else {
             textString = textString.toUpperCase();
         }
-        const text = new PIXI.Text(textString +  ' :\n' + values,
-        {
-            fontFamily: 'Montserrat-Black',
-            fontSize: 8, fill: 0x0000000,
-            align: 'center'
-        });
+        const text = new PIXI.Text(textString + ' :\n' + values,
+            {
+                fontFamily: 'Montserrat-Black',
+                fontSize: 8, fill: 0x0000000,
+                align: 'center'
+            });
         text.x += x + 5;
         text.y += y;
 
