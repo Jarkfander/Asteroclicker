@@ -148,11 +148,11 @@ export class ShipViewComponent implements AfterViewInit {
           const yTemp = -10;
 
           let tempChest = this.userS.currentUser.chest[0].chest1;
-          this.ship.openChestText(0, xTemp - 40, yTemp + 12,
+          this.ship.openChestText(0, xTemp - 42, yTemp + 12,
              Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
 
           tempChest = this.userS.currentUser.chest[0].chest2;
-          this.ship.openChestText(0, xTemp + 29 , yTemp - 25, Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
+          this.ship.openChestText(0, xTemp + 27 , yTemp - 25, Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
 
           tempChest = this.userS.currentUser.chest[0].chest3;
           this.ship.openChestText(0, xTemp + 90, yTemp + 20, Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);

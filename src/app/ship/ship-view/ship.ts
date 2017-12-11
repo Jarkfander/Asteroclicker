@@ -127,7 +127,7 @@ export class Ship {
                 this.ship.x = this.transformShipX + Math.cos(this.deltaSumShip) * 5;
                 this.initMoveXY(this.reacteur, 30, 20, this.deltaSum);
 
-                if (this.spriteChestParent != null) {
+                if (this.spriteChestParent != null && this.spriteChestParent.children[4].visible) {
                     this.spriteChestParent.x = Math.sin(this.deltaSum * 100) * -5;
                 }
 
@@ -301,7 +301,7 @@ export class Ship {
                 fontSize: 8, fill: 0x0000000,
                 align: 'center'
             });
-        text.x += x + 5;
+        text.x += x + 2;
         text.y += y;
 
         if (textString === 'CREDIT') {
@@ -343,7 +343,7 @@ export class Ship {
         tempAnim.texture.baseTexture.mipmap = true;
         tempAnim.visible = false;
         tempAnim.anchor.set(0.5);
-        tempAnim.scale.set(0.45);
+        tempAnim.scale.set(0.60);
         return tempAnim;
     }
 

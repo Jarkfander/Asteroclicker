@@ -1,5 +1,5 @@
 
-<div *ngIf="userS.currentUser.quest.gain != 0">
+<div *ngIf="userS.currentUser.quest.gain != -1">
     Daily Quest: <br> <br>
     {{ userS.currentUser.quest.text }} <br>
     {{ userS.currentUser.quest.name }} :
@@ -8,7 +8,7 @@
     You Win: {{ userS.currentUser.quest.gain }} Chest.
 </div>
 
-<div *ngIf="userS.currentUser.quest.gain === 0">
+<div *ngIf="userS.currentUser.quest.gain === -1">
   Daily Quest: <br> <br>
   New quest every 1 hours ! 
 </div>
