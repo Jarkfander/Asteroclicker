@@ -285,7 +285,7 @@ export class Ship {
 
     openChestText(i, x, y, textString: string, values) {
         const sprite = PIXI.Sprite.fromImage('./assets/oreIcon/' + textString + 'Icon.png');
-        if (textString === 'fer') {
+        if (textString === 'iron') {
             textString = 'IRON';
         } else {
             textString = textString.toUpperCase();
