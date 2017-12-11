@@ -96,7 +96,7 @@ export class UserService {
   }
 
   FillChest(snapshot) {
-    this.currentUser.numberOfChest = snapshot.numberOfChest;
+    this.currentUser.numberOfChest = snapshot.numberOfChest;    
     this.currentUser.destroyChest();
     for (let i = 0; i < snapshot.numberOfChest; i++) {
       const tempString = 'chest' + i;
