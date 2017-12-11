@@ -259,26 +259,31 @@ export class Ship {
     }
 
     // Chest managed - - - - - - - -- - - - - - - -- - -
+
+    public initFirstChest() {
+        this.spriteChestParent = new PIXI.Container();
+        this.spriteChestParent.x = 0;
+        this.spriteChestParent.y = 150;
+        this.initAnimationChest();
+        this.ship.addChildAt(this.spriteChestParent, 5);
+    }
     // init all of chest
     initChest() {
         if (this.numberOfChest > 0) {
-            this.spriteChestParent = new PIXI.Container();
-            this.spriteChestParent.x = 0;
-            this.spriteChestParent.y = 150;
-            this.initAnimationChest();
-            this.spriteChestParent.children[0].visible = true;
             this.spriteTextChest = new PIXI.Container();
-            this.ship.addChildAt(this.spriteChestParent, 5);
+            this.spriteChestParent.children[0].visible = true;
         }
     }
 
     // remove chest for initChest
     supChest() {
         if (this.spriteChestParent) {
-            for (let i = 0; i < this.spriteChestParent.children.length; i++) {
-                this.spriteChestParent.children[i].destroy();
+            for (let i = 0 ; i < this.spriteChestParent.children.length; i++) {
+                this.spriteChestParent.children[i].visible = false;
             }
-            this.spriteChestParent.destroy(); // A VOIR SI BESOIn DE LE DETRUIRE !
+            if (this.spriteTextChest) {
+                this.spriteTextChest.destroy(); 
+            }
             this.initChest();
         }
     }

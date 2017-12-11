@@ -51,14 +51,16 @@ export class ShipViewComponent implements AfterViewInit {
     this.ship = new Ship(this.app);
 
     this.ship.numberOfChest = this.userS.currentUser.numberOfChest;
+    this.ship.initFirstChest();
     this.ship.initChest();
     this.clickChest();
+    
     // init
     this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.storage].lvl, this.ship.stockUpgrade);
     // this.ship.autoUpgrade(this.userS.currentUser.mineRateLvl, this.ship.radarUpgrade);
     this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl, this.ship.droneUpgrade);
     this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl + 2, this.ship.smokeRadarUpgrade);
-
+    
     if (this.userS.currentUser.upgrades[UpgradeType.storage].lvl >= 1 && !this.boolShipTourelle) {
       this.ship.iNewTourelle = 4;
       this.ship.initNewTourelle('newTourelle_4', 500, 500);
