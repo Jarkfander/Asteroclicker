@@ -20,10 +20,10 @@
     </li> 
     <li>  
         <a href="#" (click)="openQuestModal()">Daily quest</a> <br>  
-      <div *ngIf="userS.currentUser.quest.gain != 0">
+      <div *ngIf="userS.currentUser.quest.gain != -1">
         {{ (userS.currentUser.quest.valuesFinal - userS.currentUser.quest.values).toFixed(2) }} / {{userS.currentUser.quest.valuesFinal}} {{userS.currentUser.quest.type}}    
       </div>
-      <div *ngIf="userS.currentUser.quest.gain == 0">
+      <div *ngIf="userS.currentUser.quest.gain == -1">
           No quest for now.
       </div>
     </li>
