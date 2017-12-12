@@ -52,6 +52,8 @@ export class Ship {
     deltaSum: number;
 
     spriteChestParent: PIXI.Container;
+    spriteTextOpenChest: PIXI.Sprite;
+    boolParentChest: boolean;
     spriteTextChest: PIXI.Container;
     numberOfChest: number;
 
@@ -110,6 +112,16 @@ export class Ship {
         this.transformShipY = this.ship.y;
         this.transformShipX = this.ship.x;
 
+        this.spriteTextOpenChest = PIXI.Sprite.fromImage('../../assets/capsule/youHaveNew.png')
+        this.spriteTextOpenChest.visible = false;
+        this.spriteTextOpenChest.anchor.set(0.5);
+        this.spriteTextOpenChest.scale.set(1.25);
+        this.spriteTextOpenChest.x = app.renderer.width / 2;
+        this.spriteTextOpenChest.y = app.renderer.height / 2 + 100;
+        this.app.stage.addChild(this.spriteTextOpenChest);
+
+        this.boolParentChest = false;
+        let deltaChest = 0;
         // Listen for animate update
         this.app.ticker.add((delta) => {
             if (this.ship) {
@@ -127,10 +139,21 @@ export class Ship {
                 this.ship.x = this.transformShipX + Math.cos(this.deltaSumShip) * 5;
                 this.initMoveXY(this.reacteur, 30, 20, this.deltaSum);
 
-                if (this.spriteChestParent != null && this.spriteChestParent.children[4].visible) {
-                    this.spriteChestParent.x = Math.sin(this.deltaSum * 100) * -5;
-                }
 
+                if (this.boolParentChest) {
+                    if ( this.spriteChestParent.y <= 151 ) {
+                        this.boolParentChest = false;
+                        this.spriteTextOpenChest.visible = false;
+                    }
+                    this.spriteTextOpenChest.alpha -= 0.007; 
+                    this.spriteChestParent.y = 300 - deltaChest;
+                    deltaChest += 1;
+                } else {
+                    if (this.spriteChestParent != null && this.spriteChestParent.children[4].visible) {
+                        this.spriteChestParent.x = Math.sin(this.deltaSum * 100) * -5;
+                    }
+                    deltaChest = 0;                    
+                }
             }
         });
     }
@@ -263,7 +286,7 @@ export class Ship {
     public initFirstChest() {
         this.spriteChestParent = new PIXI.Container();
         this.spriteChestParent.x = 0;
-        this.spriteChestParent.y = 150;
+        this.spriteChestParent.y = 300;
         this.initAnimationChest();
         this.ship.addChildAt(this.spriteChestParent, 5);
     }
@@ -271,6 +294,10 @@ export class Ship {
     initChest() {
         if (this.numberOfChest > 0) {
             this.spriteTextChest = new PIXI.Container();
+            this.spriteChestParent.y = 300;
+            this.boolParentChest = true;
+            this.spriteTextOpenChest.visible = true;        
+            this.spriteTextOpenChest.alpha = 1;             
             this.spriteChestParent.children[0].visible = true;
         }
     }
@@ -334,6 +361,7 @@ export class Ship {
         temp.scale.set(1);
         temp.y = -100;
     }
+    
     initAnimationFromSpriteName(spriteName, w, h, isLoop) {
         const tempAnim = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
             PIXI.loader.resources[spriteName].texture, w, h));
@@ -343,7 +371,7 @@ export class Ship {
         tempAnim.texture.baseTexture.mipmap = true;
         tempAnim.visible = false;
         tempAnim.anchor.set(0.5);
-        tempAnim.scale.set(0.60);
+        tempAnim.scale.set(0.50);
         return tempAnim;
     }
 

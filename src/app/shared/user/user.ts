@@ -39,6 +39,8 @@ export class User {
 
     public upgrades: UserUpgrade[];
 
+    public event: number;
+
     constructor() {
         this.upgrades = Array();
         this.chest = new Array<Chest>();

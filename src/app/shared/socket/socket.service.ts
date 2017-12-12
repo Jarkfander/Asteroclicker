@@ -119,6 +119,8 @@ export class SocketService {
     json['currentUser'] = this.userS.currentUser;
     json['userID'] = this.userS.currentUser.uid;
 
+    console.log(json);
+
     this.socket.emit('newChest', json);
   }
 }
