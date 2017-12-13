@@ -21,6 +21,8 @@ export class UpgradeInfoComponent implements OnInit {
 
   public timer: string = "00:00:00";
 
+  public enableButton: boolean = true;
+
   @Input("UpgradeLvls") upgradeLvls: UpgradeLvls;
 
   constructor(private socketS: SocketService, private userS: UserService) {
@@ -28,15 +30,23 @@ export class UpgradeInfoComponent implements OnInit {
 
   ngOnInit() {
     this.updateData(this.userS.currentUser);
+    this.updateEnable(this.userS.currentUser.credit);
     this.userS.upgradeSubject.subscribe((user: User) => {
       this.updateData(user);
+    });
+    this.userS.creditSubject.subscribe((user: User) => {
+      this.updateEnable(user.credit);
     });
     setInterval(() => { this.updateTimer(); }, 1000);
   }
 
+  updateEnable(credit: number) {
+    this.enableButton = this.upgradeLvls.lvls[this.userUpgrade.lvl+1].cost<credit;
+  }
+
   updateTimer() {
     if (this.userUpgrade.start != 0) {
-        this.socketS.updateUpgradeTimer(this.upgradeLvls.lvls[0].name);
+      this.socketS.updateUpgradeTimer(this.upgradeLvls.lvls[0].name);
     }
   }
 

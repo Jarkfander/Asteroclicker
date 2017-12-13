@@ -2,10 +2,10 @@
   <div class="closeLine">
     <a href="#" (click)="CloseHistory()">Close</a>
   </div> 
-  History of {{oreName.toUpperCase()}} cost for the last 30 hours
+  History of {{oreName.toUpperCase()}} cost for the last 24 hours
 
   <div class="histo-curve">
-    <app-curve-view *ngIf="histoValues!=null" [color]='color' [size]='30' [tab]='histoValues'></app-curve-view>
+    <app-curve-view *ngIf="histoValues!=null" [color]='color' [size]='24' [tab]='histoValues'></app-curve-view>
   </div>
 </app-modal>
 
