@@ -121,6 +121,7 @@ export class AsteroidViewComponent implements AfterViewInit {
 
     this.userS.eventSubject.subscribe((user: User) => {
       this.asteroidSprite.eventOk = user.event;
+      console.log('NOUVEAU EVENT');
       this.asteroidSprite.activEvent();
       this.clickCapsule();
     });
@@ -268,7 +269,8 @@ export class AsteroidViewComponent implements AfterViewInit {
         tempSprite[2].gotoAndPlay(0);
         tempSprite[2].onComplete = () => {
           this.socketS.newChest();
-        }
+          this.socketS.deleteEvent();
+        };
       });
     }
   }

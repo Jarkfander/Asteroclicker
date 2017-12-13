@@ -97,7 +97,7 @@ export class AsteroidSprite {
                             this.eventOk = 0;
                             this.compteurEvent = 0;
                         }
-                        this.activEvent();                        
+                        this.activEvent();
                     }
                 }
             }
@@ -405,7 +405,7 @@ export class AsteroidSprite {
             this.spriteEventParent.children[1].visible = false;
             this.spriteEventParent.children[2].visible = false;
             this.spriteEventParent.x = -100;
-            this.spriteEventParent.y = 650;  
+            this.spriteEventParent.y = 650;
         }
     }
 
