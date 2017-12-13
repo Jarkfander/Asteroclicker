@@ -15,7 +15,7 @@
         <b class="credit">{{upgradeLvls.lvls[userUpgrade.lvl+1].cost}} cr</b>
     </p>
 </div>
-<button *ngIf="userUpgrade.start==0" class="btn-upgrade" (click)="levelUp()">Upgrade</button>
+<button *ngIf="userUpgrade.start==0" [disabled]="!enableButton"class="btn-upgrade" (click)="levelUp()">Upgrade</button>
 <button *ngIf="userUpgrade.start!=0" disabled="true" class="btn-upgrade" >{{timer}}</button>
 </div>
 <br>

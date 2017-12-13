@@ -30,6 +30,9 @@ export class ManagedChart {
                         ticks: {
                             beginAtZero: false
                         }
+                    }],
+                    xAxes: [{
+                        display: false
                     }]
                 }
             }
