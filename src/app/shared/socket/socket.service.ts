@@ -118,7 +118,12 @@ export class SocketService {
     const json = {};
     json['currentUser'] = this.userS.currentUser;
     json['userID'] = this.userS.currentUser.uid;
-
     this.socket.emit('newChest', json);
+  }
+
+  deleteEvent() {
+    const json = {};
+    json['userID'] = this.userS.currentUser.uid;
+    this.socket.emit('deleteEvent', json);
   }
 }

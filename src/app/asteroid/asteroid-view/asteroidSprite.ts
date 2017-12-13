@@ -26,10 +26,19 @@ export class AsteroidSprite {
     krashAnim: PIXI.extras.AnimatedSprite;
     kaboomAnim: PIXI.extras.AnimatedSprite;
     woomAnim: PIXI.extras.AnimatedSprite;
+
+    eventOk : number;
+    spriteEventParent: PIXI.Container;
+    boolEvent: boolean;
+    compteurEvent: number;
+
     asteroidFolders;
     constructor(x: number, y: number, app: PIXI.Application, asteroid: Asteroid, numberOfSprite: number) {
 
         this.app = app;
+        this.eventOk = 0;
+        this.compteurEvent = 0;
+        this.boolEvent = false;
         this.asteroid = new Array<PIXI.Sprite>();
         this.asteroidFolders = { 'carbon': new Array<PIXI.Texture>(), 'titanium': new Array<PIXI.Texture>(), 'iron': new Array<PIXI.Texture>() };
         this.checkAstero = false;
@@ -46,6 +55,13 @@ export class AsteroidSprite {
         this.xBaseAsteroid = this.app.renderer.width / 2;
         this.yBaseAsteroid = this.app.renderer.height / 2;
 
+        this.spriteEventParent = new PIXI.Container();
+        this.spriteEventParent.addChild(this.initAnimationFromSpriteName('coffre_anim1', 192, 250, true));    
+        this.spriteEventParent.addChild(this.initAnimationFromSpriteName('coffre_anim3', 192, 250, false));    
+        this.spriteEventParent.addChild(this.initAnimationFromSpriteName('explosionBulle', 350, 348, false));
+        
+        this.app.stage.addChild(this.spriteEventParent);      
+        
         let shakeAstex = 1;
         let shakeAstey = 1;
         // Listen for animate update
@@ -70,6 +86,20 @@ export class AsteroidSprite {
                 }
                 this.asteroid[0].x = this.xBaseAsteroid + Math.cos(shakeAstex) * -5;
                 this.asteroid[0].y = this.yBaseAsteroid + Math.sin(shakeAstey) * -15;
+
+                if (this.boolEvent) {
+                    this.spriteEventParent.x += 1;
+                    this.spriteEventParent.y -= 1;
+                    if (this.spriteEventParent.x > 1500) {
+                        this.boolEvent = false;
+                        this.compteurEvent++;
+                        if (this.compteurEvent > 3) {
+                            this.eventOk = 0;
+                            this.compteurEvent = 0;
+                        }
+                        this.activEvent();
+                    }
+                }
             }
         });
     }
@@ -366,4 +396,31 @@ export class AsteroidSprite {
             this.compteurBoom++;
         }
     }
+
+    // Event ==>
+    activEvent() {
+        if ( this.eventOk === 1 ) {
+            this.boolEvent = true;
+            this.spriteEventParent.children[0].visible = true;
+            this.spriteEventParent.children[1].visible = false;
+            this.spriteEventParent.children[2].visible = false;
+            this.spriteEventParent.x = -100;
+            this.spriteEventParent.y = 650;
+        }
+    }
+
+    initAnimationFromSpriteName(spriteName, w, h, isLoop) {
+        const tempAnim = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
+            PIXI.loader.resources[spriteName].texture, w, h));
+        tempAnim.gotoAndPlay(0);
+        tempAnim.animationSpeed = 0.35;
+        tempAnim.loop = isLoop;
+        tempAnim.texture.baseTexture.mipmap = true;
+        tempAnim.visible = false;
+        tempAnim.anchor.set(0.5);
+        tempAnim.scale.set(0.25);
+        tempAnim.rotation = 45;
+        return tempAnim;
+    }
+
 }
