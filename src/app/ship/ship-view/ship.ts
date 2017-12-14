@@ -52,6 +52,8 @@ export class Ship {
     deltaSum: number;
 
     spriteChestParent: PIXI.Container;
+    spriteTextOpenChest: PIXI.Sprite;
+    boolParentChest: boolean;
     spriteTextChest: PIXI.Container;
     numberOfChest: number;
 
@@ -110,6 +112,16 @@ export class Ship {
         this.transformShipY = this.ship.y;
         this.transformShipX = this.ship.x;
 
+        this.spriteTextOpenChest = PIXI.Sprite.fromImage('../../assets/capsule/youHaveNew.png')
+        this.spriteTextOpenChest.visible = false;
+        this.spriteTextOpenChest.anchor.set(0.5);
+        this.spriteTextOpenChest.scale.set(1.25);
+        this.spriteTextOpenChest.x = app.renderer.width / 2;
+        this.spriteTextOpenChest.y = app.renderer.height / 2 + 100;
+        this.app.stage.addChild(this.spriteTextOpenChest);
+
+        this.boolParentChest = false;
+        let deltaChest = 0;
         // Listen for animate update
         this.app.ticker.add((delta) => {
             if (this.ship) {
@@ -127,10 +139,21 @@ export class Ship {
                 this.ship.x = this.transformShipX + Math.cos(this.deltaSumShip) * 5;
                 this.initMoveXY(this.reacteur, 30, 20, this.deltaSum);
 
-                if (this.spriteChestParent != null) {
-                    this.spriteChestParent.x = Math.sin(this.deltaSum * 100) * -5;
-                }
 
+                if (this.boolParentChest) {
+                    if ( this.spriteChestParent.y <= 151 ) {
+                        this.boolParentChest = false;
+                        this.spriteTextOpenChest.visible = false;
+                    }
+                    this.spriteTextOpenChest.alpha -= 0.007; 
+                    this.spriteChestParent.y = 300 - deltaChest;
+                    deltaChest += 1;
+                } else {
+                    if (this.spriteChestParent != null && this.spriteChestParent.children[4].visible) {
+                        this.spriteChestParent.x = Math.sin(this.deltaSum * 100) * -5;
+                    }
+                    deltaChest = 0;                    
+                }
             }
         });
     }
@@ -259,26 +282,35 @@ export class Ship {
     }
 
     // Chest managed - - - - - - - -- - - - - - - -- - -
+
+    public initFirstChest() {
+        this.spriteChestParent = new PIXI.Container();
+        this.spriteChestParent.x = 0;
+        this.spriteChestParent.y = 300;
+        this.initAnimationChest();
+        this.ship.addChildAt(this.spriteChestParent, 5);
+    }
     // init all of chest
     initChest() {
         if (this.numberOfChest > 0) {
-            this.spriteChestParent = new PIXI.Container();
-            this.spriteChestParent.x = 0;
-            this.spriteChestParent.y = 150;
-            this.initAnimationChest();
-            this.spriteChestParent.children[0].visible = true;
             this.spriteTextChest = new PIXI.Container();
-            this.ship.addChildAt(this.spriteChestParent, 5);
+            this.spriteChestParent.y = 300;
+            this.boolParentChest = true;
+            this.spriteTextOpenChest.visible = true;        
+            this.spriteTextOpenChest.alpha = 1;             
+            this.spriteChestParent.children[0].visible = true;
         }
     }
 
     // remove chest for initChest
     supChest() {
         if (this.spriteChestParent) {
-            for (let i = 0; i < this.spriteChestParent.children.length; i++) {
-                this.spriteChestParent.children[i].destroy();
+            for (let i = 0 ; i < this.spriteChestParent.children.length; i++) {
+                this.spriteChestParent.children[i].visible = false;
             }
-            this.spriteChestParent.destroy(); // A VOIR SI BESOIn DE LE DETRUIRE !
+            if (this.spriteTextChest) {
+                this.spriteTextChest.destroy(); 
+            }
             this.initChest();
         }
     }
@@ -296,7 +328,7 @@ export class Ship {
                 fontSize: 8, fill: 0x0000000,
                 align: 'center'
             });
-        text.x += x + 5;
+        text.x += x + 2;
         text.y += y;
 
         if (textString === 'CREDIT') {
@@ -329,6 +361,7 @@ export class Ship {
         temp.scale.set(1);
         temp.y = -100;
     }
+    
     initAnimationFromSpriteName(spriteName, w, h, isLoop) {
         const tempAnim = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
             PIXI.loader.resources[spriteName].texture, w, h));
@@ -338,7 +371,7 @@ export class Ship {
         tempAnim.texture.baseTexture.mipmap = true;
         tempAnim.visible = false;
         tempAnim.anchor.set(0.5);
-        tempAnim.scale.set(0.45);
+        tempAnim.scale.set(0.50);
         return tempAnim;
     }
 

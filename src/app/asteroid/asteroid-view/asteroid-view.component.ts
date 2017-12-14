@@ -43,8 +43,6 @@ export class AsteroidViewComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this.initAsteroid();
-
-
     setInterval(() => {
       this.socketS.incrementOre(this.userS.currentUser.asteroid.ore,
         parseFloat((this.userS.currentUser.currentMineRate *
@@ -85,7 +83,10 @@ export class AsteroidViewComponent implements AfterViewInit {
         this.asteroidClick();
       });
     }
-
+    this.asteroidSprite.eventOk = this.userS.currentUser.event;
+    this.asteroidSprite.activEvent();
+    this.clickCapsule();    
+    
     this.drone.laserFirstState = this.userS.currentUser.oreAmounts[this.userS.currentUser.asteroid.ore]
 
     this.userS.asteroidSubject.subscribe((user: User) => {
@@ -118,6 +119,11 @@ export class AsteroidViewComponent implements AfterViewInit {
       this.asteroid = user.asteroid;
     });
 
+    this.userS.eventSubject.subscribe((user: User) => {
+      this.asteroidSprite.eventOk = user.event;
+      this.asteroidSprite.activEvent();
+      this.clickCapsule();
+    });
     this.initializeEmmiter();
   }
 
@@ -246,5 +252,25 @@ export class AsteroidViewComponent implements AfterViewInit {
       this.backgroundSky.textures[i] = tempBackground[i];
     }
     this.backgroundSky.gotoAndPlay(0);
+  }
+
+
+  clickCapsule() {
+    if (this.asteroidSprite.eventOk === 1) {
+      const tempSprite: any = this.asteroidSprite.spriteEventParent.children;
+      tempSprite[0].interactive = true;
+      tempSprite[0].buttonMode = true;
+      tempSprite[0].on('click', (event) => {
+        tempSprite[0].visible = false;
+        tempSprite[1].visible = true;
+        tempSprite[2].visible = true;
+        tempSprite[1].gotoAndPlay(0);
+        tempSprite[2].gotoAndPlay(0);
+        tempSprite[2].onComplete = () => {
+          this.socketS.newChest();
+          this.socketS.deleteEvent();
+        };
+      });
+    }
   }
 }

@@ -31,6 +31,7 @@ export class UserService {
   searchSubject = new Subject<User>();
   upgradeSubject = new Subject<User>();
   mineRateSubject = new Subject<User>();
+  eventSubject = new Subject<User>();
 
   constructor(db: AngularFireDatabase, afAuth: AngularFireAuth,
     private upgradeS: UpgradeService, private marketS: MarketService) {
@@ -72,6 +73,11 @@ export class UserService {
           (snapshot: any) => {
             this.FillUpgrade(snapshot);
           });
+
+        this.db.object('users/' + auth.uid + '/event').valueChanges().subscribe(
+          (snapshot: any) => {
+            this.FillEvent(snapshot);
+          });
       }
     });
   }
@@ -98,6 +104,8 @@ export class UserService {
   FillChest(snapshot) {
     this.currentUser.numberOfChest = snapshot.numberOfChest;
     this.currentUser.destroyChest();
+    delete this.currentUser.chest;
+    this.currentUser.chest = new Array<Chest>();
     for (let i = 0; i < snapshot.numberOfChest; i++) {
       const tempString = 'chest' + i;
       this.currentUser.chest.push(new Chest(snapshot[tempString][0], snapshot[tempString][1], snapshot[tempString][2]));
@@ -148,6 +156,11 @@ export class UserService {
     this.incrementCounter();
   }
 
+  FillEvent(snapshot) {
+    this.currentUser.event = snapshot;
+    this.eventSubject.next(this.currentUser);
+  }
+  
   FillUpgrade(snapshot) {
     
     this.currentUser.upgrades[UpgradeType.storage]=new UserUpgrade(
