@@ -141,20 +141,19 @@ export class ShipViewComponent implements AfterViewInit {
         tempSprite[3].visible = true;
         tempSprite[1].gotoAndPlay(0);
         tempSprite[3].gotoAndPlay(0);
-        
         tempSprite[1].onComplete = () => {
           tempSprite[3].addChild(this.ship.spriteTextChest);
           const xTemp = -50;
           const yTemp = -10;
 
-          let tempChest = this.userS.currentUser.chest[0].chest1;
+          let tempChest = this.userS.currentUser.chest[this.ship.numberOfChest - 1].chest1;
           this.ship.openChestText(0, xTemp - 42, yTemp + 12,
              Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
 
-          tempChest = this.userS.currentUser.chest[0].chest2;
+          tempChest = this.userS.currentUser.chest[this.ship.numberOfChest - 1].chest2;
           this.ship.openChestText(0, xTemp + 27 , yTemp - 25, Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
 
-          tempChest = this.userS.currentUser.chest[0].chest3;
+          tempChest = this.userS.currentUser.chest[this.ship.numberOfChest - 1].chest3;
           this.ship.openChestText(0, xTemp + 90, yTemp + 20, Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
 
           tempSprite[1].interactive = true;
@@ -162,11 +161,13 @@ export class ShipViewComponent implements AfterViewInit {
           tempSprite[1].on('click', () => {
             this.ship.spriteTextChest.destroy();
             tempSprite[3].visible = false;
-
+            tempSprite[1].interactive = false;
+            tempSprite[1].buttonMode = false;
             tempSprite[4].visible = true;
             tempSprite[4].gotoAndPlay(0);
 
             tempSprite[4].onComplete = () => {
+
               tempSprite[4].visible = false;
               tempSprite[1].visible = false;
 
@@ -178,7 +179,6 @@ export class ShipViewComponent implements AfterViewInit {
               delete this.ship.spriteTextChest;
 
               tempSprite[2].onComplete = () => {
-
               };
 
               tempSprite[5].onComplete = () => {

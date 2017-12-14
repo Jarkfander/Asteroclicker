@@ -121,7 +121,6 @@ export class AsteroidViewComponent implements AfterViewInit {
 
     this.userS.eventSubject.subscribe((user: User) => {
       this.asteroidSprite.eventOk = user.event;
-      console.log('NOUVEAU EVENT');
       this.asteroidSprite.activEvent();
       this.clickCapsule();
     });
