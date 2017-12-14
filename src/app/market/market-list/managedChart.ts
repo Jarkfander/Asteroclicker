@@ -42,7 +42,7 @@ export class ManagedChart {
     // we have to change the values random with the bdd values
     public initTab(tab: any[]) {
         const tabKey = Object.keys(tab);
-        for (let i = 0; i < this.numberOfvalues ; i++) {
+        for (let i = tabKey.length-this.numberOfvalues; i < tabKey.length ; i++) {
             this.addData(new Date(parseFloat(tabKey[i])).getSeconds(), tab[ tabKey[i] ]);
         }
         this.myChart.update();
@@ -50,8 +50,8 @@ export class ManagedChart {
 
     public addNew(tab: any[]) {
         const tabKey = Object.keys(tab);
-        this.removeDataAndAddData(new Date(parseFloat(tabKey[this.numberOfvalues - 1])).getSeconds(),
-                                  tab[ tabKey[this.numberOfvalues - 1] ]);
+        this.removeDataAndAddData(new Date(parseFloat(tabKey[tabKey.length-1])).getSeconds(),
+                                  tab[ tabKey[tabKey.length-1] ]);
     }
 
     addData(label, data) {
