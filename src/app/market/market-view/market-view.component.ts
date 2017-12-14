@@ -35,7 +35,7 @@ export class MarketInfoComponent implements OnInit {
   ngOnInit() {
 
     this.value = this.marketS.oreCosts[this.oreName]
-    [Object.keys(this.marketS.oreCosts[this.oreName])[29]];
+    [Object.keys(this.marketS.oreCosts[this.oreName])[Object.keys(this.marketS.oreCosts[this.oreName]).length-1]];
 
     this.valuesMultiplicateur = this.upgradeS.storage[this.userS.currentUser.upgrades[UpgradeType.storage].lvl].capacity * 0.02
                                 * this.oreInfoS.getOreInfoByString(this.oreName).miningSpeed;
@@ -45,7 +45,7 @@ export class MarketInfoComponent implements OnInit {
     this.histoValues=this.marketS.oreHistory[this.oreName];
 
     this.marketS.oreCostsSubject[this.oreName].subscribe((tab: number[]) => {
-      this.value = tab[Object.keys(tab)[29]];
+      this.value = tab[Object.keys(tab)[Object.keys(tab).length-1]];
       this.valuesTotal = this.value * this.valuesMultiplicateur;
       this.recentValues=tab;
     });
