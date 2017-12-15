@@ -9,6 +9,9 @@ import { UserService } from '../../../shared/user/user.service';
   imports: [
     CommonModule
   ],
+  exports:[
+    RankingComponent
+  ],
   declarations: [RankingComponent],
   providers: [UserService, RankingService]
 })
