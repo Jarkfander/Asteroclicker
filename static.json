@@ -1,0 +1,8 @@
+{
+    "root": "dist/browser",
+    "clean_urls": false,
+    "https_only": true,
+    "routes": {
+      "/**": "index.html"
+    }
+  }
