@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
 import { UserService } from '../user/user.service';
+import { environment } from '../../../environments/environment';
 
 
 @Injectable()
 export class SocketService {
 
-  //private url = 'http://localhost:4000';
-  //private url = 'http://192.168.0.252:4000';
-  private url = 'https://asteroclickerserver.herokuapp.com/';
+  private url = environment.socketUrl;
 
   private socket;
 
