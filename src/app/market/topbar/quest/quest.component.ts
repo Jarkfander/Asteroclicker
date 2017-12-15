@@ -10,7 +10,7 @@ import { UserService } from '../../../shared/user/user.service';
 })
 export class QuestComponent implements AfterViewInit {
 
-  constructor(private userS: UserService, private questS: QuestService) {
+  constructor(public userS: UserService, public questS: QuestService) {
   }
 
   ngAfterViewInit(): void {

@@ -8,6 +8,9 @@ import { UserService } from '../../../shared/user/user.service';
   imports: [
     CommonModule
   ],
+  exports:[
+    QuestComponent
+  ],
   declarations: [QuestComponent],
   providers: [UserService, QuestService]
 })

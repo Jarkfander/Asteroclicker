@@ -19,9 +19,9 @@ export class AppComponent {
 
   loadAnimation: LoadAnimation;
 
-  constructor(private userS: UserService, private upgradeS: UpgradeService,
-    private marketS: MarketService,
-    private questS: QuestService, private rankingS: RankingService, private oreInfoS: OreInfoService ) {
+  constructor(public userS: UserService, public upgradeS: UpgradeService,
+    public marketS: MarketService,
+    public questS: QuestService, public rankingS: RankingService, public oreInfoS: OreInfoService ) {
     this.loadAnimation = new LoadAnimation();
   }
 

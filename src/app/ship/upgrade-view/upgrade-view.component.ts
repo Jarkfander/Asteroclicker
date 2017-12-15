@@ -14,8 +14,8 @@ import { Utils } from '../../shared/utils';
 })
 export class UpgradeInfoComponent implements OnInit {
 
-  private upgradeCaraKeys: string[];
-  private nextupgradeCaraKeys: string[];
+  public upgradeCaraKeys: string[];
+  public nextupgradeCaraKeys: string[];
 
   public userUpgrade: UserUpgrade;
 

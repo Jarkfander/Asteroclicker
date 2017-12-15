@@ -16,7 +16,7 @@ export class TopbarComponent implements AfterViewInit {
 
   public isModalOpenQuest: boolean;
   public isModalOpenRank: boolean;
-  constructor(private userS: UserService, private questS: QuestService, private socketS: SocketService) {
+  constructor(public userS: UserService, public questS: QuestService, private socketS: SocketService) {
     this.name = userS.currentUser.name;
     this.credit = userS.currentUser.credit;
   }
