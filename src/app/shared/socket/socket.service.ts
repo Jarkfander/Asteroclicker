@@ -6,9 +6,9 @@ import { UserService } from '../user/user.service';
 @Injectable()
 export class SocketService {
 
-  private url = 'http://localhost:4000';
+  //private url = 'http://localhost:4000';
   //private url = 'http://192.168.0.252:4000';
-  //private url = 'http://90.87.137.242:4000';
+  private url = 'https://asteroclickerserver.herokuapp.com/';
 
   private socket;
 

@@ -12,5 +12,6 @@ export const environment = {
     projectId: "asteroclicker",
     storageBucket: "",
     messagingSenderId: "200480343396"
-  }
+  },
+  socketUrl:"http://localhost:4000"
 };
