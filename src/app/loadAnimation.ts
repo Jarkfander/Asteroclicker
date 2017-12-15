@@ -81,6 +81,10 @@ export class LoadAnimation {
             this.addKeySpriteName('bulle' + i, './assets/capsule/bulle_anim' + i + '.png');
         }
 
+        for (let i = 1; i < 4; i++) {
+            this.addKeySpriteName('fxClick_' + i, './assets/fxClick/Bandes_click_' + i + '.png');
+        }
+
         this.addKeySpriteName('explosionBulle', './assets/capsule/explosion_spritesheet.png');
 
         this.addKeySpriteName('Boum', './assets/Boum.png');

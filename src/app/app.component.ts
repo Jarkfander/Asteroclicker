@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MarketService } from './market/market.service';
 import { LoadAnimation } from './loadAnimation';
@@ -15,7 +15,9 @@ import { OreInfoService } from './asteroid/ore-info-view/ore-info.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+
   title = 'app';
+  loadingImage = true;
 
   loadAnimation: LoadAnimation;
 
@@ -23,10 +25,17 @@ export class AppComponent {
     public marketS: MarketService,
     public questS: QuestService, public rankingS: RankingService, public oreInfoS: OreInfoService ) {
     this.loadAnimation = new LoadAnimation();
+    this.loadingImage = true;
+    if (this.loadingImage) {
+      setInterval(() => {
+        this.loadingImage = false;
+      }, 2000 * 10);
+    }
   }
 
   public ValiderLogIn(log, pswd) {
     this.userS.LogIn(log, pswd);
 
   }
+
 }

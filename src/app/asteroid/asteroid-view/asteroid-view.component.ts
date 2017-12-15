@@ -85,8 +85,9 @@ export class AsteroidViewComponent implements AfterViewInit {
     }
     this.asteroidSprite.eventOk = this.userS.currentUser.event;
     this.asteroidSprite.activEvent();
-    this.clickCapsule();    
-    
+    this.clickCapsule();
+    this.asteroidSprite.initAnimationFxClick(w, h);
+
     this.drone.laserFirstState = this.userS.currentUser.oreAmounts[this.userS.currentUser.asteroid.ore]
 
     this.userS.asteroidSubject.subscribe((user: User) => {
