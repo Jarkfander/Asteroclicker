@@ -27,7 +27,6 @@ export class UpgradeInfoComponent implements OnInit {
 
   constructor(private socketS: SocketService, private userS: UserService) {
   }
-
   ngOnInit() {
     this.updateData(this.userS.currentUser);
     this.updateEnable(this.userS.currentUser.credit);
