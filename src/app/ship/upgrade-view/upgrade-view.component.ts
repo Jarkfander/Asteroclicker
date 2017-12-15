@@ -15,7 +15,7 @@ import { Utils } from '../../shared/utils';
 export class UpgradeInfoComponent implements OnInit {
 
   public upgradeCaraKeys: string[];
-  public nextupgradeCaraKeys: string[];
+  public nextUpgradeCaraKeys: string[];
 
   public userUpgrade: UserUpgrade;
 
@@ -54,7 +54,7 @@ export class UpgradeInfoComponent implements OnInit {
     this.userUpgrade = user.upgrades[this.upgradeLvls.type];
     this.timer = Utils.secondsToHHMMSS(this.userUpgrade.timer / 1000);
     this.upgradeCaraKeys = Object.keys(this.upgradeLvls.lvls[this.userUpgrade.lvl].cara);
-    this.nextupgradeCaraKeys = Object.keys(this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].cara);
+    this.nextUpgradeCaraKeys = Object.keys(this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].cara);
     this.upgradeLvls.lvls[this.userUpgrade.lvl].displayName;
   }
 
