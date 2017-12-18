@@ -27,7 +27,9 @@ export class AsteroidSprite {
     kaboomAnim: PIXI.extras.AnimatedSprite;
     woomAnim: PIXI.extras.AnimatedSprite;
 
-    eventOk : number;
+    spriteFxContainer: PIXI.Container;
+
+    eventOk: number;
     spriteEventParent: PIXI.Container;
     boolEvent: boolean;
     compteurEvent: number;
@@ -56,12 +58,12 @@ export class AsteroidSprite {
         this.yBaseAsteroid = this.app.renderer.height / 2;
 
         this.spriteEventParent = new PIXI.Container();
-        this.spriteEventParent.addChild(this.initAnimationFromSpriteName('coffre_anim1', 192, 250, true));    
-        this.spriteEventParent.addChild(this.initAnimationFromSpriteName('coffre_anim3', 192, 250, false));    
-        this.spriteEventParent.addChild(this.initAnimationFromSpriteName('explosionBulle', 350, 348, false));
-        
-        this.app.stage.addChild(this.spriteEventParent);      
-        
+        this.spriteEventParent.addChild(this.initAnimationFromSpriteEvent('coffre_anim1', 192, 250, true));
+        this.spriteEventParent.addChild(this.initAnimationFromSpriteEvent('coffre_anim3', 192, 250, false));
+        this.spriteEventParent.addChild(this.initAnimationFromSpriteEvent('explosionBulle', 350, 348, false));
+
+        this.app.stage.addChild(this.spriteEventParent);
+
         let shakeAstex = 1;
         let shakeAstey = 1;
         // Listen for animate update
@@ -397,9 +399,62 @@ export class AsteroidSprite {
         }
     }
 
+
+    // Animation on click fx in border
+
+    initAnimationFxClick(w: number, h: number) {
+        this.spriteFxContainer = new PIXI.Container();
+        this.spriteFxContainer.width = w;
+        this.spriteFxContainer.height = h;
+
+        this.spriteFxContainer.addChild(this.initAnimationFromSpriteName('fxClick_1', 500, 500, w, h, false));
+        this.spriteFxContainer.addChild(this.initAnimationFromSpriteName('fxClick_2', 500, 500, w, h, true));
+        this.spriteFxContainer.addChild(this.initAnimationFromSpriteName('fxClick_3', 500, 500, w, h, false));
+        this.app.stage.addChild(this.spriteFxContainer);
+    }
+
+    startAnimFx() {
+        const tempSprite: any = this.spriteFxContainer.children;
+        tempSprite[0].visible = true;
+        tempSprite[0].gotoAndPlay(0);
+        tempSprite[0].onComplete = () => {
+            tempSprite[0].visible = false;
+            tempSprite[1].gotoAndPlay(0);
+            tempSprite[1].visible = true;
+        };
+    }
+
+    endAnimFx() {
+        const tempSprite: any = this.spriteFxContainer.children;
+        tempSprite[1].loop = false;
+        tempSprite[1].onComplete = () => {
+            tempSprite[1].visible = false;
+            tempSprite[2].gotoAndPlay(0);
+            tempSprite[2].visible = true;
+            tempSprite[2].onComplete = () => {
+                tempSprite[2].visible = false;
+                tempSprite[1].loop = true;
+            };
+        };
+    }
+
+    initAnimationFromSpriteName(spriteName, w, h, wSize, hSize, isLoop) {
+        const tempAnim = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
+            PIXI.loader.resources[spriteName].texture, w, h));
+        tempAnim.gotoAndPlay(0);
+        tempAnim.animationSpeed = 0.25;
+        tempAnim.alpha = 0.25;
+        tempAnim.loop = isLoop;
+        tempAnim.texture.baseTexture.mipmap = true;
+        tempAnim.width = wSize;
+        tempAnim.height = hSize;
+        tempAnim.visible = false;
+        return tempAnim;
+    }
+
     // Event ==>
     activEvent() {
-        if ( this.eventOk === 1 ) {
+        if (this.eventOk === 1) {
             this.boolEvent = true;
             this.spriteEventParent.children[0].visible = true;
             this.spriteEventParent.children[1].visible = false;
@@ -409,7 +464,7 @@ export class AsteroidSprite {
         }
     }
 
-    initAnimationFromSpriteName(spriteName, w, h, isLoop) {
+    initAnimationFromSpriteEvent(spriteName, w, h, isLoop) {
         const tempAnim = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
             PIXI.loader.resources[spriteName].texture, w, h));
         tempAnim.gotoAndPlay(0);

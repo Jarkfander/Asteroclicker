@@ -31,8 +31,7 @@ class UpgradeShip {
             return null;
         }
         this.currentLevel = lvltemp;
-
-        for (let i = 0; i < this.currentLevel + 1; i++) {
+        for (let i = 0; i < this.currentLevel; i++) {
             if (!this.tabAnimation[i]) {
                 break;
             }
@@ -107,12 +106,12 @@ export class Ship {
         this.droneUpgrade = this.initTabSprite(5, 'droneUpdate_', this.currentLevelDrone, 500, 500, 30, 0, true);
 
         this.stockUpgradeLvl = 0;
-        this.stockUpgrade = this.initTabSprite(1, 'stockage_', this.stockUpgradeLvl, 500, 500, 30, 0, true);
+        this.stockUpgrade = this.initTabSprite(5, 'stockage_', this.stockUpgradeLvl, 500, 500, 30, 0, true);
 
         this.transformShipY = this.ship.y;
         this.transformShipX = this.ship.x;
 
-        this.spriteTextOpenChest = PIXI.Sprite.fromImage('../../assets/capsule/youHaveNew.png')
+        this.spriteTextOpenChest = PIXI.Sprite.fromImage('../../assets/capsule/youHaveNew.png');
         this.spriteTextOpenChest.visible = false;
         this.spriteTextOpenChest.anchor.set(0.5);
         this.spriteTextOpenChest.scale.set(1.25);
@@ -152,7 +151,7 @@ export class Ship {
                     if (this.spriteChestParent != null && this.spriteChestParent.children[4].visible) {
                         this.spriteChestParent.x = Math.sin(this.deltaSum * 100) * -5;
                     }
-                    deltaChest = 0;                    
+                    deltaChest = 0;
                 }
             }
         });
@@ -220,6 +219,7 @@ export class Ship {
         this.ship.visible = true;
         this.ship.texture.baseTexture.mipmap = true;
         this.ship.anchor.set(0.5);
+        this.ship.cacheAsBitmap = true;
 
         this.ship.x = this.app.renderer.width / 2 - 20;
         this.ship.y = this.app.renderer.height / 2;
@@ -227,7 +227,7 @@ export class Ship {
         this.app.stage.addChild(this.ship);
     }
 
-    // First Tourelle
+    // Tourelle init - - - - - - - -  - - - - -  - - - - - - - - - - - -  - - - - - - - - - - - - -
     initTourelle(spriteName: string, width: number, height: number) {
         this.tourelle = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
             PIXI.loader.resources[spriteName].texture, width, height));

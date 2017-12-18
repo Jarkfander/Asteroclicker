@@ -85,7 +85,7 @@ export class SocketService {
     let json = {};
 
     json['user'] = this.userS.currentUser.uid;
-
+    json['distance'] = 1000;
     this.socket.emit('updateAsteroidTimer', json);
   }
 

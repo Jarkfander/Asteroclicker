@@ -29,7 +29,6 @@ export class LoadAnimation {
             this.addKeySpriteName('skyV1_' + i, './assets/sky/Cielv1_p' + i + '.png');
         }
 
-
         // Laser
         this.addKeySpriteName('laser', './assets/laser_(n2).png');
         this.addKeySpriteName('ship', './assets/upgrade/ship.png');
@@ -68,7 +67,7 @@ export class LoadAnimation {
         }
 
         // stock animation
-        for (let i = 1; i < 2; i++) {
+        for (let i = 1; i < 6; i++) {
             this.addKeySpriteName('stockage_' + i, './assets/upgrade/storage/stockage_' + i + '.png');
         }
 
@@ -79,6 +78,10 @@ export class LoadAnimation {
 
         for (let i = 1; i < 3; i++) {
             this.addKeySpriteName('bulle' + i, './assets/capsule/bulle_anim' + i + '.png');
+        }
+
+        for (let i = 1; i < 4; i++) {
+            this.addKeySpriteName('fxClick_' + i, './assets/fxClick/Bandes_click_' + i + '.png');
         }
 
         this.addKeySpriteName('explosionBulle', './assets/capsule/explosion_spritesheet.png');
