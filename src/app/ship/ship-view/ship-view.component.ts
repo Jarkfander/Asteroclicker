@@ -54,23 +54,33 @@ export class ShipViewComponent implements AfterViewInit {
     this.ship.initFirstChest();
     this.ship.initChest();
     this.clickChest();
-    
+
     // init
     this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.storage].lvl, this.ship.stockUpgrade);
-    // this.ship.autoUpgrade(this.userS.currentUser.mineRateLvl, this.ship.radarUpgrade);
+    this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.research].lvl, this.ship.radarUpgrade);
     this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl, this.ship.droneUpgrade);
     this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl + 2, this.ship.smokeRadarUpgrade);
-    
+
     if (this.userS.currentUser.upgrades[UpgradeType.storage].lvl >= 1 && !this.boolShipTourelle) {
       this.ship.iNewTourelle = 4;
       this.ship.initNewTourelle('newTourelle_4', 500, 500);
       this.boolShipTourelle = true;
     }
 
+    // start the animation before the init
+    if (this.ship.ship.cacheAsBitmap) {
+      setInterval(() => {
+        this.ship.ship.cacheAsBitmap = false;
+      }, 15000);
+    }
+
     this.userS.upgradeSubject.subscribe((user: User) => {
       this.ship.autoUpgrade(user.upgrades[UpgradeType.storage].lvl, this.ship.stockUpgrade);
+      this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.research].lvl, this.ship.radarUpgrade);
       this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl, this.ship.droneUpgrade);
       this.ship.autoUpgrade(user.upgrades[UpgradeType.mineRate].lvl + 2, this.ship.smokeRadarUpgrade);
+
+    this.ship.ship.cacheAsBitmap = false;
 
       if (this.userS.currentUser.upgrades[UpgradeType.storage].lvl >= 1 && !this.boolShipTourelle) {
         this.ship.iNewTourelle = 4;

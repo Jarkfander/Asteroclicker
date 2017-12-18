@@ -79,7 +79,6 @@ export class InfosViewComponent implements AfterViewInit {
 
   updateTimer() {
     if (this.search.start != 0) {
-
       if (this.search.results.length == 0 || this.search.results.length == 1) {
         this.socketS.updateAsteroidTimer();
       }
