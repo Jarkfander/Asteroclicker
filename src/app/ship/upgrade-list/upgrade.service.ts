@@ -60,7 +60,8 @@ export class UpgradeService {
   // create the tab of Research
   FillResearch(snapshot) {
     for (let i = 0; i < snapshot.length; i++) {
-      this.research.push(new Research(i, snapshot[i].cost, snapshot[i].time, snapshot[i].searchTime));
+      this.research.push(new Research(i, snapshot[i].cost, snapshot[i].time, snapshot[i].searchTime,
+         snapshot[i].maxDist, snapshot[i].minDist));
     }
     this.researchLoaded = true;
   }

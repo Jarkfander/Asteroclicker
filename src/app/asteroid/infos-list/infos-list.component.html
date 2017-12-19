@@ -41,4 +41,8 @@
 <button *ngIf="search.start!=0 && search.results.length==3" class="btn-upgrade" (click)="showResult()">See search result</button>
 <button *ngIf="search.start!=0 && search.results.length==0" disabled="true" class="btn-upgrade">Searching : {{timer}}</button>
 <button *ngIf="search.start!=0 && search.results.length==1" disabled="true" class="btn-upgrade">Time before arriving : {{timer}}</button>
+<div *ngIf="search.start==0" id="slidecontainer">
+  Distance: {{distance}} light years.
+  <input type="range" min={{minValues}} max={{maxValues}} value="50" class="slider" [(ngModel)]="distance"> 
+</div>
 <button *ngIf="search.start==0" class="btn-upgrade" (click)="searchNewAster()">Search Another Asteroid</button>

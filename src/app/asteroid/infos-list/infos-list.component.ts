@@ -1,4 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { Asteroid } from '../asteroid-view/asteroid';
 import { SearchResult } from '../search-result/searchResult';
 import { OreInfo } from '../ore-info-view/oreInfo';
@@ -7,7 +7,7 @@ import { SocketService } from '../../shared/socket/socket.service';
 import { OreInfoService } from '../ore-info-view/ore-info.service';
 import { UpgradeService } from '../../ship/upgrade-list/upgrade.service';
 import { User } from '../../shared/user/user';
-import { UpgradeType } from '../../ship/upgrade-class/upgrade';
+import { UpgradeType, Upgrade } from '../../ship/upgrade-class/upgrade';
 import { Utils } from '../../shared/utils';
 
 
@@ -16,7 +16,11 @@ import { Utils } from '../../shared/utils';
   templateUrl: './infos-list.component.html',
   styleUrls: ['./infos-list.component.scss']
 })
+
+
 export class InfosViewComponent implements AfterViewInit {
+
+  public distance: number;
 
   public capacity: number;
 
@@ -34,6 +38,9 @@ export class InfosViewComponent implements AfterViewInit {
 
   public allOreInfo: OreInfo[];
 
+  public maxValues: number;
+  public minValues: number;
+  
   constructor(private userS: UserService, private upgradeS: UpgradeService,
     private socketS: SocketService, private oreInfoS: OreInfoService) {
     this.oreAmount = userS.currentUser.oreAmounts;
@@ -47,6 +54,9 @@ export class InfosViewComponent implements AfterViewInit {
 
     this.allOreInfo = oreInfoS.oreInfo;
 
+    this.maxValues = upgradeS.research[userS.currentUser.upgrades[UpgradeType.research].lvl].maxDistance;
+    this.minValues = upgradeS.research[userS.currentUser.upgrades[UpgradeType.research].lvl].minDistance;
+    this.distance = this.maxValues / 2;
   }
 
   ngAfterViewInit() {
@@ -60,7 +70,10 @@ export class InfosViewComponent implements AfterViewInit {
       this.asteroid = user.asteroid;
     });
     this.userS.upgradeSubject.subscribe((user: User) => {
-      this.capacity =this.upgradeS.storage[this.userS.currentUser.upgrades[UpgradeType.storage].lvl].capacity;
+      this.capacity = this.upgradeS.storage[this.userS.currentUser.upgrades[UpgradeType.storage].lvl].capacity;
+  
+      this.maxValues = this.upgradeS.research[this.userS.currentUser.upgrades[UpgradeType.research].lvl].maxDistance;
+      this.minValues = this.upgradeS.research[this.userS.currentUser.upgrades[UpgradeType.research].lvl].minDistance;
     });
     this.userS.searchSubject.subscribe((user: User) => {
       this.search = user.asteroidSearch;
@@ -80,7 +93,7 @@ export class InfosViewComponent implements AfterViewInit {
   updateTimer() {
     if (this.search.start != 0) {
       if (this.search.results.length == 0 || this.search.results.length == 1) {
-        this.socketS.updateAsteroidTimer();
+        this.socketS.updateAsteroidTimer(this.distance);
       }
     }
   }
