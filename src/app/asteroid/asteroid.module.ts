@@ -10,13 +10,14 @@ import { UserService } from '../shared/user/user.service';
 import { UpgradeService } from '../ship/upgrade-list/upgrade.service';
 import { SocketService } from '../shared/socket/socket.service';
 import { OreInfoService } from './ore-info-view/ore-info.service';
-
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
   imports: [
     CommonModule,
-    SharedModule
+    SharedModule,
+    FormsModule
   ],
   declarations: [AsteroidViewComponent, InfosViewComponent, SearchResultComponent, OreInfosViewComponent],
   exports: [AsteroidViewComponent, InfosViewComponent],
