@@ -81,11 +81,12 @@ export class SocketService {
     this.socket.emit('chooseAsteroid', json);
   }
 
-  updateAsteroidTimer() {
+  updateAsteroidTimer(distance: number) {
     let json = {};
 
     json['user'] = this.userS.currentUser.uid;
-    json['distance'] = 1000;
+    json['distance'] = distance;
+    console.log(distance);
     this.socket.emit('updateAsteroidTimer', json);
   }
 
