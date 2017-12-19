@@ -9,6 +9,7 @@ import { UpgradeService } from '../../ship/upgrade-list/upgrade.service';
 import { User } from '../../shared/user/user';
 import { UpgradeType, Upgrade } from '../../ship/upgrade-class/upgrade';
 import { Utils } from '../../shared/utils';
+import { Research } from '../../ship/upgrade-class/research';
 
 
 @Component({
@@ -38,9 +39,10 @@ export class InfosViewComponent implements AfterViewInit {
 
   public allOreInfo: OreInfo[];
 
-  public maxValues: number;
-  public minValues: number;
-  
+  public researchInfo: Research;
+
+  public searchTime: string;
+
   constructor(private userS: UserService, private upgradeS: UpgradeService,
     private socketS: SocketService, private oreInfoS: OreInfoService) {
     this.oreAmount = userS.currentUser.oreAmounts;
@@ -54,9 +56,9 @@ export class InfosViewComponent implements AfterViewInit {
 
     this.allOreInfo = oreInfoS.oreInfo;
 
-    this.maxValues = upgradeS.research[userS.currentUser.upgrades[UpgradeType.research].lvl].maxDistance;
-    this.minValues = upgradeS.research[userS.currentUser.upgrades[UpgradeType.research].lvl].minDistance;
-    this.distance = this.maxValues / 2;
+    this.researchInfo=upgradeS.research[userS.currentUser.upgrades[UpgradeType.research].lvl];
+    this.distance = this.researchInfo.maxDistance / 2;
+    this.searchTimeUpdate();
   }
 
   ngAfterViewInit() {
@@ -71,9 +73,8 @@ export class InfosViewComponent implements AfterViewInit {
     });
     this.userS.upgradeSubject.subscribe((user: User) => {
       this.capacity = this.upgradeS.storage[this.userS.currentUser.upgrades[UpgradeType.storage].lvl].capacity;
-  
-      this.maxValues = this.upgradeS.research[this.userS.currentUser.upgrades[UpgradeType.research].lvl].maxDistance;
-      this.minValues = this.upgradeS.research[this.userS.currentUser.upgrades[UpgradeType.research].lvl].minDistance;
+
+      this.researchInfo = this.upgradeS.research[this.userS.currentUser.upgrades[UpgradeType.research].lvl];
     });
     this.userS.searchSubject.subscribe((user: User) => {
       this.search = user.asteroidSearch;
@@ -98,6 +99,14 @@ export class InfosViewComponent implements AfterViewInit {
     }
   }
 
+  //const coefDist = (((message.distance - minDist) / (maxDist - minDist)) * 5) + 1;
+  //let timer = ((researchUpgrade[user.val().upgrade.research.lvl].searchTime) * coefDist * 1000)-(Date.now() - user.val().search.start);
+
+  searchTimeUpdate() {
+    const coefDist = (((this.distance - this.researchInfo.minDistance) / (this.researchInfo.maxDistance - this.researchInfo.minDistance)) * 5) + 1;
+    this.searchTime = Utils.secondsToHHMMSS((this.researchInfo.searchTime) * coefDist);
+  }
+
   searchNewAster() {
     this.socketS.searchAsteroid();
   }
@@ -105,8 +114,6 @@ export class InfosViewComponent implements AfterViewInit {
   rejectResults() {
     this.socketS.rejectResults();
   }
-
-
 
   showResult() {
     this.isModalOpen = true;
