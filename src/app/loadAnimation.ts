@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import { app } from 'firebase/app';
 export function getFramesFromSpriteSheet(texture: PIXI.Texture, frameWidth: number, frameHeight: number) {
     const frames = [];
     for (let j = 0; j < texture.height - frameHeight + 1; j += frameHeight) {
@@ -36,6 +37,7 @@ export class LoadAnimation {
         for (let i = 1; i < 4; i++) {
             this.addKeySpriteName('tourelle_' + i, './assets/upgrade/tourelle' + i + '.png');
         }
+
         // Stock animation
         for (let i = 1; i < 8; i++) {
             this.addKeySpriteName('shipReacteur_' + i, './assets/upgrade/shipStock_' + i + '.png');
@@ -78,10 +80,6 @@ export class LoadAnimation {
 
         for (let i = 1; i < 3; i++) {
             this.addKeySpriteName('bulle' + i, './assets/capsule/bulle_anim' + i + '.png');
-        }
-
-        for (let i = 1; i < 4; i++) {
-            this.addKeySpriteName('fxClick_' + i, './assets/fxClick/Bandes_click_' + i + '.png');
         }
 
         this.addKeySpriteName('explosionBulle', './assets/capsule/explosion_spritesheet.png');

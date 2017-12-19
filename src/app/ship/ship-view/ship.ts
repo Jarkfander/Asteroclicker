@@ -22,6 +22,7 @@ class UpgradeShip {
                 return i + 1;
             }
         }
+        return this.tabLevel.length;
 
     }
 
@@ -31,6 +32,7 @@ class UpgradeShip {
             return null;
         }
         this.currentLevel = lvltemp;
+        
         for (let i = 0; i < this.currentLevel; i++) {
             if (!this.tabAnimation[i]) {
                 break;

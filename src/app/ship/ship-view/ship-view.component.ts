@@ -71,7 +71,7 @@ export class ShipViewComponent implements AfterViewInit {
     if (this.ship.ship.cacheAsBitmap) {
       setInterval(() => {
         this.ship.ship.cacheAsBitmap = false;
-      }, 15000);
+      }, 10000);
     }
 
     this.userS.upgradeSubject.subscribe((user: User) => {
