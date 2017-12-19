@@ -23,9 +23,10 @@ export class AppComponent {
 
   constructor(public userS: UserService, public upgradeS: UpgradeService,
     public marketS: MarketService,
-    public questS: QuestService, public rankingS: RankingService, public oreInfoS: OreInfoService ) {
+    public questS: QuestService, public rankingS: RankingService, public oreInfoS: OreInfoService) {
     this.loadAnimation = new LoadAnimation();
     this.loadingImage = true;
+
     if (this.loadingImage) {
       setInterval(() => {
         this.loadingImage = false;

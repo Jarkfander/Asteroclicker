@@ -79,7 +79,7 @@ export class InfosViewComponent implements AfterViewInit {
     this.userS.searchSubject.subscribe((user: User) => {
       this.search = user.asteroidSearch;
       this.timer = Utils.secondsToHHMMSS(this.search.timer / 1000);
-      if (user.asteroidSearch.results.length != 3) {
+      if (user.asteroidSearch.results.length !== 3) {
         this.isModalOpen = false;
       }
     });
