@@ -22,6 +22,7 @@ class UpgradeShip {
                 return i + 1;
             }
         }
+        return this.tabLevel.length;
 
     }
 
@@ -31,6 +32,7 @@ class UpgradeShip {
             return null;
         }
         this.currentLevel = lvltemp;
+        
         for (let i = 0; i < this.currentLevel; i++) {
             if (!this.tabAnimation[i]) {
                 break;
@@ -99,8 +101,8 @@ export class Ship {
         this.radarUpgrade = this.initTabSprite(5, 'shipRadar_', this.currentLevelRadar, 500, 500, -20, 0, true);
         this.smokeRadarUpgrade = this.initTabSprite(7, 'smoke_', this.currentLevelRadar, 500, 500, -20, 0, true);
 
-        //this.reacteurLvl = 0;
-        //this.reacteur = this.initTabSprite(7, 'shipReacteur_', this.reacteurLvl, 500, 500, 30, 0, false);
+        this.reacteurLvl = 0;
+        this.reacteur = this.initTabSprite(7, 'shipReacteur_', this.reacteurLvl, 500, 500, 30, 0, false);
 
         this.currentLevelDrone = 0;
         this.droneUpgrade = this.initTabSprite(5, 'droneUpdate_', this.currentLevelDrone, 500, 500, 30, 0, true);
@@ -136,7 +138,7 @@ export class Ship {
 
                 this.ship.y = this.transformShipY + Math.sin(this.deltaSumShip) * 17;
                 this.ship.x = this.transformShipX + Math.cos(this.deltaSumShip) * 5;
-                //this.initMoveXY(this.reacteur, 30, 20, this.deltaSum);
+                this.initMoveXY(this.reacteur, 30, 20, this.deltaSum);
 
 
                 if (this.boolParentChest) {
