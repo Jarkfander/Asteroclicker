@@ -7,6 +7,7 @@ import 'rxjs/add/operator/take';
 import { MineRate } from '../upgrade-class/mineRate';
 import { Research } from '../upgrade-class/research';
 import { Storage } from '../upgrade-class/storage';
+import { Engine } from '../upgrade-class/engine';
 
 @Injectable()
 export class UpgradeService {
@@ -15,15 +16,18 @@ export class UpgradeService {
   storage: Storage[];
   mineRate: MineRate[];
   research: Research[];
+  engine: Engine[];
 
   storageLoad: boolean = false;
   mineRateLoad: boolean = false;
   researchLoaded: boolean = false;
+  engineLoad: boolean = false;
 
   constructor(db: AngularFireDatabase) {
     this.storage = new Array();
     this.mineRate = new Array();
     this.research = new Array();
+    this.engine = new Array();
 
     this.db = db;
     this.db.object('storage').valueChanges().take(1).subscribe(
@@ -37,6 +41,10 @@ export class UpgradeService {
     this.db.object('research').valueChanges().take(1).subscribe(
       (snapshot: any) => {
         this.FillResearch(snapshot);
+      });
+    this.db.object('engine').valueChanges().take(1).subscribe(
+      (snapshot: any) => {
+        this.FillEngine(snapshot);
       });
   }
 
@@ -65,5 +73,12 @@ export class UpgradeService {
     }
     this.researchLoaded = true;
   }
-}
 
+  // create the tab of engine
+  FillEngine(snapshot) {
+    for (let i = 0; i < snapshot.length; i++) {
+      this.engine.push(new Engine(i, snapshot[i].cost, snapshot[i].time, snapshot[i].speed));
+    }
+    this.engineLoad = true;
+  }
+}

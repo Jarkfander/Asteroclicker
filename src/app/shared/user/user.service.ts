@@ -73,7 +73,6 @@ export class UserService {
           (snapshot: any) => {
             this.FillUpgrade(snapshot);
           });
-
         this.db.object('users/' + auth.uid + '/event').valueChanges().subscribe(
           (snapshot: any) => {
             this.FillEvent(snapshot);
@@ -89,7 +88,7 @@ export class UserService {
   public LogOut() {
     this.userLoad = false;
     this.currentUser = null;
-    this.afAuth.auth.signOut().then(()=>{
+    this.afAuth.auth.signOut().then(() => {
       location.reload();
     });
   }
@@ -143,15 +142,14 @@ export class UserService {
   }
 
   FillSearch(snapshot) {
-
-    let resultTab = new Array<Asteroid>();
+    const resultTab = new Array<Asteroid>();
     if (snapshot.result != 0) {
       for (let i = 0; i < snapshot.result.length; i++) {
         resultTab.push(new Asteroid(snapshot.result[i].capacity, snapshot.result[i].capacity, snapshot.result[i].purity,
           snapshot.result[i].ore, snapshot.result[i].seed, snapshot.result[i].timeToGo));
       }
     }
-    this.currentUser.asteroidSearch = new SearchResult(resultTab, snapshot.timer,snapshot.start);
+    this.currentUser.asteroidSearch = new SearchResult(resultTab, snapshot.timer, snapshot.start);
     this.searchSubject.next(this.currentUser);
     this.incrementCounter();
   }
@@ -160,24 +158,30 @@ export class UserService {
     this.currentUser.event = snapshot;
     this.eventSubject.next(this.currentUser);
   }
-  
+
   FillUpgrade(snapshot) {
-    
-    this.currentUser.upgrades[UpgradeType.storage]=new UserUpgrade(
+
+    this.currentUser.upgrades[UpgradeType.storage] = new UserUpgrade(
       snapshot.storage.lvl,
       snapshot.storage.timer,
       snapshot.storage.start
     );
-    
-    this.currentUser.upgrades[UpgradeType.mineRate]=new UserUpgrade(
+
+    this.currentUser.upgrades[UpgradeType.mineRate] = new UserUpgrade(
       snapshot.mineRate.lvl,
       snapshot.mineRate.timer,
       snapshot.mineRate.start
     );
-    this.currentUser.upgrades[UpgradeType.research]=new UserUpgrade(
+    this.currentUser.upgrades[UpgradeType.research] = new UserUpgrade(
       snapshot.research.lvl,
       snapshot.research.timer,
       snapshot.research.start
+    );
+
+    this.currentUser.upgrades[UpgradeType.engine] = new UserUpgrade(
+      snapshot.engine.lvl,
+      snapshot.engine.timer,
+      snapshot.engine.start
     );
 
     this.currentUser.score = snapshot.score;
@@ -189,7 +193,7 @@ export class UserService {
   incrementCounter() {
     if (!this.userLoad && this.loadedCounter < this.loadedTrigger) {
       this.loadedCounter++;
-      if (this.loadedCounter == this.loadedTrigger) {
+      if (this.loadedCounter === this.loadedTrigger) {
         this.userLoad = true;
       }
     }

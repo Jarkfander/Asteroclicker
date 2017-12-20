@@ -18,8 +18,9 @@ export class Upgrade {
 
 }
 
-export enum UpgradeType{
+export enum UpgradeType {
     mineRate,
     research,
-    storage
+    storage,
+    engine
 }
