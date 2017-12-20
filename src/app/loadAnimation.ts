@@ -40,7 +40,7 @@ export class LoadAnimation {
 
         // Stock animation
         for (let i = 1; i < 8; i++) {
-            this.addKeySpriteName('shipReacteur_' + i, './assets/upgrade/shipStock_' + i + '.png');
+            this.addKeySpriteName('shipEngine_' + i, './assets/upgrade/engine/engine_' + i + '.png');
         }
 
         // Radar animation

@@ -9,7 +9,7 @@ class UpgradeShip {
     tabAnimation: PIXI.extras.AnimatedSprite[];
 
     constructor(lvl: number, tabAnimation, posx: number, posy: number) {
-        this.tabLevel = [10, 20, 40, 65, 100, 150];
+        this.tabLevel = [10, 20, 40, 65, 100, 150, 170, 190, 200];
         this.tabAnimation = tabAnimation;
         this.posX = posx;
         this.posY = posy;
@@ -64,7 +64,7 @@ export class Ship {
     currentLevelRadar: number;
     smokeRadarUpgrade: UpgradeShip;
 
-    reacteur: UpgradeShip;
+    reacteurUpgrade: UpgradeShip;
     reacteurLvl: number;
 
     stockUpgrade: UpgradeShip;
@@ -102,8 +102,7 @@ export class Ship {
         this.smokeRadarUpgrade = this.initTabSprite(7, 'smoke_', this.currentLevelRadar, 500, 500, -20, 0, true);
 
         this.reacteurLvl = 0;
-        this.reacteur = this.initTabSprite(7, 'shipReacteur_', this.reacteurLvl, 500, 500, 30, 0, false);
-
+        this.reacteurUpgrade = this.initTabSprite(7, 'shipEngine_', this.reacteurLvl, 500, 500, 30, 0, false);
         this.currentLevelDrone = 0;
         this.droneUpgrade = this.initTabSprite(5, 'droneUpdate_', this.currentLevelDrone, 500, 500, 30, 0, true);
 
@@ -113,6 +112,7 @@ export class Ship {
         this.transformShipY = this.ship.y;
         this.transformShipX = this.ship.x;
 
+        // Text new chest
         this.spriteTextOpenChest = PIXI.Sprite.fromImage('../../assets/capsule/youHaveNew.png');
         this.spriteTextOpenChest.visible = false;
         this.spriteTextOpenChest.anchor.set(0.5);
@@ -138,15 +138,14 @@ export class Ship {
 
                 this.ship.y = this.transformShipY + Math.sin(this.deltaSumShip) * 17;
                 this.ship.x = this.transformShipX + Math.cos(this.deltaSumShip) * 5;
-                this.initMoveXY(this.reacteur, 30, 20, this.deltaSum);
-
+                this.initMoveXY(this.reacteurUpgrade, 30, 20, this.deltaSum);
 
                 if (this.boolParentChest) {
                     if ( this.spriteChestParent.y <= 151 ) {
                         this.boolParentChest = false;
                         this.spriteTextOpenChest.visible = false;
                     }
-                    this.spriteTextOpenChest.alpha -= 0.007; 
+                    this.spriteTextOpenChest.alpha -= 0.007;
                     this.spriteChestParent.y = 300 - deltaChest;
                     deltaChest += 1;
                 } else {

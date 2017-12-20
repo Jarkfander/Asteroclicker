@@ -3,7 +3,7 @@
 </div>
 
 <div *ngIf="upgradeS && userS && userS.userLoad && upgradeS.storageLoad && upgradeS.mineRateLoad
- && upgradeS.researchLoaded && marketS && marketS.marketLoad && loadAnimation.boolFinishLoad
+ && upgradeS.researchLoaded && upgradeS.engineLoad && marketS && marketS.marketLoad && loadAnimation.boolFinishLoad
  && oreInfoS && oreInfoS.oreInfoLoaded">
     <header>
         <app-topbar></app-topbar>
@@ -11,7 +11,7 @@
         
   <div *ngIf="loadingImage">
       <img class="image_loading" src="../assets/space2.png" />                
-      <img class="gif_loading" src="../assets/upgrade-icons/icon_mineRate.gif" />      
+      <img class="gif_loading" src="../assets/ecran chargement.gif" />      
   </div>
 
   <div class="game-content">
