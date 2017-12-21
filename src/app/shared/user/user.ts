@@ -22,8 +22,6 @@ export class User {
     public email: string;
     public name: string;
 
-    public timerRate: number;
-    public timerStock: number;
     public currentMineRate: number;
 
     public asteroid: Asteroid;

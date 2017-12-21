@@ -55,11 +55,8 @@ export class ShipViewComponent implements AfterViewInit {
     this.ship.initChest();
     this.clickChest();
 
+    this.initWithTimeUpgrade();
     // init
-    this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.storage].lvl, this.ship.stockUpgrade);
-    this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.research].lvl, this.ship.radarUpgrade);
-    this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl, this.ship.droneUpgrade);
-    this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl + 2, this.ship.smokeRadarUpgrade);
 
     if (this.userS.currentUser.upgrades[UpgradeType.storage].lvl >= 1 && !this.boolShipTourelle) {
       this.ship.iNewTourelle = 4;
@@ -79,7 +76,7 @@ export class ShipViewComponent implements AfterViewInit {
       this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.research].lvl, this.ship.radarUpgrade);
       this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl, this.ship.droneUpgrade);
       this.ship.autoUpgrade(user.upgrades[UpgradeType.mineRate].lvl + 2, this.ship.smokeRadarUpgrade);
-
+      this.ship.autoUpgrade(this.userS.currentUser.upgrades[UpgradeType.engine].lvl, this.ship.reacteurUpgrade);
     this.ship.ship.cacheAsBitmap = false;
 
       if (this.userS.currentUser.upgrades[UpgradeType.storage].lvl >= 1 && !this.boolShipTourelle) {
@@ -98,7 +95,29 @@ export class ShipViewComponent implements AfterViewInit {
   }
 
 
+  initWithTimeUpgrade() {
+    let i = 0;
+    const tabTempUpgrade = new Array<any>();
+    const tabTempUpgradeLvl = new Array<any>();
+    const tempThisUser = this.userS.currentUser.upgrades;
+    tabTempUpgrade.push(this.ship.stockUpgrade);
+    tabTempUpgradeLvl.push(tempThisUser[UpgradeType.storage].lvl);
+    tabTempUpgrade.push(this.ship.radarUpgrade);
+    tabTempUpgradeLvl.push(tempThisUser[UpgradeType.research].lvl);
+    tabTempUpgrade.push(this.ship.droneUpgrade);
+    tabTempUpgradeLvl.push(tempThisUser[UpgradeType.mineRate].lvl);
+    tabTempUpgrade.push(this.ship.smokeRadarUpgrade);
+    tabTempUpgradeLvl.push(tempThisUser[UpgradeType.mineRate].lvl + 2);
+    tabTempUpgrade.push(this.ship.reacteurUpgrade);
+    tabTempUpgradeLvl.push(tempThisUser[UpgradeType.engine].lvl);
 
+    if (i < 4) {
+      setInterval(() => {
+        this.ship.autoUpgrade(tabTempUpgradeLvl[i], tabTempUpgrade[i]);
+        i++;
+      }, 2500);
+    }
+  }
   // initial ship animated Sprite
   initSky(spriteName: string, width: number, height: number, w, h) {
     this.backgroundSky = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(

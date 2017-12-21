@@ -30,6 +30,7 @@ export class UpgradeViewComponent implements AfterViewInit {
         this.allUpgrades[UpgradeType.mineRate] = new UpgradeLvls(UpgradeType.mineRate, upgradeS.mineRate);
         this.allUpgrades[UpgradeType.research] = new UpgradeLvls(UpgradeType.research, upgradeS.research);
         this.allUpgrades[UpgradeType.storage] = new UpgradeLvls(UpgradeType.storage, upgradeS.storage);
+        this.allUpgrades[UpgradeType.engine] = new UpgradeLvls(UpgradeType.engine, upgradeS.engine);
     }
 
     ngAfterViewInit() {
