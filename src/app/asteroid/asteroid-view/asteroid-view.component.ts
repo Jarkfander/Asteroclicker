@@ -154,7 +154,7 @@ export class AsteroidViewComponent implements AfterViewInit {
       }
     }
 
-    console.log(max);
+
     const coefClick = this.clicks.length / 16;
     const newRate = base + ((max - base) * coefClick);
     this.userS.modifyCurrentMineRate(newRate <= max ? newRate : max);
