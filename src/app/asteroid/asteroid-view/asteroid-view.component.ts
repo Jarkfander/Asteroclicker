@@ -39,9 +39,12 @@ export class AsteroidViewComponent implements AfterViewInit {
   private backgroundSky: PIXI.extras.AnimatedSprite;
   private numberOfSky: number;
 
+  private clicks: number[];
+
   clicked: boolean;
 
   ngAfterViewInit() {
+    this.clicks = new Array();
     this.initAsteroid();
     setInterval(() => {
       this.socketS.incrementOre(this.userS.currentUser.asteroid.ore,
@@ -49,7 +52,7 @@ export class AsteroidViewComponent implements AfterViewInit {
           this.userS.currentUser.asteroid.purity / 100 *
           this.oreInfoS.getOreInfoByString(this.userS.currentUser.asteroid.ore).miningSpeed).toFixed(2)));
     }, 1000);
-    setInterval(() => { this.resetClick() }, 200);
+    setInterval(() => { this.updateClick() }, 100);
 
   }
 
@@ -78,11 +81,18 @@ export class AsteroidViewComponent implements AfterViewInit {
     this.asteroidSprite = new AsteroidSprite(0.25, 0.25, this.app, this.userS.currentUser.asteroid,
       this.oreInfoS.oreInfo.length);
 
-    for (let i = 0; i < this.asteroidSprite.asteroid.length; i++) {
+    this.asteroidSprite.asteroid[0].on('click', (event) => {
+      this.asteroidClick();
+    });
+
+    /*for (let i = 0; i < this.asteroidSprite.asteroid.length; i++) {
       this.asteroidSprite.asteroid[i].on('click', (event) => {
         this.asteroidClick();
+        console.log(this.asteroidSprite.asteroid[i]);
       });
-    }
+    }*/
+
+
     this.asteroidSprite.eventOk = this.userS.currentUser.event;
     this.asteroidSprite.activEvent();
     this.clickCapsule();
@@ -130,37 +140,34 @@ export class AsteroidViewComponent implements AfterViewInit {
 
   asteroidClick() {
     // ga('asteroid.send', 'event', 'buttons', 'click', 'asteroid');
-    this.clicked = true;
+    this.clicks.push(Date.now());
+  }
+
+  updateClick() {
     const max = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].maxRate;
-    if (this.userS.currentUser.currentMineRate < max) {
-      this.userS.modifyCurrentMineRate(this.userS.currentUser.currentMineRate + max * 0.1 > max ? max :
-        this.userS.currentUser.currentMineRate + max * 0.1);
+    const base = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].baseRate;
+
+    let clickTmp = this.clicks;
+    for (let i = 0; i < clickTmp.length; i++) {
+      if (Date.now() - clickTmp[i] > 2000) {
+        this.clicks.splice(this.clicks.indexOf(clickTmp[i]), 1);
+      }
     }
 
-    if (this.userS.currentUser.currentMineRate === max) {
+    console.log(max);
+    const coefClick = this.clicks.length / 16;
+    const newRate = base + ((max - base) * coefClick);
+    this.userS.modifyCurrentMineRate(newRate <= max ? newRate : max);
+
+    if (coefClick > 0.6) {
       this.drone.activeLaser();
       this.drone.laserAnim.visible = false;
       this.asteroidSprite.checkAstero = true;
     }
-  }
-
-  resetClick() {
-    const max = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].maxRate;
-    const base = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].baseRate;
-
-    if (!this.clicked) {
-      if (this.userS.currentUser.currentMineRate > base) {
-        this.userS.modifyCurrentMineRate(this.userS.currentUser.currentMineRate - (0.1 * max) <
-          base ? base : this.userS.currentUser.currentMineRate - (0.1 * max));
-      } else {
-        this.userS.modifyCurrentMineRate(base);
-        this.drone.desactivLaser();
-        this.asteroidSprite.checkAstero = false;
-      }
-    } else {
-      this.clicked = false;
+    else {
+      this.drone.desactivLaser();
+      this.asteroidSprite.checkAstero = false;
     }
-
   }
 
 

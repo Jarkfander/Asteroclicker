@@ -33,7 +33,13 @@ export class InfosViewComponent implements AfterViewInit {
 
   public isModalOpen: boolean = false;
 
-  public mineRate;
+  public mineRate: number;
+
+  public progressBarMaxValue: number;
+
+  public baseMineRate: number;
+
+  public progressBarValue: number;
 
   public oreAmount: JSON;
 
@@ -54,9 +60,14 @@ export class InfosViewComponent implements AfterViewInit {
 
     this.mineRate = userS.currentUser.currentMineRate;
 
+
+    this.baseMineRate = upgradeS.mineRate[userS.currentUser.upgrades[UpgradeType.mineRate].lvl].baseRate;
+    this.progressBarMaxValue = upgradeS.mineRate[userS.currentUser.upgrades[UpgradeType.mineRate].lvl].maxRate - this.baseMineRate;
+
+    this.updateProgressBarValue();
     this.allOreInfo = oreInfoS.oreInfo;
 
-    this.researchInfo=upgradeS.research[userS.currentUser.upgrades[UpgradeType.research].lvl];
+    this.researchInfo = upgradeS.research[userS.currentUser.upgrades[UpgradeType.research].lvl];
     this.distance = this.researchInfo.maxDistance / 2;
     this.searchTimeUpdate();
   }
@@ -73,7 +84,9 @@ export class InfosViewComponent implements AfterViewInit {
     });
     this.userS.upgradeSubject.subscribe((user: User) => {
       this.capacity = this.upgradeS.storage[this.userS.currentUser.upgrades[UpgradeType.storage].lvl].capacity;
-
+      this.baseMineRate = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].baseRate;
+      this.progressBarMaxValue = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].maxRate - this.baseMineRate;
+      this.updateProgressBarValue();
       this.researchInfo = this.upgradeS.research[this.userS.currentUser.upgrades[UpgradeType.research].lvl];
     });
     this.userS.searchSubject.subscribe((user: User) => {
@@ -85,6 +98,7 @@ export class InfosViewComponent implements AfterViewInit {
     });
     this.userS.mineRateSubject.subscribe((user: User) => {
       this.mineRate = user.currentMineRate;
+      this.updateProgressBarValue();
     });
 
 
@@ -99,8 +113,10 @@ export class InfosViewComponent implements AfterViewInit {
     }
   }
 
-  //const coefDist = (((message.distance - minDist) / (maxDist - minDist)) * 5) + 1;
-  //let timer = ((researchUpgrade[user.val().upgrade.research.lvl].searchTime) * coefDist * 1000)-(Date.now() - user.val().search.start);
+  updateProgressBarValue() {
+    this.progressBarValue = this.mineRate - this.baseMineRate > 0 ? this.mineRate - this.baseMineRate : 0;
+    this.progressBarValue /= this.progressBarMaxValue;
+  }
 
   searchTimeUpdate() {
     const coefDist = (((this.distance - this.researchInfo.minDistance) / (this.researchInfo.maxDistance - this.researchInfo.minDistance)) * 5) + 1;

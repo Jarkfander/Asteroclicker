@@ -51,7 +51,7 @@ export class UpgradeService {
   // create the tab of MineRate
   FillMineRate(snapshot) {
     for (let i = 0; i < snapshot.length; i++) {
-      this.mineRate.push(new MineRate(i, snapshot[i].cost, snapshot[i].baseRate,
+      this.mineRate.push(new MineRate(i, snapshot[i].cost,snapshot[0].baseRate, snapshot[i].baseRate,
         snapshot[i].maxRate, snapshot[i].time));
     }
     this.mineRateLoad = true;
