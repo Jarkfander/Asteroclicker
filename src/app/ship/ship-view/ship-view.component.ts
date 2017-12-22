@@ -58,7 +58,7 @@ export class ShipViewComponent implements AfterViewInit {
     this.initWithTimeUpgrade();
     // init
 
-    if (this.userS.currentUser.upgrades[UpgradeType.storage].lvl >= 1 && !this.boolShipTourelle) {
+    if (this.userS.currentUser.upgrades[UpgradeType.storage].lvl > 2 && !this.boolShipTourelle) {
       this.ship.iNewTourelle = 4;
       this.ship.initNewTourelle('newTourelle_4', 500, 500);
       this.boolShipTourelle = true;

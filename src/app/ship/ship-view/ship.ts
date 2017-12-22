@@ -28,7 +28,7 @@ class UpgradeShip {
 
     spriteAdd(newlvl: number) {
         const lvltemp = this.lvlSelection(newlvl);
-        if (newlvl === 0 || lvltemp === this.currentLevel) {
+        if (newlvl === 0 || newlvl === 1 || lvltemp === this.currentLevel) {
             return null;
         }
         this.currentLevel = lvltemp;
