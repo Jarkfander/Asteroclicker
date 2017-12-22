@@ -98,7 +98,7 @@ export class AsteroidViewComponent implements AfterViewInit {
     this.clickCapsule();
     //this.asteroidSprite.initAnimationFxClick(w, h);
 
-    this.drone.laserFirstState = this.userS.currentUser.oreAmounts[this.userS.currentUser.asteroid.ore]
+    this.drone.laserFirstState = this.userS.currentUser.oreAmounts[this.userS.currentUser.asteroid.ore];
 
     this.userS.asteroidSubject.subscribe((user: User) => {
 
@@ -153,7 +153,6 @@ export class AsteroidViewComponent implements AfterViewInit {
         this.clicks.splice(this.clicks.indexOf(clickTmp[i]), 1);
       }
     }
-
 
     const coefClick = this.clicks.length / 16;
     const newRate = base + ((max - base) * coefClick);

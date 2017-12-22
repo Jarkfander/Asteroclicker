@@ -30,7 +30,7 @@ export class AppComponent {
     if (this.loadingImage) {
       setInterval(() => {
         this.loadingImage = false;
-      }, 10000);
+      }, 15000);
     }
   }
 
