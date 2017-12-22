@@ -89,7 +89,6 @@ export class Ship {
         this.app.stage.addChild(text);
 
         this.boolNewTourelle = false;
-
         this.deltaSumShip = 0;
         this.iTourelle = 1;
 
@@ -176,7 +175,7 @@ export class Ship {
 
     // manage the upgrade when the level change
     autoUpgrade(lvl: number, tab: UpgradeShip) {
-        tab.spriteAdd(lvl);
+            tab.spriteAdd(lvl);
     }
 
     spritesheetFirstAnimation(spriteName: string, width: number, height: number, decalagex: number,
