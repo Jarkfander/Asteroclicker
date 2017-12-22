@@ -30,14 +30,14 @@ export class MarketService {
         for (let i = 0; i < keys.length; i++) {
           this.oreCostsSubject[keys[i]] = new Subject();
           this.oreHistorySubject[keys[i]] = new Subject();
-          this.db.object('trading/' + keys[i] + "/recent").valueChanges().subscribe(
+          this.db.object('trading/' + keys[i] + "/lastMinute").valueChanges().subscribe(
             (trad: any) => {
               this.FillOreCosts(keys[i], trad);
               if (i == keys.length - 1) {
                 this.marketLoad = true;
               }
             });
-          this.db.object('trading/' + keys[i] + "/history").valueChanges().subscribe(
+          this.db.object('trading/' + keys[i] + "/lastDay").valueChanges().subscribe(
             (histo: any) => {
               this.FillOreHistory(keys[i], histo);
             });

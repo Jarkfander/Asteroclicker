@@ -158,7 +158,7 @@ export class AsteroidViewComponent implements AfterViewInit {
     const newRate = base + ((max - base) * coefClick);
     this.userS.modifyCurrentMineRate(newRate <= max ? newRate : max);
 
-    if (coefClick > 0.6) {
+    if (coefClick > 0.5) {
       this.drone.activeLaser();
       this.drone.laserAnim.visible = false;
       this.asteroidSprite.checkAstero = true;
