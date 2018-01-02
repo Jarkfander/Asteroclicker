@@ -42,7 +42,14 @@ export class AsteroidSprite {
         this.compteurEvent = 0;
         this.boolEvent = false;
         this.asteroid = new Array<PIXI.Sprite>();
-        this.asteroidFolders = { 'carbon': new Array<PIXI.Texture>(), 'titanium': new Array<PIXI.Texture>(), 'iron': new Array<PIXI.Texture>() };
+        this.asteroidFolders =
+            {
+                'carbon': new Array<PIXI.Texture>(),
+                'titanium': new Array<PIXI.Texture>(),
+                'iron': new Array<PIXI.Texture>(),
+                'hyperium': new Array<PIXI.Texture>(),
+                'gold': new Array<PIXI.Texture>(),
+            };
         this.checkAstero = false;
         //this.asteroidSeed = seed;
         this.initAsteroidSprites();
