@@ -5,6 +5,7 @@ import { User, UserUpgrade } from '../../shared/user/user';
 import { UserService } from '../../shared/user/user.service';
 import { UpgradeLvls } from '../upgrade-list/upgrade-list.component';
 import { Utils } from '../../shared/utils';
+import { OreInfoService } from '../../asteroid/ore-info-view/ore-info.service';
 
 
 @Component({
@@ -23,10 +24,11 @@ export class UpgradeInfoComponent implements OnInit {
 
   public enableButton: boolean = true;
 
-  @Input("UpgradeLvls") upgradeLvls: UpgradeLvls;
+  @Input('UpgradeLvls') upgradeLvls: UpgradeLvls;
 
   constructor(private socketS: SocketService, private userS: UserService) {
   }
+
   ngOnInit() {
     this.updateData(this.userS.currentUser);
     this.updateEnable(this.userS.currentUser.credit);
@@ -40,11 +42,11 @@ export class UpgradeInfoComponent implements OnInit {
   }
 
   updateEnable(credit: number) {
-    this.enableButton = this.upgradeLvls.lvls[this.userUpgrade.lvl+1].cost<credit;
+    this.enableButton = this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].cost < credit;
   }
 
   updateTimer() {
-    if (this.userUpgrade.start != 0) {
+    if (this.userUpgrade.start !== 0) {
       this.socketS.updateUpgradeTimer(this.upgradeLvls.lvls[0].name);
     }
   }

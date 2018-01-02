@@ -22,14 +22,14 @@ export class OreInfoService {
     const key = Object.keys(snapshot);
     for (let i = 0; i < key.length; i++) {
       this.oreInfo.push(new OreInfo(key[i], snapshot[key[i]].maxValue, snapshot[key[i]].meanValue,
-        snapshot[key[i]].minValue, snapshot[key[i]].miningSpeed));
+        snapshot[key[i]].minValue, snapshot[key[i]].miningSpeed, snapshot[key[i]].searchNewOre));
     }
     this.oreInfoLoaded = true;
   }
 
   getOreInfoByString(name: string): OreInfo {
     for (let i = 0; i < this.oreInfo.length; i++) {
-      if (this.oreInfo[i].name == name) {
+      if (this.oreInfo[i].name === name) {
         return this.oreInfo[i];
       }
     }

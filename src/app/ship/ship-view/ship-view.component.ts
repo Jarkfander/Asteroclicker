@@ -107,8 +107,6 @@ export class ShipViewComponent implements AfterViewInit {
     tabTempUpgradeLvl.push(tempThisUser[UpgradeType.research].lvl);
     tabTempUpgrade.push(this.ship.droneUpgrade);
     tabTempUpgradeLvl.push(tempThisUser[UpgradeType.mineRate].lvl);
-    // tabTempUpgrade.push(this.ship.smokeRadarUpgrade);
-    // tabTempUpgradeLvl.push(tempThisUser[UpgradeType.mineRate].lvl + 2);
     tabTempUpgrade.push(this.ship.reacteurUpgrade);
     tabTempUpgradeLvl.push(tempThisUser[UpgradeType.engine].lvl);
 
