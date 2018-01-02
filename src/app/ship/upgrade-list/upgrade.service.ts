@@ -8,6 +8,7 @@ import { MineRate } from '../upgrade-class/mineRate';
 import { Research } from '../upgrade-class/research';
 import { Storage } from '../upgrade-class/storage';
 import { Engine } from '../upgrade-class/engine';
+import { OreInfoService } from '../../asteroid/ore-info-view/ore-info.service';
 
 @Injectable()
 export class UpgradeService {
@@ -23,7 +24,7 @@ export class UpgradeService {
   researchLoaded: boolean = false;
   engineLoad: boolean = false;
 
-  constructor(db: AngularFireDatabase) {
+  constructor(db: AngularFireDatabase,  private oreInfoS: OreInfoService) {
     this.storage = new Array();
     this.mineRate = new Array();
     this.research = new Array();
@@ -69,9 +70,18 @@ export class UpgradeService {
   FillResearch(snapshot) {
     for (let i = 0; i < snapshot.length; i++) {
       this.research.push(new Research(i, snapshot[i].cost, snapshot[i].time, snapshot[i].searchTime,
-         snapshot[i].maxDist, snapshot[i].minDist));
+         snapshot[i].maxDist, snapshot[i].minDist, this.researchNewOre(i)));
     }
     this.researchLoaded = true;
+  }
+
+  researchNewOre(lvl: number) {
+    for (let i = 0; i < this.oreInfoS.oreInfo.length; i++) {
+      if (lvl === this.oreInfoS.oreInfo[i].lvlOreUnlock) {
+        return this.oreInfoS.oreInfo[i].name;
+      }
+    }
+    return undefined;
   }
 
   // create the tab of engine
