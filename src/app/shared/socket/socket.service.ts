@@ -16,46 +16,55 @@ export class SocketService {
   }
 
   incrementOre(oreName: string, delta: number) {
-    let json = {};
+    const json = {};
 
-    json["user"] = this.userS.currentUser.uid;
-    json["ore"] = oreName;
-    json["amount"] = delta;
+    json['user'] = this.userS.currentUser.uid;
+    json['ore'] = oreName;
+    json['amount'] = delta;
 
-    this.socket.emit("incrementOre", json);
+    this.socket.emit('incrementOre', json);
   }
 
-  upgradeShip(upgradeName: string) {
-    let json = {};
+  upgradeShipCredit(upgradeName: string) {
+    const json = {};
 
-    json["user"] = this.userS.currentUser.uid;
-    json["upgrade"] = upgradeName;
+    json['user'] = this.userS.currentUser.uid;
+    json['upgrade'] = upgradeName;
 
-    this.socket.emit("upgradeShip", json);
+    this.socket.emit('upgradeShipCredit', json);
+  }
+
+  upgradeShipOre(upgradeName: string) {
+    const json = {};
+
+    json['user'] = this.userS.currentUser.uid;
+    json['upgrade'] = upgradeName;
+
+    this.socket.emit('upgradeShipOre', json);
   }
 
   updateUpgradeTimer(upgradeName: string) {
-    let json = {};
+    const json = {};
 
-    json["user"] = this.userS.currentUser.uid;
-    json["upgrade"] = upgradeName;
+    json['user'] = this.userS.currentUser.uid;
+    json['upgrade'] = upgradeName;
 
-    this.socket.emit("updateUpgradeTimer", json);
+    this.socket.emit('updateUpgradeTimer', json);
   }
 
 
   sellOre(oreName: string, amount: number) {
-    let json = {};
+    const json = {};
 
-    json["user"] = this.userS.currentUser.uid;
-    json["ore"] = oreName;
+    json['user'] = this.userS.currentUser.uid;
+    json['ore'] = oreName;
     json['amount'] = amount;
 
     this.socket.emit('sellOre', json);
   }
 
   buyOre(oreName: string, amount: number) {
-    let json = {};
+    const json = {};
 
     json['user'] = this.userS.currentUser.uid;
     json['ore'] = oreName;
@@ -65,7 +74,7 @@ export class SocketService {
   }
 
   searchAsteroid() {
-    let json = {};
+    const json = {};
 
     json['user'] = this.userS.currentUser.uid;
 
@@ -73,7 +82,7 @@ export class SocketService {
   }
 
   chooseAsteroid(ind : number) {
-    let json = {};
+    const json = {};
 
     json['user'] = this.userS.currentUser.uid;
     json['ind'] = ind;
@@ -82,7 +91,7 @@ export class SocketService {
   }
 
   updateAsteroidTimer(distance: number) {
-    let json = {};
+    const json = {};
 
     json['user'] = this.userS.currentUser.uid;
     json['distance'] = distance;
@@ -90,7 +99,7 @@ export class SocketService {
   }
 
   rejectResults() {
-    let json = {};
+    const json = {};
 
     json['user'] = this.userS.currentUser.uid;
 
@@ -123,6 +132,6 @@ export class SocketService {
   deleteEvent() {
     const json = {};
     json['userID'] = this.userS.currentUser.uid;
-    this.socket.emit('deleteEvent', json);
+    this.socket.emit('deconsteEvent', json);
   }
 }
