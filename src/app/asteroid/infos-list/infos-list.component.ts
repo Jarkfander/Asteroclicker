@@ -60,23 +60,32 @@ export class InfosViewComponent implements AfterViewInit {
 
     this.mineRate = userS.currentUser.currentMineRate;
 
-
     this.baseMineRate = upgradeS.mineRate[userS.currentUser.upgrades[UpgradeType.mineRate].lvl].baseRate;
     this.progressBarMaxValue = upgradeS.mineRate[userS.currentUser.upgrades[UpgradeType.mineRate].lvl].maxRate - this.baseMineRate;
 
     this.updateProgressBarValue();
-    this.allOreInfo = oreInfoS.oreInfo;
+    this.allOreInfo = this.iniOreAvailable();
 
     this.researchInfo = upgradeS.research[userS.currentUser.upgrades[UpgradeType.research].lvl];
     this.distance = this.researchInfo.maxDistance / 2;
     this.searchTimeUpdate();
   }
 
+  iniOreAvailable() {
+    const tabName = new Array<any>();
+    for ( let i = 0; i < this.oreInfoS.oreInfo.length ; i++) {
+        if (this.upgradeS.research[this.userS.currentUser.upgrades[UpgradeType.research].lvl].lvl
+           >= this.oreInfoS.oreInfo[i].lvlOreUnlock) {
+            tabName.push(this.oreInfoS.oreInfo[i]);
+        }
+    }
+    return tabName;
+  }
+
   ngAfterViewInit() {
     this.userS.oreSubject.subscribe((user: User) => {
       this.oreAmount = user.oreAmounts;
-
-      //this.carbonOverload = user.carbon >= this.upgradeS.storage[this.storageLvl].capacity;
+      // this.carbonOverload = user.carbon >= this.upgradeS.storage[this.storageLvl].capacity;
 
     });
     this.userS.asteroidSubject.subscribe((user: User) => {
@@ -85,9 +94,11 @@ export class InfosViewComponent implements AfterViewInit {
     this.userS.upgradeSubject.subscribe((user: User) => {
       this.capacity = this.upgradeS.storage[this.userS.currentUser.upgrades[UpgradeType.storage].lvl].capacity;
       this.baseMineRate = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].baseRate;
-      this.progressBarMaxValue = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].maxRate - this.baseMineRate;
+      this.progressBarMaxValue = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].maxRate
+       - this.baseMineRate;
       this.updateProgressBarValue();
       this.researchInfo = this.upgradeS.research[this.userS.currentUser.upgrades[UpgradeType.research].lvl];
+      this.allOreInfo = this.iniOreAvailable();
     });
     this.userS.searchSubject.subscribe((user: User) => {
       this.search = user.asteroidSearch;
@@ -106,8 +117,8 @@ export class InfosViewComponent implements AfterViewInit {
   }
 
   updateTimer() {
-    if (this.search.start != 0) {
-      if (this.search.results.length == 0 || this.search.results.length == 1) {
+    if (this.search.start !== 0) {
+      if (this.search.results.length === 0 || this.search.results.length === 1) {
         this.socketS.updateAsteroidTimer(this.distance);
       }
     }
@@ -119,7 +130,8 @@ export class InfosViewComponent implements AfterViewInit {
   }
 
   searchTimeUpdate() {
-    const coefDist = (((this.distance - this.researchInfo.minDistance) / (this.researchInfo.maxDistance - this.researchInfo.minDistance)) * 5) + 1;
+    const coefDist = (((this.distance - this.researchInfo.minDistance) / 
+    (this.researchInfo.maxDistance - this.researchInfo.minDistance)) * 5) + 1;
     this.searchTime = Utils.secondsToHHMMSS((this.researchInfo.searchTime) * coefDist);
   }
 
