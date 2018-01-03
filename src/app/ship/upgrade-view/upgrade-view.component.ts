@@ -24,21 +24,30 @@ export class UpgradeInfoComponent implements OnInit {
 
   public enableButton: boolean = true;
 
+  public tabOreCost;
+
   @Input('UpgradeLvls') upgradeLvls: UpgradeLvls;
 
-  constructor(private socketS: SocketService, private userS: UserService) {
+  constructor(private socketS: SocketService, private userS: UserService, private oreInfoS: OreInfoService) {
   }
 
   ngOnInit() {
     this.updateData(this.userS.currentUser);
     this.updateEnable(this.userS.currentUser.credit);
+    this.tabOreCost = [0, 0];
     this.userS.upgradeSubject.subscribe((user: User) => {
+
       this.updateData(user);
     });
     this.userS.creditSubject.subscribe((user: User) => {
       this.updateEnable(user.credit);
     });
-    setInterval(() => { this.updateTimer(); }, 1000);
+    setInterval(() => {
+      this.updateTimer();
+      this.tabOreCost = this.costOreUpgrade(this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].cost * 0.9,
+        this.upgradeLvls.lvls[this.userUpgrade.lvl].displayName);
+      }, 1000);
+
   }
 
   updateEnable(credit: number) {
@@ -56,11 +65,23 @@ export class UpgradeInfoComponent implements OnInit {
     this.timer = Utils.secondsToHHMMSS(this.userUpgrade.timer / 1000);
     this.upgradeCaraKeys = Object.keys(this.upgradeLvls.lvls[this.userUpgrade.lvl].cara);
     this.nextUpgradeCaraKeys = Object.keys(this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].cara);
-    this.upgradeLvls.lvls[this.userUpgrade.lvl].displayName;
   }
 
-  levelUp() {
-    this.socketS.upgradeShip(this.upgradeLvls.lvls[this.userUpgrade.lvl].name);
+  levelUpCredit() {
+    this.socketS.upgradeShipCredit(this.upgradeLvls.lvls[this.userUpgrade.lvl].name);
   }
 
+  levelUpOre() {
+    this.socketS.upgradeShipOre(this.upgradeLvls.lvls[this.userUpgrade.lvl].name);
+  }
+
+  costOreUpgrade(costCredit: number, nameUpgrade: string) {
+    const tempUpgradeName = this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].costOre;
+    return [ this.costOreForCredit(tempUpgradeName[0], costCredit / 2),
+    this.costOreForCredit(tempUpgradeName[1], costCredit / 2) ];
+  }
+
+  costOreForCredit(nameOre: string, costCredit: number) {
+    return costCredit / this.oreInfoS.getOreInfoByString(nameOre).meanValue;
+  }
 }
