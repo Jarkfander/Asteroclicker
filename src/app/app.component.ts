@@ -7,6 +7,7 @@ import { RankingService } from './market/topbar/ranking.service';
 import { UserService } from './shared/user/user.service';
 import { UpgradeService } from './ship/upgrade-list/upgrade.service';
 import { OreInfoService } from './asteroid/ore-info-view/ore-info.service';
+import { environment } from '../environments/environment';
 
 
 @Component({
@@ -30,7 +31,7 @@ export class AppComponent {
     if (this.loadingImage) {
       setInterval(() => {
         this.loadingImage = false;
-      }, 15000);
+      }, environment.loadingTime*1000);
     }
   }
 
