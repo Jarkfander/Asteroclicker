@@ -122,8 +122,6 @@ export class UpgradeInfoComponent implements OnInit {
       }
 
     }
-
-    console.log(temp);
     return [temp[0], temp[1]];
   }
 }
