@@ -14,6 +14,10 @@ import { UpgradeType } from '../../ship/upgrade-class/upgrade';
 import { getFramesFromSpriteSheet } from '../../loadAnimation';
 
 
+export enum KEY_CODE {
+  RIGHT_ARROW = 39,
+  LEFT_ARROW = 37
+}
 
 @Component({
   selector: 'app-asteroid-view',
@@ -39,6 +43,9 @@ export class AsteroidViewComponent implements AfterViewInit {
   private backgroundSky: PIXI.extras.AnimatedSprite;
   private numberOfSky: number;
 
+
+  private boolKeyboard = true;
+  private boolKeyboardFirst = true;
   private clicks: number[];
 
   clicked: boolean;
@@ -54,6 +61,25 @@ export class AsteroidViewComponent implements AfterViewInit {
     }, 1000);
     setInterval(() => { this.updateClick() }, 100);
 
+  }
+
+  // tslint:disable-next-line:member-ordering
+  @HostListener('window:keyup', ['$event']) keyEvent(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.RIGHT_ARROW) {
+      if (this.boolKeyboard || this.boolKeyboardFirst) {
+        this.boolKeyboard = false;
+        this.boolKeyboardFirst = false;
+      }
+
+    }
+
+    if (event.keyCode === KEY_CODE.LEFT_ARROW) {
+      if (!this.boolKeyboard) {
+        this.boolKeyboard = true;
+        this.boolKeyboardFirst = false;
+        this.asteroidClick();
+      }
+    }
   }
 
   @HostListener('window:resize') onResize() {
