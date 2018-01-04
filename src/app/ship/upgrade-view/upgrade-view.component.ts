@@ -112,12 +112,11 @@ export class UpgradeInfoComponent implements OnInit {
     for (let i = 0; i < this.oreInfoS.oreInfo.length; i++) {
       const tempName = this.oreInfoS.oreInfo[i].name;
       if (tempUpgrade[0] === tempName || tempUpgrade[1] === tempName) {
-        console.log(tempName);
         if (this.upgradeS.research[this.userS.currentUser.upgrades[UpgradeType.research].lvl].lvl >=
           this.oreInfoS.oreInfo[i].lvlOreUnlock) {
           temp.push(tempName);
         } else {
-          temp.push('?????');
+          temp.push('???');
         }
       }
 
