@@ -1,7 +1,8 @@
 <div class="row justify-between align-center">
   <img class="oreIcon" src="assets/oreIcon/{{name}}Icon.png" alt="{{name}}Icon">
 
-  <p [ngStyle]="{'color': amount>=capacity ? 'red' : 'white'}"> {{name}} : {{ amount }} </p>
+  <b class={{name}}>
+  <p [ngStyle]="{'color': amount>=capacity ? 'red' : 'white'}"> {{name.toUpperCase()}} : {{ amount }} </p>
   <p>{{rate}} {{name}}/s</p>
-
+</b>
 </div>

@@ -23,9 +23,9 @@ export class Upgrade {
     public valuesOreForUpgrade(nameUpgrade: string) {
         switch (nameUpgrade) {
             case 'engine':
-                return ['titanium', 'hyperium'];
+                return ['gold', 'titanium'];
             case 'storage':
-                return ['carbon', 'titanium'];
+                return ['carbon', 'hyperium'];
             case 'research':
                 return ['carbon', 'iron'];
             case 'mineRate':
