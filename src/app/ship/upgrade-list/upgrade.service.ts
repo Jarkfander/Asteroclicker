@@ -61,7 +61,7 @@ export class UpgradeService {
   FillMineRate(snapshot) {
     for (let i = 0; i < snapshot.length; i++) {
       this.mineRate.push(new MineRate(i, snapshot[i].cost,snapshot[0].baseRate, snapshot[i].baseRate,
-        snapshot[i].maxRate, snapshot[i].time));
+        snapshot[i].maxRate,snapshot[i].frenzyTime, snapshot[i].time));
     }
     this.mineRateLoad = true;
   }

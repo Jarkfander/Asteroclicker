@@ -44,3 +44,15 @@ app-search-result {
 .progressBar{
     width:100%;
 }
+
+progress {
+    color: red;
+}
+
+progress::-webkit-progress-value {
+    background: red;
+} 
+
+progress::-moz-progress-bar {
+    background: red;
+}

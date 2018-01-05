@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
-import { UserService } from '../user/user.service';
 import { environment } from '../../../environments/environment';
 
 
@@ -130,7 +129,12 @@ export class SocketService {
     const json = {};
     json['user'] = userId;
     json['email'] = email;
-    console.log("test");
     this.socket.emit('initializeUser', json);
+  }
+
+  reachFrenzy(userId: string) {
+    const json = {};
+    json['user'] = userId;
+    this.socket.emit('reachFrenzy', json);
   }
 }

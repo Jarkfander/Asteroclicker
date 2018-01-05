@@ -11,17 +11,17 @@ import { UpgradeType, Upgrade } from '../../ship/upgrade-class/upgrade';
 import { Utils } from '../../shared/utils';
 import { Research } from '../../ship/upgrade-class/research';
 
-@Pipe({name: "sortBy"})
+@Pipe({ name: "sortBy" })
 export class SortPipe {
   transform(array: Array<string>, args: string): Array<string> {
     array.sort((a: any, b: any) => {
-	    if ( a[args] < b[args] ){
-	    	return -1;
-	    }else if( a[args] > b[args] ){
-	        return 1;
-	    }else{
-	    	return 0;	
-	    }
+      if (a[args] < b[args]) {
+        return -1;
+      } else if (a[args] > b[args]) {
+        return 1;
+      } else {
+        return 0;
+      }
     });
     return array;
   }
@@ -87,11 +87,11 @@ export class InfosViewComponent implements AfterViewInit {
 
   iniOreAvailable() {
     const tabName = new Array<any>();
-    for ( let i = 0; i < this.oreInfoS.oreInfo.length ; i++) {
-        if (this.upgradeS.research[this.userS.currentUser.upgrades[UpgradeType.research].lvl].lvl
-           >= this.oreInfoS.oreInfo[i].lvlOreUnlock) {
-            tabName.push(this.oreInfoS.oreInfo[i]);
-        }
+    for (let i = 0; i < this.oreInfoS.oreInfo.length; i++) {
+      if (this.upgradeS.research[this.userS.currentUser.upgrades[UpgradeType.research].lvl].lvl
+        >= this.oreInfoS.oreInfo[i].lvlOreUnlock) {
+        tabName.push(this.oreInfoS.oreInfo[i]);
+      }
     }
     return tabName;
   }
@@ -109,7 +109,7 @@ export class InfosViewComponent implements AfterViewInit {
       this.capacity = this.upgradeS.storage[this.userS.currentUser.upgrades[UpgradeType.storage].lvl].capacity;
       this.baseMineRate = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].baseRate;
       this.progressBarMaxValue = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].maxRate
-       - this.baseMineRate;
+        - this.baseMineRate;
       this.updateProgressBarValue();
       this.researchInfo = this.upgradeS.research[this.userS.currentUser.upgrades[UpgradeType.research].lvl];
       this.allOreInfo = this.iniOreAvailable();
@@ -133,19 +133,25 @@ export class InfosViewComponent implements AfterViewInit {
   updateTimer() {
     if (this.search.start !== 0) {
       if (this.search.results.length === 0 || this.search.results.length === 1) {
-        this.socketS.updateAsteroidTimer(this.userS.currentUser.uid,this.distance);
+        this.socketS.updateAsteroidTimer(this.userS.currentUser.uid, this.distance);
       }
     }
   }
 
   updateProgressBarValue() {
-    this.progressBarValue = this.mineRate - this.baseMineRate > 0 ? this.mineRate - this.baseMineRate : 0;
-    this.progressBarValue /= this.progressBarMaxValue;
+    if (this.userS.currentUser.frenzy.state) {
+      const frenzyTime = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].frenzyTime;
+      this.progressBarValue=this.userS.currentUser.frenzy.timer/(frenzyTime*1000);
+    }
+    else {
+      this.progressBarValue = this.mineRate - this.baseMineRate > 0 ? this.mineRate - this.baseMineRate : 0;
+      this.progressBarValue /= this.progressBarMaxValue;
+    }
   }
 
   searchTimeUpdate() {
-    const coefDist = (((this.distance - this.researchInfo.minDistance) / 
-    (this.researchInfo.maxDistance - this.researchInfo.minDistance)) * 5) + 1;
+    const coefDist = (((this.distance - this.researchInfo.minDistance) /
+      (this.researchInfo.maxDistance - this.researchInfo.minDistance)) * 5) + 1;
     this.searchTime = Utils.secondsToHHMMSS((this.researchInfo.searchTime) * coefDist);
   }
 
