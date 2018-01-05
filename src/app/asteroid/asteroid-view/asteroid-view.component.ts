@@ -64,7 +64,6 @@ export class AsteroidViewComponent implements AfterViewInit {
     }, 1000);
     setInterval(() => { this.updateClick() }, 100);
 
-    this.frenzyModNewKey();
   }
 
   // tslint:disable-next-line:member-ordering
@@ -79,12 +78,18 @@ export class AsteroidViewComponent implements AfterViewInit {
     }
 
     if (event.keyCode === KEY_CODE.LEFT_ARROW) {
-      this.frenzyModTouch(KEY_CODE.LEFT_ARROW);      
+      this.frenzyModTouch(KEY_CODE.LEFT_ARROW);
       if (!this.boolKeyboard) {
         this.boolKeyboard = true;
         this.boolKeyboardFirst = false;
         this.asteroidClick();
       }
+    }
+    if (event.keyCode === KEY_CODE.UP_ARROW) {
+      this.frenzyModTouch(KEY_CODE.UP_ARROW);
+    }
+    if (event.keyCode === KEY_CODE.DOWN_ARROW) {
+      this.frenzyModTouch(KEY_CODE.DOWN_ARROW);
     }
   }
 
@@ -167,6 +172,12 @@ export class AsteroidViewComponent implements AfterViewInit {
       this.asteroidSprite.activEvent();
       this.clickCapsule();
     });
+
+    this.userS.frenzySubject.subscribe((user: User) => {
+      if (user.frenzyKey !== -1 ) {
+        this.asteroidSprite.frenzyModTouch(user.frenzyKey);
+      }
+    });
     this.initializeEmmiter();
   }
 
@@ -179,7 +190,7 @@ export class AsteroidViewComponent implements AfterViewInit {
     const max = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].maxRate;
     const base = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].baseRate;
 
-    let clickTmp = this.clicks;
+    const clickTmp = this.clicks;
     for (let i = 0; i < clickTmp.length; i++) {
       if (Date.now() - clickTmp[i] > 2000) {
         this.clicks.splice(this.clicks.indexOf(clickTmp[i]), 1);
@@ -319,17 +330,9 @@ export class AsteroidViewComponent implements AfterViewInit {
 
   // frenzy mod 
   frenzyModTouch(numTouchUserActu: number) {
-    console.log(numTouchUserActu);
     console.log(this.userS.currentUser.frenzyKey);
-    if (numTouchUserActu - 37 === this.userS.currentUser.frenzyKey) {
-      this.asteroidSprite.frenzyModTouchDown();
-      this.iFrenzyModActu++;
-      this.frenzyModNewKey();
-    }
+    this.socketS.nextArrow(this.userS.currentUser.uid, numTouchUserActu - 37);
   }
 
-  frenzyModNewKey() {
-      this.asteroidSprite.frenzyModTouch(this.userS.currentUser.frenzyKey);
-  }
 
 }

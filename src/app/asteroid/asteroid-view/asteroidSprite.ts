@@ -496,37 +496,30 @@ export class AsteroidSprite {
 
     // Frenzy mod - - - - - - - - - - - - - - - -
     frenzyModTouch(numTouch: number) {
-        if (this.asteroid && this.frenzyModAllTouchFinish() ) {
-            const randomX = Math.floor(Math.random() * 100 ) - 100 ;
-            const randomY = Math.floor(Math.random() * 100 ) - 100 ;
+        this.frenzyModTouchDown();
+        if (this.asteroid) {
+            const randomX = Math.floor(Math.random() * 100) - 100;
+            const randomY = Math.floor(Math.random() * 100) - 100;
 
-            this.arrowFrenzy[numTouch].position.set(this.xBaseAsteroid + randomX, this.yBaseAsteroid +randomY);
+            this.arrowFrenzy[numTouch].position.set(this.xBaseAsteroid + randomX, this.yBaseAsteroid + randomY);
             this.arrowFrenzy[numTouch].visible = true;
         }
 
     }
 
     frenzyModTouchDown() {
-        for (let i = 0 ; i < 4 ; i++) {
+        for (let i = 0; i < 4; i++) {
             this.arrowFrenzy[i].visible = false;
         }
     }
 
-    frenzyModAllTouchFinish() {
-        for (let i = 0 ; i < 4 ; i++) {
-            if (this.arrowFrenzy[i].visible) {
-                return false;
-            }
-        }
-        return true;
-    }
 
     frenzyModInit() {
         this.arrowFrenzy = new Array<PIXI.Sprite>();
-        for (let i = 0 ; i < 4 ; i++) {
-            this.arrowFrenzy.push(PIXI.Sprite.fromImage('assets/frenzy/arrow'+ i + '.png'));
+        for (let i = 0; i < 4; i++) {
+            this.arrowFrenzy.push(PIXI.Sprite.fromImage('assets/frenzy/arrow' + i + '.png'));
             this.arrowFrenzy[i].visible = false;
-            this.arrowFrenzy[i].scale.set(0.25,0.25);
+            this.arrowFrenzy[i].scale.set(0.5, 0.5);
             this.app.stage.addChild(this.arrowFrenzy[i]);
         }
     }
