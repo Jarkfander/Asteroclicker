@@ -13,5 +13,6 @@ export const environment = {
     storageBucket: "",
     messagingSenderId: "200480343396"
   },
-  socketUrl:"http://localhost:4000"
+  socketUrl:"http://localhost:4000",
+  loadingTime:0
 };

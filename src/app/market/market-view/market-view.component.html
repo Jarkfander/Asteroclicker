@@ -15,17 +15,18 @@
       <div class="row">
         <h2>{{oreName.toUpperCase()}}</h2>
         <img class="button-info" (click)="OpenHistory();" src="../../../assets/icon/information.png" />
+        <input type="range" min=1 max={{maxSliderValue}} value="{{maxSliderValue/2}}" class="slider"
+        [(ngModel)]="amount"> 
       </div>
       <div class="row">
         <div class="col">
           <div>
-
-            <button type="button" class="btn-sell" (click)="SellOre(valuesMultiplicateur);">Sell {{valuesMultiplicateur.toFixed(1)}}</button>
+            <button [disabled]="!hasOreLeft" type="button" class="btn-sell" (click)="SellOre(amount);">Sell {{amount.toFixed(1)}}</button>
             for
             <b class="credit">{{ (valuesTotal).toFixed(1) }} cr</b>
           </div>
           <div>
-            <button type="button" class="btn-buy" (click)="BuyOre(valuesMultiplicateur);">Buy {{valuesMultiplicateur.toFixed(1)}}</button>
+            <button [disabled]="!hasMoney || !hasSpaceLeft" type="button" class="btn-buy" (click)="BuyOre(amount);">Buy {{amount.toFixed(1)}}</button>
             for
             <b class="credit">{{ (valuesTotal*1.025).toFixed(1) }} cr</b>
           </div>

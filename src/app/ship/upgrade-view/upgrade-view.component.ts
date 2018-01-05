@@ -76,7 +76,7 @@ export class UpgradeInfoComponent implements OnInit {
 
   updateTimer() {
     if (this.userUpgrade.start !== 0) {
-      this.socketS.updateUpgradeTimer(this.upgradeLvls.lvls[0].name);
+      this.socketS.updateUpgradeTimer(this.userS.currentUser.uid,this.upgradeLvls.lvls[0].name);
     }
   }
 
@@ -88,11 +88,11 @@ export class UpgradeInfoComponent implements OnInit {
   }
 
   levelUpCredit() {
-    this.socketS.upgradeShipCredit(this.upgradeLvls.lvls[this.userUpgrade.lvl].name);
+    this.socketS.upgradeShipCredit(this.userS.currentUser.uid,this.upgradeLvls.lvls[this.userUpgrade.lvl].name);
   }
 
   levelUpOre() {
-    this.socketS.upgradeShipOre(this.upgradeLvls.lvls[this.userUpgrade.lvl].name);
+    this.socketS.upgradeShipOre(this.userS.currentUser.uid,this.upgradeLvls.lvls[this.userUpgrade.lvl].name);
   }
 
   costOreUpgrade(costCredit: number, nameUpgrade: string) {

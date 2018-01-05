@@ -9,6 +9,7 @@ import { Asteroid } from '../../asteroid/asteroid-view/asteroid';
 import { Quest } from '../../market/topbar/quest';
 import { SearchResult } from '../../asteroid/search-result/searchResult';
 import { UpgradeType } from '../../ship/upgrade-class/upgrade';
+import { SocketService } from '../socket/socket.service';
 
 
 @Injectable()
@@ -34,7 +35,7 @@ export class UserService {
   eventSubject = new Subject<User>();
 
   constructor(db: AngularFireDatabase, afAuth: AngularFireAuth,
-    private upgradeS: UpgradeService, private marketS: MarketService) {
+    private upgradeS: UpgradeService, private marketS: MarketService, private socketS: SocketService) {
     this.db = db;
     this.afAuth = afAuth;
     afAuth.authState.subscribe((auth) => {
@@ -83,6 +84,12 @@ export class UserService {
 
   public LogIn(log, pswd) {
     this.afAuth.auth.signInWithEmailAndPassword(log, pswd);
+  }
+
+  public CreateAccount(email, pswd) {
+    this.afAuth.auth.createUserWithEmailAndPassword(email, pswd).then((message) => {
+      this.socketS.initializeUser(message.uid,email);
+    });
   }
 
   public LogOut() {

@@ -8,5 +8,6 @@ export const environment = {
     storageBucket: "",
     messagingSenderId: "200480343396"
   },
-  socketUrl:"https://asteroclickerserver.herokuapp.com/"
+  socketUrl:"https://asteroclickerserver.herokuapp.com/",
+  loadingTime:10
 };

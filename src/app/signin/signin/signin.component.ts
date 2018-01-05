@@ -16,4 +16,14 @@ export class SigninComponent implements OnInit {
   public ValiderLogIn(log,pswd){
     this.userS.LogIn(log,pswd);
   }
+
+  public CreateAccount(email,pswd,pswd2){
+    if(pswd == pswd2){
+      console.log(pswd,pswd2);
+      this.userS.CreateAccount(email,pswd)
+    }
+    else{
+      alert("Password confirmation different from the original");
+    }
+  }
 }
