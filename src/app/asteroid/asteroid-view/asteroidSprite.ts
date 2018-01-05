@@ -497,7 +497,7 @@ export class AsteroidSprite {
     // Frenzy mod - - - - - - - - - - - - - - - -
     frenzyModTouch(numTouch: number) {
         this.frenzyModTouchDown();
-        if (this.asteroid) {
+        if (this.asteroid[0].visible) {
             const randomX = Math.floor(Math.random() * 100) - 100;
             const randomY = Math.floor(Math.random() * 100) - 100;
 

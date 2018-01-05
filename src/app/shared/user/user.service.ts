@@ -34,7 +34,8 @@ export class UserService {
   upgradeSubject = new Subject<User>();
   mineRateSubject = new Subject<User>();
   eventSubject = new Subject<User>();
-  frenzySubject = new Subject<User>();
+  frenzySubjectCombo = new Subject<number>();
+  frenzySubjectState = new Subject<boolean>();
 
   constructor(db: AngularFireDatabase, afAuth: AngularFireAuth,
     private upgradeS: UpgradeService, private marketS: MarketService, private socketS: SocketService) {
@@ -83,6 +84,12 @@ export class UserService {
         this.db.object('users/' + auth.uid + '/frenzy').valueChanges().subscribe(
           (snapshot: any) => {
             this.FillFrenzy(snapshot);
+            this.frenzySubjectState.next(snapshot.state);
+          });
+
+        this.db.object('users/' + auth.uid + '/frenzy/nextCombo').valueChanges().subscribe(
+          (snapshot: any) => {
+            this.frenzySubjectCombo.next(snapshot);
           });
       }
     });

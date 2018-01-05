@@ -171,9 +171,16 @@ export class AsteroidViewComponent implements AfterViewInit {
       this.clickCapsule();
     });
 
-    this.userS.frenzySubject.subscribe((user: User) => {
-      if (user.frenzy.state) {
-        this.asteroidSprite.frenzyModTouch(user.frenzy.nextCombo);
+    this.userS.frenzySubjectState.subscribe((FrenzyState: boolean) => {
+      if (!FrenzyState) {
+        this.asteroidSprite.frenzyModTouchDown();
+      }
+    });
+    this.userS.frenzySubjectCombo.subscribe((frenzyNum: number) => {
+      if (this.userS.currentUser.frenzy.state) {
+        this.asteroidSprite.frenzyModTouch(frenzyNum);
+      } else {
+        this.asteroidSprite.frenzyModTouchDown();
       }
     });
     this.initializeEmmiter();
@@ -326,8 +333,10 @@ export class AsteroidViewComponent implements AfterViewInit {
     }
   }
 
-  // frenzy mod 
+  // frenzy mod
   frenzyModTouch(numTouchUserActu: number) {
     this.socketS.nextArrow(this.userS.currentUser.uid, numTouchUserActu - 37);
+    this.asteroidSprite.arrowFrenzy[numTouchUserActu-37].visible = false;
+
   }
 }
