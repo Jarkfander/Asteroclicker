@@ -54,7 +54,7 @@ export class AsteroidViewComponent implements AfterViewInit {
     this.clicks = new Array();
     this.initAsteroid();
     setInterval(() => {
-      this.socketS.incrementOre(this.userS.currentUser.uid,this.userS.currentUser.asteroid.ore,
+      this.socketS.incrementOre(this.userS.currentUser.uid, this.userS.currentUser.asteroid.ore,
         parseFloat((this.userS.currentUser.currentMineRate *
           this.userS.currentUser.asteroid.purity / 100 *
           this.oreInfoS.getOreInfoByString(this.userS.currentUser.asteroid.ore).miningSpeed).toFixed(2)));
@@ -183,6 +183,10 @@ export class AsteroidViewComponent implements AfterViewInit {
     const coefClick = this.clicks.length / 16;
     const newRate = base + ((max - base) * coefClick);
     this.userS.modifyCurrentMineRate(newRate <= max ? newRate : max);
+
+    if (coefClick >= 1) {
+      this.socketS.reachFrenzy(this.userS.currentUser.uid);
+    }
 
     if (coefClick > 0.5) {
       this.drone.activeLaser();

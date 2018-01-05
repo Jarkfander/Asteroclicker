@@ -1,6 +1,7 @@
 import { Asteroid } from '../../asteroid/asteroid-view/asteroid';
 import { SearchResult } from '../../asteroid/search-result/searchResult';
 import { Quest } from '../../market/topbar/quest';
+import { Frenzy } from './frenzy';
 
 export class UserUpgrade {
     public lvl: number;
@@ -38,6 +39,8 @@ export class User {
     public upgrades: UserUpgrade[];
 
     public event: number;
+
+    public frenzy: Frenzy;
 
     constructor() {
         this.upgrades = Array();

@@ -10,6 +10,7 @@ import { Quest } from '../../market/topbar/quest';
 import { SearchResult } from '../../asteroid/search-result/searchResult';
 import { UpgradeType } from '../../ship/upgrade-class/upgrade';
 import { SocketService } from '../socket/socket.service';
+import { Frenzy } from './frenzy';
 
 
 @Injectable()
@@ -33,6 +34,7 @@ export class UserService {
   upgradeSubject = new Subject<User>();
   mineRateSubject = new Subject<User>();
   eventSubject = new Subject<User>();
+  frenzySubject = new Subject<User>();
 
   constructor(db: AngularFireDatabase, afAuth: AngularFireAuth,
     private upgradeS: UpgradeService, private marketS: MarketService, private socketS: SocketService) {
@@ -78,6 +80,10 @@ export class UserService {
           (snapshot: any) => {
             this.FillEvent(snapshot);
           });
+        this.db.object('users/' + auth.uid + '/frenzy').valueChanges().subscribe(
+          (snapshot: any) => {
+            this.FillFrenzy(snapshot);
+          });
       }
     });
   }
@@ -88,7 +94,7 @@ export class UserService {
 
   public CreateAccount(email, pswd) {
     this.afAuth.auth.createUserWithEmailAndPassword(email, pswd).then((message) => {
-      this.socketS.initializeUser(message.uid,email);
+      this.socketS.initializeUser(message.uid, email);
     });
   }
 
@@ -195,6 +201,10 @@ export class UserService {
 
     this.upgradeSubject.next(this.currentUser);
     this.incrementCounter();
+  }
+
+  FillFrenzy(snapshot) {
+    this.currentUser.frenzy = new Frenzy(snapshot.state==1, snapshot.timer, snapshot.start, snapshot.nextCombo);
   }
 
   incrementCounter() {
