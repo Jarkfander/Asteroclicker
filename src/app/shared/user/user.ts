@@ -38,8 +38,6 @@ export class User {
 
     public upgrades: UserUpgrade[];
 
-    public frenzyKey: number;
-
     public event: number;
 
     public frenzy: Frenzy;

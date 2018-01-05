@@ -50,7 +50,6 @@ export class AsteroidViewComponent implements AfterViewInit {
   private boolKeyboardFirst = true;
   private clicks: number[];
 
-  private iFrenzyModActu: number = 0;
   clicked: boolean;
 
   ngAfterViewInit() {
@@ -133,7 +132,6 @@ export class AsteroidViewComponent implements AfterViewInit {
     this.asteroidSprite.eventOk = this.userS.currentUser.event;
     this.asteroidSprite.activEvent();
     this.clickCapsule();
-    //this.asteroidSprite.initAnimationFxClick(w, h);
 
     this.drone.laserFirstState = this.userS.currentUser.oreAmounts[this.userS.currentUser.asteroid.ore];
 
@@ -174,8 +172,8 @@ export class AsteroidViewComponent implements AfterViewInit {
     });
 
     this.userS.frenzySubject.subscribe((user: User) => {
-      if (user.frenzyKey !== -1 ) {
-        this.asteroidSprite.frenzyModTouch(user.frenzyKey);
+      if (user.frenzy.state) {
+        this.asteroidSprite.frenzyModTouch(user.frenzy.nextCombo);
       }
     });
     this.initializeEmmiter();
@@ -330,9 +328,6 @@ export class AsteroidViewComponent implements AfterViewInit {
 
   // frenzy mod 
   frenzyModTouch(numTouchUserActu: number) {
-    console.log(this.userS.currentUser.frenzyKey);
     this.socketS.nextArrow(this.userS.currentUser.uid, numTouchUserActu - 37);
   }
-
-
 }
