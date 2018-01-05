@@ -16,6 +16,8 @@ import { getFramesFromSpriteSheet } from '../../loadAnimation';
 
 export enum KEY_CODE {
   RIGHT_ARROW = 39,
+  UP_ARROW = 38,
+  DOWN_ARROW = 40,
   LEFT_ARROW = 37
 }
 
@@ -48,6 +50,7 @@ export class AsteroidViewComponent implements AfterViewInit {
   private boolKeyboardFirst = true;
   private clicks: number[];
 
+  private iFrenzyModActu: number = 0;
   clicked: boolean;
 
   ngAfterViewInit() {
@@ -61,11 +64,13 @@ export class AsteroidViewComponent implements AfterViewInit {
     }, 1000);
     setInterval(() => { this.updateClick() }, 100);
 
+    this.frenzyModNewKey();
   }
 
   // tslint:disable-next-line:member-ordering
   @HostListener('window:keyup', ['$event']) keyEvent(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.RIGHT_ARROW) {
+      this.frenzyModTouch(KEY_CODE.RIGHT_ARROW);
       if (this.boolKeyboard || this.boolKeyboardFirst) {
         this.boolKeyboard = false;
         this.boolKeyboardFirst = false;
@@ -74,6 +79,7 @@ export class AsteroidViewComponent implements AfterViewInit {
     }
 
     if (event.keyCode === KEY_CODE.LEFT_ARROW) {
+      this.frenzyModTouch(KEY_CODE.LEFT_ARROW);      
       if (!this.boolKeyboard) {
         this.boolKeyboard = true;
         this.boolKeyboardFirst = false;
@@ -310,4 +316,20 @@ export class AsteroidViewComponent implements AfterViewInit {
       });
     }
   }
+
+  // frenzy mod 
+  frenzyModTouch(numTouchUserActu: number) {
+    console.log(numTouchUserActu);
+    console.log(this.userS.currentUser.frenzyKey);
+    if (numTouchUserActu - 37 === this.userS.currentUser.frenzyKey) {
+      this.asteroidSprite.frenzyModTouchDown();
+      this.iFrenzyModActu++;
+      this.frenzyModNewKey();
+    }
+  }
+
+  frenzyModNewKey() {
+      this.asteroidSprite.frenzyModTouch(this.userS.currentUser.frenzyKey);
+  }
+
 }
