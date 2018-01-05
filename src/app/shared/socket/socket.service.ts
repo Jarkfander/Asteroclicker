@@ -137,4 +137,10 @@ export class SocketService {
     json['user'] = userId;
     this.socket.emit('reachFrenzy', json);
   }
+  nextArrow(userId: string, keyCode: number) {
+    const json = {};
+    json['user'] = userId;
+    json['keyCode'] = keyCode;
+    this.socket.emit('nextArrow', json);
+  }
 }

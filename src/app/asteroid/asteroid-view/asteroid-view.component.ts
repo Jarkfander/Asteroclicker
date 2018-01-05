@@ -16,6 +16,8 @@ import { getFramesFromSpriteSheet } from '../../loadAnimation';
 
 export enum KEY_CODE {
   RIGHT_ARROW = 39,
+  UP_ARROW = 38,
+  DOWN_ARROW = 40,
   LEFT_ARROW = 37
 }
 
@@ -66,6 +68,7 @@ export class AsteroidViewComponent implements AfterViewInit {
   // tslint:disable-next-line:member-ordering
   @HostListener('window:keyup', ['$event']) keyEvent(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.RIGHT_ARROW) {
+      this.frenzyModTouch(KEY_CODE.RIGHT_ARROW);
       if (this.boolKeyboard || this.boolKeyboardFirst) {
         this.boolKeyboard = false;
         this.boolKeyboardFirst = false;
@@ -74,11 +77,18 @@ export class AsteroidViewComponent implements AfterViewInit {
     }
 
     if (event.keyCode === KEY_CODE.LEFT_ARROW) {
+      this.frenzyModTouch(KEY_CODE.LEFT_ARROW);
       if (!this.boolKeyboard) {
         this.boolKeyboard = true;
         this.boolKeyboardFirst = false;
         this.asteroidClick();
       }
+    }
+    if (event.keyCode === KEY_CODE.UP_ARROW) {
+      this.frenzyModTouch(KEY_CODE.UP_ARROW);
+    }
+    if (event.keyCode === KEY_CODE.DOWN_ARROW) {
+      this.frenzyModTouch(KEY_CODE.DOWN_ARROW);
     }
   }
 
@@ -122,7 +132,6 @@ export class AsteroidViewComponent implements AfterViewInit {
     this.asteroidSprite.eventOk = this.userS.currentUser.event;
     this.asteroidSprite.activEvent();
     this.clickCapsule();
-    //this.asteroidSprite.initAnimationFxClick(w, h);
 
     this.drone.laserFirstState = this.userS.currentUser.oreAmounts[this.userS.currentUser.asteroid.ore];
 
@@ -161,6 +170,12 @@ export class AsteroidViewComponent implements AfterViewInit {
       this.asteroidSprite.activEvent();
       this.clickCapsule();
     });
+
+    this.userS.frenzySubject.subscribe((user: User) => {
+      if (user.frenzy.state) {
+        this.asteroidSprite.frenzyModTouch(user.frenzy.nextCombo);
+      }
+    });
     this.initializeEmmiter();
   }
 
@@ -173,7 +188,7 @@ export class AsteroidViewComponent implements AfterViewInit {
     const max = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].maxRate;
     const base = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].baseRate;
 
-    let clickTmp = this.clicks;
+    const clickTmp = this.clicks;
     for (let i = 0; i < clickTmp.length; i++) {
       if (Date.now() - clickTmp[i] > 2000) {
         this.clicks.splice(this.clicks.indexOf(clickTmp[i]), 1);
@@ -309,5 +324,10 @@ export class AsteroidViewComponent implements AfterViewInit {
         };
       });
     }
+  }
+
+  // frenzy mod 
+  frenzyModTouch(numTouchUserActu: number) {
+    this.socketS.nextArrow(this.userS.currentUser.uid, numTouchUserActu - 37);
   }
 }

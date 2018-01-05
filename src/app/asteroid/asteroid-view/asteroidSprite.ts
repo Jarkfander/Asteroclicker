@@ -34,6 +34,8 @@ export class AsteroidSprite {
     boolEvent: boolean;
     compteurEvent: number;
 
+    arrowFrenzy: PIXI.Sprite[];
+
     asteroidFolders;
     constructor(x: number, y: number, app: PIXI.Application, asteroid: Asteroid, numberOfSprite: number) {
 
@@ -42,6 +44,11 @@ export class AsteroidSprite {
         this.compteurEvent = 0;
         this.boolEvent = false;
         this.asteroid = new Array<PIXI.Sprite>();
+
+        // Frenzy init
+        this.frenzyModInit();
+
+        // Asteroid init
         this.asteroidFolders =
             {
                 'carbon': new Array<PIXI.Texture>(),
@@ -483,6 +490,38 @@ export class AsteroidSprite {
         tempAnim.scale.set(0.25);
         tempAnim.rotation = 45;
         return tempAnim;
+    }
+
+
+
+    // Frenzy mod - - - - - - - - - - - - - - - -
+    frenzyModTouch(numTouch: number) {
+        this.frenzyModTouchDown();
+        if (this.asteroid) {
+            const randomX = Math.floor(Math.random() * 100) - 100;
+            const randomY = Math.floor(Math.random() * 100) - 100;
+
+            this.arrowFrenzy[numTouch].position.set(this.xBaseAsteroid + randomX, this.yBaseAsteroid + randomY);
+            this.arrowFrenzy[numTouch].visible = true;
+        }
+
+    }
+
+    frenzyModTouchDown() {
+        for (let i = 0; i < 4; i++) {
+            this.arrowFrenzy[i].visible = false;
+        }
+    }
+
+
+    frenzyModInit() {
+        this.arrowFrenzy = new Array<PIXI.Sprite>();
+        for (let i = 0; i < 4; i++) {
+            this.arrowFrenzy.push(PIXI.Sprite.fromImage('assets/frenzy/arrow' + i + '.png'));
+            this.arrowFrenzy[i].visible = false;
+            this.arrowFrenzy[i].scale.set(0.5, 0.5);
+            this.app.stage.addChild(this.arrowFrenzy[i]);
+        }
     }
 
 }

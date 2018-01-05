@@ -204,7 +204,7 @@ export class UserService {
   }
 
   FillFrenzy(snapshot) {
-    this.currentUser.frenzy = new Frenzy(snapshot.state==1, snapshot.timer, snapshot.start, snapshot.nextCombo);
+    this.currentUser.frenzy = new Frenzy(snapshot.state === 1, snapshot.timer, snapshot.start, snapshot.nextCombo);
   }
 
   incrementCounter() {
