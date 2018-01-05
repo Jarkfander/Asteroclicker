@@ -11,127 +11,126 @@ export class SocketService {
 
   private socket;
 
-  constructor(private userS: UserService) {
+  constructor() {
     this.socket = io(this.url);
   }
 
-  incrementOre(oreName: string, delta: number) {
+  incrementOre(userId: string,oreName: string, delta: number) {
     const json = {};
 
-    json['user'] = this.userS.currentUser.uid;
+    json['user'] = userId;
     json['ore'] = oreName;
     json['amount'] = delta;
 
     this.socket.emit('incrementOre', json);
   }
 
-  upgradeShipCredit(upgradeName: string) {
+  upgradeShipCredit(userId: string,upgradeName: string) {
     const json = {};
 
-    json['user'] = this.userS.currentUser.uid;
+    json['user'] = userId;
     json['upgrade'] = upgradeName;
 
     this.socket.emit('upgradeShipCredit', json);
   }
 
-  upgradeShipOre(upgradeName: string) {
+  upgradeShipOre(userId: string,upgradeName: string) {
     const json = {};
 
-    json['user'] = this.userS.currentUser.uid;
+    json['user'] = userId;
     json['upgrade'] = upgradeName;
 
     this.socket.emit('upgradeShipOre', json);
   }
 
-  updateUpgradeTimer(upgradeName: string) {
+  updateUpgradeTimer(userId: string,upgradeName: string) {
     const json = {};
 
-    json['user'] = this.userS.currentUser.uid;
+    json['user'] = userId;
     json['upgrade'] = upgradeName;
 
     this.socket.emit('updateUpgradeTimer', json);
   }
 
 
-  sellOre(oreName: string, amount: number) {
+  sellOre(userId: string,oreName: string, amount: number) {
     const json = {};
 
-    json['user'] = this.userS.currentUser.uid;
+    json['user'] = userId;
     json['ore'] = oreName;
     json['amount'] = amount;
 
     this.socket.emit('sellOre', json);
   }
 
-  buyOre(oreName: string, amount: number) {
+  buyOre(userId: string,oreName: string, amount: number) {
     const json = {};
 
-    json['user'] = this.userS.currentUser.uid;
+    json['user'] = userId;
     json['ore'] = oreName;
     json['amount'] = amount;
 
     this.socket.emit('buyOre', json);
   }
 
-  searchAsteroid() {
+  searchAsteroid(userId: string) {
     const json = {};
 
-    json['user'] = this.userS.currentUser.uid;
+    json['user'] = userId;
 
     this.socket.emit('searchAster', json);
   }
 
-  chooseAsteroid(ind : number) {
+  chooseAsteroid(userId: string,ind: number) {
     const json = {};
 
-    json['user'] = this.userS.currentUser.uid;
+    json['user'] = userId;
     json['ind'] = ind;
 
     this.socket.emit('chooseAsteroid', json);
   }
 
-  updateAsteroidTimer(distance: number) {
+  updateAsteroidTimer(userId: string,distance: number) {
     const json = {};
 
-    json['user'] = this.userS.currentUser.uid;
+    json['user'] = userId;
     json['distance'] = distance;
     this.socket.emit('updateAsteroidTimer', json);
   }
 
-  rejectResults() {
+  rejectResults(userId: string) {
     const json = {};
 
-    json['user'] = this.userS.currentUser.uid;
+    json['user'] = userId;
 
     this.socket.emit('rejectResults', json);
   }
 
-  connectionEstablished() {
+  removeChest(userId: string,numberOfChest:number) {
     const json = {};
-
-    json['user'] = this.userS.currentUser.uid;
-
-    this.socket.emit('userLogged', json);
-  }
-
-  removeChest() {
-    const json = {};
-    json['numberOfChest'] = this.userS.currentUser.numberOfChest - 1;
-    json['user'] = this.userS.currentUser.uid;
+    json['numberOfChest'] = numberOfChest - 1;
+    json['user'] = userId;
 
     this.socket.emit('removeChest', json);
   }
 
-  newChest() {
+  newChest(userId: string) {
     const json = {};
-    json['currentUser'] = this.userS.currentUser;
-    json['userID'] = this.userS.currentUser.uid;
+    json['userID'] = userId;
     this.socket.emit('newChest', json);
   }
 
-  deleteEvent() {
+  deleteEvent(userId: string) {
     const json = {};
-    json['userID'] = this.userS.currentUser.uid;
-    this.socket.emit('deconsteEvent', json);
+    json['userID'] = userId;
+    this.socket.emit('deleteEvent', json);
+  }
+
+  initializeUser(userId: string, email: string) {
+    const json = {};
+    json['user'] = userId;
+    json['email'] = email;
+    console.log("test");
+    this.socket.emit('initializeUser', json);
   }
 }

@@ -47,7 +47,7 @@ export class AsteroidViewComponent implements AfterViewInit {
     this.clicks = new Array();
     this.initAsteroid();
     setInterval(() => {
-      this.socketS.incrementOre(this.userS.currentUser.asteroid.ore,
+      this.socketS.incrementOre(this.userS.currentUser.uid,this.userS.currentUser.asteroid.ore,
         parseFloat((this.userS.currentUser.currentMineRate *
           this.userS.currentUser.asteroid.purity / 100 *
           this.oreInfoS.getOreInfoByString(this.userS.currentUser.asteroid.ore).miningSpeed).toFixed(2)));
@@ -274,8 +274,8 @@ export class AsteroidViewComponent implements AfterViewInit {
         tempSprite[1].gotoAndPlay(0);
         tempSprite[2].gotoAndPlay(0);
         tempSprite[2].onComplete = () => {
-          this.socketS.newChest();
-          this.socketS.deleteEvent();
+          this.socketS.newChest(this.userS.currentUser.uid);
+          this.socketS.deleteEvent(this.userS.currentUser.uid);
         };
       });
     }

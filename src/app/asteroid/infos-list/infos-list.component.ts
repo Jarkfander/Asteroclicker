@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef, Pipe } from '@angular/core';
 import { Asteroid } from '../asteroid-view/asteroid';
 import { SearchResult } from '../search-result/searchResult';
 import { OreInfo } from '../ore-info-view/oreInfo';
@@ -11,13 +11,27 @@ import { UpgradeType, Upgrade } from '../../ship/upgrade-class/upgrade';
 import { Utils } from '../../shared/utils';
 import { Research } from '../../ship/upgrade-class/research';
 
+@Pipe({name: "sortBy"})
+export class SortPipe {
+  transform(array: Array<string>, args: string): Array<string> {
+    array.sort((a: any, b: any) => {
+	    if ( a[args] < b[args] ){
+	    	return -1;
+	    }else if( a[args] > b[args] ){
+	        return 1;
+	    }else{
+	    	return 0;	
+	    }
+    });
+    return array;
+  }
+}
 
 @Component({
   selector: 'app-infos-list',
   templateUrl: './infos-list.component.html',
   styleUrls: ['./infos-list.component.scss']
 })
-
 
 export class InfosViewComponent implements AfterViewInit {
 
@@ -119,7 +133,7 @@ export class InfosViewComponent implements AfterViewInit {
   updateTimer() {
     if (this.search.start !== 0) {
       if (this.search.results.length === 0 || this.search.results.length === 1) {
-        this.socketS.updateAsteroidTimer(this.distance);
+        this.socketS.updateAsteroidTimer(this.userS.currentUser.uid,this.distance);
       }
     }
   }
@@ -136,11 +150,11 @@ export class InfosViewComponent implements AfterViewInit {
   }
 
   searchNewAster() {
-    this.socketS.searchAsteroid();
+    this.socketS.searchAsteroid(this.userS.currentUser.uid);
   }
 
   rejectResults() {
-    this.socketS.rejectResults();
+    this.socketS.rejectResults(this.userS.currentUser.uid);
   }
 
   showResult() {

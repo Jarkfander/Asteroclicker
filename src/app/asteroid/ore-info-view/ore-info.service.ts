@@ -21,7 +21,7 @@ export class OreInfoService {
   FillOreInfo(snapshot) {
     const key = Object.keys(snapshot);
     for (let i = 0; i < key.length; i++) {
-      this.oreInfo.push(new OreInfo(key[i], snapshot[key[i]].maxValue, snapshot[key[i]].meanValue,
+      this.oreInfo.push(new OreInfo(snapshot[key[i]].order,key[i], snapshot[key[i]].maxValue, snapshot[key[i]].meanValue,
         snapshot[key[i]].minValue, snapshot[key[i]].miningSpeed, snapshot[key[i]].searchNewOre));
     }
     this.oreInfoLoaded = true;

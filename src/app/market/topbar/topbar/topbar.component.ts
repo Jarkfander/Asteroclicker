@@ -28,8 +28,6 @@ export class TopbarComponent implements AfterViewInit {
     this.userS.creditSubject.subscribe((user: User) => {
       this.credit = user.credit;
     });
-    this.socketS.connectionEstablished();
-
   }
 
   public LogOut() {
