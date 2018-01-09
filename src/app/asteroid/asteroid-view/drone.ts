@@ -16,11 +16,13 @@ export class Drone {
     yBaseDrone: number;
     laserAnim: PIXI.extras.AnimatedSprite;
 
+    deltaTempAster: number;
+
     laserAnim_actif1: PIXI.extras.AnimatedSprite;
     laserAnim_actif2: PIXI.extras.AnimatedSprite;
     laserAnim_actif3: PIXI.extras.AnimatedSprite;
 
-    constructor(x: number , y: number, app: PIXI.Application) {
+    constructor(x: number , y: number, xpos: number, ypos: number, app: PIXI.Application) {
         this.app = app;
         this.isMining = true;
         this.delta = 0;
@@ -34,8 +36,8 @@ export class Drone {
         this.drone.animationSpeed = 0.35;
         this.drone.visible = true;
 
-        this.drone.x = this.app.renderer.width / 2;
-        this.drone.y = this.app.renderer.height / 2 - 150;
+        this.drone.x = this.app.renderer.width / 2 + xpos;
+        this.drone.y = this.app.renderer.height / 2 - 150 + ypos;
 
         this.xBaseDrone = this.drone.x;
         this.yBaseDrone = this.drone.y;
@@ -63,6 +65,7 @@ export class Drone {
                     this.delta = 0;
                 }
                 this.delta += (2 * Math.PI) / 1000;
+                this.delta += this.deltaTempAster;
                 if (this.isMining) {
                     if (this.deltaGo < 8) {
                         this.deltaGo += 0.08;
@@ -168,8 +171,9 @@ export class Drone {
     }
 
 
-    changeSpriteDrone(lvl: number) {
-        const num = lvl <= 10 ? 1 : lvl <= 25 ? 2 : 3;
+    changeSpriteDrone(lvl: number, numberOfDrone: number) {
+        const num = lvl <= 10 + (40 * numberOfDrone) ? 1 :
+        lvl <= 25 + (40 * numberOfDrone) ? 2 : 3;
         const temp = getFramesFromSpriteSheet(PIXI.loader.resources['drone' + num].texture, 266, 308);
 
         for (let i = 0; i < this.drone.textures.length; i++) {
