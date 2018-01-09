@@ -3,6 +3,7 @@ import { QuestService } from '../quest.service';
 import { UserService } from '../../../shared/user/user.service';
 import { User } from '../../../shared/user/user';
 import { SocketService } from '../../../shared/socket/socket.service';
+import { SharedModule } from '../../../shared/shared.module';
 
 
 @Component({
@@ -16,9 +17,12 @@ export class TopbarComponent implements AfterViewInit {
 
   public isModalOpenQuest: boolean;
   public isModalOpenRank: boolean;
+  public creditValue: string;
+
   constructor(public userS: UserService, public questS: QuestService, private socketS: SocketService) {
     this.name = userS.currentUser.name;
     this.credit = userS.currentUser.credit;
+    this.creditValue = SharedModule.calculeMoneyWithSpace(userS.currentUser.credit);
   }
 
   ngAfterViewInit() {
@@ -27,6 +31,7 @@ export class TopbarComponent implements AfterViewInit {
     });
     this.userS.creditSubject.subscribe((user: User) => {
       this.credit = user.credit;
+      this.creditValue = SharedModule.calculeMoneyWithSpace(user.credit);
     });
   }
 

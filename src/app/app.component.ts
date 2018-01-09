@@ -31,7 +31,7 @@ export class AppComponent {
     if (this.loadingImage) {
       setInterval(() => {
         this.loadingImage = false;
-      }, environment.loadingTime*1000);
+      }, environment.loadingTime * 1000);
     }
   }
 
@@ -40,4 +40,6 @@ export class AppComponent {
 
   }
 
+
 }
+

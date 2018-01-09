@@ -1,3 +1,5 @@
+import { SharedModule } from "../../shared/shared.module";
+
 export class Quest {
 
     public name: string;
@@ -14,5 +16,12 @@ export class Quest {
         this.values = _values;
         this.num = _num;
         this.gain = _gain;
+    }
+
+    public calculValueDisplay() {
+       return this.valueWithSpace(this.valuesFinal - this.values);
+    }
+    public valueWithSpace(values: number) {
+        return SharedModule.calculeMoneyWithSpace(values);
     }
 }

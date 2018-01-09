@@ -1,29 +1,33 @@
-
 <div *ngIf="userS.currentUser.quest.gain != -1">
-    Daily Quest: <br> <br>
-    {{ userS.currentUser.quest.text }} <br>
-    {{ userS.currentUser.quest.name }} :
-    {{ (userS.currentUser.quest.valuesFinal - userS.currentUser.quest.values).toFixed(2) }} / {{userS.currentUser.quest.valuesFinal}}    
-    <br> <br>
-    You Win: {{ userS.currentUser.quest.gain }} Chest.
+  Daily Quest:
+  <br>
+  <br> {{ userS.currentUser.quest.text }}
+  <br> {{ userS.currentUser.quest.name }} : {{ userS.currentUser.quest.calculValueDisplay()  }} / {{userS.currentUser.quest.valueWithSpace(userS.currentUser.quest.valuesFinal)}}
+  <br>
+  <br> You Win: {{ userS.currentUser.quest.gain }} Chest.
 </div>
 
 <div *ngIf="userS.currentUser.quest.gain === -1">
-  Daily Quest: <br> <br>
-  New quest every 1 hours ! 
+  Daily Quest:
+  <br>
+  <br> New quest every 1 hours !
 </div>
-<br> <br>
+<br>
+<br>
 <div *ngIf="questS.questGroup.values != 0">
-  Glory Quest: <br> <br>
-  {{ questS.questGroup.name }} <br>
-  {{ (questS.questGroup.valuesFinal - questS.questGroup.values).toFixed(2) }} / {{questS.questGroup.valuesFinal}}    
-  <br> <br>
-  You Win: {{userS.currentUser.score * 0.20 + 10000 }} Credit.
+  Glory Quest:
+  <br>
+  <br> {{ questS.questGroup.name }}
+  <br> {{ questS.questGroup.calculValueDisplay() }} / {{questS.questGroup.valueWithSpace(questS.questGroup.valuesFinal)}}
+  <br>
+  <br> You Win: {{userS.currentUser.valueWithSpace(userS.currentUser.score.score * 0.20 + 10000 )}} Credit.
 </div>
 
 <div *ngIf="questS.questGroup.values === 0">
-  Glory Quest: <br> <br>
-  Wait new information !
+  Glory Quest:
+  <br>
+  <br> Wait new information !
 </div>
-
-<br>
+<div>
+  <img class="upgrade-icon" src="../../../assets/Ivan.gif" />
+</div>

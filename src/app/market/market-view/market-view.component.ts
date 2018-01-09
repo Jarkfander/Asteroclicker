@@ -6,6 +6,7 @@ import { UserService } from '../../shared/user/user.service';
 import { UpgradeService } from '../../ship/upgrade-list/upgrade.service';
 import { OreInfoService } from '../../asteroid/ore-info-view/ore-info.service';
 import { UpgradeType } from '../../ship/upgrade-class/upgrade';
+import { SharedModule } from '../../shared/shared.module';
 
 
 @Component({
@@ -25,6 +26,7 @@ export class MarketInfoComponent implements OnInit {
   public histoValues: number[];
 
   public valuesTotal: any;
+  public valuesTotalWithTaxe: any;
   public boolOreUnlock: boolean;
 
   public hasMoney: boolean;
@@ -58,14 +60,16 @@ export class MarketInfoComponent implements OnInit {
 
     this.amount = parseFloat((this.maxSliderValue / 2).toFixed(1));
 
-    this.valuesTotal = this.value * this.amount;
+    this.valuesTotal = SharedModule.calculeMoneyWithSpace(this.value * this.amount);
+    this.valuesTotalWithTaxe = SharedModule.calculeMoneyWithSpace(this.value * this.amount * 1.025);
 
     this.recentValues = this.marketS.oreCosts[this.oreName];
     this.histoValues = this.marketS.oreHistory[this.oreName];
 
     this.marketS.oreCostsSubject[this.oreName].subscribe((tab: number[]) => {
       this.value = tab[Object.keys(tab)[Object.keys(tab).length - 1]];
-      this.valuesTotal = this.value * this.amount;
+      this.valuesTotal = SharedModule.calculeMoneyWithSpace(this.value * this.amount);
+      this.valuesTotalWithTaxe = SharedModule.calculeMoneyWithSpace(this.value * this.amount * 1.025);
       this.recentValues = tab;
     });
 
@@ -79,7 +83,8 @@ export class MarketInfoComponent implements OnInit {
         * this.oreInfoS.getOreInfoByString(this.oreName).miningSpeed);
       this.maxSliderValue = ((Math.floor(this.maxSliderValue / 50)) + 1) * 50;
 
-      this.valuesTotal = this.value * this.amount;
+      this.valuesTotal = SharedModule.calculeMoneyWithSpace(this.value * this.amount);
+      this.valuesTotalWithTaxe = SharedModule.calculeMoneyWithSpace(this.value * this.amount * 1.025);
 
       this.boolOreUnlock = this.upgradeS.research[this.userS.currentUser.upgrades[UpgradeType.research].lvl].lvl >=
         this.oreInfoS.getOreInfoByString(this.oreName).lvlOreUnlock;

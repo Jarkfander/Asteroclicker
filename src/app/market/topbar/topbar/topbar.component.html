@@ -7,12 +7,12 @@
     </div>
   </div>
 
-  <h1 class="credit-count credit"> {{ userS.currentUser.calculeMoneyWithSpace() }} cr</h1>
+  <h1 class="credit-count credit"> {{ creditValue }} cr</h1>
   <ul>
     <li>
         <a href="#" (click)="openQuestModal()">Glory quest</a> <br>  
       <div *ngIf="questS.questGroup.values > 0">
-        {{ (questS.questGroup.valuesFinal - questS.questGroup.values).toFixed(2) }} / {{questS.questGroup.valuesFinal}} {{questS.questGroup.type}}
+        {{ questS.questGroup.calculValueDisplay() }} / {{questS.questGroup.valueWithSpace(questS.questGroup.valuesFinal)}} {{questS.questGroup.type}}
       </div>
       <div *ngIf="questS.questGroup.values <= 0">
           No quest for now.
@@ -21,7 +21,7 @@
     <li>  
         <a href="#" (click)="openQuestModal()">Daily quest</a> <br>  
       <div *ngIf="userS.currentUser.quest.gain != -1">
-        {{ (userS.currentUser.quest.valuesFinal - userS.currentUser.quest.values).toFixed(2) }} / {{userS.currentUser.quest.valuesFinal}} {{userS.currentUser.quest.type}}    
+        {{ userS.currentUser.quest.calculValueDisplay() }} / {{userS.currentUser.quest.valueWithSpace(userS.currentUser.quest.valuesFinal)}} {{userS.currentUser.quest.type}}    
       </div>
       <div *ngIf="userS.currentUser.quest.gain == -1">
           No quest for now.
