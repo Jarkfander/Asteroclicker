@@ -9,17 +9,18 @@
   </tr>
 </table>
 
-<div class="progressBar">
-  <progress value="{{progressBarValue}}">
-  </progress>
+<div class="progressBar" >
+    <progress value="{{progressBarValue}}" >
+    </progress>
 </div>
 
 <br>
 <table style="width:100%">
-  <tr *ngFor="let info of allOreInfo |sortBy:'order'">
-    <app-ore-infos-view [name]="info.name" [amount]="oreAmount[info.name]" [capacity]="capacity" [rate]="asteroid.ore==info.name && ansteroid.currentCapacity>0 && oreAmount[info.name]<capacity?(info.miningSpeed*(asteroid.purity/100)*mineRate).toFixed(2):0">
-    </app-ore-infos-view>
-  </tr>
+      <tr *ngFor="let info of allOreInfo |sortBy:'order'">
+            <app-ore-infos-view [name]="info.name" [amount]="oreAmount[info.name]" [capacity]="capacity"
+            [rate]="asteroid.ore==info.name && asteroid.currentCapacity>0 && oreAmount[info.name]<capacity?(info.miningSpeed*(asteroid.purity/100)*mineRate).toFixed(2):0" >
+            </app-ore-infos-view>
+      </tr>
 </table>
 <br>
 
@@ -47,8 +48,8 @@
 <button *ngIf="search.start!=0 && search.results.length==1" disabled="true" class="btn-upgrade">Time before arriving : {{timer}}</button>
 <div *ngIf="search.start==0" id="slidecontainer">
   Distance: {{distance}} light years.
-  <input type="range" min={{researchInfo.minDistance}} max={{researchInfo.maxDistance}} value="50" class="slider" [(ngModel)]="distance"
-    (ngModelChange)="searchTimeUpdate()">
+  <input type="range" min={{researchInfo.minDistance}} max={{researchInfo.maxDistance}} value="50" class="slider"
+   [(ngModel)]="distance" (ngModelChange)="searchTimeUpdate()"> 
 </div>
 <div *ngIf="search.start==0">Search time : {{searchTime}}</div>
 <button *ngIf="search.start==0" class="btn-upgrade" (click)="searchNewAster()">Search Another Asteroid</button>
