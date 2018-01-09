@@ -1,3 +1,5 @@
+import { SharedModule } from "../../shared/shared.module";
+
 export class Upgrade {
 
     public lvl: number;
@@ -35,7 +37,11 @@ export class Upgrade {
         }
     }
 
+    public costValue() {
+        return SharedModule.calculeMoneyWithSpace(this.cost);
+    }
 }
+
 
 export enum UpgradeType {
     mineRate,

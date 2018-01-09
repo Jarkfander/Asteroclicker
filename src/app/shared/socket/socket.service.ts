@@ -14,7 +14,7 @@ export class SocketService {
     this.socket = io(this.url);
   }
 
-  incrementOre(userId: string,oreName: string, delta: number) {
+  incrementOre(userId: string, oreName: string, delta: number) {
     const json = {};
 
     json['user'] = userId;
@@ -24,7 +24,7 @@ export class SocketService {
     this.socket.emit('incrementOre', json);
   }
 
-  upgradeShipCredit(userId: string,upgradeName: string) {
+  upgradeShipCredit(userId: string, upgradeName: string) {
     const json = {};
 
     json['user'] = userId;
@@ -33,7 +33,7 @@ export class SocketService {
     this.socket.emit('upgradeShipCredit', json);
   }
 
-  upgradeShipOre(userId: string,upgradeName: string) {
+  upgradeShipOre(userId: string, upgradeName: string) {
     const json = {};
 
     json['user'] = userId;
@@ -42,7 +42,7 @@ export class SocketService {
     this.socket.emit('upgradeShipOre', json);
   }
 
-  updateUpgradeTimer(userId: string,upgradeName: string) {
+  updateUpgradeTimer(userId: string, upgradeName: string) {
     const json = {};
 
     json['user'] = userId;
@@ -52,7 +52,7 @@ export class SocketService {
   }
 
 
-  sellOre(userId: string,oreName: string, amount: number) {
+  sellOre(userId: string, oreName: string, amount: number) {
     const json = {};
 
     json['user'] = userId;
@@ -62,7 +62,7 @@ export class SocketService {
     this.socket.emit('sellOre', json);
   }
 
-  buyOre(userId: string,oreName: string, amount: number) {
+  buyOre(userId: string, oreName: string, amount: number) {
     const json = {};
 
     json['user'] = userId;
@@ -80,7 +80,7 @@ export class SocketService {
     this.socket.emit('searchAster', json);
   }
 
-  chooseAsteroid(userId: string,ind: number) {
+  chooseAsteroid(userId: string, ind: number) {
     const json = {};
 
     json['user'] = userId;
@@ -89,7 +89,7 @@ export class SocketService {
     this.socket.emit('chooseAsteroid', json);
   }
 
-  updateAsteroidTimer(userId: string,distance: number) {
+  updateAsteroidTimer(userId: string, distance: number) {
     const json = {};
 
     json['user'] = userId;
@@ -105,7 +105,7 @@ export class SocketService {
     this.socket.emit('rejectResults', json);
   }
 
-  removeChest(userId: string,numberOfChest:number) {
+  removeChest(userId: string, numberOfChest: number) {
     const json = {};
     json['numberOfChest'] = numberOfChest - 1;
     json['user'] = userId;

@@ -2,8 +2,9 @@ import * as PIXI from 'pixi.js';
 import { getFramesFromSpriteSheet } from '../../loadAnimation';
 
 export class Drone {
-    drone: PIXI.Sprite;
     app: PIXI.Application;
+    public drone: PIXI.extras.AnimatedSprite;
+
     public laser: PIXI.extras.AnimatedSprite;
     laserFirstState: boolean;
     isBeginClick: boolean;
@@ -18,26 +19,34 @@ export class Drone {
     laserAnim_actif1: PIXI.extras.AnimatedSprite;
     laserAnim_actif2: PIXI.extras.AnimatedSprite;
     laserAnim_actif3: PIXI.extras.AnimatedSprite;
-    
+
     constructor(x: number , y: number, app: PIXI.Application) {
         this.app = app;
         this.isMining = true;
         this.delta = 0;
-        this.drone = PIXI.Sprite.fromImage('assets/drone.png');
-        this.drone.texture.baseTexture.mipmap = true;
+
+        // Drone 
+        this.drone = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(PIXI.loader.resources['drone1'].texture, 266, 308));
+        this.drone.gotoAndPlay(0);
+        this.drone.scale.set(x + 0.15, y + 0.15);
+        this.drone.loop = true;
         this.drone.anchor.set(0.5);
-        this.drone.scale.set(x, y);
+        this.drone.animationSpeed = 0.35;
+        this.drone.visible = true;
 
         this.drone.x = this.app.renderer.width / 2;
         this.drone.y = this.app.renderer.height / 2 - 150;
-        this.app.stage.addChild(this.drone);
 
         this.xBaseDrone = this.drone.x;
         this.yBaseDrone = this.drone.y;
 
+        this.app.stage.addChild(this.drone);
+
+        // LaserAnim 
         this.laserAnim = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(PIXI.loader.resources['laser'].texture, 946, 964));
         this.laserAnim.gotoAndPlay(0);
-        this.laserAnim.anchor.set(0.5, 0.04);
+        this.laserAnim.scale.set(0.60, 0.60);
+        this.laserAnim.anchor.set(0.54, -0.08);
         this.laserAnim.animationSpeed = 0.35;
         this.laserAnim.visible = true;
 
@@ -91,9 +100,10 @@ export class Drone {
         this.laserAnim_actif1 = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(PIXI.loader.resources['laserMinage1'].texture,
          946, 946));
         this.laserAnim_actif1.gotoAndPlay(0);
-        this.laserAnim_actif1.anchor.set(0.5, 0.04);
+        this.laserAnim_actif1.anchor.set(0.53, -0.09);
         this.laserAnim_actif1.animationSpeed = 0.30;
         this.laserAnim_actif1.position.set(3000, 3000);
+        this.laserAnim_actif1.scale.set(0.60, 0.60);
 
         this.laserAnim_actif1.visible = true;
         this.laserAnim_actif1.loop = false;
@@ -103,8 +113,9 @@ export class Drone {
         this.laserAnim_actif2 = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(PIXI.loader.resources['laserMinage2'].texture,
         946, 946));
         this.laserAnim_actif2.gotoAndPlay(0);
-        this.laserAnim_actif2.anchor.set(0.5, 0.04);
+        this.laserAnim_actif2.anchor.set(0.53, -0.09);
         this.laserAnim_actif2.position.set(3000, 3000);
+        this.laserAnim_actif2.scale.set(0.60, 0.60);
         this.laserAnim_actif2.animationSpeed = 0.35;
         this.laserAnim_actif2.visible = true;
 
@@ -113,7 +124,8 @@ export class Drone {
         this.laserAnim_actif3 = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(PIXI.loader.resources['laserMinage3'].texture,
         946, 946));
         this.laserAnim_actif3.gotoAndPlay(0);
-        this.laserAnim_actif3.anchor.set(0.5, 0.04);
+        this.laserAnim_actif3.anchor.set(0.53, -0.09);
+        this.laserAnim_actif3.scale.set(0.60, 0.60);
         this.laserAnim_actif3.animationSpeed = 0.25;
         this.laserAnim_actif3.position.set(3000, 3000);
         this.laserAnim_actif3.visible = true;
@@ -155,5 +167,14 @@ export class Drone {
         }
     }
 
+
+    changeSpriteDrone(lvl: number) {
+        const num = lvl <= 10 ? 1 : lvl <= 25 ? 2 : 3;
+        const temp = getFramesFromSpriteSheet(PIXI.loader.resources['drone' + num].texture, 266, 308);
+
+        for (let i = 0; i < this.drone.textures.length; i++) {
+            this.drone.textures[i] = temp[i];
+        }
+    }
 
 }
