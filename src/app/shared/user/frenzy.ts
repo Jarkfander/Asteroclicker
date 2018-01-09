@@ -1,13 +1,17 @@
 export class Frenzy {
     state: boolean;
     timer: number;
-    start: number;
-    nextCombo: number;
+    nextCombos: {};
+    public comboInd: number =0;
 
-    public constructor(state: boolean, timer: number, start: number, nextcombo: number) {
+    public constructor(state: boolean,timer:number, nextCombos) {
+        this.comboInd=0;
         this.state = state;
-        this.timer = timer;
-        this.start = start;
-        this.nextCombo = nextcombo;
+        this.nextCombos = nextCombos;
+        this.timer=timer;
+    }
+
+    public updateTimer(timer: number){
+        this.timer=timer;
     }
 }

@@ -12,6 +12,7 @@ import { ParticleBase } from '../../shared/pixiVisual/particleBase';
 import { User } from '../../shared/user/user';
 import { UpgradeType, Upgrade } from '../../ship/upgrade-class/upgrade';
 import { getFramesFromSpriteSheet } from '../../loadAnimation';
+import { Frenzy } from '../../shared/user/frenzy';
 import { UpgradeLvls } from '../../ship/upgrade-list/upgrade-list.component';
 
 
@@ -29,13 +30,6 @@ export enum KEY_CODE {
 })
 
 export class AsteroidViewComponent implements AfterViewInit {
-  constructor(private el: ElementRef, private render: Renderer2, private userS: UserService,
-    private upgradeS: UpgradeService, private socketS: SocketService, private oreInfoS: OreInfoService) {
-    this.asteroid = this.userS.currentUser.asteroid;
-    this.state = this.asteroid.currentCapacity == this.asteroid.capacity ? 4 :
-      Math.floor((this.asteroid.currentCapacity / this.asteroid.capacity) * 5);
-  }
-
   private app: PIXI.Application;
   private asteroidSprite: AsteroidSprite;
   private asteroid: Asteroid;
@@ -52,6 +46,13 @@ export class AsteroidViewComponent implements AfterViewInit {
   private clicks: number[];
 
   clicked: boolean;
+
+  constructor(private el: ElementRef, private render: Renderer2, private userS: UserService,
+    private upgradeS: UpgradeService, private socketS: SocketService, private oreInfoS: OreInfoService) {
+    this.asteroid = this.userS.currentUser.asteroid;
+    this.state = this.asteroid.currentCapacity == this.asteroid.capacity ? 4 :
+      Math.floor((this.asteroid.currentCapacity / this.asteroid.capacity) * 5);
+  }
 
   ngAfterViewInit() {
     this.clicks = new Array();
@@ -173,18 +174,22 @@ export class AsteroidViewComponent implements AfterViewInit {
       this.clickCapsule();
     });
 
-    this.userS.upgradeSubject.subscribe((user: User) => {
-      this.drone.changeSpriteDrone(user.upgrades[UpgradeType.mineRate].lvl);
-    });
+    this.userS.frenzySubjectState.subscribe((frenzy: Frenzy) => {
+      if (!frenzy.state) {
 
-    this.userS.frenzySubjectState.subscribe((FrenzyState: boolean) => {
-      if (!FrenzyState) {
+        this.userS.upgradeSubject.subscribe((user: User) => {
+          this.drone.changeSpriteDrone(user.upgrades[UpgradeType.mineRate].lvl);
+        });
+
         this.asteroidSprite.frenzyModTouchDown();
+      }
+      else {
+        this.asteroidSprite.frenzyModTouch(frenzy.nextCombos[0]);
       }
     });
     this.userS.frenzySubjectCombo.subscribe((frenzyNum: number) => {
       if (this.userS.currentUser.frenzy.state) {
-        this.asteroidSprite.frenzyModTouch(frenzyNum);
+
       } else {
         this.asteroidSprite.frenzyModTouchDown();
       }
@@ -194,7 +199,9 @@ export class AsteroidViewComponent implements AfterViewInit {
 
   asteroidClick() {
     // ga('asteroid.send', 'event', 'buttons', 'click', 'asteroid');
-    this.clicks.push(Date.now());
+    if (!this.userS.currentUser.frenzy.state) {
+      this.clicks.push(Date.now());
+    }
   }
 
   updateClick() {
@@ -341,8 +348,13 @@ export class AsteroidViewComponent implements AfterViewInit {
 
   // frenzy mod
   frenzyModTouch(numTouchUserActu: number) {
-    this.socketS.nextArrow(this.userS.currentUser.uid, numTouchUserActu - 37);
-    this.asteroidSprite.arrowFrenzy[numTouchUserActu-37].visible = false;
+    if (this.userS.currentUser.frenzy.state) {
+      this.socketS.validArrow(this.userS.currentUser.uid, numTouchUserActu - 37, this.userS.currentUser.frenzy.comboInd);
+      if (this.userS.currentUser.frenzy.nextCombos[this.userS.currentUser.frenzy.comboInd] == (numTouchUserActu - 37)) {
+        this.userS.currentUser.frenzy.comboInd++;
+        this.asteroidSprite.frenzyModTouch(this.userS.currentUser.frenzy.nextCombos[this.userS.currentUser.frenzy.comboInd]);
 
+      }
+    }
   }
 }

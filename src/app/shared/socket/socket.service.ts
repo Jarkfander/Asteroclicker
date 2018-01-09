@@ -137,10 +137,11 @@ export class SocketService {
     json['user'] = userId;
     this.socket.emit('reachFrenzy', json);
   }
-  nextArrow(userId: string, keyCode: number) {
+  validArrow(userId: string, keyCode: number,keyInd: number) {
     const json = {};
     json['user'] = userId;
     json['keyCode'] = keyCode;
-    this.socket.emit('nextArrow', json);
+    json['keyInd'] = keyInd;
+    this.socket.emit('validArrow', json);
   }
 }

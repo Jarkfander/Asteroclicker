@@ -35,7 +35,7 @@ export class UserService {
   mineRateSubject = new Subject<User>();
   eventSubject = new Subject<User>();
   frenzySubjectCombo = new Subject<number>();
-  frenzySubjectState = new Subject<boolean>();
+  frenzySubjectState = new Subject<Frenzy>();
 
   constructor(db: AngularFireDatabase, afAuth: AngularFireAuth,
     private upgradeS: UpgradeService, private marketS: MarketService, private socketS: SocketService) {
@@ -81,15 +81,19 @@ export class UserService {
           (snapshot: any) => {
             this.FillEvent(snapshot);
           });
-        this.db.object('users/' + auth.uid + '/frenzy').valueChanges().subscribe(
-          (snapshot: any) => {
-            this.FillFrenzy(snapshot);
-            this.frenzySubjectState.next(snapshot.state);
+        this.db.object('users/' + auth.uid + '/frenzy/info').valueChanges().subscribe(
+          (info: any) => {
+            this.db.object('users/' + auth.uid + '/frenzy/time').valueChanges().take(1).subscribe(
+              (time: any) => {
+                this.FillFrenzy(info,time);
+                this.frenzySubjectState.next(this.currentUser.frenzy);
+              });
           });
-
-        this.db.object('users/' + auth.uid + '/frenzy/nextCombo').valueChanges().subscribe(
+        this.db.object('users/' + auth.uid + '/frenzy/time').valueChanges().subscribe(
           (snapshot: any) => {
-            this.frenzySubjectCombo.next(snapshot);
+            if(this.currentUser.frenzy!=null){
+              this.currentUser.frenzy.updateTimer(snapshot.timer);
+            }
           });
       }
     });
@@ -210,8 +214,8 @@ export class UserService {
     this.incrementCounter();
   }
 
-  FillFrenzy(snapshot) {
-    this.currentUser.frenzy = new Frenzy(snapshot.state === 1, snapshot.timer, snapshot.start, snapshot.nextCombo);
+  FillFrenzy(info,time) {
+    this.currentUser.frenzy = new Frenzy(info.state === 1,time.timer, info.nextCombos);
   }
 
   incrementCounter() {

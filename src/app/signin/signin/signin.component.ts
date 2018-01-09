@@ -19,7 +19,6 @@ export class SigninComponent implements OnInit {
 
   public CreateAccount(email,pswd,pswd2){
     if(pswd == pswd2){
-      console.log(pswd,pswd2);
       this.userS.CreateAccount(email,pswd)
     }
     else{
