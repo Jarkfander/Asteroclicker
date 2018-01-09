@@ -10,8 +10,9 @@ import { OreInfoService } from '../ore-info-view/ore-info.service';
 import { Asteroid } from './asteroid';
 import { ParticleBase } from '../../shared/pixiVisual/particleBase';
 import { User } from '../../shared/user/user';
-import { UpgradeType } from '../../ship/upgrade-class/upgrade';
+import { UpgradeType, Upgrade } from '../../ship/upgrade-class/upgrade';
 import { getFramesFromSpriteSheet } from '../../loadAnimation';
+import { UpgradeLvls } from '../../ship/upgrade-list/upgrade-list.component';
 
 
 export enum KEY_CODE {
@@ -128,6 +129,7 @@ export class AsteroidViewComponent implements AfterViewInit {
       });
     }*/
 
+    this.drone.changeSpriteDrone(this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl);
 
     this.asteroidSprite.eventOk = this.userS.currentUser.event;
     this.asteroidSprite.activEvent();
@@ -169,6 +171,10 @@ export class AsteroidViewComponent implements AfterViewInit {
       this.asteroidSprite.eventOk = user.event;
       this.asteroidSprite.activEvent();
       this.clickCapsule();
+    });
+
+    this.userS.upgradeSubject.subscribe((user: User) => {
+      this.drone.changeSpriteDrone(user.upgrades[UpgradeType.mineRate].lvl);
     });
 
     this.userS.frenzySubjectState.subscribe((FrenzyState: boolean) => {
