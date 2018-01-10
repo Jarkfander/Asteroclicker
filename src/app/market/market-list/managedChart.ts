@@ -14,7 +14,8 @@ export class ManagedChart {
                     borderColor: [
                         color,
                     ],
-                    borderWidth: 1
+                    borderWidth: 1,
+                    pointRadius:0
                 }]
             },
             options: {
