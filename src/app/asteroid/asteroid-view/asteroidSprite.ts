@@ -511,7 +511,6 @@ export class AsteroidSprite {
             if (this.arrowFrenzy[i].visible) {
                 this.emitDestructionParticle(this.arrowFrenzy[i].worldTransform.tx,
                     this.arrowFrenzy[i].worldTransform.ty);
-                this.boomAnim.scale.set(2, 2);
                 this.animBoomOnClick(this.arrowFrenzy[i].worldTransform.tx,
                     this.arrowFrenzy[i].worldTransform.ty, this.boomAnim, true);
                     this.checkAstero = true;
