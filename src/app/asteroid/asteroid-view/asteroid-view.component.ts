@@ -173,6 +173,13 @@ export class AsteroidViewComponent implements AfterViewInit {
         this.asteroidSprite.frenzyModTouch(frenzy.nextCombos[0]);
       }
     });
+    this.userS.frenzySubjectCombo.subscribe((frenzyNum: number) => {
+      if (this.userS.currentUser.frenzy.state) {
+
+      } else {
+        this.asteroidSprite.frenzyModTouchDown();
+      }
+    });
 
     this.userS.upgradeSubject.subscribe((user: User) => {
       const tempLvl = this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl;
