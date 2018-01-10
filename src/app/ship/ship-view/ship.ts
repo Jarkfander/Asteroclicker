@@ -16,6 +16,16 @@ class UpgradeShip {
         this.currentLevel = lvl;
     }
 
+    allAnimBeginOrStop(isBadConfig: boolean) {
+        for (let i = 0; i < this.tabAnimation.length; i++) {
+            if (isBadConfig) {
+                this.tabAnimation[i].stop();
+            } else {
+                this.tabAnimation[i].play();
+            }
+        }
+    }
+
     lvlSelection(newlvl: number) {
         for (let i = 0; i < this.tabLevel.length; i++) {
             if (newlvl <= this.tabLevel[i]) {
@@ -32,7 +42,7 @@ class UpgradeShip {
             return null;
         }
         this.currentLevel = lvltemp;
-        
+
         for (let i = 0; i < this.currentLevel; i++) {
             if (!this.tabAnimation[i]) {
                 break;
@@ -140,7 +150,7 @@ export class Ship {
                 this.initMoveXY(this.reacteurUpgrade, 30, 20, this.deltaSum);
 
                 if (this.boolParentChest) {
-                    if ( this.spriteChestParent.y <= 151 ) {
+                    if (this.spriteChestParent.y <= 151) {
                         this.boolParentChest = false;
                         this.spriteTextOpenChest.visible = false;
                     }
@@ -175,7 +185,7 @@ export class Ship {
 
     // manage the upgrade when the level change
     autoUpgrade(lvl: number, tab: UpgradeShip) {
-            tab.spriteAdd(lvl);
+        tab.spriteAdd(lvl);
     }
 
     spritesheetFirstAnimation(spriteName: string, width: number, height: number, decalagex: number,
@@ -186,7 +196,7 @@ export class Ship {
         spriteAnim.animationSpeed = 0.24;
         spriteAnim.visible = false;
         spriteAnim.anchor.set(0.5);
-
+        spriteAnim.stop();
         if (boolShipParent) {
             this.ship.addChild(spriteAnim);
         } else {
@@ -194,14 +204,13 @@ export class Ship {
             spriteAnim.y = this.app.renderer.height / 2 - decalagey;
             this.app.stage.addChild(spriteAnim);
         }
-
         return spriteAnim;
     }
 
     spritesheetAnimation(spriteName: string, width: number, height: number, decalagex, decalagey, newParent) {
         const spriteAnim = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
             PIXI.loader.resources[spriteName].texture, width, height));
-        spriteAnim.gotoAndPlay(0);
+        spriteAnim.stop();
         spriteAnim.animationSpeed = 0.24;
         spriteAnim.visible = false;
         spriteAnim.anchor.set(0.5);
@@ -214,7 +223,7 @@ export class Ship {
     initShip(spriteName: string, width: number, height: number) {
         this.ship = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
             PIXI.loader.resources[spriteName].texture, width, height));
-        this.ship.gotoAndPlay(0);
+        this.ship.stop();
         this.ship.animationSpeed = 0.10;
         this.ship.visible = true;
         this.ship.texture.baseTexture.mipmap = true;
@@ -296,8 +305,8 @@ export class Ship {
             this.spriteTextChest = new PIXI.Container();
             this.spriteChestParent.y = 300;
             this.boolParentChest = true;
-            this.spriteTextOpenChest.visible = true;        
-            this.spriteTextOpenChest.alpha = 1;             
+            this.spriteTextOpenChest.visible = true;
+            this.spriteTextOpenChest.alpha = 1;
             this.spriteChestParent.children[0].visible = true;
         }
     }
@@ -305,11 +314,11 @@ export class Ship {
     // remove chest for initChest
     supChest() {
         if (this.spriteChestParent) {
-            for (let i = 0 ; i < this.spriteChestParent.children.length; i++) {
+            for (let i = 0; i < this.spriteChestParent.children.length; i++) {
                 this.spriteChestParent.children[i].visible = false;
             }
             if (this.spriteTextChest) {
-                this.spriteTextChest.destroy(); 
+                this.spriteTextChest.destroy();
             }
             this.initChest();
         }
@@ -361,7 +370,7 @@ export class Ship {
         temp.scale.set(1);
         temp.y = -100;
     }
-    
+
     initAnimationFromSpriteName(spriteName, w, h, isLoop) {
         const tempAnim = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
             PIXI.loader.resources[spriteName].texture, w, h));

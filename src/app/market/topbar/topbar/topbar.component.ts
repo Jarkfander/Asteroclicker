@@ -34,7 +34,8 @@ export class TopbarComponent implements AfterViewInit {
       this.creditValue = SharedModule.calculeMoneyWithSpace(user.credit);
     });
   }
-
+  export class CheckboxOverviewExample {}
+  
   public LogOut() {
     this.userS.LogOut();
   }

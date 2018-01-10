@@ -152,6 +152,7 @@ export class UserService {
   FillProfile(snapshot) {
     this.currentUser.email = snapshot.email;
     this.currentUser.name = snapshot.name;
+    this.currentUser.boolBadConfig = snapshot.badConfig === 0 ? false : true;
     this.profileSubject.next(this.currentUser);
     this.incrementCounter();
   }

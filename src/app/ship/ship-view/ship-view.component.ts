@@ -68,8 +68,13 @@ export class ShipViewComponent implements AfterViewInit {
     if (this.ship.ship.cacheAsBitmap) {
       setInterval(() => {
         this.ship.ship.cacheAsBitmap = false;
+        this.animationGoodConfig();
       }, 10000);
     }
+
+    this.userS.profileSubject.subscribe((user: User) => {
+      this.animationGoodConfig();
+    });
 
     this.userS.upgradeSubject.subscribe((user: User) => {
       this.ship.autoUpgrade(user.upgrades[UpgradeType.storage].lvl, this.ship.stockUpgrade);
@@ -122,7 +127,12 @@ export class ShipViewComponent implements AfterViewInit {
   initSky(spriteName: string, width: number, height: number, w, h) {
     this.backgroundSky = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
       PIXI.loader.resources[spriteName].texture, width, height));
-    this.backgroundSky.gotoAndPlay(0);
+    const isBadConfig = this.userS.currentUser.boolBadConfig;
+    if (isBadConfig) {
+      this.backgroundSky.stop();
+    } else {
+      this.backgroundSky.play();
+    }
     this.backgroundSky.animationSpeed = 0.32;
     this.backgroundSky.visible = true;
     this.backgroundSky.loop = false;
@@ -211,7 +221,7 @@ export class ShipViewComponent implements AfterViewInit {
               };
 
               tempSprite[5].onComplete = () => {
-                this.socketS.removeChest(this.userS.currentUser.uid,this.userS.currentUser.numberOfChest);
+                this.socketS.removeChest(this.userS.currentUser.uid, this.userS.currentUser.numberOfChest);
               };
             };
           });
@@ -220,6 +230,20 @@ export class ShipViewComponent implements AfterViewInit {
       });
     }
   }
+
+  animationGoodConfig() {
+    const isBadConfig = this.userS.currentUser.boolBadConfig;
+    this.ship.radarUpgrade.allAnimBeginOrStop(isBadConfig);
+    this.ship.reacteurUpgrade.allAnimBeginOrStop(isBadConfig);
+    this.ship.stockUpgrade.allAnimBeginOrStop(isBadConfig);
+    this.ship.droneUpgrade.allAnimBeginOrStop(isBadConfig);
+    if (isBadConfig) {
+      this.backgroundSky.stop();
+      this.ship.tourelle.stop();
+    } else {
+      this.backgroundSky.play();
+      this.ship.tourelle.play();
+    }
+  }
+
 }
-
-

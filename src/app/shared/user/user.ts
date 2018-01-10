@@ -42,9 +42,12 @@ export class User {
 
     public frenzy: Frenzy;
 
+    public boolBadConfig: boolean;
+
     constructor() {
         this.upgrades = Array();
         this.chest = new Array<Chest>();
+        this.boolBadConfig = true;
     }
 
     public destroyChest() {

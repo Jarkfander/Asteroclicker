@@ -49,8 +49,7 @@ export class AsteroidSprite {
         this.frenzyModInit();
 
         // Asteroid init
-        this.asteroidFolders =
-            {
+        this.asteroidFolders = {
                 'carbon': new Array<PIXI.Texture>(),
                 'titanium': new Array<PIXI.Texture>(),
                 'iron': new Array<PIXI.Texture>(),
@@ -58,7 +57,6 @@ export class AsteroidSprite {
                 'gold': new Array<PIXI.Texture>(),
             };
         this.checkAstero = false;
-        //this.asteroidSeed = seed;
         this.initAsteroidSprites();
 
         this.generateAsteroid(asteroid);
@@ -172,7 +170,8 @@ export class AsteroidSprite {
 
     initAsteroidSprites() {
         const keys = Object.keys(this.asteroidFolders);
-        for (let id in keys) {
+        // tslint:disable-next-line:forin
+        for (const id in keys) {
             const key = keys[id];
             this.asteroidFolders[key].push(PIXI.Texture.fromImage('assets/AsteroidSprites/' + key + '/b.png'));
 
@@ -183,24 +182,24 @@ export class AsteroidSprite {
     }
 
     generateAsteroid(asteroid: Asteroid) {
-        const state = asteroid.currentCapacity == asteroid.capacity ? 4 :
+        const state = asteroid.currentCapacity === asteroid.capacity ? 4 :
             Math.floor((asteroid.currentCapacity / asteroid.capacity) * 5);
-        let seedNum = [];
-        let nums = [1, 2, 3, 4];
-        let comb = [[1, 1], [1, -1], [-1, -1], [-1, 1]];
+        const seedNum = [];
+        const nums = [1, 2, 3, 4];
+        const comb = [[1, 1], [1, -1], [-1, -1], [-1, 1]];
 
         for (let i = 0; i < asteroid.seed.length; i++) {
-            seedNum.push(parseInt(asteroid.seed[i]));
+            // tslint:disable-next-line:radix
+            seedNum.push( parseInt( asteroid.seed[i] ) );
         }
 
-        if (this.asteroid.length == 0) {
+        if (this.asteroid.length === 0) {
             this.asteroid.push(new PIXI.Sprite());
             this.asteroid.push(new PIXI.Sprite());
             this.asteroid.push(new PIXI.Sprite());
             this.asteroid.push(new PIXI.Sprite());
             this.asteroid.push(new PIXI.Sprite());
-        }
-        else {
+        } else {
             this.app.stage.removeChild(this.asteroid[0]);
             for (let i = 1; i < this.asteroid.length; i++) {
                 this.asteroid[0].removeChild(this.asteroid[i]);
@@ -246,7 +245,7 @@ export class AsteroidSprite {
         this.woomAnim.scale.set(1, 1);
         this.app.stage.removeChild(this.asteroid[0]);
     }
-    // Change the sprite of asteroid when the user change 
+    // Change the sprite of asteroid when the user change
     changeSprite(asteroid: Asteroid) {
 
         this.InitializeDestructionEmitter(asteroid.ore);
@@ -509,10 +508,17 @@ export class AsteroidSprite {
 
     frenzyModTouchDown() {
         for (let i = 0; i < 4; i++) {
+            if (this.arrowFrenzy[i].visible) {
+                this.emitDestructionParticle(this.arrowFrenzy[i].worldTransform.tx,
+                    this.arrowFrenzy[i].worldTransform.ty);
+                this.boomAnim.scale.set(2, 2);
+                this.animBoomOnClick(this.arrowFrenzy[i].worldTransform.tx,
+                    this.arrowFrenzy[i].worldTransform.ty, this.boomAnim, true);
+                    this.checkAstero = true;
+            }
             this.arrowFrenzy[i].visible = false;
         }
     }
-
 
     frenzyModInit() {
         this.arrowFrenzy = new Array<PIXI.Sprite>();
