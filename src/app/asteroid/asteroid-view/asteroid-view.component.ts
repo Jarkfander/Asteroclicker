@@ -166,14 +166,14 @@ export class AsteroidViewComponent implements AfterViewInit {
       this.clickCapsule();
     });
 
-<<<<<<< HEAD
     this.userS.frenzySubjectState.subscribe((frenzy: Frenzy) => {
       if (!frenzy.state) {
+        this.asteroidSprite.frenzyModTouchDown();
+      } else {
+        this.asteroidSprite.frenzyModTouch(frenzy.nextCombos[0]);
+      }
+    });
 
-        this.userS.upgradeSubject.subscribe((user: User) => {
-          this.drone.changeSpriteDrone(user.upgrades[UpgradeType.mineRate].lvl);
-        });
-=======
     this.userS.upgradeSubject.subscribe((user: User) => {
       const tempLvl = this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl;
       if (this.numOfDrone !== Math.floor(tempLvl / 40) + 1) {
@@ -184,21 +184,7 @@ export class AsteroidViewComponent implements AfterViewInit {
         this.drone[i].changeSpriteDrone(user.upgrades[UpgradeType.mineRate].lvl, i);
       }
     });
->>>>>>> many drone
 
-        this.asteroidSprite.frenzyModTouchDown();
-      }
-      else {
-        this.asteroidSprite.frenzyModTouch(frenzy.nextCombos[0]);
-      }
-    });
-    this.userS.frenzySubjectCombo.subscribe((frenzyNum: number) => {
-      if (this.userS.currentUser.frenzy.state) {
-
-      } else {
-        this.asteroidSprite.frenzyModTouchDown();
-      }
-    });
     this.initializeEmmiter();
   }
 
