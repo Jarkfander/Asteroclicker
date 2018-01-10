@@ -181,6 +181,9 @@ export class AsteroidViewComponent implements AfterViewInit {
       }
     });
 
+    this.userS.profileSubject.subscribe((user: User) => {
+      this.configComputer(user.boolBadConfig);
+    });
     this.userS.upgradeSubject.subscribe((user: User) => {
       const tempLvl = this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl;
       if (this.numOfDrone !== Math.floor(tempLvl / 40) + 1) {
@@ -296,6 +299,9 @@ export class AsteroidViewComponent implements AfterViewInit {
     this.backgroundSky = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
       PIXI.loader.resources[spriteName].texture, width, height));
     this.backgroundSky.gotoAndPlay(0);
+    if (this.userS.currentUser.boolBadConfig) {
+      this.backgroundSky.stop();
+    }
     this.backgroundSky.animationSpeed = 0.32;
     this.backgroundSky.visible = true;
     this.backgroundSky.loop = false;
@@ -363,8 +369,13 @@ export class AsteroidViewComponent implements AfterViewInit {
   // Manage lot of drone - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   initNumberOfDroneBegin() {
     const tempLvl = this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl;
-    this.numOfDrone = Math.floor(tempLvl / 40) + 1;
     let random = 1;
+
+    if (this.userS.currentUser.boolBadConfig) {
+      this.numOfDrone = 1;
+    } else {
+      this.numOfDrone = Math.floor(tempLvl / 50) + 1;
+    }
 
     for (let i = 0; i < this.numOfDrone; i++) {
       random = (Math.floor(Math.random() * 4) + 1) * 0.01;
@@ -383,9 +394,11 @@ export class AsteroidViewComponent implements AfterViewInit {
   }
 
   addNewDrone() {
+    if (this.userS.currentUser.boolBadConfig) {
+      return;
+    }
     const tempLvl = this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl;
     const random = (Math.floor(Math.random() * 4) + 1) * 0.01;
-
     this.drone.push(new Drone(0.20 - random, 0.20 - random, 1, 1, this.app));
     this.drone[this.numOfDrone - 1].deltaTempAster = ((this.numOfDrone - 1) / 3) * (2 * Math.PI) / 1000;
     this.drone[this.numOfDrone - 1].laserAnim.visible = this.drone[0].laserAnim.visible;
@@ -396,6 +409,14 @@ export class AsteroidViewComponent implements AfterViewInit {
   miningLaser(booltemp: boolean) {
     for (let i = 0; i < this.numOfDrone; i++) {
       this.drone[i].laserAnim.visible = booltemp;
+    }
+  }
+
+  configComputer(isBadConfig) {
+    if (isBadConfig) {
+      this.backgroundSky.stop();
+    } else {
+      this.backgroundSky.play();
     }
   }
 

@@ -172,7 +172,7 @@ export class Drone {
 
 
     changeSpriteDrone(lvl: number, numberOfDrone: number) {
-        const num = lvl <= 10 + (40 * numberOfDrone) ? 1 :
+        const num = lvl <= 10 + (50 * numberOfDrone) ? 1 :
         lvl <= 25 + (40 * numberOfDrone) ? 2 : 3;
         const temp = getFramesFromSpriteSheet(PIXI.loader.resources['drone' + num].texture, 266, 308);
 
