@@ -144,4 +144,11 @@ export class SocketService {
     json['keyInd'] = keyInd;
     this.socket.emit('validArrow', json);
   }
+
+  badConfigBdd(userId: string, isBadConfig: boolean) {
+    const json = {};
+    json['user'] = userId;
+    json['isBadConfig'] = isBadConfig;
+    this.socket.emit('changeBadConfig', json);
+  }
 }
