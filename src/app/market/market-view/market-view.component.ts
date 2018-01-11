@@ -25,6 +25,7 @@ export class MarketInfoComponent implements OnInit {
   public recentValues: number[];
   public histoValues: number[];
 
+  public unitValue: string;
   public valuesTotal: any;
   public valuesTotalWithTaxe: any;
   public boolOreUnlock: boolean;
@@ -54,6 +55,7 @@ export class MarketInfoComponent implements OnInit {
     this.value = this.marketS.oreCosts[this.oreName]
     [Object.keys(this.marketS.oreCosts[this.oreName])[Object.keys(this.marketS.oreCosts[this.oreName]).length - 1]];
 
+    this.unitValue = SharedModule.calculeMoneyWithSpace(this.value);
     this.maxSliderValue = (this.upgradeS.storage[this.userS.currentUser.upgrades[UpgradeType.storage].lvl].capacity * 0.02
       * this.oreInfoS.getOreInfoByString(this.oreName).miningSpeed);
     this.maxSliderValue = ((Math.floor(this.maxSliderValue / 50)) + 1) * 50
@@ -68,6 +70,8 @@ export class MarketInfoComponent implements OnInit {
 
     this.marketS.oreCostsSubject[this.oreName].subscribe((tab: number[]) => {
       this.value = tab[Object.keys(tab)[Object.keys(tab).length - 1]];
+      this.unitValue = SharedModule.calculeMoneyWithSpace(this.value);
+      
       this.valuesTotal = SharedModule.calculeMoneyWithSpace(this.value * this.amount);
       this.valuesTotalWithTaxe = SharedModule.calculeMoneyWithSpace(this.value * this.amount * 1.025);
       this.recentValues = tab;
@@ -104,11 +108,11 @@ export class MarketInfoComponent implements OnInit {
   }
 
   public SellOre/*moon*/(amount: number) {
-    this.socketS.sellOre(this.userS.currentUser.uid,this.oreName, amount);
+    this.socketS.sellOre(this.userS.currentUser.uid, this.oreName, amount);
   }
 
   public BuyOre(amount: number) {
-    this.socketS.buyOre(this.userS.currentUser.uid,this.oreName, amount);
+    this.socketS.buyOre(this.userS.currentUser.uid, this.oreName, amount);
   }
 
   OpenHistory() {

@@ -3,37 +3,45 @@
     <a href="#" (click)="CloseHistory()">Close</a>
   </div>
   History of {{oreName.toUpperCase()}} cost for the last 24 hours
-
   <div class="histo-curve">
     <app-curve-view *ngIf="histoValues!=null" [color]='color' [size]='24' [tab]='histoValues'></app-curve-view>
   </div>
 </app-modal>
 
-<div *ngIf="this.boolOreUnlock"><div *ngIf="this.boolOreUnlock"></div>
+<div *ngIf="this.boolOreUnlock">
+  <div *ngIf="this.boolOreUnlock"></div>
   <div class="market-item">
     <div class="col">
       <div class="row">
         <h2>{{oreName.toUpperCase()}}</h2>
         <img class="button-info" (click)="OpenHistory();" src="../../../assets/icon/information.png" />
-        <input type="range" min=1 max={{maxSliderValue}} value="{{maxSliderValue/2}}" class="slider"
-        [(ngModel)]="amount"> 
-      </div>
-      <div class="row">
-        <div class="col">
-          <div>
-            <button [disabled]="!hasOreLeft" type="button" class="btn-sell" (click)="SellOre(amount);">Sell {{amount.toFixed(1)}}</button>
-            for
-            <b class="credit">{{ valuesTotal }} cr</b>
-          </div>
-          <div>
-            <button [disabled]="!hasMoney || !hasSpaceLeft" type="button" class="btn-buy" (click)="BuyOre(amount);">Buy {{amount.toFixed(1)}}</button>
-            for
-            <b class="credit">{{ valuesTotalWithTaxe }} cr</b>
-          </div>
-        </div>
-        <app-curve-view *ngIf="recentValues!=null" [color]='color' [size]='500' [tab]='recentValues'></app-curve-view>
 
       </div>
+      <div class="row">
+        {{unitValue}} cr/u
+      </div>
+
+      <div class="row">
+        <input type="range" min=1 max={{maxSliderValue}} value="{{maxSliderValue/2}}" class="slider" [(ngModel)]="amount">
+      </div>
+
+      <div class="row">
+        <div>
+          <button [disabled]="!hasOreLeft" type="button" class="btn-sell" (click)="SellOre(amount);">Sell {{amount.toFixed(1)}}</button>
+          for
+          <b class="credit">{{ valuesTotal }} cr</b>
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <button [disabled]="!hasMoney || !hasSpaceLeft" type="button" class="btn-buy" (click)="BuyOre(amount);">Buy {{amount.toFixed(1)}}</button>
+          for
+          <b class="credit">{{ valuesTotalWithTaxe }} cr</b>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <app-curve-view *ngIf="recentValues!=null" [color]='color' [size]='500' [tab]='recentValues'></app-curve-view>
     </div>
   </div>
 
