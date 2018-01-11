@@ -31,9 +31,10 @@ export class AppComponent {
 
   }
   public loadAnimationEnvironment() {
-      setTimeout(() => {
+    this.loadingImage = false;
+    /*  setTimeout(() => {
         this.loadingImage = false;
-    }, environment.loadingTime * 1000);
+    }, environment.loadingTime * 1000);*/
   }
 
   public ValiderLogIn(log, pswd) {

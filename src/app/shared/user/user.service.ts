@@ -39,11 +39,13 @@ export class UserService {
 
   constructor(db: AngularFireDatabase, afAuth: AngularFireAuth,
     private upgradeS: UpgradeService, private marketS: MarketService, private socketS: SocketService) {
+
     this.db = db;
     this.afAuth = afAuth;
     afAuth.authState.subscribe((auth) => {
       if (auth != null) {
         this.currentUser = new User();
+        this.currentUser.frenzy=new Frenzy(false,0,{});
         this.currentUser.uid = auth.uid;
         this.db.object('users/' + auth.uid + '/asteroid').valueChanges().subscribe(
           (snapshot: any) => {
