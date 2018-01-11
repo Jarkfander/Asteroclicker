@@ -8,21 +8,20 @@ import { UserService } from '../../shared/user/user.service';
 })
 export class SigninComponent implements OnInit {
 
-  constructor(private userS:UserService) { }
+  constructor(private userS: UserService) { }
 
   ngOnInit() {
   }
 
-  public ValiderLogIn(log,pswd){
-    this.userS.LogIn(log,pswd);
+  public ValiderLogIn(log, pswd) {
+    this.userS.LogIn(log, pswd);
   }
 
-  public CreateAccount(email,pswd,pswd2){
-    if(pswd == pswd2){
-      this.userS.CreateAccount(email,pswd)
-    }
-    else{
-      alert("Password confirmation different from the original");
+  public CreateAccount(email, pswd, pswd2) {
+    if (pswd === pswd2) {
+      this.userS.CreateAccount(email, pswd);
+    } else {
+      alert('Password confirmation different from the original');
     }
   }
 }

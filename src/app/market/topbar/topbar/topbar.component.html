@@ -30,7 +30,7 @@
         
     <li><a href="#" (click)="openQuestModal()">Quest</a></li>
     <li><a href="#" (click)="openRankModal()">Ranking</a></li>
-    <li><a href="#">My profile</a></li>
+    <li><a href="#" (click)="openProfileModal()">My profile</a></li>
     <li><a href="#">Configuration</a></li>
     <li><a href="#" (click)="LogOut();">Sign out</a></li>
   </ul>
@@ -44,4 +44,9 @@
 <app-modal *ngIf="isModalOpenRank">
   <a href="#" (click)="closeRankModal()">Close</a>
   <app-ranking></app-ranking>
+</app-modal> 
+
+<app-modal *ngIf="isModalProfile">
+  <a href="#" (click)="closeProfileModal()">Close</a>
+  <app-profile></app-profile>
 </app-modal> 
