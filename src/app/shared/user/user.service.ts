@@ -44,6 +44,7 @@ export class UserService {
     afAuth.authState.subscribe((auth) => {
       if (auth != null) {
         this.currentUser = new User();
+        this.currentUser.frenzy = new Frenzy(false, 0, {});
         this.currentUser.uid = auth.uid;
         this.db.object('users/' + auth.uid + '/asteroid').valueChanges().subscribe(
           (snapshot: any) => {
@@ -85,13 +86,13 @@ export class UserService {
           (info: any) => {
             this.db.object('users/' + auth.uid + '/frenzy/time').valueChanges().take(1).subscribe(
               (time: any) => {
-                this.FillFrenzy(info,time);
+                this.FillFrenzy(info, time);
                 this.frenzySubjectState.next(this.currentUser.frenzy);
               });
           });
         this.db.object('users/' + auth.uid + '/frenzy/time').valueChanges().subscribe(
           (snapshot: any) => {
-            if(this.currentUser.frenzy!=null){
+            if (this.currentUser.frenzy != null) {
               this.currentUser.frenzy.updateTimer(snapshot.timer);
             }
           });
@@ -215,8 +216,8 @@ export class UserService {
     this.incrementCounter();
   }
 
-  FillFrenzy(info,time) {
-    this.currentUser.frenzy = new Frenzy(info.state === 1,time.timer, info.nextCombos);
+  FillFrenzy(info, time) {
+    this.currentUser.frenzy = new Frenzy(info.state === 1, time.timer, info.nextCombos);
   }
 
   incrementCounter() {
