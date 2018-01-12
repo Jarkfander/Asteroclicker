@@ -17,9 +17,10 @@ export class SigninComponent implements OnInit {
     this.userS.LogIn(log, pswd);
   }
 
-  public CreateAccount(email, pswd, pswd2) {
+  public CreateAccount(email, pswd, pswd2, speudo) {
     if (pswd === pswd2) {
-      this.userS.CreateAccount(email, pswd);
+      this.userS.CreateAccount(email, pswd, speudo);
+      window.location.reload();
     } else {
       alert('Password confirmation different from the original');
     }

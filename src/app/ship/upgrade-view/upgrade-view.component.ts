@@ -46,81 +46,88 @@ export class UpgradeInfoComponent implements OnInit {
     this.userS.upgradeSubject.subscribe((user: User) => {
       this.updateData(user);
       const temp = this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].costOre;
-      this.enableButtonOre = this.tabOreCost[0] <= this.userS.currentUser.oreAmounts[temp[0]] &&
-        this.tabOreCost[1] <= this.userS.currentUser.oreAmounts[temp[1]];
+      this.updateEnable(user.credit);
       this.tabOreCost = this.costOreUpgrade(this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].cost * 0.9,
         this.upgradeLvls.lvls[this.userUpgrade.lvl].displayName);
       this.tabOreCostTemp = this.createInterogationPointOre();
     });
+
     this.userS.creditSubject.subscribe((user: User) => {
       this.updateEnable(user.credit);
     });
+
+    this.userS.oreSubject.subscribe((user: User) => {
+      const temp = this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].costOre;
+      this.enableButtonOre = this.tabOreCost[0] <= this.userS.currentUser.oreAmounts[temp[0]] && 
+      this.tabOreCost[1] <= this.userS.currentUser.oreAmounts[temp[1]];
+    });
+
+    setTimeout(() => {
+      this.tabOreCostTemp = this.createInterogationPointOre();
+      this.tabOreCost = this.costOreUpgrade(this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].cost * 0.9,
+        this.upgradeLvls.lvls[this.userUpgrade.lvl].displayName);
+      const temp = this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].costOre;
+      this.enableButtonOre = this.tabOreCost[0] <= this.userS.currentUser.oreAmounts[temp[0]] &&
+        this.tabOreCost[1] <= this.userS.currentUser.oreAmounts[temp[1]];
+    }, 1000);
+
     setInterval(() => {
       this.updateTimer();
-      if (this.intervalDone) {
-        this.intervalDone = false;
-        this.tabOreCostTemp = this.createInterogationPointOre();
-        this.tabOreCost = this.costOreUpgrade(this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].cost * 0.9,
-          this.upgradeLvls.lvls[this.userUpgrade.lvl].displayName);
-        const temp = this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].costOre;
-        this.enableButtonOre = this.tabOreCost[0] <= this.userS.currentUser.oreAmounts[temp[0]] &&
-          this.tabOreCost[1] <= this.userS.currentUser.oreAmounts[temp[1]];
-      }
     }, 1000);
 
   }
 
-  updateEnable(credit: number) {
-    this.enableButtonCredit = this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].cost <= credit;
+updateEnable(credit: number) {
+  this.enableButtonCredit = this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].cost <= credit;
+}
+
+updateTimer() {
+  if (this.userUpgrade.start !== 0) {
+    this.socketS.updateUpgradeTimer(this.userS.currentUser.uid, this.upgradeLvls.lvls[0].name);
   }
+}
 
-  updateTimer() {
-    if (this.userUpgrade.start !== 0) {
-      this.socketS.updateUpgradeTimer(this.userS.currentUser.uid,this.upgradeLvls.lvls[0].name);
-    }
-  }
+updateData(user: User) {
+  this.userUpgrade = user.upgrades[this.upgradeLvls.type];
+  this.timer = Utils.secondsToHHMMSS(this.userUpgrade.timer / 1000);
+  this.upgradeCaraKeys = Object.keys(this.upgradeLvls.lvls[this.userUpgrade.lvl].cara);
+  this.nextUpgradeCaraKeys = Object.keys(this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].cara);
+}
 
-  updateData(user: User) {
-    this.userUpgrade = user.upgrades[this.upgradeLvls.type];
-    this.timer = Utils.secondsToHHMMSS(this.userUpgrade.timer / 1000);
-    this.upgradeCaraKeys = Object.keys(this.upgradeLvls.lvls[this.userUpgrade.lvl].cara);
-    this.nextUpgradeCaraKeys = Object.keys(this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].cara);
-  }
+levelUpCredit() {
+  this.socketS.upgradeShipCredit(this.userS.currentUser.uid, this.upgradeLvls.lvls[this.userUpgrade.lvl].name);
+}
 
-  levelUpCredit() {
-    this.socketS.upgradeShipCredit(this.userS.currentUser.uid,this.upgradeLvls.lvls[this.userUpgrade.lvl].name);
-  }
+levelUpOre() {
+  this.socketS.upgradeShipOre(this.userS.currentUser.uid, this.upgradeLvls.lvls[this.userUpgrade.lvl].name);
+}
 
-  levelUpOre() {
-    this.socketS.upgradeShipOre(this.userS.currentUser.uid,this.upgradeLvls.lvls[this.userUpgrade.lvl].name);
-  }
+costOreUpgrade(costCredit: number, nameUpgrade: string) {
+  const tempUpgradeName = this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].costOre;
+  return [this.costOreForCredit(tempUpgradeName[0], costCredit / 2),
+  this.costOreForCredit(tempUpgradeName[1], costCredit / 2)];
+}
 
-  costOreUpgrade(costCredit: number, nameUpgrade: string) {
-    const tempUpgradeName = this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].costOre;
-    return [this.costOreForCredit(tempUpgradeName[0], costCredit / 2),
-    this.costOreForCredit(tempUpgradeName[1], costCredit / 2)];
-  }
+costOreForCredit(nameOre: string, costCredit: number) {
+  return costCredit / this.oreInfoS.getOreInfoByString(nameOre).meanValue;
+}
 
-  costOreForCredit(nameOre: string, costCredit: number) {
-    return costCredit / this.oreInfoS.getOreInfoByString(nameOre).meanValue;
-  }
+createInterogationPointOre() {
+  const temp = new Array<any>();
 
-  createInterogationPointOre() {
-    const temp = new Array<any>();
-
-    const tempUpgrade = this.upgradeLvls.lvls[this.userUpgrade.lvl].valuesOreForUpgrade(this.upgradeLvls.lvls[this.userUpgrade.lvl].name);
-    for (let i = 0; i < this.oreInfoS.oreInfo.length; i++) {
-      const tempName = this.oreInfoS.oreInfo[i].name;
-      if (tempUpgrade[0] === tempName || tempUpgrade[1] === tempName) {
-        if (this.upgradeS.research[this.userS.currentUser.upgrades[UpgradeType.research].lvl].lvl >=
-          this.oreInfoS.oreInfo[i].lvlOreUnlock) {
-          temp.push(tempName);
-        } else {
-          temp.push('???');
-        }
+  const tempUpgrade = this.upgradeLvls.lvls[this.userUpgrade.lvl].valuesOreForUpgrade(this.upgradeLvls.lvls[this.userUpgrade.lvl].name);
+  for (let i = 0; i < this.oreInfoS.oreInfo.length; i++) {
+    const tempName = this.oreInfoS.oreInfo[i].name;
+    if (tempUpgrade[0] === tempName || tempUpgrade[1] === tempName) {
+      if (this.upgradeS.research[this.userS.currentUser.upgrades[UpgradeType.research].lvl].lvl >=
+        this.oreInfoS.oreInfo[i].lvlOreUnlock) {
+        temp.push(tempName);
+      } else {
+        temp.push('???');
       }
-
     }
-    return [temp[0], temp[1]];
+
   }
+  return [temp[0], temp[1]];
+}
 }

@@ -125,10 +125,11 @@ export class SocketService {
     this.socket.emit('deleteEvent', json);
   }
 
-  initializeUser(userId: string, email: string) {
+  initializeUser(userId: string, email: string, pseudo: string) {
     const json = {};
     json['user'] = userId;
     json['email'] = email;
+    json['pseudo'] = pseudo;
     this.socket.emit('initializeUser', json);
   }
 

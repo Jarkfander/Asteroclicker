@@ -27,8 +27,6 @@ export class AppComponent {
     public marketS: MarketService,
     public questS: QuestService, public rankingS: RankingService, public oreInfoS: OreInfoService) {
     this.loadAnimation = new LoadAnimation();
-
-
   }
   public loadAnimationEnvironment() {
     this.loadingImage = false;
