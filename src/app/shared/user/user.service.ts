@@ -105,9 +105,10 @@ export class UserService {
     this.afAuth.auth.signInWithEmailAndPassword(log, pswd);
   }
 
-  public CreateAccount(email, pswd) {
+  public CreateAccount(email, pswd, pseudo) {
     this.afAuth.auth.createUserWithEmailAndPassword(email, pswd).then((message) => {
-      this.socketS.initializeUser(message.uid, email);
+      this.socketS.initializeUser(message.uid, email, pseudo);
+      console.log('New account !');
     });
   }
 
