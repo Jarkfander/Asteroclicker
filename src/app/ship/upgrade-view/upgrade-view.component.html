@@ -1,27 +1,29 @@
 <div class="upgrade row justify-between">
-<img class="upgrade-icon" src="../../../assets/upgrade-icons/icon_{{upgradeLvls.lvls[userUpgrade.lvl].name}}.gif" />
-<div class="column justify-between">
-    <h1>{{upgradeLvls.lvls[userUpgrade.lvl].displayName}}</h1><br>
-    <p>Current Level: {{userUpgrade.lvl}}</p>
-    <p *ngFor="let key of upgradeCaraKeys">
-        {{key}} : {{upgradeLvls.lvls[userUpgrade.lvl].cara[key]}}
-    </p>
-    <br>
-    <p>Next Level: {{userUpgrade.lvl+1}}</p>
-    <p *ngFor="let nextkey of nextUpgradeCaraKeys">
-        {{nextkey}} : {{upgradeLvls.lvls[userUpgrade.lvl+1].cara[nextkey]}}
-    </p>
-    <p>Cost:
-        <b class="credit">{{upgradeLvls.lvls[userUpgrade.lvl+1].costValue()}} cr</b> <br> or 
-        <b class={{upgradeLvls.lvls[userUpgrade.lvl+1].costOre[0]}}>{{tabOreCostTemp[0].toUpperCase()}}: {{tabOreCost[0]}}</b>,
-        <b class={{upgradeLvls.lvls[userUpgrade.lvl+1].costOre[1]}}>{{tabOreCostTemp[1].toUpperCase()}}: {{tabOreCost[1]}}</b>
-    </p>
-</div>
-<button *ngIf="userUpgrade.start==0" [disabled]="!enableButtonCredit"class="btn-upgrade" (click)="levelUpCredit()">Upgrade / Credit</button>
-<button *ngIf="userUpgrade.start!=0" disabled="true" class="btn-upgrade" >{{timer}}</button>
+    <img class="upgrade-icon" src="../../../assets/upgrade-icons/icon_{{upgradeLvls.lvls[userUpgrade.lvl].name}}.gif" />
+    <div class="column justify-between">
+        <h1>{{upgradeLvls.lvls[userUpgrade.lvl].displayName}}</h1>
+        <br>
+        <p>Current Level: {{userUpgrade.lvl}}</p>
+        <p *ngFor="let key of upgradeCaraKeys">
+            {{key}} : {{upgradeLvls.lvls[userUpgrade.lvl].cara[key]}}
+        </p>
+        <br>
+        <p>Next Level: {{userUpgrade.lvl+1}}</p>
+        <p *ngFor="let nextkey of nextUpgradeCaraKeys">
+            {{nextkey}} : {{upgradeLvls.lvls[userUpgrade.lvl+1].cara[nextkey]}}
+        </p>
+        <p>Cost:
+            <b class="credit">{{upgradeLvls.lvls[userUpgrade.lvl+1].costValue()}} cr</b>
+            <br> or
+            <b class={{upgradeLvls.lvls[userUpgrade.lvl+1].costOre[0]}}>{{tabOreCostTemp[0].toUpperCase()}}: {{tabOreCost[0]}}</b>,
+            <b class={{upgradeLvls.lvls[userUpgrade.lvl+1].costOre[1]}}>{{tabOreCostTemp[1].toUpperCase()}}: {{tabOreCost[1]}}</b>
+        </p>
+    </div>
+    <button *ngIf="userUpgrade.start==0" [disabled]="!enableButtonCredit" class="btn-upgrade" (click)="levelUpCredit()">Upgrade / Credit</button>
+    <button *ngIf="userUpgrade.start!=0" disabled="true" class="btn-upgrade">{{timer}}</button>
 
 
-<button *ngIf="userUpgrade.start==0" [disabled]="!enableButtonOre"class="btn-upgrade" (click)="levelUpOre()">Upgrade / Ore</button>
-<button *ngIf="userUpgrade.start!=0" disabled="true" class="btn-upgrade" >{{timer}}</button>
+    <button *ngIf="userUpgrade.start==0" [disabled]="!enableButtonOre" class="btn-upgrade" (click)="levelUpOre()">Upgrade / Ore</button>
+    <button *ngIf="userUpgrade.start!=0" disabled="true" class="btn-upgrade">{{timer}}</button>
 </div>
 <br>
