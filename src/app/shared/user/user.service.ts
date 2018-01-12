@@ -39,6 +39,7 @@ export class UserService {
 
   constructor(db: AngularFireDatabase, afAuth: AngularFireAuth,
     private upgradeS: UpgradeService, private marketS: MarketService, private socketS: SocketService) {
+
     this.db = db;
     this.afAuth = afAuth;
     afAuth.authState.subscribe((auth) => {

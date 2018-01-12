@@ -9,7 +9,7 @@ import { UserService } from '../../../shared/user/user.service';
   imports: [
     CommonModule
   ],
-  exports:[
+  exports: [
     RankingComponent
   ],
   declarations: [RankingComponent],

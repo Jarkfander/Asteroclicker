@@ -17,6 +17,7 @@ import { environment } from '../environments/environment';
 })
 export class AppComponent {
 
+
   title = 'app';
   loadingImage = true;
 
@@ -26,19 +27,21 @@ export class AppComponent {
     public marketS: MarketService,
     public questS: QuestService, public rankingS: RankingService, public oreInfoS: OreInfoService) {
     this.loadAnimation = new LoadAnimation();
-    this.loadingImage = true;
 
-    if (this.loadingImage) {
-      setInterval(() => {
+
+  }
+  public loadAnimationEnvironment() {
+    this.loadingImage = false;
+    /*  setTimeout(() => {
         this.loadingImage = false;
-      }, environment.loadingTime * 1000);
-    }
+    }, environment.loadingTime * 1000);*/
   }
 
   public ValiderLogIn(log, pswd) {
     this.userS.LogIn(log, pswd);
 
   }
+
 
 
 }

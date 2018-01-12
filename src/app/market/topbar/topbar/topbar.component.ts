@@ -17,6 +17,7 @@ export class TopbarComponent implements AfterViewInit {
 
   public isModalOpenQuest: boolean;
   public isModalOpenRank: boolean;
+  public isModalProfile: boolean;
   public creditValue: string;
 
   constructor(public userS: UserService, public questS: QuestService, private socketS: SocketService) {
@@ -55,4 +56,11 @@ export class TopbarComponent implements AfterViewInit {
     this.isModalOpenRank = false;
   }
 
+  public openProfileModal() {
+    this.isModalProfile = true;
+  }
+
+  public closeProfileModal() {
+    this.isModalProfile = false;
+  }
 }

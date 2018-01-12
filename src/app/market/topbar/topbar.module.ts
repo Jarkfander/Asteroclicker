@@ -6,13 +6,15 @@ import { QuestService } from './quest.service';
 import { UserService } from '../../shared/user/user.service';
 import { QuestModule } from './quest/quest.module';
 import { RankingModule } from './ranking/ranking.module';
+import { ProfileModule } from './profile/profile.module';
 
 @NgModule({
   imports: [
     CommonModule,
     SharedModule,
     QuestModule,
-    RankingModule
+    RankingModule,
+    ProfileModule
   ],
   exports: [
     TopbarComponent
