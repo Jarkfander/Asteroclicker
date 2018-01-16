@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { getFramesFromSpriteSheet } from '../../loadAnimation';
+import { getFramesFromSpriteSheet, initSprite } from '../../loadAnimation';
 
 export class Drone {
     app: PIXI.Application;
@@ -22,19 +22,15 @@ export class Drone {
     laserAnim_actif2: PIXI.extras.AnimatedSprite;
     laserAnim_actif3: PIXI.extras.AnimatedSprite;
 
-    constructor(x: number , y: number, xpos: number, ypos: number, app: PIXI.Application) {
+    constructor(x: number, y: number, xpos: number, ypos: number, app: PIXI.Application) {
         this.app = app;
         this.isMining = true;
         this.delta = 0;
 
-        // Drone 
-        this.drone = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(PIXI.loader.resources['drone1'].texture, 266, 308));
-        this.drone.gotoAndPlay(0);
+        // Drone
+        this.drone = initSprite('drone1', 266, 308, true, true);
         this.drone.scale.set(x + 0.15, y + 0.15);
         this.drone.loop = true;
-        this.drone.anchor.set(0.5);
-        this.drone.animationSpeed = 0.35;
-        this.drone.visible = true;
 
         this.drone.x = this.app.renderer.width / 2 + xpos;
         this.drone.y = this.app.renderer.height / 2 - 150 + ypos;
@@ -44,13 +40,10 @@ export class Drone {
 
         this.app.stage.addChild(this.drone);
 
-        // LaserAnim 
-        this.laserAnim = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(PIXI.loader.resources['laser'].texture, 946, 964));
-        this.laserAnim.gotoAndPlay(0);
+        // LaserAnim
+        this.laserAnim = initSprite('laser', 946, 964, true, true);
         this.laserAnim.scale.set(0.60, 0.60);
         this.laserAnim.anchor.set(0.54, -0.08);
-        this.laserAnim.animationSpeed = 0.35;
-        this.laserAnim.visible = true;
 
         this.deltaGo = 0;
 
@@ -71,10 +64,7 @@ export class Drone {
                         this.deltaGo += 0.08;
                         this.drone.x = this.drone.x - this.deltaGo;
                         this.drone.y = this.drone.y - Math.sin(this.deltaGo);
-                        this.laserAnim.visible = false;
-                        this.laserAnim_actif1.visible = false;
-                        this.laserAnim_actif2.visible = false;
-                        this.laserAnim_actif3.visible = false;
+                        this.LaserAnimVisible(false, false, false, false);
                         this.drone.rotation = 0;
                         this.delta = 0;
                     } else {
@@ -89,7 +79,7 @@ export class Drone {
                         this.drone.y = this.drone.y + Math.sin(this.deltaGo);
                         this.delta = 0;
                         this.laserAnim.visible = this.deltaGo <= 1 ? true : false;
-                    } else  {
+                    } else {
                         this.drone.x = this.xBaseDrone + Math.cos(this.delta) * 50;
                         this.drone.y = this.yBaseDrone + Math.sin(this.delta) * 50;
                         this.drone.rotation = Math.sin(this.delta) * 0.25;
@@ -99,42 +89,31 @@ export class Drone {
         });
     }
 
+    LaserAnimVisible(laserAnimBool, laserAnim1Bool, laserAnim2Bool, laserAnim3Bool) {
+        this.laserAnim.visible = laserAnimBool;
+        this.laserAnim_actif1.visible = laserAnim1Bool;
+        this.laserAnim_actif2.visible = laserAnim2Bool;
+        this.laserAnim_actif3.visible = laserAnim3Bool;
+    }
+    // init the position and the scale of the laser
+    initLaserPositionScale(laser: PIXI.extras.AnimatedSprite) {
+        laser.anchor.set(0.53, -0.09);
+        laser.position.set(3000, 3000);
+        laser.scale.set(0.60, 0.60);
+        laser.loop = false;
+        this.drone.addChild(laser);
+    }
+    // init the sprite sheet of the laser
     initLaser() {
-        this.laserAnim_actif1 = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(PIXI.loader.resources['laserMinage1'].texture,
-         946, 946));
-        this.laserAnim_actif1.gotoAndPlay(0);
-        this.laserAnim_actif1.anchor.set(0.53, -0.09);
-        this.laserAnim_actif1.animationSpeed = 0.30;
-        this.laserAnim_actif1.position.set(3000, 3000);
-        this.laserAnim_actif1.scale.set(0.60, 0.60);
+        this.laserAnim_actif1 = initSprite('laserMinage1', 946, 946, true, true, 0.30);
+        this.initLaserPositionScale(this.laserAnim_actif1);
 
-        this.laserAnim_actif1.visible = true;
-        this.laserAnim_actif1.loop = false;
+        this.laserAnim_actif2 = initSprite('laserMinage2', 946, 946, true, true, 0.35);
+        this.initLaserPositionScale(this.laserAnim_actif2);
+        this.laserAnim_actif2.loop = true;
 
-        this.drone.addChild(this.laserAnim_actif1);
-
-        this.laserAnim_actif2 = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(PIXI.loader.resources['laserMinage2'].texture,
-        946, 946));
-        this.laserAnim_actif2.gotoAndPlay(0);
-        this.laserAnim_actif2.anchor.set(0.53, -0.09);
-        this.laserAnim_actif2.position.set(3000, 3000);
-        this.laserAnim_actif2.scale.set(0.60, 0.60);
-        this.laserAnim_actif2.animationSpeed = 0.35;
-        this.laserAnim_actif2.visible = true;
-
-        this.drone.addChild(this.laserAnim_actif2);
-
-        this.laserAnim_actif3 = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(PIXI.loader.resources['laserMinage3'].texture,
-        946, 946));
-        this.laserAnim_actif3.gotoAndPlay(0);
-        this.laserAnim_actif3.anchor.set(0.53, -0.09);
-        this.laserAnim_actif3.scale.set(0.60, 0.60);
-        this.laserAnim_actif3.animationSpeed = 0.25;
-        this.laserAnim_actif3.position.set(3000, 3000);
-        this.laserAnim_actif3.visible = true;
-        this.laserAnim_actif3.loop = false;
-
-        this.drone.addChild(this.laserAnim_actif3);
+        this.laserAnim_actif3 = initSprite('laserMinage3', 946, 946, true, true, 0.25);
+        this.initLaserPositionScale(this.laserAnim_actif3);
     }
 
     activeLaser() {
@@ -142,9 +121,7 @@ export class Drone {
             this.laserAnim_actif1.position.set(0, 0);
             this.laserAnim_actif2.position.set(0, 0);
             this.laserAnim_actif3.position.set(0, 0);
-            this.laserAnim_actif2.visible = false;
-            this.laserAnim_actif3.visible = false;
-            this.laserAnim_actif1.visible = true;
+            this.LaserAnimVisible(this.laserAnim.visible, false, false, true);
             this.laserAnim_actif1.stop();
             this.laserAnim_actif1.gotoAndPlay(0);
             this.isBeginClick = false;
@@ -173,7 +150,7 @@ export class Drone {
 
     changeSpriteDrone(lvl: number, numberOfDrone: number) {
         const num = lvl <= 10 + (50 * numberOfDrone) ? 1 :
-        lvl <= 25 + (40 * numberOfDrone) ? 2 : 3;
+            lvl <= 25 + (40 * numberOfDrone) ? 2 : 3;
         const temp = getFramesFromSpriteSheet(PIXI.loader.resources['drone' + num].texture, 266, 308);
 
         for (let i = 0; i < this.drone.textures.length; i++) {
