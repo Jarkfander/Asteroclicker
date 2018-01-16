@@ -1,4 +1,6 @@
-import { SharedModule } from "../../shared/shared.module";
+import { SharedModule } from "../shared/shared.module";
+
+
 
 export class Quest {
 

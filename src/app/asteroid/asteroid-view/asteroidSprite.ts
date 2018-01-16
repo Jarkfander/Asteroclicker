@@ -3,7 +3,7 @@ import * as TWEEN from 'tween.js';
 import * as PIXIParticles from 'pixi-particles';
 import { getFramesFromSpriteSheet, initSprite } from '../../loadAnimation';
 import { ParticleBase } from '../../shared/pixiVisual/particleBase';
-import { Asteroid } from './asteroid';
+import { IAsteroid } from '../asteroid.service';
 
 export class AsteroidSprite {
     asteroid: PIXI.Sprite[];
@@ -37,7 +37,7 @@ export class AsteroidSprite {
     arrowFrenzy: PIXI.Sprite[];
 
     asteroidFolders;
-    constructor(x: number, y: number, app: PIXI.Application, asteroid: Asteroid, numberOfSprite: number) {
+    constructor(x: number, y: number, app: PIXI.Application, asteroid: IAsteroid, numberOfSprite: number) {
 
         this.app = app;
         this.eventOk = 0;
@@ -179,7 +179,7 @@ export class AsteroidSprite {
         }
     }
 
-    generateAsteroid(asteroid: Asteroid) {
+    generateAsteroid(asteroid: IAsteroid) {
         const state = asteroid.currentCapacity === asteroid.capacity ? 4 :
             Math.floor((asteroid.currentCapacity / asteroid.capacity) * 5);
         const seedNum = [];
@@ -244,7 +244,7 @@ export class AsteroidSprite {
         this.app.stage.removeChild(this.asteroid[0]);
     }
     // Change the sprite of asteroid when the user change
-    changeSprite(asteroid: Asteroid) {
+    changeSprite(asteroid: IAsteroid) {
 
         this.InitializeDestructionEmitter(asteroid.ore);
         this.InitializeClickEmitter(asteroid.ore);

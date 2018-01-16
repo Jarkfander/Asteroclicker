@@ -3,17 +3,19 @@ import * as PIXI from 'pixi.js';
 
 import { AsteroidSprite } from './asteroidSprite';
 import { Drone } from './drone';
-import { UpgradeService } from '../../ship/upgrade-list/upgrade.service';
 import { SocketService } from '../../shared/socket/socket.service';
 import { UserService } from '../../shared/user/user.service';
 import { OreInfoService } from '../ore-info-view/ore-info.service';
-import { Asteroid } from './asteroid';
 import { ParticleBase } from '../../shared/pixiVisual/particleBase';
 import { User } from '../../shared/user/user';
 import { UpgradeType, Upgrade } from '../../ship/upgrade-class/upgrade';
 import { getFramesFromSpriteSheet, initSprite, changeSpriteInAnime } from '../../loadAnimation';
 import { Frenzy } from '../../shared/user/frenzy';
 import { UpgradeLvls } from '../../ship/upgrade-list/upgrade-list.component';
+import { UpgradeService } from '../../ship/upgrade.service';
+import { IAsteroid, AsteroidService } from '../asteroid.service';
+import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
+import { Observable } from 'rxjs/Observable';
 
 
 export enum KEY_CODE {
@@ -29,10 +31,11 @@ export enum KEY_CODE {
   styleUrls: ['./asteroid-view.component.scss']
 })
 
-export class AsteroidViewComponent implements AfterViewInit {
+export class AsteroidViewComponent implements OnInit {
+
   private app: PIXI.Application;
   private asteroidSprite: AsteroidSprite;
-  private asteroid: Asteroid;
+  private asteroid: IAsteroid;
   private state: number;
   private drone: Array<Drone>;
   private numOfDrone: number;
@@ -48,23 +51,21 @@ export class AsteroidViewComponent implements AfterViewInit {
   clicked: boolean;
 
   constructor(private el: ElementRef, private render: Renderer2, private userS: UserService,
-    private upgradeS: UpgradeService, private socketS: SocketService, private oreInfoS: OreInfoService) {
-    this.asteroid = this.userS.currentUser.asteroid;
-    this.state = this.asteroid.currentCapacity == this.asteroid.capacity ? 4 :
-      Math.floor((this.asteroid.currentCapacity / this.asteroid.capacity) * 5);
+     private asteroidS:AsteroidService,private upgradeS: UpgradeService, private socketS: SocketService, private oreInfoS: OreInfoService) {
   }
 
-  ngAfterViewInit() {
-    this.clicks = new Array();
-    this.initAsteroid();
-    setInterval(() => {
-      this.socketS.incrementOre(this.userS.currentUser.uid, this.userS.currentUser.asteroid.ore,
-        parseFloat((this.userS.currentUser.currentMineRate *
-          this.userS.currentUser.asteroid.purity / 100 *
-          this.oreInfoS.getOreInfoByString(this.userS.currentUser.asteroid.ore).miningSpeed).toFixed(2)));
-    }, 1000);
-    setInterval(() => { this.updateClick() }, 100);
+  ngOnInit(): void {
 
+      this.clicks = new Array();
+      this.initAsteroid();
+      setInterval(() => {
+        this.socketS.incrementOre(this.userS.currentUser.uid, this.userS.currentUser.asteroid.ore,
+          parseFloat((this.userS.currentUser.currentMineRate *
+            this.userS.currentUser.asteroid.purity / 100 *
+            this.oreInfoS.getOreInfoByString(this.userS.currentUser.asteroid.ore).miningSpeed).toFixed(2)));
+      }, 1000);
+      setInterval(() => { this.updateClick() }, 100);
+  
   }
 
   // tslint:disable-next-line:member-ordering
@@ -127,6 +128,7 @@ export class AsteroidViewComponent implements AfterViewInit {
 
     this.initNumberOfDroneBegin();
 
+
     this.initializeEmmiter();
     this.subjectManage();
   }
@@ -134,29 +136,33 @@ export class AsteroidViewComponent implements AfterViewInit {
   // Subject
   subjectManage() {
     // Asteroid Subject
-    this.userS.asteroidSubject.subscribe((user: User) => {
-      const state = this.asteroid.currentCapacity === this.asteroid.capacity ? 4 :
-        Math.floor((this.asteroid.currentCapacity / this.asteroid.capacity) * 5);
+    this.asteroidS.isEmpty.subscribe((isEmpty : boolean)=>{
+      this.miningDrone(!isEmpty);
+    });
 
-      if (user.asteroid.currentCapacity === 0 && this.asteroid.currentCapacity !== 0) {
-        this.asteroidSprite.destructBase();
-        this.miningDrone(true);
+    this.asteroidS.asteroid.subscribe((asteroid: IAsteroid) => {
+      if(this.asteroid==null){
+        this.asteroid=asteroid;
       }
+
+      const state = asteroid.currentCapacity === asteroid.capacity ? 4 :
+        Math.floor((asteroid.currentCapacity / asteroid.capacity) * 5);
+
+      if (asteroid.currentCapacity === 0 && this.asteroid.currentCapacity !== 0) {
+        this.asteroidSprite.destructBase();
+      }
+
       if (state < this.state) {
         this.asteroidSprite.destructOnePart();
-        this.state = state;
       }
 
-      if (state > this.state) {
-        this.state = state;
-      }
+      this.state = state;
 
-      if (user.asteroid.currentCapacity > this.asteroid.currentCapacity) {
-        this.asteroidSprite.changeSprite(user.asteroid);
-        this.miningDrone(false);
+      if (asteroid.currentCapacity > this.asteroid.currentCapacity) {
+        this.asteroidSprite.changeSprite(asteroid);
         this.miningLaser(true);
       }
-      this.asteroid = user.asteroid;
+      this.asteroid = asteroid;
     });
 
     // Event Subject
@@ -365,7 +371,6 @@ export class AsteroidViewComponent implements AfterViewInit {
     for (let i = 0; i < this.numOfDrone; i++) {
       random = (Math.floor(Math.random() * 4) + 1) * 0.01;
       this.drone.push(new Drone(0.20 - random, 0.20 - random, 1, 1, this.app));
-      this.drone[i].isMining = this.asteroid.currentCapacity === 0;
       this.drone[i].deltaTempAster = (i / 3) * (2 * Math.PI) / 1000;
       this.drone[i].changeSpriteDrone(tempLvl, i);
       this.drone[i].laserFirstState = this.userS.currentUser.oreAmounts[this.userS.currentUser.asteroid.ore];

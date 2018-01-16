@@ -7,10 +7,11 @@ import { SearchResultComponent } from './search-result/search-result.component';
 import { InfosViewComponent, SortPipe } from './infos-list/infos-list.component';
 import { OreInfosViewComponent } from './ore-info-view/ore-infos-view.component';
 import { UserService } from '../shared/user/user.service';
-import { UpgradeService } from '../ship/upgrade-list/upgrade.service';
 import { SocketService } from '../shared/socket/socket.service';
 import { OreInfoService } from './ore-info-view/ore-info.service';
 import { FormsModule } from '@angular/forms';
+import { UpgradeService } from '../ship/upgrade.service';
+import { AsteroidService } from './asteroid.service';
 
 
 @NgModule({
@@ -21,6 +22,6 @@ import { FormsModule } from '@angular/forms';
   ],
   declarations: [AsteroidViewComponent, InfosViewComponent, SearchResultComponent, OreInfosViewComponent,SortPipe],
   exports: [AsteroidViewComponent, InfosViewComponent, SortPipe],
-  providers: [UserService, UpgradeService, SocketService, OreInfoService]
+  providers: [UserService, UpgradeService, SocketService, OreInfoService,AsteroidService]
 })
 export class AsteroidModule { }

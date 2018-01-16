@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SigninComponent } from './signin/signin.component';
 import { SharedModule} from '../shared/shared.module';
-import { UserService } from '../shared/user/user.service';
+import { SigninComponent } from './signin.component';
+import { AuthService } from './auth.service';
+import { SocketService } from '../shared/socket/socket.service';
 
 @NgModule({
   imports: [
@@ -13,6 +14,6 @@ import { UserService } from '../shared/user/user.service';
     SigninComponent
   ],
   declarations: [SigninComponent],
-  providers: [UserService]
+  providers: [AuthService, SocketService]
 })
 export class SigninModule { }

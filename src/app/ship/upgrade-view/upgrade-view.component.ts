@@ -6,7 +6,7 @@ import { UserService } from '../../shared/user/user.service';
 import { UpgradeLvls } from '../upgrade-list/upgrade-list.component';
 import { Utils } from '../../shared/utils';
 import { OreInfoService } from '../../asteroid/ore-info-view/ore-info.service';
-import { UpgradeService } from '../upgrade-list/upgrade.service';
+import { UpgradeService } from '../upgrade.service';
 
 
 @Component({

@@ -1,15 +1,15 @@
 import { Component, AfterViewInit, ViewChild, ElementRef, Pipe } from '@angular/core';
-import { Asteroid } from '../asteroid-view/asteroid';
 import { SearchResult } from '../search-result/searchResult';
 import { OreInfo } from '../ore-info-view/oreInfo';
 import { UserService } from '../../shared/user/user.service';
 import { SocketService } from '../../shared/socket/socket.service';
 import { OreInfoService } from '../ore-info-view/ore-info.service';
-import { UpgradeService } from '../../ship/upgrade-list/upgrade.service';
 import { User } from '../../shared/user/user';
 import { UpgradeType, Upgrade } from '../../ship/upgrade-class/upgrade';
 import { Utils } from '../../shared/utils';
 import { Research } from '../../ship/upgrade-class/research';
+import { UpgradeService } from '../../ship/upgrade.service';
+import { IAsteroid } from '../asteroid.service';
 
 @Pipe({ name: "sortBy" })
 export class SortPipe {
@@ -39,7 +39,7 @@ export class InfosViewComponent implements AfterViewInit {
 
   public capacity: number;
 
-  public asteroid: Asteroid;
+  public asteroid: IAsteroid;
 
   public search: SearchResult;
 

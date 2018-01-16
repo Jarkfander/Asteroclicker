@@ -1,13 +1,16 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MarketService } from './market/market.service';
 import { LoadAnimation } from './loadAnimation';
-import { QuestService } from './market/topbar/quest.service';
-import { RankingService } from './market/topbar/ranking.service';
 import { UserService } from './shared/user/user.service';
-import { UpgradeService } from './ship/upgrade-list/upgrade.service';
 import { OreInfoService } from './asteroid/ore-info-view/ore-info.service';
 import { environment } from '../environments/environment';
+import { UpgradeService } from './ship/upgrade.service';
+import { QuestService } from './quest/quest.service';
+import { RankingService } from './ranking/ranking.service';
+import { AuthService } from './signin/auth.service';
+import { Observable } from 'rxjs/Observable';
+import { User } from 'firebase/app';
 
 
 @Component({
@@ -15,19 +18,25 @@ import { environment } from '../environments/environment';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
-
-  title = 'app';
   loadingImage = true;
 
   loadAnimation: LoadAnimation;
 
-  constructor(public userS: UserService, public upgradeS: UpgradeService,
+  user$: Observable<User>;
+
+  constructor(public authS: AuthService, public upgradeS: UpgradeService,
     public marketS: MarketService,
     public questS: QuestService, public rankingS: RankingService, public oreInfoS: OreInfoService) {
     this.loadAnimation = new LoadAnimation();
   }
+
+  ngOnInit(): void {
+    this.user$ = this.authS.User;
+  }
+
+
   public loadAnimationEnvironment() {
     this.loadingImage = false;
     /*  setTimeout(() => {
@@ -36,11 +45,7 @@ export class AppComponent {
   }
 
   public ValiderLogIn(log, pswd) {
-    this.userS.LogIn(log, pswd);
-
+    this.authS.LogIn(log, pswd);
   }
-
-
-
 }
 

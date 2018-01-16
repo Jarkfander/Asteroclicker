@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ShipViewComponent } from './ship-view/ship-view.component';
 import {  UpgradeInfoComponent } from './upgrade-view/upgrade-view.component';
 import { UserService } from '../shared/user/user.service';
-import { UpgradeService } from './upgrade-list/upgrade.service';
 import { UpgradeViewComponent } from './upgrade-list/upgrade-list.component';
+import { UpgradeService } from './upgrade.service';
 
 
 @NgModule({

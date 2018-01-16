@@ -2,11 +2,11 @@ import { Component, AfterViewInit, Renderer2, ElementRef } from '@angular/core';
 import { Research } from '../upgrade-class/research';
 import { MineRate } from '../upgrade-class/mineRate';
 import { Storage } from '../upgrade-class/storage';
-import { UpgradeService } from './upgrade.service';
 import { SocketService } from '../../shared/socket/socket.service';
 import { UserService } from '../../shared/user/user.service';
 import { User } from '../../shared/user/user';
 import { Upgrade, UpgradeType } from '../upgrade-class/upgrade';
+import { UpgradeService } from '../upgrade.service';
 
 
 

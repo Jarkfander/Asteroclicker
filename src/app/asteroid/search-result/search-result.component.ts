@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
 import { SocketService } from '../../shared/socket/socket.service';
-import { Asteroid } from '../asteroid-view/asteroid';
 import { UserService } from '../../shared/user/user.service';
+import { IAsteroid } from '../asteroid.service';
 
 
 @Component({
@@ -13,7 +13,7 @@ export class SearchResultComponent implements AfterViewInit {
 
   constructor(private socketS: SocketService,private userS: UserService) { }
 
-  @Input('asteroid') asteroid:Asteroid;
+  @Input('asteroid') asteroid:IAsteroid;
   @Input('num') num:number;
   ngAfterViewInit() {
   }

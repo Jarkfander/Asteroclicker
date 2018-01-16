@@ -1,9 +1,11 @@
 import { Component, AfterViewInit, Renderer2, ElementRef } from '@angular/core';
-import { QuestService } from '../quest.service';
-import { UserService } from '../../../shared/user/user.service';
-import { User } from '../../../shared/user/user';
-import { SocketService } from '../../../shared/socket/socket.service';
-import { SharedModule } from '../../../shared/shared.module';
+import { UserService } from '../shared/user/user.service';
+import { QuestService } from '../quest/quest.service';
+import { SocketService } from '../shared/socket/socket.service';
+import { SharedModule } from '../shared/shared.module';
+import { User } from '../shared/user/user';
+import { AuthService } from '../signin/auth.service';
+
 
 
 @Component({
@@ -20,7 +22,7 @@ export class TopbarComponent implements AfterViewInit {
   public isModalProfile: boolean;
   public creditValue: string;
 
-  constructor(public userS: UserService, public questS: QuestService, private socketS: SocketService) {
+  constructor(private authS:AuthService, public userS: UserService, public questS: QuestService, private socketS: SocketService) {
     this.name = userS.currentUser.name;
     this.credit = userS.currentUser.credit;
     this.creditValue = SharedModule.calculeMoneyWithSpace(userS.currentUser.credit);
@@ -37,7 +39,7 @@ export class TopbarComponent implements AfterViewInit {
   }
 
   public LogOut() {
-    this.userS.LogOut();
+    this.authS.LogOut();
   }
 
   public openQuestModal() {
