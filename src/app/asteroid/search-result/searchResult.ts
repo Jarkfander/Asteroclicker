@@ -1,11 +1,12 @@
-import { Asteroid } from "../asteroid-view/asteroid";
+import { IAsteroid } from "../asteroid.service";
+
 
 export class SearchResult {
-    public results: Asteroid[];
+    public results: IAsteroid[];
     public timer: number;
     public start: number;
 
-    constructor(results: Asteroid[], timer: number, start: number) {
+    constructor(results: IAsteroid[], timer: number, start: number) {
         this.start = start;
         this.results = results;
         this.timer = timer;

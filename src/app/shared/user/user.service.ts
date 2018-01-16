@@ -3,14 +3,14 @@ import { User, UserUpgrade, Chest } from './user';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Subject } from 'rxjs/Subject';
-import { UpgradeService } from '../../ship/upgrade-list/upgrade.service';
 import { MarketService } from '../../market/market.service';
-import { Asteroid } from '../../asteroid/asteroid-view/asteroid';
-import { Quest } from '../../market/topbar/quest';
 import { SearchResult } from '../../asteroid/search-result/searchResult';
 import { UpgradeType } from '../../ship/upgrade-class/upgrade';
 import { SocketService } from '../socket/socket.service';
 import { Frenzy } from './frenzy';
+import { UpgradeService } from '../../ship/upgrade.service';
+import { Quest } from '../../quest/quest';
+import { IAsteroid } from '../../asteroid/asteroid.service';
 
 
 @Injectable()
@@ -101,28 +101,10 @@ export class UserService {
     });
   }
 
-  public LogIn(log, pswd) {
-    this.afAuth.auth.signInWithEmailAndPassword(log, pswd);
-  }
 
-  public CreateAccount(email, pswd, pseudo) {
-    this.afAuth.auth.createUserWithEmailAndPassword(email, pswd).then((message) => {
-      this.socketS.initializeUser(message.uid, email, pseudo);
-      console.log('New account !');
-    });
-  }
-
-  public LogOut() {
-    this.userLoad = false;
-    this.currentUser = null;
-    this.afAuth.auth.signOut().then(() => {
-      location.reload();
-    });
-  }
 
   FillAsteroid(snapshot) {
-    this.currentUser.asteroid = new Asteroid(snapshot.currentCapacity, snapshot.capacity, snapshot.purity,
-      snapshot.ore, snapshot.seed, 0);
+    this.currentUser.asteroid = snapshot;
     this.asteroidSubject.next(this.currentUser);
     this.incrementCounter();
   }
@@ -170,11 +152,10 @@ export class UserService {
   }
 
   FillSearch(snapshot) {
-    const resultTab = new Array<Asteroid>();
+    const resultTab = new Array<IAsteroid>();
     if (snapshot.result != 0) {
       for (let i = 0; i < snapshot.result.length; i++) {
-        resultTab.push(new Asteroid(snapshot.result[i].capacity, snapshot.result[i].capacity, snapshot.result[i].purity,
-          snapshot.result[i].ore, snapshot.result[i].seed, snapshot.result[i].timeToGo));
+        resultTab.push(snapshot.result[i]);
       }
     }
     this.currentUser.asteroidSearch = new SearchResult(resultTab, snapshot.timer, snapshot.start);

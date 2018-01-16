@@ -1,4 +1,4 @@
-@import '../../../config';
+@import '../../config';
 
 .background-image {
     position: fixed;
@@ -7,7 +7,7 @@
     z-index: -1;
   
     display: block;
-    background: url('../../../assets/bg2.jpg') no-repeat center fixed;
+    background: url('../../assets/bg2.jpg') no-repeat center fixed;
     background-size: cover;
     width: 105%;
     height: 105%;

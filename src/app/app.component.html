@@ -1,10 +1,10 @@
-<div *ngIf="userS && !userS.userLoad">
+<div *ngIf="(user$|async)==null">
   <app-signin>
   </app-signin>
 </div>
 
 
-<div *ngIf="upgradeS && userS && userS.userLoad && upgradeS.storageLoad && upgradeS.mineRateLoad
+<div *ngIf="upgradeS && (user$|async)!=null && upgradeS.storageLoad && upgradeS.mineRateLoad
  && upgradeS.researchLoaded && upgradeS.engineLoad && marketS && marketS.marketLoad && loadAnimation.boolFinishLoad
  && oreInfoS && oreInfoS.oreInfoLoaded">
 

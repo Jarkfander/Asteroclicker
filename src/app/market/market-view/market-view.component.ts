@@ -3,10 +3,10 @@ import { ManagedChart } from '../market-list/managedChart';
 import { MarketService } from '../market.service';
 import { SocketService } from '../../shared/socket/socket.service';
 import { UserService } from '../../shared/user/user.service';
-import { UpgradeService } from '../../ship/upgrade-list/upgrade.service';
 import { OreInfoService } from '../../asteroid/ore-info-view/ore-info.service';
 import { UpgradeType } from '../../ship/upgrade-class/upgrade';
 import { SharedModule } from '../../shared/shared.module';
+import { UpgradeService } from '../../ship/upgrade.service';
 
 
 @Component({

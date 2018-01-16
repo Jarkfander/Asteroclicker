@@ -4,16 +4,18 @@ import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/take';
-import { MineRate } from '../upgrade-class/mineRate';
-import { Research } from '../upgrade-class/research';
-import { Storage } from '../upgrade-class/storage';
-import { Engine } from '../upgrade-class/engine';
-import { OreInfoService } from '../../asteroid/ore-info-view/ore-info.service';
+import { Storage } from './upgrade-class/storage';
+import { MineRate } from './upgrade-class/mineRate';
+import { Research } from './upgrade-class/research';
+import { Engine } from './upgrade-class/engine';
+import { OreInfoService } from '../asteroid/ore-info-view/ore-info.service';
+
 
 @Injectable()
 export class UpgradeService {
 
   db: AngularFireDatabase;
+  
   storage: Storage[];
   mineRate: MineRate[];
   research: Research[];

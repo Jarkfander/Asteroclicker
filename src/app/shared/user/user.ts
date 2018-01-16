@@ -1,7 +1,7 @@
-import { Asteroid } from '../../asteroid/asteroid-view/asteroid';
 import { SearchResult } from '../../asteroid/search-result/searchResult';
-import { Quest } from '../../market/topbar/quest';
+import { Quest } from '../../quest/quest';
 import { Frenzy } from './frenzy';
+import { IAsteroid } from '../../asteroid/asteroid.service';
 
 export class UserUpgrade {
     public lvl: number;
@@ -25,7 +25,7 @@ export class User {
 
     public currentMineRate: number;
 
-    public asteroid: Asteroid;
+    public asteroid: IAsteroid;
     public score: number;
 
     public asteroidSearch: SearchResult;

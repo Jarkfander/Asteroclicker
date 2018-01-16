@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { UserService } from '../../../shared/user/user.service';
-import { SocketService } from '../../../shared/socket/socket.service';
+import { UserService } from '../shared/user/user.service';
+import { SocketService } from '../shared/socket/socket.service';
 
 @Component({
   selector: 'app-profile',

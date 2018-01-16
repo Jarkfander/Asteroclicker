@@ -66,7 +66,7 @@ export class Drone {
                 }
                 this.delta += (2 * Math.PI) / 1000;
                 this.delta += this.deltaTempAster;
-                if (this.isMining) {
+                if (!this.isMining) {
                     if (this.deltaGo < 8) {
                         this.deltaGo += 0.08;
                         this.drone.x = this.drone.x - this.deltaGo;
