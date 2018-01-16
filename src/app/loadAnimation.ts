@@ -1,14 +1,5 @@
 import * as PIXI from 'pixi.js';
 import { app } from 'firebase/app';
-export function getFramesFromSpriteSheet(texture: PIXI.Texture, frameWidth: number, frameHeight: number) {
-    const frames = [];
-    for (let j = 0; j < texture.height - frameHeight + 1; j += frameHeight) {
-        for (let i = 0; i < texture.width - frameWidth + 1; i += frameWidth) {
-            frames.push(new PIXI.Texture(texture.baseTexture, new PIXI.Rectangle(i, j, frameWidth, frameHeight)));
-        }
-    }
-    return frames;
-}
 
 
 export class LoadAnimation {
@@ -111,4 +102,43 @@ export class LoadAnimation {
             this.boolFinishLoad = true;
         });
     }
+}
+
+
+// Animated Sprite 
+export function getFramesFromSpriteSheet(texture: PIXI.Texture, frameWidth: number, frameHeight: number) {
+    const frames = [];
+    for (let j = 0; j < texture.height - frameHeight + 1; j += frameHeight) {
+        for (let i = 0; i < texture.width - frameWidth + 1; i += frameWidth) {
+            frames.push(new PIXI.Texture(texture.baseTexture, new PIXI.Rectangle(i, j, frameWidth, frameHeight)));
+        }
+    }
+    return frames;
+}
+
+export function initSprite(spriteName: string, width: number, height: number,
+    visible = true, play = true, animationSpeed: number = 0.35,
+    anchorSet: number = 0.5) {
+
+    const animatedSprite = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
+        PIXI.loader.resources[spriteName].texture, width, height));
+    animatedSprite.animationSpeed = animationSpeed;
+    animatedSprite.visible = visible;
+    animatedSprite.anchor.set(anchorSet);
+    animatedSprite.loop = true;
+    play ? animatedSprite.play() : animatedSprite.stop();
+
+    return animatedSprite;
+}
+
+export function changeSpriteInAnime(animatedSprite, name: string, iTemp: number, numberOfSpriteMax: number ) {
+    iTemp = ((iTemp + 1) % numberOfSpriteMax) === 0 ? 1 : ((iTemp + 1) % numberOfSpriteMax);
+    const stringTemp: string = name + iTemp;
+
+    const tempSprite = getFramesFromSpriteSheet(PIXI.loader.resources[stringTemp].texture, 500, 500);
+
+    for (let i = 0; i < animatedSprite.textures.length; i++) {
+        animatedSprite.textures[i] = tempSprite[i];
+    }
+    return iTemp;
 }

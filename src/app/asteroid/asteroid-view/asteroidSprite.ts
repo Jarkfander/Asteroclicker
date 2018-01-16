@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import * as TWEEN from 'tween.js';
 import * as PIXIParticles from 'pixi-particles';
-import { getFramesFromSpriteSheet } from '../../loadAnimation';
+import { getFramesFromSpriteSheet, initSprite } from '../../loadAnimation';
 import { ParticleBase } from '../../shared/pixiVisual/particleBase';
 import { IAsteroid } from '../asteroid.service';
 
@@ -50,12 +50,12 @@ export class AsteroidSprite {
 
         // Asteroid init
         this.asteroidFolders = {
-                'carbon': new Array<PIXI.Texture>(),
-                'titanium': new Array<PIXI.Texture>(),
-                'iron': new Array<PIXI.Texture>(),
-                'hyperium': new Array<PIXI.Texture>(),
-                'gold': new Array<PIXI.Texture>(),
-            };
+            'carbon': new Array<PIXI.Texture>(),
+            'titanium': new Array<PIXI.Texture>(),
+            'iron': new Array<PIXI.Texture>(),
+            'hyperium': new Array<PIXI.Texture>(),
+            'gold': new Array<PIXI.Texture>(),
+        };
         this.checkAstero = false;
         this.initAsteroidSprites();
 
@@ -129,7 +129,6 @@ export class AsteroidSprite {
     }
 
     addSpriteToScene(sprite: PIXI.Sprite, x: number, y: number) {
-
         sprite.texture.baseTexture.mipmap = true;
         sprite.anchor.set(0.5);
 
@@ -143,7 +142,6 @@ export class AsteroidSprite {
             sprite.y = y;
 
         }
-
 
         sprite.interactive = true;
         sprite.buttonMode = true;
@@ -190,7 +188,7 @@ export class AsteroidSprite {
 
         for (let i = 0; i < asteroid.seed.length; i++) {
             // tslint:disable-next-line:radix
-            seedNum.push( parseInt( asteroid.seed[i] ) );
+            seedNum.push(parseInt(asteroid.seed[i]));
         }
 
         if (this.asteroid.length === 0) {
@@ -360,44 +358,30 @@ export class AsteroidSprite {
         );
     }
 
-    initAnimationBoomKrash() {
-        this.boomAnim = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(PIXI.loader.resources['Boum'].texture, 236, 236));
-        this.boomAnim.gotoAndPlay(0);
-        this.boomAnim.anchor.set(0.5, 0.04);
-        this.boomAnim.scale.set(1, 1);
-        this.boomAnim.animationSpeed = 0.36;
-        this.boomAnim.visible = false;
-        this.boomAnim.loop = false;
-        this.app.stage.addChildAt(this.boomAnim, 4);
-
-        this.krashAnim = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(PIXI.loader.resources['krash'].texture, 236, 236));
-        this.krashAnim.gotoAndPlay(0);
-        this.krashAnim.anchor.set(0.5, 0.04);
-        this.krashAnim.scale.set(1, 1);
-        this.krashAnim.animationSpeed = 0.35;
-        this.krashAnim.visible = false;
-        this.krashAnim.loop = false;
-        this.app.stage.addChildAt(this.krashAnim, 4);
-
-        this.kaboomAnim = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(PIXI.loader.resources['kaboom'].texture, 236, 236));
-        this.kaboomAnim.gotoAndPlay(0);
-        this.kaboomAnim.anchor.set(0.5, 0.04);
-        this.kaboomAnim.scale.set(1, 1);
-        this.kaboomAnim.animationSpeed = 0.28;
-        this.kaboomAnim.visible = false;
-        this.kaboomAnim.loop = false;
-        this.app.stage.addChildAt(this.kaboomAnim, 4);
-
-        this.woomAnim = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(PIXI.loader.resources['woom'].texture, 236, 236));
-        this.woomAnim.gotoAndPlay(0);
-        this.woomAnim.anchor.set(0.5, 0.04);
-        this.woomAnim.scale.set(1, 1);
-        this.woomAnim.animationSpeed = 0.28;
-        this.woomAnim.visible = false;
-        this.woomAnim.loop = false;
-        this.app.stage.addChildAt(this.woomAnim, 4);
+    // init the position and the scale of spriteSheet    
+    initAnimScaleAndAnchor(tempAnim: PIXI.extras.AnimatedSprite) {
+        tempAnim.anchor.set(0.5, 0.04);
+        tempAnim.scale.set(1, 1);
+        tempAnim.loop = false;
+        this.app.stage.addChildAt(tempAnim, 4);
     }
 
+    // Init Boom Krash kAboom ... the spriteSheet anim
+    initAnimationBoomKrash() {
+        this.boomAnim = initSprite('Boum', 236, 236, false, false, 0.36);
+        this.initAnimScaleAndAnchor(this.boomAnim);
+
+        this.krashAnim = initSprite('krash', 236, 236, false, false, 0.35);
+        this.initAnimScaleAndAnchor(this.krashAnim);
+
+        this.kaboomAnim = initSprite('kaboom', 236, 236, false, false, 0.28);
+        this.initAnimScaleAndAnchor(this.kaboomAnim);
+
+        this.woomAnim = initSprite('woom', 236, 236, false, false, 0.28);
+        this.initAnimScaleAndAnchor(this.woomAnim);
+    }
+
+    // When you click put a random animation 
     animBoomOnClick(x: number, y: number, pixiAnimate: PIXI.extras.AnimatedSprite, boolForce = false) {
         if (this.compteurBoom % 25 === 0 || boolForce) {
             this.compteurBoom = 1 + Math.floor(Math.random() * 12);
@@ -412,9 +396,7 @@ export class AsteroidSprite {
         }
     }
 
-
     // Animation on click fx in border
-
     initAnimationFxClick(w: number, h: number) {
         this.spriteFxContainer = new PIXI.Container();
         this.spriteFxContainer.width = w;
@@ -451,17 +433,14 @@ export class AsteroidSprite {
         };
     }
 
+    // Init the fxClick 1 2 and 3
     initAnimationFromSpriteName(spriteName, w, h, wSize, hSize, isLoop) {
-        const tempAnim = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
-            PIXI.loader.resources[spriteName].texture, w, h));
-        tempAnim.gotoAndPlay(0);
-        tempAnim.animationSpeed = 0.25;
+        const tempAnim = initSprite(spriteName, w, h, false, true, 0.25);
         tempAnim.alpha = 0.25;
         tempAnim.loop = isLoop;
         tempAnim.texture.baseTexture.mipmap = true;
         tempAnim.width = wSize;
         tempAnim.height = hSize;
-        tempAnim.visible = false;
         return tempAnim;
     }
 
@@ -477,21 +456,15 @@ export class AsteroidSprite {
         }
     }
 
+    // init animation event
     initAnimationFromSpriteEvent(spriteName, w, h, isLoop) {
-        const tempAnim = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
-            PIXI.loader.resources[spriteName].texture, w, h));
-        tempAnim.gotoAndPlay(0);
-        tempAnim.animationSpeed = 0.35;
+        const tempAnim = initSprite(spriteName, w, h, false, true);
         tempAnim.loop = isLoop;
         tempAnim.texture.baseTexture.mipmap = true;
-        tempAnim.visible = false;
-        tempAnim.anchor.set(0.5);
         tempAnim.scale.set(0.25);
         tempAnim.rotation = 45;
         return tempAnim;
     }
-
-
 
     // Frenzy mod - - - - - - - - - - - - - - - -
     frenzyModTouch(numTouch: number) {
@@ -513,7 +486,7 @@ export class AsteroidSprite {
                     this.arrowFrenzy[i].worldTransform.ty);
                 this.animBoomOnClick(this.arrowFrenzy[i].worldTransform.tx,
                     this.arrowFrenzy[i].worldTransform.ty, this.boomAnim, true);
-                    this.checkAstero = true;
+                this.checkAstero = true;
             }
             this.arrowFrenzy[i].visible = false;
         }

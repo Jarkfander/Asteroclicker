@@ -9,7 +9,7 @@ import { OreInfoService } from '../ore-info-view/ore-info.service';
 import { ParticleBase } from '../../shared/pixiVisual/particleBase';
 import { User } from '../../shared/user/user';
 import { UpgradeType, Upgrade } from '../../ship/upgrade-class/upgrade';
-import { getFramesFromSpriteSheet } from '../../loadAnimation';
+import { getFramesFromSpriteSheet, initSprite, changeSpriteInAnime } from '../../loadAnimation';
 import { Frenzy } from '../../shared/user/frenzy';
 import { UpgradeLvls } from '../../ship/upgrade-list/upgrade-list.component';
 import { UpgradeService } from '../../ship/upgrade.service';
@@ -112,9 +112,7 @@ export class AsteroidViewComponent implements OnInit {
 
     this.drone = new Array<Drone>();
     // skyV1
-    this.numberOfSky = 1;
-    this.initSky('skyV1_1', 500, 500, w, h);
-
+    this.initSky(w, h);
 
     this.asteroidSprite = new AsteroidSprite(0.25, 0.25, this.app, this.userS.currentUser.asteroid,
       this.oreInfoS.oreInfo.length);
@@ -130,12 +128,19 @@ export class AsteroidViewComponent implements OnInit {
 
     this.initNumberOfDroneBegin();
 
+
+    this.initializeEmmiter();
+    this.subjectManage();
+  }
+
+  // Subject
+  subjectManage() {
+    // Asteroid Subject
     this.asteroidS.isEmpty.subscribe((isEmpty : boolean)=>{
       this.miningDrone(!isEmpty);
     });
 
     this.asteroidS.asteroid.subscribe((asteroid: IAsteroid) => {
-
       if(this.asteroid==null){
         this.asteroid=asteroid;
       }
@@ -157,20 +162,17 @@ export class AsteroidViewComponent implements OnInit {
         this.asteroidSprite.changeSprite(asteroid);
         this.miningLaser(true);
       }
-      /*
-      if (this.drone.laser != null) {
-        this.drone.laser.visible = user[user.asteroid.ore] <
-          this.upgradeS.storage[user.upgrades[UpgradeType.storage].lvl].capacity;
-      }*/
       this.asteroid = asteroid;
     });
 
+    // Event Subject
     this.userS.eventSubject.subscribe((user: User) => {
       this.asteroidSprite.eventOk = user.event;
       this.asteroidSprite.activEvent();
       this.clickCapsule();
     });
 
+    // frenzy Subject
     this.userS.frenzySubjectState.subscribe((frenzy: Frenzy) => {
       if (!frenzy.state) {
         this.asteroidSprite.frenzyModTouchDown();
@@ -178,6 +180,8 @@ export class AsteroidViewComponent implements OnInit {
         this.asteroidSprite.frenzyModTouch(frenzy.nextCombos[0]);
       }
     });
+
+    // Frenzy Subject Combo
     this.userS.frenzySubjectCombo.subscribe((frenzyNum: number) => {
       if (this.userS.currentUser.frenzy.state) {
 
@@ -186,9 +190,12 @@ export class AsteroidViewComponent implements OnInit {
       }
     });
 
+    // Profile Subject
     this.userS.profileSubject.subscribe((user: User) => {
-      this.configComputer(user.boolBadConfig);
+      user.boolBadConfig ? this.backgroundSky.stop() : this.backgroundSky.play();
     });
+
+    // Upgrade Subject
     this.userS.upgradeSubject.subscribe((user: User) => {
       const tempLvl = this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl;
       if (this.numOfDrone !== Math.floor(tempLvl / 40) + 1) {
@@ -199,8 +206,6 @@ export class AsteroidViewComponent implements OnInit {
         this.drone[i].changeSpriteDrone(user.upgrades[UpgradeType.mineRate].lvl, i);
       }
     });
-
-    this.initializeEmmiter();
   }
 
   asteroidClick() {
@@ -300,19 +305,12 @@ export class AsteroidViewComponent implements OnInit {
   }
 
   // initial sky animated Sprite
-  initSky(spriteName: string, width: number, height: number, w, h) {
-    this.backgroundSky = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
-      PIXI.loader.resources[spriteName].texture, width, height));
+  initSky(w, h) {
+    this.numberOfSky = 1;
+    this.backgroundSky = initSprite('skyV1_1', 500, 500, true, this.userS.currentUser.boolBadConfig, 0.32);
     this.backgroundSky.gotoAndPlay(0);
-    if (this.userS.currentUser.boolBadConfig) {
-      this.backgroundSky.stop();
-    }
-    this.backgroundSky.animationSpeed = 0.32;
-    this.backgroundSky.visible = true;
     this.backgroundSky.loop = false;
-
     this.backgroundSky.texture.baseTexture.mipmap = true;
-    this.backgroundSky.anchor.set(0.5);
 
     this.backgroundSky.x = w / 2;
     this.backgroundSky.y = h / 2;
@@ -323,22 +321,10 @@ export class AsteroidViewComponent implements OnInit {
     this.app.stage.addChild(this.backgroundSky);
 
     this.backgroundSky.onComplete = () => {
-      this.skyAfterAnimation();
+      this.numberOfSky = changeSpriteInAnime(this.backgroundSky, 'skyV1_', this.numberOfSky, 7);
+      this.backgroundSky.gotoAndPlay(0);
     };
   }
-
-  skyAfterAnimation() {
-    this.numberOfSky = ((this.numberOfSky + 1) % 7) === 0 ? 1 : ((this.numberOfSky + 1) % 7);
-    const stringSky: string = 'skyV1_' + this.numberOfSky;
-
-    const tempBackground = getFramesFromSpriteSheet(PIXI.loader.resources[stringSky].texture, 500, 500);
-
-    for (let i = 0; i < this.backgroundSky.textures.length; i++) {
-      this.backgroundSky.textures[i] = tempBackground[i];
-    }
-    this.backgroundSky.gotoAndPlay(0);
-  }
-
 
   clickCapsule() {
     if (this.asteroidSprite.eventOk === 1) {
@@ -413,14 +399,6 @@ export class AsteroidViewComponent implements OnInit {
   miningLaser(booltemp: boolean) {
     for (let i = 0; i < this.numOfDrone; i++) {
       this.drone[i].laserAnim.visible = booltemp;
-    }
-  }
-
-  configComputer(isBadConfig) {
-    if (isBadConfig) {
-      this.backgroundSky.stop();
-    } else {
-      this.backgroundSky.play();
     }
   }
 
