@@ -51,6 +51,14 @@ export class SocketService {
     this.socket.emit('updateUpgradeTimer', json);
   }
 
+  updateCargoTimer(userId: string) {
+    const json = {};
+
+    json['user'] = userId;
+
+    this.socket.emit('updateCargoTimer', json);
+  }
+
 
   sellOre(userId: string, oreName: string, amount: number) {
     const json = {};
