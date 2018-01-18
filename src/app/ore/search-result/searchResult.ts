@@ -1,4 +1,6 @@
-import { IAsteroid } from "../asteroid.service";
+import { IAsteroid } from "../../asteroid/asteroid.service";
+
+
 
 
 export class SearchResult {

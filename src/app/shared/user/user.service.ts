@@ -4,13 +4,13 @@ import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Subject } from 'rxjs/Subject';
 import { MarketService } from '../../market/market.service';
-import { SearchResult } from '../../asteroid/search-result/searchResult';
 import { UpgradeType } from '../../ship/upgrade-class/upgrade';
 import { SocketService } from '../socket/socket.service';
 import { Frenzy } from './frenzy';
 import { UpgradeService } from '../../ship/upgrade.service';
 import { Quest } from '../../quest/quest';
 import { IAsteroid } from '../../asteroid/asteroid.service';
+import { SearchResult } from '../../ore/search-result/searchResult';
 
 
 @Injectable()
@@ -24,10 +24,8 @@ export class UserService {
   userLoad: boolean = false;
   afAuth: AngularFireAuth;
 
-  asteroidSubject = new Subject<User>();
   chestSubject = new Subject<User>();
   creditSubject = new Subject<User>();
-  oreSubject = new Subject<User>();
   profileSubject = new Subject<User>();
   questSubject = new Subject<User>();
   searchSubject = new Subject<User>();
@@ -47,10 +45,6 @@ export class UserService {
         this.currentUser = new User();
         this.currentUser.frenzy = new Frenzy(false, 0, {});
         this.currentUser.uid = auth.uid;
-        this.db.object('users/' + auth.uid + '/asteroid').valueChanges().subscribe(
-          (snapshot: any) => {
-            this.FillAsteroid(snapshot);
-          });
         this.db.object('users/' + auth.uid + '/chest').valueChanges().subscribe(
           (snapshot: any) => {
             this.FillChest(snapshot);
@@ -58,10 +52,6 @@ export class UserService {
         this.db.object('users/' + auth.uid + '/credit').valueChanges().subscribe(
           (snapshot: any) => {
             this.FillCredit(snapshot);
-          });
-        this.db.object('users/' + auth.uid + '/ore').valueChanges().subscribe(
-          (snapshot: any) => {
-            this.FillOre(snapshot);
           });
         this.db.object('users/' + auth.uid + '/profile').valueChanges().subscribe(
           (snapshot: any) => {
@@ -103,12 +93,6 @@ export class UserService {
 
 
 
-  FillAsteroid(snapshot) {
-    this.currentUser.asteroid = snapshot;
-    this.asteroidSubject.next(this.currentUser);
-    this.incrementCounter();
-  }
-
   FillChest(snapshot) {
     this.currentUser.numberOfChest = snapshot.numberOfChest;
     this.currentUser.destroyChest();
@@ -125,12 +109,6 @@ export class UserService {
   FillCredit(snapshot) {
     this.currentUser.credit = snapshot;
     this.creditSubject.next(this.currentUser);
-    this.incrementCounter();
-  }
-
-  FillOre(snapshot) {
-    this.currentUser.oreAmounts = snapshot;
-    this.oreSubject.next(this.currentUser);
     this.incrementCounter();
   }
 

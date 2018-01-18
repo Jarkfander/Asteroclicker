@@ -1,15 +1,17 @@
 import { Component, AfterViewInit, ViewChild, ElementRef, Pipe } from '@angular/core';
 import { SearchResult } from '../search-result/searchResult';
-import { OreInfo } from '../ore-info-view/oreInfo';
 import { UserService } from '../../shared/user/user.service';
 import { SocketService } from '../../shared/socket/socket.service';
-import { OreInfoService } from '../ore-info-view/ore-info.service';
 import { User } from '../../shared/user/user';
 import { UpgradeType, Upgrade } from '../../ship/upgrade-class/upgrade';
 import { Utils } from '../../shared/utils';
 import { Research } from '../../ship/upgrade-class/research';
 import { UpgradeService } from '../../ship/upgrade.service';
-import { IAsteroid } from '../asteroid.service';
+import { Observable } from 'rxjs/Observable';
+import { IAsteroid, AsteroidService } from '../../asteroid/asteroid.service';
+import { OreInfo } from '../ore-view/oreInfo';
+import { OreService, IOreAmounts, IOreInfos, IOreInfo } from '../ore.service';
+import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 
 @Pipe({ name: "sortBy" })
 export class SortPipe {
@@ -28,18 +30,18 @@ export class SortPipe {
 }
 
 @Component({
-  selector: 'app-infos-list',
-  templateUrl: './infos-list.component.html',
-  styleUrls: ['./infos-list.component.scss']
+  selector: 'app-ore-list',
+  templateUrl: './ore-list.component.html',
+  styleUrls: ['./ore-list.component.scss']
 })
 
-export class InfosViewComponent implements AfterViewInit {
+export class OreListComponent implements OnInit {
 
   public distance: number;
 
   public capacity: number;
 
-  public asteroid: IAsteroid;
+  public asteroid$: Observable<IAsteroid>;
 
   public search: SearchResult;
 
@@ -55,56 +57,50 @@ export class InfosViewComponent implements AfterViewInit {
 
   public progressBarValue: number;
 
-  public oreAmount: JSON;
+  public oreAmounts$: Observable<IOreAmounts>;
 
-  public allOreInfo: OreInfo[];
+  public oreInfosTab: OreInfo[];
 
   public researchInfo: Research;
 
   public searchTime: string;
 
-  constructor(private userS: UserService, private upgradeS: UpgradeService,
-    private socketS: SocketService, private oreInfoS: OreInfoService) {
-    this.oreAmount = userS.currentUser.oreAmounts;
-    this.capacity = upgradeS.storage[userS.currentUser.upgrades[UpgradeType.storage].lvl].capacity;
+  constructor(private userS: UserService, private asteroidS: AsteroidService, private upgradeS: UpgradeService,
+    private socketS: SocketService, private oreInfoS: OreService) {
+    this.oreInfosTab = new Array();
+  }
 
-    this.asteroid = userS.currentUser.asteroid;
+  ngOnInit(): void {
 
-    this.search = userS.currentUser.asteroidSearch;
+    this.oreAmounts$ = this.oreInfoS.OreAmounts;
+    this.oreInfoS.OreInfos.take(1).subscribe((oreInfos: IOreInfos) => {
 
-    this.mineRate = userS.currentUser.currentMineRate;
+      const oreNames = Object.keys(oreInfos);
+      
+      for (let i = 0; i < oreNames.length; i++) {
+        const info: IOreInfo = oreInfos[oreNames[i]];
+        this.oreInfosTab.push(new OreInfo(info.order, oreNames[i], info.maxValue, info.meanValue,
+          info.minValue, info.miningSpeed, info.searchNewOre));
+      }
 
-    this.baseMineRate = upgradeS.mineRate[userS.currentUser.upgrades[UpgradeType.mineRate].lvl].baseRate;
-    this.progressBarMaxValue = upgradeS.mineRate[userS.currentUser.upgrades[UpgradeType.mineRate].lvl].maxRate - this.baseMineRate;
+    });
+
+    this.capacity = this.upgradeS.storage[this.userS.currentUser.upgrades[UpgradeType.storage].lvl].capacity;
+
+    this.search = this.userS.currentUser.asteroidSearch;
+
+    this.mineRate = this.userS.currentUser.currentMineRate;
+
+    this.baseMineRate = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].baseRate;
+    this.progressBarMaxValue = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].maxRate - this.baseMineRate;
 
     this.updateProgressBarValue();
-    this.allOreInfo = this.iniOreAvailable();
 
-    this.researchInfo = upgradeS.research[userS.currentUser.upgrades[UpgradeType.research].lvl];
+    this.researchInfo = this.upgradeS.research[this.userS.currentUser.upgrades[UpgradeType.research].lvl];
     this.distance = this.researchInfo.maxDistance / 2;
     this.searchTimeUpdate();
-  }
 
-  iniOreAvailable() {
-    const tabName = new Array<any>();
-    for (let i = 0; i < this.oreInfoS.oreInfo.length; i++) {
-      if (this.upgradeS.research[this.userS.currentUser.upgrades[UpgradeType.research].lvl].lvl
-        >= this.oreInfoS.oreInfo[i].lvlOreUnlock) {
-        tabName.push(this.oreInfoS.oreInfo[i]);
-      }
-    }
-    return tabName;
-  }
-
-  ngAfterViewInit() {
-    this.userS.oreSubject.subscribe((user: User) => {
-      this.oreAmount = user.oreAmounts;
-      // this.carbonOverload = user.carbon >= this.upgradeS.storage[this.storageLvl].capacity;
-
-    });
-    this.userS.asteroidSubject.subscribe((user: User) => {
-      this.asteroid = user.asteroid;
-    });
+    this.asteroid$ = this.asteroidS.asteroid;
     this.userS.upgradeSubject.subscribe((user: User) => {
       this.capacity = this.upgradeS.storage[this.userS.currentUser.upgrades[UpgradeType.storage].lvl].capacity;
       this.baseMineRate = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].baseRate;
@@ -112,7 +108,6 @@ export class InfosViewComponent implements AfterViewInit {
         - this.baseMineRate;
       this.updateProgressBarValue();
       this.researchInfo = this.upgradeS.research[this.userS.currentUser.upgrades[UpgradeType.research].lvl];
-      this.allOreInfo = this.iniOreAvailable();
     });
     this.userS.searchSubject.subscribe((user: User) => {
       this.search = user.asteroidSearch;
@@ -128,6 +123,7 @@ export class InfosViewComponent implements AfterViewInit {
 
 
     setInterval(() => { this.updateTimer(); }, 1000);
+
   }
 
   updateTimer() {
@@ -141,7 +137,7 @@ export class InfosViewComponent implements AfterViewInit {
   updateProgressBarValue() {
     if (this.userS.currentUser.frenzy.state) {
       const frenzyTime = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].frenzyTime;
-      this.progressBarValue=this.userS.currentUser.frenzy.timer/(frenzyTime*1000);
+      this.progressBarValue = this.userS.currentUser.frenzy.timer / (frenzyTime * 1000);
     }
     else {
       this.progressBarValue = this.mineRate - this.baseMineRate > 0 ? this.mineRate - this.baseMineRate : 0;

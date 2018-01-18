@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { MarketService } from './market/market.service';
 import { LoadAnimation } from './loadAnimation';
 import { UserService } from './shared/user/user.service';
-import { OreInfoService } from './asteroid/ore-info-view/ore-info.service';
 import { environment } from '../environments/environment';
 import { UpgradeService } from './ship/upgrade.service';
 import { QuestService } from './quest/quest.service';
@@ -28,7 +27,7 @@ export class AppComponent implements OnInit {
 
   constructor(public authS: AuthService, public upgradeS: UpgradeService,
     public marketS: MarketService,
-    public questS: QuestService, public rankingS: RankingService, public oreInfoS: OreInfoService) {
+    public questS: QuestService, public rankingS: RankingService) {
     this.loadAnimation = new LoadAnimation();
   }
 

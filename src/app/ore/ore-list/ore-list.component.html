@@ -3,9 +3,9 @@
 <table style="width:100%">
   <tr style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;"
     unselectable="on" onselectstart="return false;" onmousedown="return false;">
-    <td align="left">Type of Asteroid : {{ asteroid.ore }} </td>
-    <td *ngIf="asteroid.currentCapacity>0" align="right">{{ asteroid.currentCapacity }}/{{ asteroid.capacity }} </td>
-    <td *ngIf="asteroid.currentCapacity==0" style="color:red" align="right">EMPTY</td>
+    <td align="left">Type of Asteroid : {{ (asteroid$|async)?.ore }} </td>
+    <td *ngIf="(asteroid$|async)?.currentCapacity>0" align="right">{{ (asteroid$|async)?.currentCapacity }}/{{ (asteroid$|async)?.capacity }} </td>
+    <td *ngIf="(asteroid$|async)?.currentCapacity==0" style="color:red" align="right">EMPTY</td>
   </tr>
 </table>
 
@@ -16,10 +16,27 @@
 
 <br>
 <table style="width:100%">
-      <tr *ngFor="let info of allOreInfo |sortBy:'order'">
-            <app-ore-infos-view [name]="info.name" [amount]="oreAmount[info.name]" [capacity]="capacity"
-            [rate]="asteroid.ore==info.name && asteroid.currentCapacity>0 && oreAmount[info.name]<capacity?(info.miningSpeed*(asteroid.purity/100)*mineRate).toFixed(2):0" >
-            </app-ore-infos-view>
+      <tr >
+            <app-ore-view [name]="'carbon'" [amount]="(oreAmounts$|async)?.carbon" [capacity]="capacity"
+            [rate]="minerate" >
+            </app-ore-view>
+
+            <app-ore-view [name]="'iron'" [amount]="(oreAmounts$|async)?.iron" [capacity]="capacity"
+            [rate]="minerate" >
+            </app-ore-view>
+
+            <app-ore-view [name]="'titanium'" [amount]="(oreAmounts$|async)?.titanium" [capacity]="capacity"
+            [rate]="minerate" >
+            </app-ore-view>
+
+            <app-ore-view [name]="'gold'" [amount]="(oreAmounts$|async)?.gold" [capacity]="capacity"
+            [rate]="minerate" >
+            </app-ore-view>
+
+            <app-ore-view [name]="'hyperium'" [amount]="(oreAmounts$|async)?.hyperium" [capacity]="capacity"
+            [rate]="minerate" >
+            </app-ore-view>
+
       </tr>
 </table>
 <br>

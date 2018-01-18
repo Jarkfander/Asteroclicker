@@ -2,11 +2,11 @@ import { Component, OnInit, Input } from '@angular/core';
 
 
 @Component({
-  selector: 'app-ore-infos-view',
-  templateUrl: './ore-infos-view.component.html',
-  styleUrls: ['./ore-infos-view.component.scss']
+  selector: 'app-ore-view',
+  templateUrl: './ore-view.component.html',
+  styleUrls: ['./ore-view.component.scss']
 })
-export class OreInfosViewComponent implements OnInit {
+export class OreViewComponent implements OnInit {
 
   @Input('name') name: string;
   @Input('amount') amount: number ;

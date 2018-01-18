@@ -1,7 +1,7 @@
-import { SearchResult } from '../../asteroid/search-result/searchResult';
 import { Quest } from '../../quest/quest';
 import { Frenzy } from './frenzy';
 import { IAsteroid } from '../../asteroid/asteroid.service';
+import { SearchResult } from '../../ore/search-result/searchResult';
 
 export class UserUpgrade {
     public lvl: number;
@@ -25,7 +25,6 @@ export class User {
 
     public currentMineRate: number;
 
-    public asteroid: IAsteroid;
     public score: number;
 
     public asteroidSearch: SearchResult;
@@ -33,8 +32,6 @@ export class User {
     public quest: Quest;
     public chest: Array<Chest>;
     public numberOfChest: number;
-
-    public oreAmounts: JSON;
 
     public upgrades: UserUpgrade[];
 

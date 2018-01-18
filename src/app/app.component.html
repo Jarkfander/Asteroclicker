@@ -6,7 +6,7 @@
 
 <div *ngIf="upgradeS && (user$|async)!=null && upgradeS.storageLoad && upgradeS.mineRateLoad
  && upgradeS.researchLoaded && upgradeS.engineLoad && marketS && marketS.marketLoad && loadAnimation.boolFinishLoad
- && oreInfoS && oreInfoS.oreInfoLoaded">
+  ">
 
   {{loadAnimationEnvironment()}} 
   <header>
@@ -32,7 +32,7 @@
         <app-asteroid-view></app-asteroid-view>
       </div>
       <div class="mining-panel-infos-view light-box-panel scrollable">
-        <app-infos-list></app-infos-list>
+        <app-ore-list></app-ore-list>
       </div>
     </div>
     <div class="game-panel market-panel light-box-panel scrollable">

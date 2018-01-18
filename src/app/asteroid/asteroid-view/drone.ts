@@ -6,7 +6,6 @@ export class Drone {
     public drone: PIXI.extras.AnimatedSprite;
 
     public laser: PIXI.extras.AnimatedSprite;
-    laserFirstState: boolean;
     isBeginClick: boolean;
 
     delta: number;

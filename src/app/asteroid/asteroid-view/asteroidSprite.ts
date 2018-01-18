@@ -37,7 +37,7 @@ export class AsteroidSprite {
     arrowFrenzy: PIXI.Sprite[];
 
     asteroidFolders;
-    constructor(x: number, y: number, app: PIXI.Application, asteroid: IAsteroid, numberOfSprite: number) {
+    constructor(x: number, y: number, app: PIXI.Application, asteroid: IAsteroid) {
 
         this.app = app;
         this.eventOk = 0;

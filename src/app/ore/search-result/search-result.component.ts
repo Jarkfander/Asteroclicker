@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
 import { SocketService } from '../../shared/socket/socket.service';
 import { UserService } from '../../shared/user/user.service';
-import { IAsteroid } from '../asteroid.service';
+import { IAsteroid } from '../../asteroid/asteroid.service';
 
 
 @Component({
