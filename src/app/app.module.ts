@@ -19,6 +19,7 @@ import { UpgradeService } from './ship/upgrade.service';
 import { QuestService } from './quest/quest.service';
 import { RankingService } from './ranking/ranking.service';
 import { AuthService } from './signin/auth.service';
+import { OreModule } from './ore/ore.module';
 
 
 
@@ -37,7 +38,8 @@ import { AuthService } from './signin/auth.service';
     SigninModule,
     TopbarModule,
     SharedModule,
-    MarketModule
+    MarketModule,
+    OreModule
   ],
   providers: [UserService, UpgradeService, MarketService, QuestService, RankingService, AuthService],
   bootstrap: [AppComponent]

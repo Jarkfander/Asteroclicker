@@ -5,8 +5,8 @@ import { User, UserUpgrade } from '../../shared/user/user';
 import { UserService } from '../../shared/user/user.service';
 import { UpgradeLvls } from '../upgrade-list/upgrade-list.component';
 import { Utils } from '../../shared/utils';
-import { OreInfoService } from '../../asteroid/ore-info-view/ore-info.service';
 import { UpgradeService } from '../upgrade.service';
+import { OreService, IOreAmounts, IOreInfos } from '../../ore/ore.service';
 
 
 @Component({
@@ -32,10 +32,12 @@ export class UpgradeInfoComponent implements OnInit {
   public tabOreCost;
   public tabOreCostTemp;
 
+  oreInfos: IOreInfos;
+
   @Input('UpgradeLvls') upgradeLvls: UpgradeLvls;
 
   constructor(private socketS: SocketService, private userS: UserService,
-    private oreInfoS: OreInfoService, private upgradeS: UpgradeService) {
+    private oreS: OreService, private upgradeS: UpgradeService) {
   }
 
   ngOnInit() {
@@ -43,33 +45,39 @@ export class UpgradeInfoComponent implements OnInit {
     this.updateEnable(this.userS.currentUser.credit);
     this.tabOreCost = [0, 0];
     this.tabOreCostTemp = ['????', '????'];
-    this.userS.upgradeSubject.subscribe((user: User) => {
-      this.updateData(user);
-      const temp = this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].costOre;
-      this.updateEnable(user.credit);
-      this.tabOreCost = this.costOreUpgrade(this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].cost * 0.9,
-        this.upgradeLvls.lvls[this.userUpgrade.lvl].displayName);
-      this.tabOreCostTemp = this.createInterogationPointOre();
-    });
 
     this.userS.creditSubject.subscribe((user: User) => {
       this.updateEnable(user.credit);
     });
 
-    this.userS.oreSubject.subscribe((user: User) => {
+    this.oreS.OreAmounts.subscribe((oreAmounts: IOreAmounts) => {
       const temp = this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].costOre;
-      this.enableButtonOre = this.tabOreCost[0] <= this.userS.currentUser.oreAmounts[temp[0]] && 
-      this.tabOreCost[1] <= this.userS.currentUser.oreAmounts[temp[1]];
+      this.enableButtonOre = this.tabOreCost[0] <= oreAmounts[temp[0]] &&
+        this.tabOreCost[1] <= oreAmounts[temp[1]];
     });
 
-    setTimeout(() => {
-      this.tabOreCostTemp = this.createInterogationPointOre();
-      this.tabOreCost = this.costOreUpgrade(this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].cost * 0.9,
-        this.upgradeLvls.lvls[this.userUpgrade.lvl].displayName);
-      const temp = this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].costOre;
-      this.enableButtonOre = this.tabOreCost[0] <= this.userS.currentUser.oreAmounts[temp[0]] &&
-        this.tabOreCost[1] <= this.userS.currentUser.oreAmounts[temp[1]];
-    }, 1000);
+    this.oreS.OreInfos.take(1).subscribe((oreInfos: IOreInfos) => {
+      this.oreInfos = oreInfos;
+
+      this.userS.upgradeSubject.subscribe((user: User) => {
+        this.updateData(user);
+        const temp = this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].costOre;
+        this.updateEnable(user.credit);
+        this.tabOreCost = this.costOreUpgrade(this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].cost * 0.9,
+          this.upgradeLvls.lvls[this.userUpgrade.lvl].displayName);
+        this.tabOreCostTemp = this.createInterogationPointOre();
+      });
+
+      setTimeout(() => {
+        this.tabOreCostTemp = this.createInterogationPointOre();
+        this.tabOreCost = this.costOreUpgrade(this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].cost * 0.9,
+          this.upgradeLvls.lvls[this.userUpgrade.lvl].displayName);
+        const temp = this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].costOre;
+      }, 1000);
+
+    });
+
+
 
     setInterval(() => {
       this.updateTimer();
@@ -77,57 +85,58 @@ export class UpgradeInfoComponent implements OnInit {
 
   }
 
-updateEnable(credit: number) {
-  this.enableButtonCredit = this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].cost <= credit;
-}
-
-updateTimer() {
-  if (this.userUpgrade.start !== 0) {
-    this.socketS.updateUpgradeTimer(this.userS.currentUser.uid, this.upgradeLvls.lvls[0].name);
+  updateEnable(credit: number) {
+    this.enableButtonCredit = this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].cost <= credit;
   }
-}
 
-updateData(user: User) {
-  this.userUpgrade = user.upgrades[this.upgradeLvls.type];
-  this.timer = Utils.secondsToHHMMSS(this.userUpgrade.timer / 1000);
-  this.upgradeCaraKeys = Object.keys(this.upgradeLvls.lvls[this.userUpgrade.lvl].cara);
-  this.nextUpgradeCaraKeys = Object.keys(this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].cara);
-}
-
-levelUpCredit() {
-  this.socketS.upgradeShipCredit(this.userS.currentUser.uid, this.upgradeLvls.lvls[this.userUpgrade.lvl].name);
-}
-
-levelUpOre() {
-  this.socketS.upgradeShipOre(this.userS.currentUser.uid, this.upgradeLvls.lvls[this.userUpgrade.lvl].name);
-}
-
-costOreUpgrade(costCredit: number, nameUpgrade: string) {
-  const tempUpgradeName = this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].costOre;
-  return [this.costOreForCredit(tempUpgradeName[0], costCredit / 2),
-  this.costOreForCredit(tempUpgradeName[1], costCredit / 2)];
-}
-
-costOreForCredit(nameOre: string, costCredit: number) {
-  return costCredit / this.oreInfoS.getOreInfoByString(nameOre).meanValue;
-}
-
-createInterogationPointOre() {
-  const temp = new Array<any>();
-
-  const tempUpgrade = this.upgradeLvls.lvls[this.userUpgrade.lvl].valuesOreForUpgrade(this.upgradeLvls.lvls[this.userUpgrade.lvl].name);
-  for (let i = 0; i < this.oreInfoS.oreInfo.length; i++) {
-    const tempName = this.oreInfoS.oreInfo[i].name;
-    if (tempUpgrade[0] === tempName || tempUpgrade[1] === tempName) {
-      if (this.upgradeS.research[this.userS.currentUser.upgrades[UpgradeType.research].lvl].lvl >=
-        this.oreInfoS.oreInfo[i].lvlOreUnlock) {
-        temp.push(tempName);
-      } else {
-        temp.push('???');
-      }
+  updateTimer() {
+    if (this.userUpgrade.start !== 0) {
+      this.socketS.updateUpgradeTimer(this.userS.currentUser.uid, this.upgradeLvls.lvls[0].name);
     }
-
   }
-  return [temp[0], temp[1]];
-}
+
+  updateData(user: User) {
+    this.userUpgrade = user.upgrades[this.upgradeLvls.type];
+    this.timer = Utils.secondsToHHMMSS(this.userUpgrade.timer / 1000);
+    this.upgradeCaraKeys = Object.keys(this.upgradeLvls.lvls[this.userUpgrade.lvl].cara);
+    this.nextUpgradeCaraKeys = Object.keys(this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].cara);
+  }
+
+  levelUpCredit() {
+    this.socketS.upgradeShipCredit(this.userS.currentUser.uid, this.upgradeLvls.lvls[this.userUpgrade.lvl].name);
+  }
+
+  levelUpOre() {
+    this.socketS.upgradeShipOre(this.userS.currentUser.uid, this.upgradeLvls.lvls[this.userUpgrade.lvl].name);
+  }
+
+  costOreUpgrade(costCredit: number, nameUpgrade: string) {
+    const tempUpgradeName = this.upgradeLvls.lvls[this.userUpgrade.lvl + 1].costOre;
+    return [this.costOreForCredit(tempUpgradeName[0], costCredit / 2),
+    this.costOreForCredit(tempUpgradeName[1], costCredit / 2)];
+  }
+
+  costOreForCredit(nameOre: string, costCredit: number) {
+    return costCredit / this.oreInfos[nameOre].meanValue;
+  }
+
+  createInterogationPointOre() {
+    const temp = new Array<any>();
+
+    const tempUpgrade = this.upgradeLvls.lvls[this.userUpgrade.lvl].valuesOreForUpgrade(this.upgradeLvls.lvls[this.userUpgrade.lvl].name);
+    const oreKeys = Object.keys(this.oreInfos);
+    for (let i = 0; i < oreKeys.length; i++) {
+      const tempName = oreKeys[i];
+      if (tempUpgrade[0] === tempName || tempUpgrade[1] === tempName) {
+        if (this.upgradeS.research[this.userS.currentUser.upgrades[UpgradeType.research].lvl].lvl >=
+          this.oreInfos[tempName].lvlOreUnlock) {
+          temp.push(tempName);
+        } else {
+          temp.push('???');
+        }
+      }
+
+    }
+    return [temp[0], temp[1]];
+  }
 }
