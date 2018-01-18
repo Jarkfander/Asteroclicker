@@ -19,9 +19,6 @@
             <b class={{upgradeLvls[upgradeCurrentLvl.lvl+1].costOre[1]}}>{{tabOreCostTemp[1].toUpperCase()}}: {{tabOreCost[1]}}</b>
         </p>
     </div>
-    <button *ngIf="upgradeCurrentLvl && upgradeCurrentLvl.start==0" [disabled]="!enableButtonCredit" class="btn-upgrade" (click)="levelUpCredit()">Upgrade / Credit</button>
-    <button *ngIf="upgradeCurrentLvl && upgradeCurrentLvl.start!=0" disabled="true" class="btn-upgrade">{{timer}}</button>
-
 
     <button *ngIf="upgradeCurrentLvl && upgradeCurrentLvl.start==0" [disabled]="!enableButtonOre" class="btn-upgrade" (click)="levelUpOre()">Upgrade / Ore</button>
     <button *ngIf="upgradeCurrentLvl && upgradeCurrentLvl.start!=0" disabled="true" class="btn-upgrade">{{timer}}</button>

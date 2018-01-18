@@ -12,14 +12,22 @@ export class LoadAnimation {
         this.tabSpriteName = new Array<String>();
 
         // ciel animation
-        for (let i = 1; i < 7; i++) {
-            this.addKeySpriteName('skyV0_' + i, './assets/sky/ciel_niv0_p' + i + '.png');
+        for (let i = 1; i < 3; i++) {
+            this.addKeySpriteName('ciel1_' + i, './assets/sky/ciel1_' + i + '.png');
         }
 
         // ciel animation V1
-        for (let i = 1; i < 7; i++) {
-            this.addKeySpriteName('skyV1_' + i, './assets/sky/Cielv1_p' + i + '.png');
+        for (let i = 1; i < 3; i++) {
+            this.addKeySpriteName('ciel2_' + i, './assets/sky/ciel2_' + i + '.png');
         }
+
+        // ciel animation V2
+        for (let i = 1; i < 3; i++) {
+            this.addKeySpriteName('ciel3_' + i, './assets/sky/ciel3_' + i + '.png');
+        }
+
+        // etoile filante
+        this.addKeySpriteName('etoile_filante', './assets/sky/etoile_filante.png');
 
         // Laser
         this.addKeySpriteName('laser', './assets/laser_(n2).png');
@@ -104,7 +112,6 @@ export class LoadAnimation {
     }
 }
 
-
 // Animated Sprite 
 export function getFramesFromSpriteSheet(texture: PIXI.Texture, frameWidth: number, frameHeight: number) {
     const frames = [];
@@ -119,7 +126,6 @@ export function getFramesFromSpriteSheet(texture: PIXI.Texture, frameWidth: numb
 export function initSprite(spriteName: string, width: number, height: number,
     visible = true, play = true, animationSpeed: number = 0.35,
     anchorSet: number = 0.5) {
-
     const animatedSprite = new PIXI.extras.AnimatedSprite(getFramesFromSpriteSheet(
         PIXI.loader.resources[spriteName].texture, width, height));
     animatedSprite.animationSpeed = animationSpeed;
@@ -131,7 +137,7 @@ export function initSprite(spriteName: string, width: number, height: number,
     return animatedSprite;
 }
 
-export function changeSpriteInAnime(animatedSprite, name: string, iTemp: number, numberOfSpriteMax: number ) {
+export function changeSpriteInAnime(animatedSprite, name: string, iTemp: number, numberOfSpriteMax: number) {
     iTemp = ((iTemp + 1) % numberOfSpriteMax) === 0 ? 1 : ((iTemp + 1) % numberOfSpriteMax);
     const stringTemp: string = name + iTemp;
 

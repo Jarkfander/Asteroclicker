@@ -303,7 +303,7 @@ export class AsteroidViewComponent implements OnInit {
   // initial sky animated Sprite
   initSky(w, h) {
     this.numberOfSky = 1;
-    this.backgroundSky = initSprite('skyV1_1', 500, 500, true, this.userS.currentUser.boolBadConfig, 0.32);
+    this.backgroundSky = initSprite('ciel3_1', 500, 500, true, this.userS.currentUser.boolBadConfig, 0.32);
     this.backgroundSky.gotoAndPlay(0);
     this.backgroundSky.loop = false;
     this.backgroundSky.texture.baseTexture.mipmap = true;
@@ -317,7 +317,7 @@ export class AsteroidViewComponent implements OnInit {
     this.app.stage.addChild(this.backgroundSky);
 
     this.backgroundSky.onComplete = () => {
-      this.numberOfSky = changeSpriteInAnime(this.backgroundSky, 'skyV1_', this.numberOfSky, 7);
+      this.numberOfSky = changeSpriteInAnime(this.backgroundSky, 'ciel3_', this.numberOfSky, 3);
       this.backgroundSky.gotoAndPlay(0);
     };
   }
