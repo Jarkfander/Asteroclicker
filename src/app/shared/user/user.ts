@@ -41,6 +41,8 @@ export class User {
 
     public boolBadConfig: boolean;
 
+    public cargo: any;
+
     constructor() {
         this.upgrades = Array();
         this.chest = new Array<Chest>();

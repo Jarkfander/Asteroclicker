@@ -89,6 +89,8 @@ export class UserService {
 
 
 
+  cargoSubject = new Subject<User>();
+
   constructor(db: AngularFireDatabase, afAuth: AngularFireAuth,
     private upgradeS: UpgradeService, private marketS: MarketService,
     private socketS: SocketService, private authS: AuthService) {

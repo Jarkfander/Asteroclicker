@@ -122,14 +122,6 @@ export class MarketInfoComponent implements OnInit {
     /* this.userS.oreSubject.subscribe((user) => {
 
      });*/
-
-     /*
-     ==> updateCargoTimer => quand on a un cargo en marche
-         setInterval(() => {
-      this.socketS.updateCargoTimer(this.userS.currentUser.uid);
-    }, 1000);
-
-    */
   }
 
   public SellOre/*moon*/(amount: number) {

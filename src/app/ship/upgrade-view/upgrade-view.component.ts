@@ -108,6 +108,11 @@ export class UpgradeViewComponent implements OnInit {
     if (this.upgradeCurrentLvl.start !== 0) {
       this.socketS.updateUpgradeTimer(this.userS.currentUser.uid, this.upgradeLvls[0].name);
     }
+    for (let i = 1; i < 5; i++) {
+      if (this.userS.currentUser.cargo['cargo' + i] && this.userS.currentUser.cargo['cargo' + i].start !== 0) {
+        this.socketS.updateCargoTimer(this.userS.currentUser.uid);
+      }
+    }
   }
 
   updateData(upgrade: IUpgrade) {
