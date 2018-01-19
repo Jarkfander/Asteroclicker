@@ -43,30 +43,3 @@
 
 <br>
 
-<app-modal class="col" *ngIf="isModalOpen">
-
-  <div class="closeLine">
-    <a href="#" (click)="closeModal()">Close</a>
-  </div>
-
-  <div class="result row">
-    <app-search-result *ngFor="let aste of search.results; let i = index" [num]="i" [asteroid]="aste"></app-search-result>
-  </div>
-
-  <div class="rejectLine">
-    <button class="btn-upgrade" (click)="rejectResults()">Reject</button>
-  </div>
-
-
-</app-modal>
-
-<button *ngIf="search.start!=0 && search.results.length==3" class="btn-upgrade" (click)="showResult()">See search result</button>
-<button *ngIf="search.start!=0 && search.results.length==0" disabled="true" class="btn-upgrade">Searching : {{timer}}</button>
-<button *ngIf="search.start!=0 && search.results.length==1" disabled="true" class="btn-upgrade">Time before arriving : {{timer}}</button>
-<div *ngIf="search.start==0" id="slidecontainer">
-  Distance: {{distance}} light years.
-  <input type="range" min={{researchInfo.minDistance}} max={{researchInfo.maxDistance}} value="50" class="slider"
-   [(ngModel)]="distance" (ngModelChange)="searchTimeUpdate()"> 
-</div>
-<div *ngIf="search.start==0">Search time : {{searchTime}}</div>
-<button *ngIf="search.start==0" class="btn-upgrade" (click)="searchNewAster()">Search Another Asteroid</button>
