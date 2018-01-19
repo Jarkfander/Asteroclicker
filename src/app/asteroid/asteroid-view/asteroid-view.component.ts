@@ -70,6 +70,7 @@ export class AsteroidViewComponent implements OnInit {
       }, 1000);
       this.userS.getUpgradeByName("mineRate").subscribe((upgrade:IUpgrade)=>{
         this.userMineRateLvl=upgrade.lvl;
+        this.initNumberOfDroneBegin();
       })
       setInterval(() => { this.updateClick() }, 100);
     });
@@ -131,9 +132,6 @@ export class AsteroidViewComponent implements OnInit {
     this.asteroidSprite.eventOk = this.userS.currentUser.event;
     this.asteroidSprite.activEvent();
     this.clickCapsule();
-
-    this.initNumberOfDroneBegin(newAste);
-
 
     this.initializeEmmiter();
   }
@@ -356,7 +354,7 @@ export class AsteroidViewComponent implements OnInit {
   }
 
   // Manage lot of drone - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  initNumberOfDroneBegin(newAste: IAsteroid) {
+  initNumberOfDroneBegin() {
     let random = 1;
 
     if (this.userS.currentUser.boolBadConfig) {

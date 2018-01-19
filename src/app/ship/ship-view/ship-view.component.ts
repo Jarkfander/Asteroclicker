@@ -23,6 +23,8 @@ export class ShipViewComponent implements AfterViewInit {
   private backgroundSky: PIXI.extras.AnimatedSprite;
   private numberOfSky: number;
 
+  private animationLoaded:boolean=false;
+
   constructor(private el: ElementRef, private render: Renderer2, private userS: UserService, private socketS: SocketService) { }
 
   ngAfterViewInit() {
@@ -66,16 +68,18 @@ export class ShipViewComponent implements AfterViewInit {
     }
 
     this.userS.profile.subscribe((profile: IProfile) => {
-      this.animationGoodConfig(profile.badConfig==1);
+      this.animationGoodConfig(profile.badConfig == 1);
     });
 
     this.userS.upgrade.subscribe((upgrades: IUpgrades) => {
-      
-      this.ship.autoUpgrade(upgrades.storage.lvl, this.ship.stockUpgrade);
-      this.ship.autoUpgrade(upgrades.research.lvl, this.ship.radarUpgrade);
-      this.ship.autoUpgrade(upgrades.mineRate.lvl, this.ship.droneUpgrade);
-      this.ship.autoUpgrade(upgrades.engine.lvl, this.ship.reacteurUpgrade);
-      this.ship.ship.cacheAsBitmap = false;
+
+      if(this.animationLoaded){
+        this.ship.autoUpgrade(upgrades.storage.lvl, this.ship.stockUpgrade);
+        this.ship.autoUpgrade(upgrades.research.lvl, this.ship.radarUpgrade);
+        this.ship.autoUpgrade(upgrades.mineRate.lvl, this.ship.droneUpgrade);
+        this.ship.autoUpgrade(upgrades.engine.lvl, this.ship.reacteurUpgrade);
+        this.ship.ship.cacheAsBitmap = false;
+      }
 
       if (upgrades.storage.lvl >= 2 && !this.boolShipTourelle) {
         this.ship.initNewTourelle();
@@ -114,6 +118,9 @@ export class ShipViewComponent implements AfterViewInit {
       if (i < 4) {
         this.ship.autoUpgrade(tabTempUpgradeLvl[i], tabTempUpgrade[i]);
         i++;
+      }
+      else if(!this.animationLoaded){
+        this.animationLoaded=true;
       }
     }, 2500);
   }
@@ -205,7 +212,7 @@ export class ShipViewComponent implements AfterViewInit {
     }
   }
 
-  animationGoodConfig(isBadConfig:boolean) {
+  animationGoodConfig(isBadConfig: boolean) {
     this.ship.radarUpgrade.allAnimBeginOrStop(isBadConfig);
     this.ship.reacteurUpgrade.allAnimBeginOrStop(isBadConfig);
     this.ship.stockUpgrade.allAnimBeginOrStop(isBadConfig);
