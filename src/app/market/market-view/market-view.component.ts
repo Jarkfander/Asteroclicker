@@ -41,9 +41,13 @@ export class MarketInfoComponent implements OnInit {
   public oreInfo: IOreInfo;
   public oreAmount: number;
 
+<<<<<<< HEAD
   public userStorageLvl:number=1;
 
   //Utiliser oreservcie pour recup bystring
+=======
+  //Utiliser ore servcie pour recup bystring
+>>>>>>> sell buy modif
   constructor(private marketS: MarketService, private socketS: SocketService,
     private userS: UserService, private upgradeS: UpgradeService, private oreS: OreService) {
 
@@ -62,8 +66,8 @@ export class MarketInfoComponent implements OnInit {
 
       this.oreS.getOreAmountByString(this.oreName).subscribe((oreAmount: number) => {
 
-        this.hasMoney = this.userS.currentUser.credit > 0;
-        this.hasOreLeft = oreAmount > 0;
+        this.hasMoney = this.userS.currentUser.credit > 0 ;
+        this.hasOreLeft = oreAmount > 0 ;
         this.hasSpaceLeft = oreAmount
           < this.upgradeS.storage[this.userStorageLvl].capacity;
 
@@ -75,7 +79,7 @@ export class MarketInfoComponent implements OnInit {
         this.unitValue = SharedModule.calculeMoneyWithSpace(this.value);
         this.maxSliderValue = (this.upgradeS.storage[this.userStorageLvl].capacity * 0.02
           * this.oreInfo.miningSpeed);
-        this.maxSliderValue = ((Math.floor(this.maxSliderValue / 50)) + 1) * 50
+        this.maxSliderValue = ((Math.floor(this.maxSliderValue / 50)) + 1) * 50;
 
         this.amountToSell = parseFloat((this.maxSliderValue / 2).toFixed(1));
 
