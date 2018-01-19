@@ -1,6 +1,6 @@
 import { Component, AfterViewInit, ViewChild, ElementRef, Pipe } from '@angular/core';
 import { SearchResult } from '../search-result/searchResult';
-import { UserService } from '../../shared/user/user.service';
+import { UserService, IUpgrades, IFrenzyInfo } from '../../shared/user/user.service';
 import { SocketService } from '../../shared/socket/socket.service';
 import { User } from '../../shared/user/user';
 import { UpgradeType, Upgrade } from '../../ship/upgrade-class/upgrade';
@@ -37,9 +37,9 @@ export class SortPipe {
 
 export class OreListComponent implements OnInit {
 
-  public distance: number;
+  public distance: number = 0;
 
-  public capacity: number;
+  public capacity: number = 0;
 
   public asteroid$: Observable<IAsteroid>;
 
@@ -51,63 +51,64 @@ export class OreListComponent implements OnInit {
 
   public mineRate: number;
 
-  public progressBarMaxValue: number;
+  public progressBarMaxValue: number = 1;
 
-  public baseMineRate: number;
+  public baseMineRate: number = 0;
 
-  public progressBarValue: number;
+  public progressBarValue: number = 1;
 
   public oreAmounts$: Observable<IOreAmounts>;
-
-  public oreInfosTab: OreInfo[];
 
   public researchInfo: Research;
 
   public searchTime: string;
 
+  public userMineRateLvl: number;
+
+  public userFrenzyInfo: IFrenzyInfo = {
+    state: 0,
+    nextCombos: {}
+  };
+
+  public userFrenzyTimer: number = 0;
+
   constructor(private userS: UserService, private asteroidS: AsteroidService, private upgradeS: UpgradeService,
     private socketS: SocketService, private oreInfoS: OreService) {
-    this.oreInfosTab = new Array();
   }
 
   ngOnInit(): void {
 
     this.oreAmounts$ = this.oreInfoS.OreAmounts;
-    this.oreInfoS.OreInfos.take(1).subscribe((oreInfos: IOreInfos) => {
-
-      const oreNames = Object.keys(oreInfos);
-      
-      for (let i = 0; i < oreNames.length; i++) {
-        const info: IOreInfo = oreInfos[oreNames[i]];
-        this.oreInfosTab.push(new OreInfo(info.order, oreNames[i], info.maxValue, info.meanValue,
-          info.minValue, info.miningSpeed, info.searchNewOre));
-      }
-
-    });
-
-    this.capacity = this.upgradeS.storage[this.userS.currentUser.upgrades[UpgradeType.storage].lvl].capacity;
 
     this.search = this.userS.currentUser.asteroidSearch;
 
     this.mineRate = this.userS.currentUser.currentMineRate;
 
-    this.baseMineRate = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].baseRate;
-    this.progressBarMaxValue = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].maxRate - this.baseMineRate;
-
     this.updateProgressBarValue();
 
-    this.researchInfo = this.upgradeS.research[this.userS.currentUser.upgrades[UpgradeType.research].lvl];
+    this.researchInfo = this.upgradeS.research[1];
     this.distance = this.researchInfo.maxDistance / 2;
     this.searchTimeUpdate();
 
     this.asteroid$ = this.asteroidS.asteroid;
-    this.userS.upgradeSubject.subscribe((user: User) => {
-      this.capacity = this.upgradeS.storage[this.userS.currentUser.upgrades[UpgradeType.storage].lvl].capacity;
-      this.baseMineRate = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].baseRate;
-      this.progressBarMaxValue = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].maxRate
+
+    this.userS.frenzyInfo.subscribe((fInfo:IFrenzyInfo)=>{
+      this.userFrenzyInfo=fInfo;
+    });
+
+    this.userS.frenzyTimer.subscribe((timer:number)=>{
+      this.userFrenzyTimer=timer;
+    });
+    
+    this.userS.upgrade.subscribe((upgrade: IUpgrades) => {
+      this.userMineRateLvl = upgrade.mineRate.lvl;
+      this.capacity = this.upgradeS.storage[upgrade.storage.lvl].capacity;
+      this.baseMineRate = this.upgradeS.mineRate[upgrade.mineRate.lvl].baseRate;
+      this.progressBarMaxValue = this.upgradeS.mineRate[upgrade.mineRate.lvl].maxRate
         - this.baseMineRate;
+      this.researchInfo = this.upgradeS.research[upgrade.research.lvl];
       this.updateProgressBarValue();
-      this.researchInfo = this.upgradeS.research[this.userS.currentUser.upgrades[UpgradeType.research].lvl];
+
     });
     this.userS.searchSubject.subscribe((user: User) => {
       this.search = user.asteroidSearch;
@@ -135,9 +136,9 @@ export class OreListComponent implements OnInit {
   }
 
   updateProgressBarValue() {
-    if (this.userS.currentUser.frenzy.state) {
-      const frenzyTime = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].frenzyTime;
-      this.progressBarValue = this.userS.currentUser.frenzy.timer / (frenzyTime * 1000);
+    if (this.userFrenzyInfo.state) {
+      const frenzyTime = this.upgradeS.mineRate[this.userMineRateLvl].frenzyTime;
+      this.progressBarValue = this.userFrenzyTimer / (frenzyTime * 1000);
     }
     else {
       this.progressBarValue = this.mineRate - this.baseMineRate > 0 ? this.mineRate - this.baseMineRate : 0;

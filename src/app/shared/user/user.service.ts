@@ -11,12 +11,67 @@ import { UpgradeService } from '../../ship/upgrade.service';
 import { Quest } from '../../quest/quest';
 import { IAsteroid } from '../../asteroid/asteroid.service';
 import { SearchResult } from '../../ore/search-result/searchResult';
+import { AuthService } from '../../signin/auth.service';
+import { Observable } from 'rxjs/Observable';
+import { Research } from '../../ship/upgrade-class/research';
+import { storage } from 'firebase';
 
+
+export interface IUser {
+
+  uid: string;
+  credit: number;
+
+  email: string;
+  name: string;
+
+  currentMineRate: number;
+
+  score: number;
+
+  asteroidSearch: SearchResult;
+
+  quest: Quest;
+  chest: Array<Chest>;
+  numberOfChest: number;
+
+  upgrades: UserUpgrade[];
+
+  event: number;
+
+  frenzy: Frenzy;
+
+  boolBadConfig: boolean;
+}
+
+export interface IFrenzyInfo {
+  nextCombos,
+  state: number
+}
+
+export interface IProfile {
+  badConfig: number,
+  email: string,
+  name: string
+}
+
+export interface IUpgrades {
+  engine: IUpgrade,
+  mineRate: IUpgrade,
+  research: IUpgrade,
+  storage: IUpgrade
+}
+
+export interface IUpgrade {
+  lvl: number,
+  start: number,
+  timer: number,
+}
 
 @Injectable()
 export class UserService {
 
-  loadedTrigger: number = 7;
+  loadedTrigger: number = 3;
   loadedCounter: number = 0;
 
   db: AngularFireDatabase;
@@ -25,18 +80,18 @@ export class UserService {
   afAuth: AngularFireAuth;
 
   chestSubject = new Subject<User>();
-  creditSubject = new Subject<User>();
-  profileSubject = new Subject<User>();
+
   questSubject = new Subject<User>();
   searchSubject = new Subject<User>();
-  upgradeSubject = new Subject<User>();
+
   mineRateSubject = new Subject<User>();
   eventSubject = new Subject<User>();
-  frenzySubjectCombo = new Subject<number>();
-  frenzySubjectState = new Subject<Frenzy>();
+
+
 
   constructor(db: AngularFireDatabase, afAuth: AngularFireAuth,
-    private upgradeS: UpgradeService, private marketS: MarketService, private socketS: SocketService) {
+    private upgradeS: UpgradeService, private marketS: MarketService,
+    private socketS: SocketService, private authS: AuthService) {
 
     this.db = db;
     this.afAuth = afAuth;
@@ -49,14 +104,6 @@ export class UserService {
           (snapshot: any) => {
             this.FillChest(snapshot);
           });
-        this.db.object('users/' + auth.uid + '/credit').valueChanges().subscribe(
-          (snapshot: any) => {
-            this.FillCredit(snapshot);
-          });
-        this.db.object('users/' + auth.uid + '/profile').valueChanges().subscribe(
-          (snapshot: any) => {
-            this.FillProfile(snapshot);
-          });
         this.db.object('users/' + auth.uid + '/quest').valueChanges().subscribe(
           (snapshot: any) => {
             this.FillQuest(snapshot);
@@ -65,33 +112,43 @@ export class UserService {
           (snapshot: any) => {
             this.FillSearch(snapshot);
           });
-        this.db.object('users/' + auth.uid + '/upgrade').valueChanges().subscribe(
-          (snapshot: any) => {
-            this.FillUpgrade(snapshot);
-          });
         this.db.object('users/' + auth.uid + '/event').valueChanges().subscribe(
           (snapshot: any) => {
             this.FillEvent(snapshot);
-          });
-        this.db.object('users/' + auth.uid + '/frenzy/info').valueChanges().subscribe(
-          (info: any) => {
-            this.db.object('users/' + auth.uid + '/frenzy/time').valueChanges().take(1).subscribe(
-              (time: any) => {
-                this.FillFrenzy(info, time);
-                this.frenzySubjectState.next(this.currentUser.frenzy);
-              });
-          });
-        this.db.object('users/' + auth.uid + '/frenzy/time').valueChanges().subscribe(
-          (snapshot: any) => {
-            if (this.currentUser.frenzy != null) {
-              this.currentUser.frenzy.updateTimer(snapshot.timer);
-            }
           });
       }
     });
   }
 
+  get credit(): Observable<number> {
+    return this.authS.UserId
+      .mergeMap((id: String) => this.db.object('users/' + id + '/credit').valueChanges<number>())
+  }
 
+  get frenzyInfo(): Observable<IFrenzyInfo> {
+    return this.authS.UserId
+      .mergeMap((id: String) => this.db.object('users/' + id + '/frenzy/info').valueChanges<IFrenzyInfo>())
+  }
+
+  get frenzyTimer(): Observable<number> {
+    return this.authS.UserId
+      .mergeMap((id: String) => this.db.object('users/' + id + '/frenzy/time/timer').valueChanges<number>())
+  }
+
+  get profile(): Observable<IProfile> {
+    return this.authS.UserId
+      .mergeMap((id: String) => this.db.object('users/' + id + '/profile').valueChanges<IProfile>())
+  }
+
+  get upgrade(): Observable<IUpgrades> {
+    return this.authS.UserId
+      .mergeMap((id: String) => this.db.object('users/' + id + '/upgrade').valueChanges<IUpgrades>())
+  }
+
+  getUpgradeByName(upgradeName: string): Observable<IUpgrade> {
+    return this.authS.UserId
+      .mergeMap((id: String) => this.db.object('users/' + id + '/upgrade/' + upgradeName).valueChanges<IUpgrade>())
+  }
 
   FillChest(snapshot) {
     this.currentUser.numberOfChest = snapshot.numberOfChest;
@@ -106,19 +163,6 @@ export class UserService {
     this.incrementCounter();
   }
 
-  FillCredit(snapshot) {
-    this.currentUser.credit = snapshot;
-    this.creditSubject.next(this.currentUser);
-    this.incrementCounter();
-  }
-
-  FillProfile(snapshot) {
-    this.currentUser.email = snapshot.email;
-    this.currentUser.name = snapshot.name;
-    this.currentUser.boolBadConfig = snapshot.badConfig === 0 ? false : true;
-    this.profileSubject.next(this.currentUser);
-    this.incrementCounter();
-  }
 
   FillQuest(snapshot) {
     this.currentUser.quest = new Quest(snapshot.name, snapshot.type, snapshot.values,
@@ -144,41 +188,6 @@ export class UserService {
   FillEvent(snapshot) {
     this.currentUser.event = snapshot;
     this.eventSubject.next(this.currentUser);
-  }
-
-  FillUpgrade(snapshot) {
-
-    this.currentUser.upgrades[UpgradeType.storage] = new UserUpgrade(
-      snapshot.storage.lvl,
-      snapshot.storage.timer,
-      snapshot.storage.start
-    );
-
-    this.currentUser.upgrades[UpgradeType.mineRate] = new UserUpgrade(
-      snapshot.mineRate.lvl,
-      snapshot.mineRate.timer,
-      snapshot.mineRate.start
-    );
-    this.currentUser.upgrades[UpgradeType.research] = new UserUpgrade(
-      snapshot.research.lvl,
-      snapshot.research.timer,
-      snapshot.research.start
-    );
-
-    this.currentUser.upgrades[UpgradeType.engine] = new UserUpgrade(
-      snapshot.engine.lvl,
-      snapshot.engine.timer,
-      snapshot.engine.start
-    );
-
-    this.currentUser.score = snapshot.score;
-
-    this.upgradeSubject.next(this.currentUser);
-    this.incrementCounter();
-  }
-
-  FillFrenzy(info, time) {
-    this.currentUser.frenzy = new Frenzy(info.state === 1, time.timer, info.nextCombos);
   }
 
   incrementCounter() {
