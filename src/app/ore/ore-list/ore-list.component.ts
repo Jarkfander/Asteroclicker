@@ -1,5 +1,5 @@
 import { Component, AfterViewInit, ViewChild, ElementRef, Pipe } from '@angular/core';
-import { SearchResult } from '../search-result/searchResult';
+
 import { UserService, IUpgrades, IFrenzyInfo } from '../../shared/user/user.service';
 import { SocketService } from '../../shared/socket/socket.service';
 import { User } from '../../shared/user/user';
@@ -37,33 +37,21 @@ export class SortPipe {
 
 export class OreListComponent implements OnInit {
 
-  public distance: number = 0;
-
   public capacity: number = 0;
 
   public asteroid$: Observable<IAsteroid>;
 
-  public search: SearchResult;
-
-  public timer: string = "00:00:00";
-
-  public isModalOpen: boolean = false;
-
   public mineRate: number;
-
-  public progressBarMaxValue: number = 1;
 
   public baseMineRate: number = 0;
 
-  public progressBarValue: number = 1;
-
   public oreAmounts$: Observable<IOreAmounts>;
 
-  public researchInfo: Research;
-
-  public searchTime: string;
-
   public userMineRateLvl: number;
+
+  public progressBarValue: number = 1;
+
+  public progressBarMaxValue: number = 1;
 
   public userFrenzyInfo: IFrenzyInfo = {
     state: 0,
@@ -80,15 +68,9 @@ export class OreListComponent implements OnInit {
 
     this.oreAmounts$ = this.oreInfoS.OreAmounts;
 
-    this.search = this.userS.currentUser.asteroidSearch;
-
     this.mineRate = this.userS.currentUser.currentMineRate;
 
     this.updateProgressBarValue();
-
-    this.researchInfo = this.upgradeS.research[1];
-    this.distance = this.researchInfo.maxDistance / 2;
-    this.searchTimeUpdate();
 
     this.asteroid$ = this.asteroidS.asteroid;
 
@@ -105,34 +87,18 @@ export class OreListComponent implements OnInit {
       this.capacity = this.upgradeS.storage[upgrade.storage.lvl].capacity;
       this.baseMineRate = this.upgradeS.mineRate[upgrade.mineRate.lvl].baseRate;
       this.progressBarMaxValue = this.upgradeS.mineRate[upgrade.mineRate.lvl].maxRate
-        - this.baseMineRate;
-      this.researchInfo = this.upgradeS.research[upgrade.research.lvl];
+      - this.baseMineRate;
       this.updateProgressBarValue();
 
     });
-    this.userS.searchSubject.subscribe((user: User) => {
-      this.search = user.asteroidSearch;
-      this.timer = Utils.secondsToHHMMSS(this.search.timer / 1000);
-      if (user.asteroidSearch.results.length !== 3) {
-        this.isModalOpen = false;
-      }
-    });
+
     this.userS.mineRateSubject.subscribe((user: User) => {
       this.mineRate = user.currentMineRate;
       this.updateProgressBarValue();
     });
 
 
-    setInterval(() => { this.updateTimer(); }, 1000);
 
-  }
-
-  updateTimer() {
-    if (this.search.start !== 0) {
-      if (this.search.results.length === 0 || this.search.results.length === 1) {
-        this.socketS.updateAsteroidTimer(this.userS.currentUser.uid, this.distance);
-      }
-    }
   }
 
   updateProgressBarValue() {
@@ -146,26 +112,6 @@ export class OreListComponent implements OnInit {
     }
   }
 
-  searchTimeUpdate() {
-    const coefDist = (((this.distance - this.researchInfo.minDistance) /
-      (this.researchInfo.maxDistance - this.researchInfo.minDistance)) * 5) + 1;
-    this.searchTime = Utils.secondsToHHMMSS((this.researchInfo.searchTime) * coefDist);
-  }
 
-  searchNewAster() {
-    this.socketS.searchAsteroid(this.userS.currentUser.uid);
-  }
-
-  rejectResults() {
-    this.socketS.rejectResults(this.userS.currentUser.uid);
-  }
-
-  showResult() {
-    this.isModalOpen = true;
-  }
-
-  closeModal() {
-    this.isModalOpen = false;
-  }
 
 }

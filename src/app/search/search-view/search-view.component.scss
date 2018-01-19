@@ -1,7 +1,3 @@
-
-.closeLine, .rejectLine {
-    height:10%;
-}
 .slider {
     -webkit-appearance: none;
     width: 100%;
@@ -30,20 +26,4 @@
     border-radius: 50%;
     background: #4CAF50;
     cursor: pointer;
-}
-
-.progressBar{
-    width:100%;
-}
-
-progress {
-    color: red;
-}
-
-progress::-webkit-progress-value {
-    background: red;
-} 
-
-progress::-moz-progress-bar {
-    background: red;
 }

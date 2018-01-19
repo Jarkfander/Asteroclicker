@@ -108,8 +108,8 @@ export class AsteroidViewComponent implements OnInit {
     this.render.removeChild(this.el.nativeElement, this.app.view);
     delete this.asteroidSprite;
     this.app.destroy();
-
     this.initAsteroid(this.asteroid);
+    this.initNumberOfDroneBegin();
   }
 
   initAsteroid(newAste: IAsteroid) {

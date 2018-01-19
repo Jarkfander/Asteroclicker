@@ -2,19 +2,21 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OreViewComponent } from './ore-view/ore-view.component';
 import { SortPipe, OreListComponent } from './ore-list/ore-list.component';
-import { SearchResultComponent } from './search-result/search-result.component';
 import { SharedModule } from '../shared/shared.module';
 import { FormsModule } from '@angular/forms';
 import { OreService } from './ore.service';
+import { SearchResultComponent } from '../search/search-result/search-result.component';
+import { SearchModule } from '../search/search.module';
 
 
 @NgModule({
   imports: [
     CommonModule,
     SharedModule,
-    FormsModule
+    FormsModule,
+    SearchModule
   ],
-  declarations: [ OreViewComponent, SearchResultComponent, OreListComponent,SortPipe],
+  declarations: [ OreViewComponent, OreListComponent,SortPipe],
   exports:[
     OreViewComponent,OreListComponent, SortPipe
   ],

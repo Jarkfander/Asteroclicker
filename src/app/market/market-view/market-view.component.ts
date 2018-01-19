@@ -39,7 +39,7 @@ export class MarketInfoComponent implements OnInit {
   public amountToSell: number = 1;
 
   public oreInfo: IOreInfo;
-  public oreAmount: number;
+  public currentOreAmount: number =0;
 
   public userStorageLvl:number=1;
 
@@ -50,9 +50,7 @@ export class MarketInfoComponent implements OnInit {
   }
 
   ngOnInit() {
-
-
-
+    
     this.oreS.getOreInfoByString(this.oreName).take(1).subscribe((oreInfo: IOreInfo) => {
       this.oreInfo = oreInfo;
 
@@ -62,12 +60,11 @@ export class MarketInfoComponent implements OnInit {
 
       this.oreS.getOreAmountByString(this.oreName).subscribe((oreAmount: number) => {
 
-        this.hasMoney = this.userS.currentUser.credit > 0;
-        this.hasOreLeft = oreAmount > 0;
-        this.hasSpaceLeft = oreAmount
+        this.currentOreAmount=oreAmount;
+        this.hasOreLeft = this.currentOreAmount > 0;
+        this.hasSpaceLeft = this.currentOreAmount
+
           < this.upgradeS.storage[this.userStorageLvl].capacity;
-
-
 
         this.value = this.marketS.oreCosts[this.oreName]
         [Object.keys(this.marketS.oreCosts[this.oreName])[Object.keys(this.marketS.oreCosts[this.oreName]).length - 1]];
@@ -85,43 +82,40 @@ export class MarketInfoComponent implements OnInit {
         this.recentValues = this.marketS.oreCosts[this.oreName];
         this.histoValues = this.marketS.oreHistory[this.oreName];
 
-        this.marketS.oreCostsSubject[this.oreName].subscribe((tab: number[]) => {
-          this.value = tab[Object.keys(tab)[Object.keys(tab).length - 1]];
-          this.unitValue = SharedModule.calculeMoneyWithSpace(this.value);
-
-          this.valuesTotal = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell);
-          this.valuesTotalWithTaxe = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell * 1.025);
-          this.recentValues = tab;
-        });
-
-        this.marketS.oreHistorySubject[this.oreName].subscribe((tab: number[]) => {
-          this.histoValues = tab;
-        });
-
-        this.userS.getUpgradeByName("storage").subscribe((upgrade:IUpgrade) => {
-
-          this.hasSpaceLeft = oreAmount
-          < this.upgradeS.storage[this.userStorageLvl].capacity;
-
-          this.userStorageLvl=upgrade.lvl;
-          this.maxSliderValue = (this.upgradeS.storage[upgrade.lvl].capacity * 0.02
-            * this.oreInfo.miningSpeed);
-          this.maxSliderValue = ((Math.floor(this.maxSliderValue / 50)) + 1) * 50;
-
-          this.valuesTotal = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell);
-          this.valuesTotalWithTaxe = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell * 1.025);
-        });
-
-        this.userS.credit.subscribe((credit:number) => {
-          this.hasMoney = credit > 0;
-        });
       });
+
+      this.userS.credit.subscribe((credit:number) => {
+        this.hasMoney = credit > 0;
+      });
+
+      this.userS.getUpgradeByName("storage").subscribe((upgrade:IUpgrade) => {
+
+        this.hasSpaceLeft = this.currentOreAmount
+        < this.upgradeS.storage[this.userStorageLvl].capacity;
+
+        this.userStorageLvl=upgrade.lvl;
+        this.maxSliderValue = (this.upgradeS.storage[upgrade.lvl].capacity * 0.02
+          * this.oreInfo.miningSpeed);
+        this.maxSliderValue = ((Math.floor(this.maxSliderValue / 50)) + 1) * 50;
+
+        this.valuesTotal = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell);
+        this.valuesTotalWithTaxe = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell * 1.025);
+      });
+
+      this.marketS.oreCostsSubject[this.oreName].subscribe((tab: number[]) => {
+        this.value = tab[Object.keys(tab)[Object.keys(tab).length - 1]];
+        this.unitValue = SharedModule.calculeMoneyWithSpace(this.value);
+
+        this.valuesTotal = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell);
+        this.valuesTotalWithTaxe = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell * 1.025);
+        this.recentValues = tab;
+      });
+
+      this.marketS.oreHistorySubject[this.oreName].subscribe((tab: number[]) => {
+        this.histoValues = tab;
+      });
+
     });
-
-    //To Transform in a setter of oreAmount
-    /* this.userS.oreSubject.subscribe((user) => {
-
-     });*/
   }
 
   public SellOre/*moon*/(amount: number) {

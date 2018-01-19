@@ -20,6 +20,8 @@ import { QuestService } from './quest/quest.service';
 import { RankingService } from './ranking/ranking.service';
 import { AuthService } from './signin/auth.service';
 import { OreModule } from './ore/ore.module';
+import { SearchViewComponent } from './search/search-view/search-view.component';
+import { SearchModule } from './search/search.module';
 
 
 
@@ -39,7 +41,8 @@ import { OreModule } from './ore/ore.module';
     TopbarModule,
     SharedModule,
     MarketModule,
-    OreModule
+    OreModule,
+    SearchModule
   ],
   providers: [UserService, UpgradeService, MarketService, QuestService, RankingService, AuthService],
   bootstrap: [AppComponent]
