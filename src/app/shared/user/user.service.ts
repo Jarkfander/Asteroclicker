@@ -118,6 +118,11 @@ export class UserService {
           (snapshot: any) => {
             this.FillEvent(snapshot);
           });
+
+        this.db.object('users/' + auth.uid + '/cargo').valueChanges().subscribe(
+          (snapshot: any) => {
+            this.FillCargo(snapshot);
+          });
       }
     });
   }
@@ -190,6 +195,11 @@ export class UserService {
   FillEvent(snapshot) {
     this.currentUser.event = snapshot;
     this.eventSubject.next(this.currentUser);
+  }
+
+  FillCargo(snapshot) {
+    this.currentUser.cargo = snapshot;
+    this.cargoSubject.next(this.currentUser);
   }
 
   incrementCounter() {

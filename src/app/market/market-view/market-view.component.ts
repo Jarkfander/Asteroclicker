@@ -41,13 +41,9 @@ export class MarketInfoComponent implements OnInit {
   public oreInfo: IOreInfo;
   public oreAmount: number;
 
-<<<<<<< HEAD
   public userStorageLvl:number=1;
 
   //Utiliser oreservcie pour recup bystring
-=======
-  //Utiliser ore servcie pour recup bystring
->>>>>>> sell buy modif
   constructor(private marketS: MarketService, private socketS: SocketService,
     private userS: UserService, private upgradeS: UpgradeService, private oreS: OreService) {
 

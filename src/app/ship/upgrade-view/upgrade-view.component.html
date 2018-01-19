@@ -12,11 +12,11 @@
         <p *ngFor="let nextkey of nextUpgradeCaraKeys">
             {{nextkey}} : {{upgradeLvls[upgradeCurrentLvl.lvl+1].cara[nextkey]}}
         </p>
-        <p>Cost:
-            <b class="credit">{{upgradeLvls[upgradeCurrentLvl.lvl+1].costValue()}} cr</b>
-            <br> or
-            <b class={{upgradeLvls[upgradeCurrentLvl.lvl+1].costOre[0]}}>{{tabOreCostTemp[0].toUpperCase()}}: {{tabOreCost[0]}}</b>,
-            <b class={{upgradeLvls[upgradeCurrentLvl.lvl+1].costOre[1]}}>{{tabOreCostTemp[1].toUpperCase()}}: {{tabOreCost[1]}}</b>
+        <p>Cost:  
+        </p>
+
+        <p *ngFor="let key of upgradeCostString">
+           {{key.toUpperCase()}} : {{this.upgradeLvls[this.upgradeCurrentLvl.lvl + 1].costOreString[key]}}
         </p>
     </div>
 
