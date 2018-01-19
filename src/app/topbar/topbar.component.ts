@@ -1,5 +1,5 @@
 import { Component, AfterViewInit, Renderer2, ElementRef } from '@angular/core';
-import { UserService } from '../shared/user/user.service';
+import { UserService, IProfile } from '../shared/user/user.service';
 import { QuestService } from '../quest/quest.service';
 import { SocketService } from '../shared/socket/socket.service';
 import { SharedModule } from '../shared/shared.module';
@@ -29,12 +29,12 @@ export class TopbarComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.userS.profileSubject.subscribe((user: User) => {
-      this.name = user.name;
+    this.userS.profile.subscribe((profile: IProfile) => {
+      this.name = profile.name;
     });
-    this.userS.creditSubject.subscribe((user: User) => {
-      this.credit = user.credit;
-      this.creditValue = SharedModule.calculeMoneyWithSpace(user.credit);
+    this.userS.credit.subscribe((credit: number) => {
+      this.credit = credit;
+      this.creditValue = SharedModule.calculeMoneyWithSpace(credit);
     });
   }
 

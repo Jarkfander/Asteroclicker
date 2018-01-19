@@ -4,13 +4,12 @@ import * as PIXI from 'pixi.js';
 import { AsteroidSprite } from './asteroidSprite';
 import { Drone } from './drone';
 import { SocketService } from '../../shared/socket/socket.service';
-import { UserService } from '../../shared/user/user.service';
+import { UserService, IFrenzyInfo, IProfile, IUpgrades, IUpgrade } from '../../shared/user/user.service';
 import { ParticleBase } from '../../shared/pixiVisual/particleBase';
 import { User } from '../../shared/user/user';
 import { UpgradeType, Upgrade } from '../../ship/upgrade-class/upgrade';
 import { getFramesFromSpriteSheet, initSprite, changeSpriteInAnime } from '../../loadAnimation';
 import { Frenzy } from '../../shared/user/frenzy';
-import { UpgradeLvls } from '../../ship/upgrade-list/upgrade-list.component';
 import { UpgradeService } from '../../ship/upgrade.service';
 import { IAsteroid, AsteroidService } from '../asteroid.service';
 import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
@@ -48,6 +47,7 @@ export class AsteroidViewComponent implements OnInit {
   private boolKeyboardFirst = true;
   private clicks: number[];
 
+  private userMineRateLvl : number =1;
   clicked: boolean;
 
   constructor(private el: ElementRef, private render: Renderer2, private userS: UserService,
@@ -68,6 +68,9 @@ export class AsteroidViewComponent implements OnInit {
               oreInfos[this.asteroid.ore].miningSpeed).toFixed(2)));
         }
       }, 1000);
+      this.userS.getUpgradeByName("mineRate").subscribe((upgrade:IUpgrade)=>{
+        this.userMineRateLvl=upgrade.lvl;
+      })
       setInterval(() => { this.updateClick() }, 100);
     });
   }
@@ -177,7 +180,7 @@ export class AsteroidViewComponent implements OnInit {
     });
 
     // frenzy Subject
-    this.userS.frenzySubjectState.subscribe((frenzy: Frenzy) => {
+    this.userS.frenzyInfo.subscribe((frenzy: IFrenzyInfo) => {
       if (!frenzy.state) {
         this.asteroidSprite.frenzyModTouchDown();
       } else {
@@ -185,29 +188,20 @@ export class AsteroidViewComponent implements OnInit {
       }
     });
 
-    // Frenzy Subject Combo
-    this.userS.frenzySubjectCombo.subscribe((frenzyNum: number) => {
-      if (this.userS.currentUser.frenzy.state) {
-
-      } else {
-        this.asteroidSprite.frenzyModTouchDown();
-      }
-    });
-
     // Profile Subject
-    this.userS.profileSubject.subscribe((user: User) => {
-      user.boolBadConfig ? this.backgroundSky.stop() : this.backgroundSky.play();
+    this.userS.profile.subscribe((profile: IProfile) => {
+      profile.badConfig ? this.backgroundSky.stop() : this.backgroundSky.play();
     });
 
     // Upgrade Subject
-    this.userS.upgradeSubject.subscribe((user: User) => {
-      const tempLvl = this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl;
+    this.userS.upgrade.subscribe((upgrade: IUpgrades) => {
+      const tempLvl = upgrade.mineRate.lvl;
       if (this.numOfDrone !== Math.floor(tempLvl / 40) + 1) {
         this.numOfDrone = Math.floor(tempLvl / 40) + 1;
         this.addNewDrone();
       }
       for (let i = 0; i < this.numOfDrone; i++) {
-        this.drone[i].changeSpriteDrone(user.upgrades[UpgradeType.mineRate].lvl, i);
+        this.drone[i].changeSpriteDrone(upgrade.mineRate.lvl, i);
       }
     });
   }
@@ -220,8 +214,8 @@ export class AsteroidViewComponent implements OnInit {
   }
 
   updateClick() {
-    const max = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].maxRate;
-    const base = this.upgradeS.mineRate[this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl].baseRate;
+    const max = this.upgradeS.mineRate[this.userMineRateLvl].maxRate;
+    const base = this.upgradeS.mineRate[this.userMineRateLvl].baseRate;
 
     const clickTmp = this.clicks;
     for (let i = 0; i < clickTmp.length; i++) {
@@ -363,20 +357,19 @@ export class AsteroidViewComponent implements OnInit {
 
   // Manage lot of drone - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   initNumberOfDroneBegin(newAste: IAsteroid) {
-    const tempLvl = this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl;
     let random = 1;
 
     if (this.userS.currentUser.boolBadConfig) {
       this.numOfDrone = 1;
     } else {
-      this.numOfDrone = Math.floor(tempLvl / 50) + 1;
+      this.numOfDrone = Math.floor(this.userMineRateLvl / 50) + 1;
     }
 
     for (let i = 0; i < this.numOfDrone; i++) {
       random = (Math.floor(Math.random() * 4) + 1) * 0.01;
       this.drone.push(new Drone(0.20 - random, 0.20 - random, 1, 1, this.app));
       this.drone[i].deltaTempAster = (i / 3) * (2 * Math.PI) / 1000;
-      this.drone[i].changeSpriteDrone(tempLvl, i);
+      this.drone[i].changeSpriteDrone(this.userMineRateLvl, i);
     }
   }
 
