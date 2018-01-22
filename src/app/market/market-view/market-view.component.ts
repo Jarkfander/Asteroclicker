@@ -8,6 +8,8 @@ import { SharedModule } from '../../shared/shared.module';
 import { UpgradeService } from '../../ship/upgrade.service';
 import { OreService, IOreInfo } from '../../ore/ore.service';
 
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/first';
 
 @Component({
   selector: 'app-market-view',
@@ -22,7 +24,7 @@ export class MarketInfoComponent implements OnInit {
 
   public value: number;
 
-  public isModalOpen: boolean = false;
+  public isModalOpen = false;
   public recentValues: number[];
   public histoValues: number[];
 
@@ -36,84 +38,87 @@ export class MarketInfoComponent implements OnInit {
   public hasSpaceLeft: boolean;
 
   public maxSliderValue: number;
-  public amountToSell: number = 1;
+  public amountToSell = 1;
 
   public oreInfo: IOreInfo;
-  public currentOreAmount: number =0;
+  public currentOreAmount = 0;
 
-  public userStorageLvl:number=1;
+  public userStorageLvl = 1;
 
-  //Utiliser oreservcie pour recup bystring
-  constructor(private marketS: MarketService, private socketS: SocketService,
-    private userS: UserService, private upgradeS: UpgradeService, private oreS: OreService) {
+  // Utiliser oreservcie pour recup bystring
+  constructor(private marketS: MarketService,
+              private socketS: SocketService,
+              private userS: UserService,
+              private upgradeS: UpgradeService,
+              private oreS: OreService) {
 
   }
 
   ngOnInit() {
-    
-    this.oreS.getOreInfoByString(this.oreName).take(1).subscribe((oreInfo: IOreInfo) => {
-      this.oreInfo = oreInfo;
 
-      this.userS.getUpgradeByName("research").subscribe((upgrade:IUpgrade)=>{
-        this.boolOreUnlock = upgrade.lvl >=this.oreInfo.searchNewOre;
-      });
+    this.oreS.getOreInfoByString(this.oreName)
+      .first()
+      .subscribe((oreInfo: IOreInfo) => {
+        this.oreInfo = oreInfo;
 
-      this.oreS.getOreAmountByString(this.oreName).subscribe((oreAmount: number) => {
+        this.userS.getUpgradeByName('research')
+          .map((upgrade: IUpgrade) => upgrade.lvl >= this.oreInfo.searchNewOre)
+          .subscribe((isUnlocked: boolean) => this.boolOreUnlock = isUnlocked);
 
-        this.currentOreAmount=oreAmount;
-        this.hasOreLeft = this.currentOreAmount > 0;
-        this.hasSpaceLeft = this.currentOreAmount
+        this.oreS.getOreAmountByString(this.oreName).subscribe((oreAmount: number) => {
 
+          this.currentOreAmount = oreAmount;
+          this.hasOreLeft = this.currentOreAmount > 0;
+          this.hasSpaceLeft = this.currentOreAmount < this.upgradeS.storage[this.userStorageLvl].capacity;
+
+          this.value = this.marketS.oreCosts[this.oreName]
+          [Object.keys(this.marketS.oreCosts[this.oreName])[Object.keys(this.marketS.oreCosts[this.oreName]).length - 1]];
+
+          this.unitValue = SharedModule.calculeMoneyWithSpace(this.value);
+          this.maxSliderValue = (this.upgradeS.storage[this.userStorageLvl].capacity * 0.02
+            * this.oreInfo.miningSpeed);
+          this.maxSliderValue = ((Math.floor(this.maxSliderValue / 50)) + 1) * 50;
+
+          this.amountToSell = parseFloat((this.maxSliderValue / 2).toFixed(1));
+
+          this.valuesTotal = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell);
+          this.valuesTotalWithTaxe = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell * 1.025);
+
+          this.recentValues = this.marketS.oreCosts[this.oreName];
+          this.histoValues = this.marketS.oreHistory[this.oreName];
+
+        });
+
+        this.userS.credit.subscribe((credit:number) => {
+          this.hasMoney = credit > 0;
+        });
+
+        this.userS.getUpgradeByName('storage').subscribe((upgrade:IUpgrade) => {
+
+          this.hasSpaceLeft = this.currentOreAmount
           < this.upgradeS.storage[this.userStorageLvl].capacity;
 
-        this.value = this.marketS.oreCosts[this.oreName]
-        [Object.keys(this.marketS.oreCosts[this.oreName])[Object.keys(this.marketS.oreCosts[this.oreName]).length - 1]];
+          this.userStorageLvl = upgrade.lvl;
+          this.maxSliderValue = (this.upgradeS.storage[upgrade.lvl].capacity * 0.02
+            * this.oreInfo.miningSpeed);
+          this.maxSliderValue = ((Math.floor(this.maxSliderValue / 50)) + 1) * 50;
 
-        this.unitValue = SharedModule.calculeMoneyWithSpace(this.value);
-        this.maxSliderValue = (this.upgradeS.storage[this.userStorageLvl].capacity * 0.02
-          * this.oreInfo.miningSpeed);
-        this.maxSliderValue = ((Math.floor(this.maxSliderValue / 50)) + 1) * 50
+          this.valuesTotal = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell);
+          this.valuesTotalWithTaxe = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell * 1.025);
+        });
 
-        this.amountToSell = parseFloat((this.maxSliderValue / 2).toFixed(1));
+        this.marketS.oreCostsSubject[this.oreName].subscribe((tab: number[]) => {
+          this.value = tab[Object.keys(tab)[Object.keys(tab).length - 1]];
+          this.unitValue = SharedModule.calculeMoneyWithSpace(this.value);
 
-        this.valuesTotal = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell);
-        this.valuesTotalWithTaxe = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell * 1.025);
+          this.valuesTotal = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell);
+          this.valuesTotalWithTaxe = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell * 1.025);
+          this.recentValues = tab;
+        });
 
-        this.recentValues = this.marketS.oreCosts[this.oreName];
-        this.histoValues = this.marketS.oreHistory[this.oreName];
-
-      });
-
-      this.userS.credit.subscribe((credit:number) => {
-        this.hasMoney = credit > 0;
-      });
-
-      this.userS.getUpgradeByName("storage").subscribe((upgrade:IUpgrade) => {
-
-        this.hasSpaceLeft = this.currentOreAmount
-        < this.upgradeS.storage[this.userStorageLvl].capacity;
-
-        this.userStorageLvl=upgrade.lvl;
-        this.maxSliderValue = (this.upgradeS.storage[upgrade.lvl].capacity * 0.02
-          * this.oreInfo.miningSpeed);
-        this.maxSliderValue = ((Math.floor(this.maxSliderValue / 50)) + 1) * 50;
-
-        this.valuesTotal = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell);
-        this.valuesTotalWithTaxe = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell * 1.025);
-      });
-
-      this.marketS.oreCostsSubject[this.oreName].subscribe((tab: number[]) => {
-        this.value = tab[Object.keys(tab)[Object.keys(tab).length - 1]];
-        this.unitValue = SharedModule.calculeMoneyWithSpace(this.value);
-
-        this.valuesTotal = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell);
-        this.valuesTotalWithTaxe = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell * 1.025);
-        this.recentValues = tab;
-      });
-
-      this.marketS.oreHistorySubject[this.oreName].subscribe((tab: number[]) => {
-        this.histoValues = tab;
-      });
+        this.marketS.oreHistorySubject[this.oreName].subscribe((tab: number[]) => {
+          this.histoValues = tab;
+        });
 
     });
   }
@@ -126,11 +131,11 @@ export class MarketInfoComponent implements OnInit {
     this.socketS.buyOre(this.userS.currentUser.uid, this.oreName, amount);
   }
 
-  OpenHistory() {
+  public OpenHistory() {
     this.isModalOpen = true;
   }
 
-  CloseHistory() {
+  public CloseHistory() {
     this.isModalOpen = false;
   }
 }

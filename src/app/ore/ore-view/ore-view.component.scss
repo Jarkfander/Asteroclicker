@@ -1,4 +1,17 @@
-.oreIcon{
+@import '../../../theme';
+
+article {
+    background-color: $black;
+    color: white;
+    margin-bottom: $gap;
+}
+
+img {
     width : 30%;
-    height : 30%;
+    margin: 0 5px;
+}
+
+p {
+    font-size: 1rem;
+    text-align : right;
 }

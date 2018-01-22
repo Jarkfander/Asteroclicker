@@ -11,14 +11,14 @@ import { IAsteroid } from '../../asteroid/asteroid.service';
 })
 export class SearchResultComponent implements AfterViewInit {
 
-  constructor(private socketS: SocketService,private userS: UserService) { }
+  constructor(private socketS: SocketService, private userS: UserService) { }
 
-  @Input('asteroid') asteroid:IAsteroid;
-  @Input('num') num:number;
-  ngAfterViewInit() {
-  }
+  @Input('asteroid') asteroid: IAsteroid;
+  @Input('num') num: number;
 
-  chooseAsteroid(){
-    this.socketS.chooseAsteroid(this.userS.currentUser.uid,this.num);
+  ngAfterViewInit() { }
+
+  chooseAsteroid() {
+    this.socketS.chooseAsteroid(this.userS.currentUser.uid, this.num);
   }
 }

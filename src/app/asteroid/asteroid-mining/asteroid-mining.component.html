@@ -1,0 +1,26 @@
+<!--
+<table style="width:100%">
+  <tr style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;"
+    unselectable="on" onselectstart="return false;" onmousedown="return false;">
+    <td align="left">Type of Asteroid : {{ (asteroid$|async)?.ore }} </td>
+    <td *ngIf="(asteroid$|async)?.currentCapacity>0" align="right">{{ (asteroid$|async)?.currentCapacity }}/{{ (asteroid$|async)?.capacity }} </td>
+    <td *ngIf="(asteroid$|async)?.currentCapacity==0" style="color:red" align="right">EMPTY</td>
+  </tr>
+</table>
+
+<div class="progressBar" >
+    <progress value="{{ progressBarValue }}" >
+    </progress>
+</div>
+-->
+
+<section class="row align-center">
+  <article class="canvas-container">
+    <canvas #chartMining></canvas>
+  </article>
+  <article class="canvas-container">
+    <canvas #chartCapacity></canvas>
+    <p *ngIf="(asteroid$ | async)?.currentCapacity === 0">EMPTY</p>    
+  </article>
+</section>
+

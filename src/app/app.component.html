@@ -4,43 +4,58 @@
 </div>
 
 
-<div *ngIf="upgradeS && (user$|async)!=null && upgradeS.storageLoad && upgradeS.mineRateLoad
+<main *ngIf="upgradeS && (user$|async)!=null && upgradeS.storageLoad && upgradeS.mineRateLoad
  && upgradeS.researchLoaded && upgradeS.engineLoad && marketS && marketS.marketLoad && loadAnimation.boolFinishLoad
   ">
 
-  {{loadAnimationEnvironment()}} 
-  <header>
-    <app-topbar></app-topbar>
-  </header>
-
+  {{loadAnimationEnvironment()}}
   <div *ngIf="loadingImage">
     <img class="image_loading" src="../assets/space2.png" />
     <img class="gif_loading" src="../assets/ecran chargement.gif" />
   </div>
 
+  <!-- Ship -->
+  <app-ship-view class="ship border"></app-ship-view>
+
+  <!-- Upgrades -->
+  <app-upgrade-list class="upgrade"></app-upgrade-list>
+
+  <!-- Asteroid -->
+  <app-asteroid-view class="asteroid border"></app-asteroid-view>
+
+  <!-- Ore -->
+  <app-ore-list class="ore"></app-ore-list>
+
+  <!-- Mining Rate -->
+  <app-asteroid-mining class="mining border"></app-asteroid-mining>
+
+  <!-- Search -->
+  <app-search-view class="search border"></app-search-view>
+
+  <!-- TopBar -->
+  <app-topbar class="topbar"></app-topbar>
+
+  <!-- Market -->
+  <app-market-list class="market"></app-market-list>  
+
+  <!--
   <div class="game-content">
     <div class="game-panel ship-panel">
       <div class="ship-panel-ship-view">
-        <app-ship-view></app-ship-view>
       </div>
       <div class="ship-panel-upgrade-view light-box-panel scrollable">
-        <app-upgrade-list></app-upgrade-list>
       </div>
     </div>
     <div class="game-panel mining-panel">
       <div class="mining-panel-asteroid-view">
-        <app-asteroid-view></app-asteroid-view>
       </div>
       <div class="mining-panel-infos-view light-box-panel scrollable">
-        <app-ore-list></app-ore-list>
-        <app-search-view></app-search-view>
       </div>
     </div>
     <div class="game-panel market-panel light-box-panel scrollable">
-      <app-market-list></app-market-list>
     </div>
   </div>
+  -->
 
 
-
-</div>
+</main>

@@ -19,28 +19,26 @@ import { User } from 'firebase/app';
 })
 export class AppComponent implements OnInit {
 
-  loadingImage = true;
+  public loadAnimation: LoadAnimation;
+  public user$: Observable<User>;
+  public loadingImage = true;
 
-  loadAnimation: LoadAnimation;
+  constructor(public authS: AuthService,
+              public upgradeS: UpgradeService,
+              public marketS: MarketService,
+              public questS: QuestService,
+              public rankingS: RankingService) {}
 
-  user$: Observable<User>;
-
-  constructor(public authS: AuthService, public upgradeS: UpgradeService,
-    public marketS: MarketService,
-    public questS: QuestService, public rankingS: RankingService) {
-    this.loadAnimation = new LoadAnimation();
-  }
-
-  ngOnInit(): void {
+  ngOnInit() {
     this.user$ = this.authS.User;
+    this.loadAnimation = new LoadAnimation();
   }
 
 
   public loadAnimationEnvironment() {
-    this.loadingImage = false;
-    /*  setTimeout(() => {
+    setTimeout(() => {
         this.loadingImage = false;
-    }, environment.loadingTime * 1000);*/
+    }, environment.loadingTime * 0); // TODO : Change 0 for 1000
   }
 
   public ValiderLogIn(log, pswd) {

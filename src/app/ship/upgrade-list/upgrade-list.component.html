@@ -1,4 +1,6 @@
-<app-upgrade-view [UpgradeName]="'storage'" [UpgradeLvls]="storageLvls" ></app-upgrade-view>
-<app-upgrade-view [UpgradeName]="'mineRate'" [UpgradeLvls]="mineRateLvls" ></app-upgrade-view>
-<app-upgrade-view [UpgradeName]="'research'" [UpgradeLvls]="researchLvls" ></app-upgrade-view>
-<app-upgrade-view [UpgradeName]="'engine'" [UpgradeLvls]="engineLvls" ></app-upgrade-view>
+<section class="row justify-between">
+    <app-upgrade-view class="border" [name]="'storage'" [lvls]="storageLvls" ></app-upgrade-view>
+    <app-upgrade-view class="border" [name]="'mineRate'" [lvls]="mineRateLvls" ></app-upgrade-view>
+    <app-upgrade-view class="border" [name]="'research'" [lvls]="researchLvls" ></app-upgrade-view>
+    <app-upgrade-view class="border" [name]="'engine'" [lvls]="engineLvls" ></app-upgrade-view>    
+</section>

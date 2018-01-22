@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 import { AsteroidModule } from './asteroid/asteroid.module';
 import { ShipModule } from './ship/ship.module';
@@ -24,7 +24,6 @@ import { SearchViewComponent } from './search/search-view/search-view.component'
 import { SearchModule } from './search/search.module';
 
 
-
 @NgModule({
   declarations: [
     AppComponent
@@ -32,6 +31,7 @@ import { SearchModule } from './search/search.module';
   imports: [
     CommonModule,
     BrowserModule,
+    BrowserAnimationsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule, // imports firebase/firestore, only needed for database features
     AngularFireAuthModule, // imports firebase/auth, only needed for auth features

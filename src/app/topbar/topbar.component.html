@@ -1,15 +1,7 @@
-<div class="topbar">
-  <div class="player-info">
-    <img src="http://placehold.it/400x400" class="avatar" />
-    <div class="player-info-text">
-        <h1 class="player-name">Cpt. {{name}}</h1>
-        <p class="player-title">Explorer</p>
-    </div>
-  </div>
-
-  <h1 class="credit-count credit"> {{ creditValue }} cr</h1>
-  <ul>
-    <li>
+<header class="col justify-between">
+  <article class="row-reverse">
+    <!--
+    <div>
         <a href="#" (click)="openQuestModal()">Glory quest</a> <br>  
       <div *ngIf="questS.questGroup.values > 0">
         {{ questS.questGroup.calculValueDisplay() }} / {{questS.questGroup.valueWithSpace(questS.questGroup.valuesFinal)}} {{questS.questGroup.type}}
@@ -17,8 +9,9 @@
       <div *ngIf="questS.questGroup.values <= 0">
           No quest for now.
       </div>
-    </li> 
-    <li>  
+    </div>
+
+    <div>
         <a href="#" (click)="openQuestModal()">Daily quest</a> <br>  
       <div *ngIf="userS.currentUser.quest.gain != -1">
         {{ userS.currentUser.quest.calculValueDisplay() }} / {{userS.currentUser.quest.valueWithSpace(userS.currentUser.quest.valuesFinal)}} {{userS.currentUser.quest.type}}    
@@ -26,15 +19,17 @@
       <div *ngIf="userS.currentUser.quest.gain == -1">
           No quest for now.
       </div>
-    </li>
-        
-    <li><a href="#" (click)="openQuestModal()">Quest</a></li>
-    <li><a href="#" (click)="openRankModal()">Ranking</a></li>
-    <li><a href="#" (click)="openProfileModal()">My profile</a></li>
-    <li><a href="#">Configuration</a></li>
-    <li><a href="#" (click)="LogOut();">Sign out</a></li>
-  </ul>
-</div>
+    </div>
+    -->
+    <button class="border" (click)="openProfileModal()">Profile</button> 
+    <button class="border" (click)="openRankModal()">Rank</button>           
+    <button class="border" (click)="openQuestModal()">Quest</button>
+  </article>
+
+  <article class="credit row align-center justify-center border">
+    <h1> {{ creditValue }} cr</h1>    
+  </article>
+</header>
 
 <app-modal *ngIf="isModalOpenQuest">
     <a href="#" (click)="closeQuestModal()">Close</a>

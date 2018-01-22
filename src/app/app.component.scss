@@ -1,4 +1,69 @@
 @import '../config';
+@import '../theme';
+
+:host {
+    height: 100%;
+    width: 100%;
+}
+
+main {
+    height: 100%;
+    width: 100%;
+    padding: $gap;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 2fr;
+    grid-template-rows: repeat(10, 1fr);
+    grid-gap: $gap;
+}
+
+.ship {
+    display: block;
+    grid-column: 1 / 1;
+    grid-row: 1 / 6;
+}
+
+.upgrade {
+    display: block;
+    grid-column: 1 / 1;
+    grid-row: 6 / 11;
+}
+
+.asteroid {
+    display: block;
+    grid-column: 2 / 4;
+    grid-row: 1 / 7;
+}
+
+.ore {
+    display: block;
+    grid-column: 2 / 2;
+    grid-row: 7 / 11;   
+}
+
+.mining {
+    display: block;
+    grid-column: 3 / 3;
+    grid-row: 7 / 9;
+}
+
+.search {
+    display: block;
+    grid-column: 3 / 3;
+    grid-row: 9 / 11;
+}
+
+.topbar {
+    display: block;
+    grid-column: 4 / 4;
+    grid-row: 1 / 3;  
+}
+
+.market {
+    display: block;
+    grid-column: 4 / 4;
+    grid-row: 3 / 11;
+}
+
 
 .game-content {
     position: absolute;

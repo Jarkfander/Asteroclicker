@@ -8,7 +8,7 @@ import { QuestService } from './quest.service';
   imports: [
     CommonModule
   ],
-  exports:[
+  exports: [
     QuestComponent
   ],
   declarations: [QuestComponent],

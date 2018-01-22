@@ -1,33 +1,31 @@
-<div *ngIf="userS.currentUser.quest.gain != -1">
-  Daily Quest:
-  <br>
-  <br> {{ userS.currentUser.quest.text }}
-  <br> {{ userS.currentUser.quest.name }} : {{ userS.currentUser.quest.calculValueDisplay()  }} / {{userS.currentUser.quest.valueWithSpace(userS.currentUser.quest.valuesFinal)}}
-  <br>
-  <br> You Win: {{ userS.currentUser.quest.gain }} Capsule.
-</div>
+<section>
+  <!-- Daily Quest open -->
+  <article class="col" *ngIf="quest.gain !== -1">
+    <h1>Daily Quest</h1>
+    <p>{{ quest.text }}</p>
+    <p>{{ quest.name }} : {{ quest.calculValueDisplay()  }} / {{ quest.valueWithSpace(userS.currentUser.quest.valuesFinal)}}</p>
+    <p>You Win: {{ quest.gain }} Capsule.</p>
+  </article>
+  <!-- Daily Quest closed -->
+  <article class="col" *ngIf="quest.gain === -1">
+      <h1>Daily Quest</h1>
+      <p>New quest every 1 hours !</p>
+  </article>
 
-<div *ngIf="userS.currentUser.quest.gain === -1">
-  Daily Quest:
-  <br>
-  <br> New quest every 1 hours !
-</div>
-<br>
-<br>
-<div *ngIf="questS.questGroup.values != 0">
-  Glory Quest:
-  <br>
-  <br> {{ questS.questGroup.name }}
-  <br> {{ questS.questGroup.calculValueDisplay() }} / {{questS.questGroup.valueWithSpace(questS.questGroup.valuesFinal)}}
-  <br>
-  <br> You Win: {{userS.currentUser.valueWithSpace(userS.currentUser.score.score * 0.20 + 10000 )}} Credit.
-</div>
+  <!-- Group Quest open -->
+  <article class="col" *ngIf="questGroup.values !== 0">
+    <h1>Glory Quest</h1>
+    <p>{{ questGroup.name }}</p>
+    <p>{{ questGroup.calculValueDisplay() }} / {{ questGroup.valueWithSpace(questS.questGroup.valuesFinal)}}</p>
+    <!--
+    <p>You Win: {{ userS.currentUser.valueWithSpace(userS.currentUser.score.score * 0.20 + 10000 )}} Credit.</p>
+    -->
+  </article>
+  <!-- Group Quest closed -->
+  <article class="col" *ngIf="questGroup.values === 0">
+    <h1>Glory Quest</h1>
+    <p>Wait new information !</p>
+  </article>
+</section>
 
-<div *ngIf="questS.questGroup.values === 0">
-  Glory Quest:
-  <br>
-  <br> Wait new information !
-</div>
-<div>
   <img class="upgrade-icon" src="../../../assets/Ivan.gif" />
-</div>

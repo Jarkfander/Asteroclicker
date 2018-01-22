@@ -47,19 +47,22 @@ export class AsteroidViewComponent implements OnInit {
   private boolKeyboardFirst = true;
   private clicks: number[];
 
-  private userMineRateLvl : number =1;
-  clicked: boolean;
+  private userMineRateLvl  = 1;
+  public clicked: boolean;
 
-  constructor(private el: ElementRef, private render: Renderer2, private userS: UserService,
-    private asteroidS: AsteroidService, private upgradeS: UpgradeService, private socketS: SocketService, private oreS: OreService) {
-  }
+  constructor(private el: ElementRef,
+              private render: Renderer2,
+              private userS: UserService,
+              private asteroidS: AsteroidService,
+              private upgradeS: UpgradeService,
+              private socketS: SocketService,
+              private oreS: OreService) { }
 
   ngOnInit(): void {
-    
     this.clicks = new Array();
     this.subjectManage();
 
-    this.oreS.OreInfos.take(1).subscribe((oreInfos:IOreInfos)=>{
+    this.oreS.OreInfos.take(1).subscribe((oreInfos: IOreInfos) => {
       setInterval(() => {
         if (this.asteroid != null && this.asteroid.currentCapacity > 0) {
           this.socketS.incrementOre(this.userS.currentUser.uid, this.asteroid.ore,
@@ -68,11 +71,11 @@ export class AsteroidViewComponent implements OnInit {
               oreInfos[this.asteroid.ore].miningSpeed).toFixed(2)));
         }
       }, 1000);
-      this.userS.getUpgradeByName("mineRate").subscribe((upgrade:IUpgrade)=>{
-        this.userMineRateLvl=upgrade.lvl;
+      this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUpgrade) => {
+        this.userMineRateLvl = upgrade.lvl;
         this.initNumberOfDroneBegin();
-      })
-      setInterval(() => { this.updateClick() }, 100);
+      });
+      setInterval(() => { this.updateClick(); }, 100);
     });
   }
 
@@ -112,9 +115,9 @@ export class AsteroidViewComponent implements OnInit {
     this.initNumberOfDroneBegin();
   }
 
-  initAsteroid(newAste: IAsteroid) {
-    const w = this.el.nativeElement.parentElement.offsetWidth;
-    const h = this.el.nativeElement.parentElement.offsetHeight;
+  private initAsteroid(newAste: IAsteroid) {
+    const w = this.el.nativeElement.offsetWidth;
+    const h = this.el.nativeElement.offsetHeight;
     this.app = new PIXI.Application(w, h, { backgroundColor: 0x1079bb });
     this.render.appendChild(this.el.nativeElement, this.app.view);
 

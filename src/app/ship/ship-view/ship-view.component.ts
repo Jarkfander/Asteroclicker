@@ -23,12 +23,12 @@ export class ShipViewComponent implements AfterViewInit {
   private backgroundSky: PIXI.extras.AnimatedSprite;
   private numberOfSky: number;
 
-  private animationLoaded:boolean=false;
+  private animationLoaded = false;
 
   constructor(private el: ElementRef, private render: Renderer2, private userS: UserService, private socketS: SocketService) { }
 
   ngAfterViewInit() {
-    this.initPixi();
+    setTimeout(() => this.initPixi(), 0);
   }
 
   @HostListener('window:resize') onResize() {
@@ -40,9 +40,9 @@ export class ShipViewComponent implements AfterViewInit {
   }
 
 
-  initPixi() {
-    const w = this.el.nativeElement.parentElement.offsetWidth;
-    const h = this.el.nativeElement.parentElement.offsetHeight;
+  private initPixi() {
+    const w = this.el.nativeElement.offsetWidth;
+    const h = this.el.nativeElement.offsetHeight;
     this.app = new PIXI.Application(w, h, { backgroundColor: 0xffffff });
     this.render.appendChild(this.el.nativeElement, this.app.view);
 
@@ -68,12 +68,12 @@ export class ShipViewComponent implements AfterViewInit {
     }
 
     this.userS.profile.subscribe((profile: IProfile) => {
-      this.animationGoodConfig(profile.badConfig == 1);
+      this.animationGoodConfig(profile.badConfig === 1);
     });
 
     this.userS.upgrade.subscribe((upgrades: IUpgrades) => {
 
-      if(this.animationLoaded){
+      if (this.animationLoaded) {
         this.ship.autoUpgrade(upgrades.storage.lvl, this.ship.stockUpgrade);
         this.ship.autoUpgrade(upgrades.research.lvl, this.ship.radarUpgrade);
         this.ship.autoUpgrade(upgrades.mineRate.lvl, this.ship.droneUpgrade);
@@ -118,9 +118,8 @@ export class ShipViewComponent implements AfterViewInit {
       if (i < 4) {
         this.ship.autoUpgrade(tabTempUpgradeLvl[i], tabTempUpgrade[i]);
         i++;
-      }
-      else if(!this.animationLoaded){
-        this.animationLoaded=true;
+      } else if (!this.animationLoaded) {
+        this.animationLoaded = true;
       }
     }, 2500);
   }
