@@ -105,7 +105,7 @@ export class UpgradeViewComponent implements OnInit {
     }
     for (let i = 1; i < 5; i++) {
       if (this.userS.currentUser.cargo['cargo' + i] && this.userS.currentUser.cargo['cargo' + i].start !== 0) {
-        this.socketS.updateCargoTimer(this.userS.currentUser.uid);
+        // this.socketS.updateCargoTimer(this.userS.currentUser.uid);
       }
     }
   }
@@ -167,12 +167,11 @@ export class UpgradeViewComponent implements OnInit {
     const keysCost = Object.keys(tempUpgradeCost);
     for (let i = 0; i < keysCost.length; i++) {
         if (keysCost[i] === 'credit') {
-          if (this.currentUsercredit <= tempUpgradeCost[keysCost[i]]) {
-            console.log(tempUpgradeCost[keysCost[i]]);
+          if (this.currentUsercredit < tempUpgradeCost[keysCost[i]]) {
             return false;
           }
         }
-        if (this.currentOreAmounts[keysCost[i]] <= tempUpgradeCost[keysCost[i]]) {
+        if (this.currentOreAmounts[keysCost[i]] < tempUpgradeCost[keysCost[i]]) {
           return false;
         }
     }
