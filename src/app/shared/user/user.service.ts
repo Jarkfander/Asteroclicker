@@ -10,11 +10,11 @@ import { Frenzy } from './frenzy';
 import { UpgradeService } from '../../ship/upgrade.service';
 import { Quest } from '../../quest/quest';
 import { IAsteroid } from '../../asteroid/asteroid.service';
-import { SearchResult } from '../../ore/search-result/searchResult';
 import { AuthService } from '../../signin/auth.service';
 import { Observable } from 'rxjs/Observable';
 import { Research } from '../../ship/upgrade-class/research';
 import { storage } from 'firebase';
+
 
 
 export interface IUser {
@@ -28,8 +28,6 @@ export interface IUser {
   currentMineRate: number;
 
   score: number;
-
-  asteroidSearch: SearchResult;
 
   quest: Quest;
   chest: Array<Chest>;
@@ -110,10 +108,6 @@ export class UserService {
           (snapshot: any) => {
             this.FillQuest(snapshot);
           });
-        this.db.object('users/' + auth.uid + '/search').valueChanges().subscribe(
-          (snapshot: any) => {
-            this.FillSearch(snapshot);
-          });
         this.db.object('users/' + auth.uid + '/event').valueChanges().subscribe(
           (snapshot: any) => {
             this.FillEvent(snapshot);
@@ -177,18 +171,6 @@ export class UserService {
     this.currentUser.quest.text = snapshot.text;
     this.currentUser.quest.valuesFinal = snapshot.valuesFinal;
     this.questSubject.next(this.currentUser);
-    this.incrementCounter();
-  }
-
-  FillSearch(snapshot) {
-    const resultTab = new Array<IAsteroid>();
-    if (snapshot.result != 0) {
-      for (let i = 0; i < snapshot.result.length; i++) {
-        resultTab.push(snapshot.result[i]);
-      }
-    }
-    this.currentUser.asteroidSearch = new SearchResult(resultTab, snapshot.timer, snapshot.start);
-    this.searchSubject.next(this.currentUser);
     this.incrementCounter();
   }
 
