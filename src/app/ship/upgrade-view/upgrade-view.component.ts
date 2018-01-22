@@ -20,10 +20,10 @@ export class UpgradeViewComponent implements OnInit {
   public upgradeCaraKeys: string[];
   public nextUpgradeCaraKeys: string[];
 
-  public upgradeCurrentLvl: IUpgrade ={
-    lvl:1,
-    start:0,
-    timer:0
+  public upgradeCurrentLvl: IUpgrade = {
+    lvl: 1,
+    start: 0,
+    timer: 0
   };
 
   public timer: string = "00:00:00";
@@ -37,18 +37,24 @@ export class UpgradeViewComponent implements OnInit {
   public tabOreCost;
   public tabOreCostTemp;
 
-  public userResearchLvl:number=1;
+  public upgradeCostString: string[];
+  public isOkForBuy = false;
+
+  public userResearchLvl: number = 1;
   oreInfos: IOreInfos;
+
+  public currentOreAmounts: IOreAmounts;
+  public currentUsercredit: number;
 
   @Input('UpgradeLvls') upgradeLvls: Upgrade[];
 
   constructor(private socketS: SocketService, private userS: UserService,
     private oreS: OreService, private upgradeS: UpgradeService) {
-      this.upgradeCurrentLvl={
-        lvl:1,
-        start:0,
-        timer:0
-      };
+    this.upgradeCurrentLvl = {
+      lvl: 1,
+      start: 0,
+      timer: 0
+    };
   }
 
   ngOnInit() {
@@ -56,20 +62,20 @@ export class UpgradeViewComponent implements OnInit {
       this.oreInfos = oreInfos;
 
       this.userS.getUpgradeByName(this.upgradeName).subscribe((upgrade: IUpgrade) => {
-        this.upgradeCurrentLvl=upgrade;
+        this.upgradeCurrentLvl = upgrade;
         this.updateData(upgrade);
         const temp = this.upgradeLvls[this.upgradeCurrentLvl.lvl + 1].costOre;
         this.tabOreCost = this.costOreUpgrade(this.upgradeLvls[this.upgradeCurrentLvl.lvl + 1].cost * 0.9,
           this.upgradeLvls[this.upgradeCurrentLvl.lvl].displayName);
-        this.tabOreCostTemp = this.createInterogationPointOre();
+        this.valuesUpgradeLvl();
       });
 
-      this.userS.getUpgradeByName("research").subscribe((upgrade: IUpgrade) => {
-        this.userResearchLvl=upgrade.lvl;
+      this.userS.getUpgradeByName('research').subscribe((upgrade: IUpgrade) => {
+        this.userResearchLvl = upgrade.lvl;
       });
-      
+
       setTimeout(() => {
-        this.tabOreCostTemp = this.createInterogationPointOre();
+        this.valuesUpgradeLvl();
         this.tabOreCost = this.costOreUpgrade(this.upgradeLvls[this.upgradeCurrentLvl.lvl + 1].cost * 0.9,
           this.upgradeLvls[this.upgradeCurrentLvl.lvl].displayName);
         const temp = this.upgradeLvls[this.upgradeCurrentLvl.lvl + 1].costOre;
@@ -77,21 +83,14 @@ export class UpgradeViewComponent implements OnInit {
 
     });
 
-    this.userS.credit.subscribe((credit:number)=>{
-      this.updateEnable(credit);
+    this.oreS.OreAmounts.subscribe((oreAmounts: IOreAmounts) => {
+      this.currentOreAmounts = oreAmounts;
+      this.enableButtonOre = this.boolOreCost();
     });
-
-    this.tabOreCost = [0, 0];
-    this.tabOreCostTemp = ['????', '????'];
 
     this.userS.credit.subscribe((credit: number) => {
-      this.updateEnable(credit);
-    });
-
-    this.oreS.OreAmounts.subscribe((oreAmounts: IOreAmounts) => {
-      const temp = this.upgradeLvls[this.upgradeCurrentLvl.lvl + 1].costOre;
-      this.enableButtonOre = this.tabOreCost[0] <= oreAmounts[temp[0]] &&
-        this.tabOreCost[1] <= oreAmounts[temp[1]];
+      this.currentUsercredit = credit;
+      this.enableButtonOre = this.boolOreCost();
     });
 
     setInterval(() => {
@@ -100,13 +99,14 @@ export class UpgradeViewComponent implements OnInit {
 
   }
 
-  updateEnable(credit: number) {
-    this.enableButtonCredit = this.upgradeLvls[this.upgradeCurrentLvl.lvl + 1].cost <= credit;
-  }
-
   updateTimer() {
     if (this.upgradeCurrentLvl.start !== 0) {
       this.socketS.updateUpgradeTimer(this.userS.currentUser.uid, this.upgradeLvls[0].name);
+    }
+    for (let i = 1; i < 5; i++) {
+      if (this.userS.currentUser.cargo['cargo' + i] && this.userS.currentUser.cargo['cargo' + i].start !== 0) {
+        // this.socketS.updateCargoTimer(this.userS.currentUser.uid);
+      }
     }
   }
 
@@ -135,23 +135,47 @@ export class UpgradeViewComponent implements OnInit {
     return costCredit / this.oreInfos[nameOre].meanValue;
   }
 
-  createInterogationPointOre() {
-    const temp = new Array<any>();
-
-    const tempUpgrade = this.upgradeLvls[this.upgradeCurrentLvl.lvl].valuesOreForUpgrade(this.upgradeLvls[this.upgradeCurrentLvl.lvl].name);
+  valuesUpgradeLvl() {
+    const tempUpgradeCost = this.upgradeLvls[this.upgradeCurrentLvl.lvl + 1].costOreString;
+    const keysCost = Object.keys(tempUpgradeCost);
     const oreKeys = Object.keys(this.oreInfos);
-    for (let i = 0; i < oreKeys.length; i++) {
-      const tempName = oreKeys[i];
-      if (tempUpgrade[0] === tempName || tempUpgrade[1] === tempName) {
-        if (this.upgradeS.research[this.userResearchLvl].lvl >=
-          this.oreInfos[tempName].lvlOreUnlock) {
-          temp.push(tempName);
-        } else {
-          temp.push('???');
+
+    const temp = {};
+    for (let i = 0; i < keysCost.length; i++) {
+      for (let j = 0; j < oreKeys.length; j++) {
+        const tempName = oreKeys[j];
+        if (tempName === keysCost[i]) {
+          if (this.upgradeS.research[this.userResearchLvl].lvl >=
+            this.oreInfos[oreKeys[j]].searchNewOre) {
+            temp[oreKeys[j]] = tempUpgradeCost[keysCost[i]];
+          } else {
+            temp['???'] = tempUpgradeCost[keysCost[i]];
+          }
+        }
+
+        if (keysCost[i] === 'credit') {
+          temp[keysCost[i]] = tempUpgradeCost[keysCost[i]];
         }
       }
-
     }
-    return [temp[0], temp[1]];
+    this.upgradeCostString = Object.keys(temp);
   }
+
+
+  boolOreCost() {
+    const tempUpgradeCost = this.upgradeLvls[this.upgradeCurrentLvl.lvl + 1].costOreString;
+    const keysCost = Object.keys(tempUpgradeCost);
+    for (let i = 0; i < keysCost.length; i++) {
+        if (keysCost[i] === 'credit') {
+          if (this.currentUsercredit < tempUpgradeCost[keysCost[i]]) {
+            return false;
+          }
+        }
+        if (this.currentOreAmounts[keysCost[i]] < tempUpgradeCost[keysCost[i]]) {
+          return false;
+        }
+    }
+    return true;
+  }
+
 }

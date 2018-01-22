@@ -37,7 +37,6 @@ export class AsteroidViewComponent implements OnInit {
   private asteroid: IAsteroid;
   private state: number;
   private drone: Array<Drone>;
-  private numOfDrone: number;
   private emitter: ParticleBase;
 
   private backgroundSky: PIXI.extras.AnimatedSprite;
@@ -47,7 +46,7 @@ export class AsteroidViewComponent implements OnInit {
   private boolKeyboardFirst = true;
   private clicks: number[];
 
-  private userMineRateLvl : number =1;
+  private userMineRateLvl: number = 1;
   clicked: boolean;
 
   constructor(private el: ElementRef, private render: Renderer2, private userS: UserService,
@@ -55,11 +54,11 @@ export class AsteroidViewComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+
     this.clicks = new Array();
     this.subjectManage();
 
-    this.oreS.OreInfos.take(1).subscribe((oreInfos:IOreInfos)=>{
+    this.oreS.OreInfos.take(1).subscribe((oreInfos: IOreInfos) => {
       setInterval(() => {
         if (this.asteroid != null && this.asteroid.currentCapacity > 0) {
           this.socketS.incrementOre(this.userS.currentUser.uid, this.asteroid.ore,
@@ -68,8 +67,8 @@ export class AsteroidViewComponent implements OnInit {
               oreInfos[this.asteroid.ore].miningSpeed).toFixed(2)));
         }
       }, 1000);
-      this.userS.getUpgradeByName("mineRate").subscribe((upgrade:IUpgrade)=>{
-        this.userMineRateLvl=upgrade.lvl;
+      this.userS.getUpgradeByName("mineRate").subscribe((upgrade: IUpgrade) => {
+        this.userMineRateLvl = upgrade.lvl;
         this.initNumberOfDroneBegin();
       })
       setInterval(() => { this.updateClick() }, 100);
@@ -194,12 +193,13 @@ export class AsteroidViewComponent implements OnInit {
     // Upgrade Subject
     this.userS.upgrade.subscribe((upgrade: IUpgrades) => {
       const tempLvl = upgrade.mineRate.lvl;
-      if (this.numOfDrone !== Math.floor(tempLvl / 40) + 1) {
-        this.numOfDrone = Math.floor(tempLvl / 40) + 1;
+      if (this.drone.length !== Math.floor(tempLvl / 40) + 1) {
         this.addNewDrone();
       }
-      for (let i = 0; i < this.numOfDrone; i++) {
-        this.drone[i].changeSpriteDrone(upgrade.mineRate.lvl, i);
+      for (let i = 0; i < this.drone.length; i++) {
+        if (this.drone[i]) {
+          this.drone[i].changeSpriteDrone(upgrade.mineRate.lvl, i);
+        }
       }
     });
   }
@@ -231,14 +231,14 @@ export class AsteroidViewComponent implements OnInit {
     }
 
     if (coefClick > 0.5) {
-      for (let i = 0; i < this.numOfDrone; i++) {
+      for (let i = 0; i < this.drone.length; i++) {
         this.drone[i].activeLaser();
         this.drone[i].laserAnim.visible = false;
       }
 
       this.asteroidSprite.checkAstero = true;
     } else {
-      for (let i = 0; i < this.numOfDrone; i++) {
+      for (let i = 0; i < this.drone.length; i++) {
         this.drone[i].desactivLaser();
       }
       this.asteroidSprite.checkAstero = false;
@@ -303,7 +303,7 @@ export class AsteroidViewComponent implements OnInit {
   // initial sky animated Sprite
   initSky(w, h) {
     this.numberOfSky = 1;
-    this.backgroundSky = initSprite('skyV1_1', 500, 500, true, this.userS.currentUser.boolBadConfig, 0.32);
+    this.backgroundSky = initSprite('ciel3_1', 500, 500, true, this.userS.currentUser.boolBadConfig, 0.32);
     this.backgroundSky.gotoAndPlay(0);
     this.backgroundSky.loop = false;
     this.backgroundSky.texture.baseTexture.mipmap = true;
@@ -317,7 +317,7 @@ export class AsteroidViewComponent implements OnInit {
     this.app.stage.addChild(this.backgroundSky);
 
     this.backgroundSky.onComplete = () => {
-      this.numberOfSky = changeSpriteInAnime(this.backgroundSky, 'skyV1_', this.numberOfSky, 7);
+      this.numberOfSky = changeSpriteInAnime(this.backgroundSky, 'ciel3_', this.numberOfSky, 3);
       this.backgroundSky.gotoAndPlay(0);
     };
   }
@@ -356,14 +356,9 @@ export class AsteroidViewComponent implements OnInit {
   // Manage lot of drone - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   initNumberOfDroneBegin() {
     let random = 1;
+    const numOfDrone = this.userS.currentUser.boolBadConfig ? 1 : Math.floor(this.userMineRateLvl / 50) + 1;
 
-    if (this.userS.currentUser.boolBadConfig) {
-      this.numOfDrone = 1;
-    } else {
-      this.numOfDrone = Math.floor(this.userMineRateLvl / 50) + 1;
-    }
-
-    for (let i = 0; i < this.numOfDrone; i++) {
+    for (let i = 0; i < numOfDrone; i++) {
       random = (Math.floor(Math.random() * 4) + 1) * 0.01;
       this.drone.push(new Drone(0.20 - random, 0.20 - random, 1, 1, this.app));
       this.drone[i].deltaTempAster = (i / 3) * (2 * Math.PI) / 1000;
@@ -372,7 +367,7 @@ export class AsteroidViewComponent implements OnInit {
   }
 
   miningDrone(booltemp: boolean) {
-    for (let i = 0; i < this.numOfDrone; i++) {
+    for (let i = 0; i < this.drone.length; i++) {
       this.drone[i].isMining = booltemp;
     }
   }
@@ -384,13 +379,13 @@ export class AsteroidViewComponent implements OnInit {
     const tempLvl = this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl;
     const random = (Math.floor(Math.random() * 4) + 1) * 0.01;
     this.drone.push(new Drone(0.20 - random, 0.20 - random, 1, 1, this.app));
-    this.drone[this.numOfDrone - 1].deltaTempAster = ((this.numOfDrone - 1) / 3) * (2 * Math.PI) / 1000;
-    this.drone[this.numOfDrone - 1].laserAnim.visible = this.drone[0].laserAnim.visible;
-    this.drone[this.numOfDrone - 1].isMining = this.drone[0].isMining;
+    this.drone[this.drone.length - 1].deltaTempAster = ((this.drone.length - 1) / 3) * (2 * Math.PI) / 1000;
+    this.drone[this.drone.length - 1].laserAnim.visible = this.drone[0].laserAnim.visible;
+    this.drone[this.drone.length - 1].isMining = this.drone[0].isMining;
   }
 
   miningLaser(booltemp: boolean) {
-    for (let i = 0; i < this.numOfDrone; i++) {
+    for (let i = 0; i < this.drone.length; i++) {
       this.drone[i].laserAnim.visible = booltemp;
     }
   }

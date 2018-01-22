@@ -18,6 +18,8 @@ export class MarketViewComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+
   }
 
 }

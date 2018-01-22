@@ -127,7 +127,7 @@ export class ShipViewComponent implements AfterViewInit {
 
   // initial ship animated Sprite
   initSky(w, h) {
-    this.backgroundSky = initSprite('skyV0_1', 500, 500, true,
+    this.backgroundSky = initSprite('ciel2_1', 500, 500, true,
       this.userS.currentUser.boolBadConfig, 0.32);
     this.backgroundSky.loop = false;
     this.backgroundSky.texture.baseTexture.mipmap = true;
@@ -141,7 +141,7 @@ export class ShipViewComponent implements AfterViewInit {
     this.app.stage.addChild(this.backgroundSky);
 
     this.backgroundSky.onComplete = () => {
-      this.numberOfSky = changeSpriteInAnime(this.backgroundSky, 'skyV0_', this.numberOfSky, 7);
+      this.numberOfSky = changeSpriteInAnime(this.backgroundSky, 'ciel2_', this.numberOfSky, 3);
       this.backgroundSky.gotoAndPlay(0);
     };
   }
