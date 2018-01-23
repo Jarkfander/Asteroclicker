@@ -54,10 +54,10 @@ export interface IProfile {
 }
 
 export interface IUpgrades {
-  engine: IUpgrade,
   mineRate: IUpgrade,
   research: IUpgrade,
-  storage: IUpgrade
+  storage: IUpgrade,
+  engine: IUpgrade
 }
 
 export interface IUpgrade {
@@ -123,32 +123,32 @@ export class UserService {
 
   get credit(): Observable<number> {
     return this.authS.UserId
-      .mergeMap((id: String) => this.db.object('users/' + id + '/credit').valueChanges<number>())
+      .mergeMap((id: String) => this.db.object('users/' + id + '/credit').valueChanges<number>());
   }
 
   get frenzyInfo(): Observable<IFrenzyInfo> {
     return this.authS.UserId
-      .mergeMap((id: String) => this.db.object('users/' + id + '/frenzy/info').valueChanges<IFrenzyInfo>())
+      .mergeMap((id: String) => this.db.object('users/' + id + '/frenzy/info').valueChanges<IFrenzyInfo>());
   }
 
   get frenzyTimer(): Observable<number> {
     return this.authS.UserId
-      .mergeMap((id: String) => this.db.object('users/' + id + '/frenzy/time/timer').valueChanges<number>())
+      .mergeMap((id: String) => this.db.object('users/' + id + '/frenzy/time/timer').valueChanges<number>());
   }
 
   get profile(): Observable<IProfile> {
     return this.authS.UserId
-      .mergeMap((id: String) => this.db.object('users/' + id + '/profile').valueChanges<IProfile>())
+      .mergeMap((id: String) => this.db.object('users/' + id + '/profile').valueChanges<IProfile>());
   }
 
   get upgrade(): Observable<IUpgrades> {
     return this.authS.UserId
-      .mergeMap((id: String) => this.db.object('users/' + id + '/upgrade').valueChanges<IUpgrades>())
+      .mergeMap((id: String) => this.db.object('users/' + id + '/upgrade').valueChanges<IUpgrades>());
   }
 
   getUpgradeByName(upgradeName: string): Observable<IUpgrade> {
     return this.authS.UserId
-      .mergeMap((id: String) => this.db.object('users/' + id + '/upgrade/' + upgradeName).valueChanges<IUpgrade>())
+      .mergeMap((id: String) => this.db.object('users/' + id + '/upgrade/' + upgradeName).valueChanges<IUpgrade>());
   }
 
   FillChest(snapshot) {

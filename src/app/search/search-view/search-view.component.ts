@@ -21,11 +21,11 @@ export class SearchViewComponent implements OnInit {
   public searchTime: string;
 
   public distance: number = 0;
-  
-  public search: ISearch={
-    result:[],
-    start:0,
-    timer:0
+
+  public search: ISearch = {
+    result: [],
+    start: 0,
+    timer: 0
   };
 
   public isModalOpen: boolean = false;
@@ -33,21 +33,21 @@ export class SearchViewComponent implements OnInit {
   public timer: string = "00:00:00";
 
 
-  constructor(private userS: UserService,private upgradeS: UpgradeService
-    ,private socketS: SocketService,private searchS:SearchService) {
-   }
+  constructor(private userS: UserService, private upgradeS: UpgradeService
+    , private socketS: SocketService, private searchS: SearchService) {
+  }
 
   ngOnInit() {
 
-    this.searchS.search.subscribe((searchResult:ISearch)=>{
-        this.search=searchResult;
-        this.timer = Utils.secondsToHHMMSS(this.search.timer / 1000);
-        if (searchResult.result.length !== 3) {
-          this.isModalOpen = false;
-        }
+    this.searchS.search.subscribe((searchResult: ISearch) => {
+      this.search = searchResult;
+      this.timer = Utils.secondsToHHMMSS(this.search.timer / 1000);
+      if (searchResult.result.length !== 3) {
+        this.isModalOpen = false;
+      }
     });
 
-    this.researchInfo = new Research(1,1,1,1,100000,1,1);
+    this.researchInfo = new Research(1, 1, 1, 1, 100000, 1, 1);
     this.distance = this.researchInfo.maxDistance / 2;
 
     this.userS.upgrade.subscribe((upgrade: IUpgrades) => {

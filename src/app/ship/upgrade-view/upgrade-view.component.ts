@@ -28,7 +28,8 @@ export class UpgradeViewComponent implements OnInit {
     timer: 0
   };
 
-  public timer = '00:00:00';
+  public QGlvlMax: number = 0;
+  public timer: string = "00:00:00";
 
   public enableButtonCredit = true;
 
@@ -36,14 +37,11 @@ export class UpgradeViewComponent implements OnInit {
 
   public intervalDone = true;
 
-  public tabOreCost;
-  public tabOreCostTemp;
-
   public upgradeCostString: string[];
   public isOkForBuy = false;
 
   public currentOreAmounts: IOreAmounts;
-  public currentUsercredit: number;
+  public currentUsercredit: number = 0;
 
   public userResearchLvl = 1;
   public oreInfos: IOreInfos;
@@ -51,12 +49,12 @@ export class UpgradeViewComponent implements OnInit {
 
   constructor(private socketS: SocketService, private userS: UserService,
     private oreS: OreService, private upgradeS: UpgradeService) {
-      this.currentLvl = {
-        lvl: 1,
-        start: 0,
-        timer: 0
-      };
-    }
+    this.currentLvl = {
+      lvl: 1,
+      start: 0,
+      timer: 0
+    };
+  }
 
 
   @HostListener('mouseenter', ['$event']) inHover() { this.isHover = true; }
@@ -70,22 +68,20 @@ export class UpgradeViewComponent implements OnInit {
       this.userS.getUpgradeByName(this.name).subscribe((upgrade: IUpgrade) => {
         this.currentLvl = upgrade;
         this.updateData(upgrade);
-        const temp = this.lvls[this.currentLvl.lvl + 1].costOre;
-        this.tabOreCost = this.costOreUpgrade(this.lvls[this.currentLvl.lvl + 1].cost * 0.9,
-          this.lvls[this.currentLvl.lvl].displayName);
-          this.valuesUpgradeLvl();
+        this.valuesUpgradeLvl();
+      });
+
+      this.userS.getUpgradeByName('QG').subscribe((upgrade: IUpgrade) => {
+        this.QGlvlMax = upgrade.lvl * 10;
       });
 
       this.userS.getUpgradeByName('research').subscribe((upgrade: IUpgrade) => {
         this.userResearchLvl = upgrade.lvl;
+        this.valuesUpgradeLvl();
       });
 
       setTimeout(() => {
         this.valuesUpgradeLvl();
-        this.tabOreCost = this.costOreUpgrade(this.lvls[this.currentLvl.lvl + 1].cost * 0.9,
-          this.lvls[this.currentLvl.lvl].displayName);
-        const temp = this.lvls[this.currentLvl.lvl + 1].costOre;
-
       }, 1000);
 
     });
@@ -173,15 +169,19 @@ export class UpgradeViewComponent implements OnInit {
   boolOreCost() {
     const tempUpgradeCost = this.lvls[this.currentLvl.lvl + 1].costOreString;
     const keysCost = Object.keys(tempUpgradeCost);
+
+    if (this.currentLvl.lvl + 1 > this.QGlvlMax) {
+      return false;
+    }
     for (let i = 0; i < keysCost.length; i++) {
-        if (keysCost[i] === 'credit') {
-          if (this.currentUsercredit < tempUpgradeCost[keysCost[i]]) {
-            return false;
-          }
-        }
-        if (this.currentOreAmounts[keysCost[i]] < tempUpgradeCost[keysCost[i]]) {
+      if (keysCost[i] === 'credit') {
+        if (this.currentUsercredit < tempUpgradeCost[keysCost[i]]) {
           return false;
         }
+      }
+      if (this.currentOreAmounts[keysCost[i]] < tempUpgradeCost[keysCost[i]]) {
+        return false;
+      }
     }
     return true;
   }

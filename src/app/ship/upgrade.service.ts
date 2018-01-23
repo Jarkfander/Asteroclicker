@@ -9,6 +9,7 @@ import { MineRate } from './upgrade-class/mineRate';
 import { Research } from './upgrade-class/research';
 import { Engine } from './upgrade-class/engine';
 import { OreService, IOreInfos } from '../ore/ore.service';
+import { QG } from './upgrade-class/qg';
 
 
 @Injectable()
@@ -20,6 +21,7 @@ export class UpgradeService {
   mineRate: MineRate[];
   research: Research[];
   engine: Engine[];
+  QG: QG[];
 
   storageLoad: boolean = false;
   mineRateLoad: boolean = false;
@@ -33,6 +35,7 @@ export class UpgradeService {
     this.mineRate = new Array();
     this.research = new Array();
     this.engine = new Array();
+    this.QG = new Array();
 
     this.db = db;
 
@@ -59,6 +62,11 @@ export class UpgradeService {
     this.db.object('engine').valueChanges().take(1).subscribe(
       (snapshot: any) => {
         this.FillEngine(snapshot);
+      });
+
+    this.db.object('QG').valueChanges().take(1).subscribe(
+      (snapshot: any) => {
+        this.FillQG(snapshot);
       });
   }
 
@@ -104,5 +112,12 @@ export class UpgradeService {
       this.engine.push(new Engine(i, snapshot[i].cost, snapshot[i].time, snapshot[i].speed));
     }
     this.engineLoad = true;
+  }
+
+  // create the tab of QG
+  FillQG(snapshot) {
+    for (let i = 0; i < snapshot.length; i++) {
+      this.QG.push(new QG(i, snapshot[i].cost, snapshot[i].time, snapshot.numberOfCargo));
+    }
   }
 }

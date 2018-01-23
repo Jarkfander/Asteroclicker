@@ -55,7 +55,6 @@ export class SocketService {
     const json = {};
 
     json['user'] = userId;
-
     this.socket.emit('updateCargoTimer', json);
   }
 
@@ -146,7 +145,7 @@ export class SocketService {
     json['user'] = userId;
     this.socket.emit('reachFrenzy', json);
   }
-  validArrow(userId: string, keyCode: number,keyInd: number) {
+  validArrow(userId: string, keyCode: number, keyInd: number) {
     const json = {};
     json['user'] = userId;
     json['keyCode'] = keyCode;
