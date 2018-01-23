@@ -14,20 +14,22 @@ import { UpgradeService } from '../upgrade.service';
 })
 export class UpgradeListComponent implements OnInit {
 
-    public storageLvls: Upgrade[];
-    public mineRateLvls: Upgrade[];
-    public researchLvls: Upgrade[];
-    public engineLvls: Upgrade[];
+    storageLvls: Upgrade[];
+    mineRateLvls: Upgrade[];
+    researchLvls: Upgrade[];
+    engineLvls: Upgrade[];
+    QGLvls: Upgrade[];
 
     constructor(private upgradeS: UpgradeService) {
 
     }
 
     ngOnInit() {
-        this.storageLvls = this.upgradeS.mineRate;
-        this.mineRateLvls = this.upgradeS.research;
-        this.researchLvls = this.upgradeS.storage;
+        this.storageLvls = this.upgradeS.storage;
+        this.mineRateLvls = this.upgradeS.mineRate;
+        this.researchLvls = this.upgradeS.research;
         this.engineLvls = this.upgradeS.engine;
+        this.QGLvls = this.upgradeS.QG;
     }
 
     // Managed time

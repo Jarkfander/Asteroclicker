@@ -19,28 +19,10 @@ export class Upgrade {
         this.time = _time;
         this.cara = {};
 
-        const tempName = this.valuesOreForUpgrade(this.name);
-        this.costOre = [tempName[0], tempName[1]];
-
         const keysCost = Object.keys(_cost);
         this.costOreString = {};
         for (let i = 0; i < keysCost.length; i++) {
             this.costOreString[keysCost[i]] = _cost[keysCost[i]];
-        }
-    }
-
-    public valuesOreForUpgrade(nameUpgrade: string) {
-        switch (nameUpgrade) {
-            case 'engine':
-                return ['gold', 'titanium'];
-            case 'storage':
-                return ['carbon', 'hyperium'];
-            case 'research':
-                return ['carbon', 'iron'];
-            case 'mineRate':
-                return ['iron', 'titanium'];
-            default:
-                return 0;
         }
     }
 
@@ -54,5 +36,6 @@ export enum UpgradeType {
     mineRate,
     research,
     storage,
-    engine
+    engine,
+    QG
 }

@@ -91,6 +91,7 @@ export class LoadAnimation {
         this.addKeySpriteName('krash', './assets/krash.png');
         this.addKeySpriteName('kaboom', './assets/kaboom.png');
         this.addKeySpriteName('woom', './assets/woom.png');
+        this.addKeySpriteName('laserSound', '../assets/sound/laserSound.mp3');
 
         this.onAssetsLoaded();
     }
@@ -110,7 +111,9 @@ export class LoadAnimation {
             this.boolFinishLoad = true;
         });
     }
+
 }
+
 
 
 // Animated Sprite
