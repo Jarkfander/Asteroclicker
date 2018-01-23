@@ -1,26 +1,39 @@
-<div class="upgrade row justify-between">
-    <img class="upgrade-icon" src="../../../assets/upgrade-icons/icon_{{upgradeLvls[upgradeCurrentLvl.lvl].name}}.gif" />
-    <div class="column justify-between">
-        <h1>{{upgradeLvls[upgradeCurrentLvl.lvl].displayName}}</h1>
-        <br>
-        <p>Current Level: {{upgradeCurrentLvl.lvl}}</p>
-        <p *ngFor="let key of upgradeCaraKeys">
-            {{key}} : {{upgradeLvls[upgradeCurrentLvl.lvl].cara[key]}}
-        </p>
-        <br>
-        <p>Next Level: {{upgradeCurrentLvl.lvl+1}}</p>
-        <p *ngFor="let nextkey of nextUpgradeCaraKeys">
-            {{nextkey}} : {{upgradeLvls[upgradeCurrentLvl.lvl+1].cara[nextkey]}}
-        </p>
-        <p>Cost:  
-        </p>
+<article *ngIf="isHover" class="upgrade row align-center border">
+    <img class="upgrade-icon" src="../../../assets/upgrade-icons/icon_{{lvls[currentLvl.lvl].name}}.gif" />
+    <div class="col justify-between">
+        <div class="current-lvl col">
+            <h3>Current Level: {{currentLvl.lvl}}</h3>
+            <p *ngFor="let key of caraKeys">
+                {{key}} : {{lvls[currentLvl.lvl].cara[key]}}
+            </p>
+        </div>
+        <div class="next-lvl col">
+            <h3>Next Level: {{currentLvl.lvl+1}}</h3>
+            <p *ngFor="let nextkey of nextCaraKeys">
+                {{nextkey}} : {{lvls[currentLvl.lvl+1].cara[nextkey]}}
+            </p>
+        </div>
 
-        <p *ngFor="let key of upgradeCostString">
-           {{key.toUpperCase()}} : {{this.upgradeLvls[this.upgradeCurrentLvl.lvl + 1].costOreString[key]}}
-        </p>
     </div>
+    <!--
+    <button *ngIf="currentLvl && currentLvl.start==0" [disabled]="!enableButtonCredit" class="btn-upgrade" (click)="levelUpCredit()">Upgrade / Credit</button>
+    <button *ngIf="currentLvl && currentLvl.start!=0" disabled="true" class="btn-upgrade">{{timer}}</button>
+    -->
+</article>
 
-    <button *ngIf="upgradeCurrentLvl && upgradeCurrentLvl.start==0" [disabled]="!enableButtonOre" class="btn-upgrade" (click)="levelUpOre()">Upgrade / Ore</button>
-    <button *ngIf="upgradeCurrentLvl && upgradeCurrentLvl.start!=0" disabled="true" class="btn-upgrade">{{timer}}</button>
-</div>
-<br>
+<form class="col justify-between align-center">
+    <h1>{{lvls[currentLvl.lvl].displayName}}</h1>
+    <!--
+    <button *ngIf="currentLvl && currentLvl.start==0" [disabled]="!enableButtonOre" class="btn-upgrade" (click)="levelUpOre()">Upgrade / Ore</button>
+    -->
+    <button *ngIf="currentLvl && currentLvl.start!=0" disabled="true" class="btn-upgrade">{{timer}}</button>
+    <div (click)="levelUpOre()" class="cost row justify-around align-center">
+            <div class="cost-ore row">
+        <p *ngFor="let key of upgradeCostString">
+
+             <img *ngIf="key != '???'" src="../../../assets/oreIcon/{{key}}Icon.png" />
+            {{key.toUpperCase()}} : {{lvls[currentLvl.lvl + 1].costOreString[key]}}
+         </p>
+        </div>
+    </div>
+</form>

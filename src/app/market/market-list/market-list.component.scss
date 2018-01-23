@@ -1,20 +1,10 @@
-:host{
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-content: center;
+@import '../../../theme';
 
-    h1{
-        font-family: "Montserrat-SemiBoldItalic", sans-serif;
-        font-size: 2em;
-        text-align: center;
-        font-variant: small-caps;
-    }
-    .market-list{
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }    
-
+section {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
 }
-
+app-market-view {
+    height: calc(30% - #{$gap});
+}

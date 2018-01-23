@@ -1,13 +1,9 @@
-import { Component, AfterViewInit, Renderer2, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Research } from '../upgrade-class/research';
 import { MineRate } from '../upgrade-class/mineRate';
 import { Storage } from '../upgrade-class/storage';
-import { SocketService } from '../../shared/socket/socket.service';
-import { UserService } from '../../shared/user/user.service';
-import { User } from '../../shared/user/user';
 import { Upgrade, UpgradeType } from '../upgrade-class/upgrade';
 import { UpgradeService } from '../upgrade.service';
-import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 
 
 
@@ -18,13 +14,12 @@ import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 })
 export class UpgradeListComponent implements OnInit {
 
-    storageLvls: Upgrade[];
-    mineRateLvls: Upgrade[];
-    researchLvls: Upgrade[];
-    engineLvls: Upgrade[];
+    public storageLvls: Upgrade[];
+    public mineRateLvls: Upgrade[];
+    public researchLvls: Upgrade[];
+    public engineLvls: Upgrade[];
 
-    constructor(private el: ElementRef, private render: Renderer2, private userS: UserService,
-        private upgradeS: UpgradeService, private socketS: SocketService) {
+    constructor(private upgradeS: UpgradeService) {
 
     }
 
@@ -35,7 +30,7 @@ export class UpgradeListComponent implements OnInit {
         this.engineLvls = this.upgradeS.engine;
     }
 
-    // Managed time 
+    // Managed time
    /* updateTimer(upgradeTimerUser, upgradeTimer, functionLvlUp, timerUpgradebdd) {
         if (upgradeTimerUser !== 0) {
             const timeLeft = (timerUpgradebdd * 60 * 1000)

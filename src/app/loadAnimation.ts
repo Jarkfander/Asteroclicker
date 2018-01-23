@@ -112,7 +112,8 @@ export class LoadAnimation {
     }
 }
 
-// Animated Sprite 
+
+// Animated Sprite
 export function getFramesFromSpriteSheet(texture: PIXI.Texture, frameWidth: number, frameHeight: number) {
     const frames = [];
     for (let j = 0; j < texture.height - frameHeight + 1; j += frameHeight) {

@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { UpgradeService } from '../ship/upgrade.service';
 import { AsteroidService } from './asteroid.service';
 import { OreService } from '../ore/ore.service';
+import { AsteroidMiningComponent } from './asteroid-mining/asteroid-mining.component';
 
 
 @NgModule({
@@ -17,8 +18,8 @@ import { OreService } from '../ore/ore.service';
     SharedModule,
     FormsModule
   ],
-  declarations: [AsteroidViewComponent],
-  exports: [AsteroidViewComponent],
-  providers: [UserService, UpgradeService, SocketService, OreService,AsteroidService]
+  declarations: [AsteroidViewComponent, AsteroidMiningComponent],
+  exports: [AsteroidViewComponent, AsteroidMiningComponent],
+  providers: [UserService, UpgradeService, SocketService, OreService, AsteroidService]
 })
 export class AsteroidModule { }

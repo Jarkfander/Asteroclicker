@@ -1,3 +1,4 @@
+<!--
 <br>
 
 <table style="width:100%">
@@ -13,33 +14,47 @@
     <progress value="{{progressBarValue}}" >
     </progress>
 </div>
+-->
+<perfect-scrollbar class="col">
+  <div class="ore" *ngFor="let ore of ores">
+    <app-ore-view *ngIf="(oreAmounts$|async) as amount"
+      [name]="ore"
+      [amount]="amount[ore]"
+      [capacity]="capacity"
+      [rate]="mineRate" >
+    </app-ore-view>
+  </div>
 
+    
+    <!--
+    <app-ore-view [name]="'iron'" [amount]="(oreAmounts$|async)?.iron" [capacity]="capacity"
+    [rate]="mineRate" >
+    </app-ore-view>
+    
+    <app-ore-view [name]="'titanium'" [amount]="(oreAmounts$|async)?.titanium" [capacity]="capacity"
+    [rate]="mineRate" >
+    </app-ore-view>
+    
+    <app-ore-view [name]="'gold'" [amount]="(oreAmounts$|async)?.gold" [capacity]="capacity"
+    [rate]="mineRate" >
+    </app-ore-view>
+    
+    <app-ore-view [name]="'hyperium'" [amount]="(oreAmounts$|async)?.hyperium" [capacity]="capacity"
+    [rate]="mineRate" >
+    </app-ore-view>
+  -->
+</perfect-scrollbar>
+
+
+<!--
 <br>
 <table style="width:100%">
       <tr >
-            <app-ore-view [name]="'carbon'" [amount]="(oreAmounts$|async)?.carbon" [capacity]="capacity"
-            [rate]="mineRate" >
-            </app-ore-view>
 
-            <app-ore-view [name]="'iron'" [amount]="(oreAmounts$|async)?.iron" [capacity]="capacity"
-            [rate]="mineRate" >
-            </app-ore-view>
-
-            <app-ore-view [name]="'titanium'" [amount]="(oreAmounts$|async)?.titanium" [capacity]="capacity"
-            [rate]="mineRate" >
-            </app-ore-view>
-
-            <app-ore-view [name]="'gold'" [amount]="(oreAmounts$|async)?.gold" [capacity]="capacity"
-            [rate]="mineRate" >
-            </app-ore-view>
-
-            <app-ore-view [name]="'hyperium'" [amount]="(oreAmounts$|async)?.hyperium" [capacity]="capacity"
-            [rate]="mineRate" >
-            </app-ore-view>
 
       </tr>
 </table>
 <br>
 
 <br>
-
+-->

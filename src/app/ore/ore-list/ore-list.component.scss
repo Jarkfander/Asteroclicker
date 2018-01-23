@@ -1,3 +1,12 @@
+@import '../../../theme';
+
+section {
+    .ore {
+        height: calc(25% - #{$gap});
+    }
+}
+
+
 
 .closeLine, .rejectLine {
     height:10%;

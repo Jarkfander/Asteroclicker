@@ -8,12 +8,14 @@ import { MarketViewComponent } from './market-list/market-list.component';
 import { SharedModule } from '../shared/shared.module';
 import { CurveViewComponent } from './curve-view/curve-view.component';
 import { FormsModule } from '@angular/forms';
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
 @NgModule({
   imports: [
     CommonModule,
     ChartsModule,
     SharedModule,
+    PerfectScrollbarModule,
     FormsModule
   ],
   declarations: [MarketViewComponent, MarketInfoComponent, CurveViewComponent],

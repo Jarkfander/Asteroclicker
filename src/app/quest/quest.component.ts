@@ -1,6 +1,7 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { QuestService } from './quest.service';
 import { UserService } from '../shared/user/user.service';
+import { Quest } from './quest';
 
 
 @Component({
@@ -8,12 +9,16 @@ import { UserService } from '../shared/user/user.service';
   templateUrl: './quest.component.html',
   styleUrls: ['./quest.component.scss']
 })
-export class QuestComponent implements AfterViewInit {
+export class QuestComponent implements OnInit {
 
-  constructor(public userS: UserService, public questS: QuestService) {
+  public quest: Quest;
+  public questGroup: Quest;
+  constructor(private userS: UserService, private questS: QuestService) {
   }
 
-  ngAfterViewInit(): void {
+  ngOnInit() {
+    this.quest = this.userS.currentUser.quest;
+    this.questGroup = this.questS.questGroup;
   }
 
 }
