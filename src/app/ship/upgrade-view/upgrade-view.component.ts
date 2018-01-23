@@ -39,6 +39,12 @@ export class UpgradeViewComponent implements OnInit {
   public tabOreCost;
   public tabOreCostTemp;
 
+  public upgradeCostString: string[];
+  public isOkForBuy = false;
+
+  public currentOreAmounts: IOreAmounts;
+  public currentUsercredit: number;
+
   public userResearchLvl = 1;
   public oreInfos: IOreInfos;
 
@@ -50,7 +56,8 @@ export class UpgradeViewComponent implements OnInit {
         start: 0,
         timer: 0
       };
-  }
+    }
+
 
   @HostListener('mouseenter', ['$event']) inHover() { this.isHover = true; }
   @HostListener('mouseleave', ['$event']) outHover() { this.isHover = false; }
@@ -59,13 +66,14 @@ export class UpgradeViewComponent implements OnInit {
     this.oreS.OreInfos.take(1).subscribe((oreInfos: IOreInfos) => {
       this.oreInfos = oreInfos;
 
+
       this.userS.getUpgradeByName(this.name).subscribe((upgrade: IUpgrade) => {
         this.currentLvl = upgrade;
         this.updateData(upgrade);
         const temp = this.lvls[this.currentLvl.lvl + 1].costOre;
         this.tabOreCost = this.costOreUpgrade(this.lvls[this.currentLvl.lvl + 1].cost * 0.9,
           this.lvls[this.currentLvl.lvl].displayName);
-        this.tabOreCostTemp = this.createInterogationPointOre();
+          this.valuesUpgradeLvl();
       });
 
       this.userS.getUpgradeByName('research').subscribe((upgrade: IUpgrade) => {
@@ -73,29 +81,24 @@ export class UpgradeViewComponent implements OnInit {
       });
 
       setTimeout(() => {
-        this.tabOreCostTemp = this.createInterogationPointOre();
+        this.valuesUpgradeLvl();
         this.tabOreCost = this.costOreUpgrade(this.lvls[this.currentLvl.lvl + 1].cost * 0.9,
           this.lvls[this.currentLvl.lvl].displayName);
         const temp = this.lvls[this.currentLvl.lvl + 1].costOre;
+
       }, 1000);
 
     });
 
-    this.userS.credit.subscribe((credit: number) => {
-      this.updateEnable(credit);
-    });
-
-    this.tabOreCost = [0, 0];
-    this.tabOreCostTemp = ['????', '????'];
-
-    this.userS.credit.subscribe((credit: number) => {
-      this.updateEnable(credit);
-    });
 
     this.oreS.OreAmounts.subscribe((oreAmounts: IOreAmounts) => {
-      const temp = this.lvls[this.currentLvl.lvl + 1].costOre;
-      this.enableButtonOre = this.tabOreCost[0] <= oreAmounts[temp[0]] &&
-        this.tabOreCost[1] <= oreAmounts[temp[1]];
+      this.currentOreAmounts = oreAmounts;
+      this.enableButtonOre = this.boolOreCost();
+    });
+
+    this.userS.credit.subscribe((credit: number) => {
+      this.currentUsercredit = credit;
+      this.enableButtonOre = this.boolOreCost();
     });
 
     setInterval(() => {
@@ -104,13 +107,14 @@ export class UpgradeViewComponent implements OnInit {
 
   }
 
-  updateEnable(credit: number) {
-    this.enableButtonCredit = this.lvls[this.currentLvl.lvl + 1].cost <= credit;
-  }
-
   updateTimer() {
     if (this.currentLvl.start !== 0) {
       this.socketS.updateUpgradeTimer(this.userS.currentUser.uid, this.lvls[0].name);
+    }
+    for (let i = 1; i < 5; i++) {
+      if (this.userS.currentUser.cargo['cargo' + i] && this.userS.currentUser.cargo['cargo' + i].start !== 0) {
+        // this.socketS.updateCargoTimer(this.userS.currentUser.uid);
+      }
     }
   }
 
@@ -139,23 +143,47 @@ export class UpgradeViewComponent implements OnInit {
     return costCredit / this.oreInfos[nameOre].meanValue;
   }
 
-  createInterogationPointOre() {
-    const temp = new Array<any>();
-
-    const tempUpgrade = this.lvls[this.currentLvl.lvl].valuesOreForUpgrade(this.lvls[this.currentLvl.lvl].name);
+  valuesUpgradeLvl() {
+    const tempUpgradeCost = this.lvls[this.currentLvl.lvl + 1].costOreString;
+    const keysCost = Object.keys(tempUpgradeCost);
     const oreKeys = Object.keys(this.oreInfos);
-    for (let i = 0; i < oreKeys.length; i++) {
-      const tempName = oreKeys[i];
-      if (tempUpgrade[0] === tempName || tempUpgrade[1] === tempName) {
-        if (this.upgradeS.research[this.userResearchLvl].lvl >=
-          this.oreInfos[tempName].lvlOreUnlock) {
-          temp.push(tempName);
-        } else {
-          temp.push('???');
+
+    const temp = {};
+    for (let i = 0; i < keysCost.length; i++) {
+      for (let j = 0; j < oreKeys.length; j++) {
+        const tempName = oreKeys[j];
+        if (tempName === keysCost[i]) {
+          if (this.upgradeS.research[this.userResearchLvl].lvl >=
+            this.oreInfos[oreKeys[j]].searchNewOre) {
+            temp[oreKeys[j]] = tempUpgradeCost[keysCost[i]];
+          } else {
+            temp['???'] = tempUpgradeCost[keysCost[i]];
+          }
+        }
+
+        if (keysCost[i] === 'credit') {
+          temp[keysCost[i]] = tempUpgradeCost[keysCost[i]];
         }
       }
-
     }
-    return [temp[0], temp[1]];
+    this.upgradeCostString = Object.keys(temp);
   }
+
+
+  boolOreCost() {
+    const tempUpgradeCost = this.lvls[this.currentLvl.lvl + 1].costOreString;
+    const keysCost = Object.keys(tempUpgradeCost);
+    for (let i = 0; i < keysCost.length; i++) {
+        if (keysCost[i] === 'credit') {
+          if (this.currentUsercredit < tempUpgradeCost[keysCost[i]]) {
+            return false;
+          }
+        }
+        if (this.currentOreAmounts[keysCost[i]] < tempUpgradeCost[keysCost[i]]) {
+          return false;
+        }
+    }
+    return true;
+  }
+
 }

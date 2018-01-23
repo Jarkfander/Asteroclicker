@@ -20,11 +20,7 @@ class UpgradeShip {
 
     allAnimBeginOrStop(isBadConfig: boolean) {
         for (let i = 0; i < this.tabAnimation.length; i++) {
-            if (isBadConfig) {
-                this.tabAnimation[i].stop();
-            } else {
-                this.tabAnimation[i].play();
-            }
+            isBadConfig ? this.tabAnimation[i].stop() : this.tabAnimation[i].play();
         }
     }
 

@@ -9,17 +9,24 @@ export class Upgrade {
     public displayName: string;
 
     public cara;
-    public costOre;
-    constructor(level: number, _cost: number, _time: number, name: string, displayName: string) {
+    public costOre: any;
+    public costOreString: any;
+
+    constructor(level: number, _cost, _time: number, name: string, displayName: string) {
         this.displayName = displayName;
         this.name = name;
         this.lvl = level;
-        this.cost = _cost;
         this.time = _time;
         this.cara = {};
 
         const tempName = this.valuesOreForUpgrade(this.name);
         this.costOre = [tempName[0], tempName[1]];
+
+        const keysCost = Object.keys(_cost);
+        this.costOreString = {};
+        for (let i = 0; i < keysCost.length; i++) {
+            this.costOreString[keysCost[i]] = _cost[keysCost[i]];
+        }
     }
 
     public valuesOreForUpgrade(nameUpgrade: string) {
@@ -33,7 +40,7 @@ export class Upgrade {
             case 'mineRate':
                 return ['iron', 'titanium'];
             default:
-            return 0;
+                return 0;
         }
     }
 

@@ -29,6 +29,9 @@ export class AsteroidSprite {
 
     spriteFxContainer: PIXI.Container;
 
+    spriteStar: PIXI.extras.AnimatedSprite;
+    spriteStarXY: any;
+
     eventOk: number;
     spriteEventParent: PIXI.Container;
     boolEvent: boolean;
@@ -45,6 +48,16 @@ export class AsteroidSprite {
         this.boolEvent = false;
         this.asteroid = new Array<PIXI.Sprite>();
 
+        this.spriteStar = initSprite('etoile_filante', 500, 172, true, true, 0.30);
+        this.spriteStarXY = {x: -200, y: 800};
+        this.spriteStar.scale.set(0.5, 0.5);
+        this.spriteStar.position.x = -200;
+        this.spriteStar.position.y = 800;
+        this.spriteStar.rotation = 100;
+        this.spriteStar.loop = false;
+        this.spriteStar.onComplete = () =>  { this.spriteStar.visible = false; };
+
+        this.app.stage.addChild(this.spriteStar);
         // Frenzy init
         this.frenzyModInit();
 
@@ -100,6 +113,19 @@ export class AsteroidSprite {
                 }
                 this.asteroid[0].x = this.xBaseAsteroid + Math.cos(shakeAstex) * -5;
                 this.asteroid[0].y = this.yBaseAsteroid + Math.sin(shakeAstey) * -15;
+
+                if (this.spriteStar.position.x < 1000) {
+                    this.spriteStar.position.x = this.spriteStarXY.x + this.delta * 2000;
+                    this.spriteStar.position.y = this.spriteStarXY.y - this.delta * 1800;
+                } else {
+                    this.spriteStar.position.x = this.spriteStarXY.x;
+                    this.spriteStarXY.y = Math.random() * 1000 + 200;
+                    this.spriteStar.position.y = this.spriteStarXY.y;
+                    const randScal = Math.random() * 0.75 +  0.25;
+                    this.spriteStar.scale.set(randScal, randScal);
+                    this.spriteStar.visible = true,
+                    this.spriteStar.gotoAndPlay(0);
+                }
 
                 if (this.boolEvent) {
                     this.spriteEventParent.x += 1;

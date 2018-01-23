@@ -38,13 +38,13 @@ export class UpgradeService {
 
     this.oreS.OreInfos.take(1).subscribe(
       (oreInfos: IOreInfos) => {
-        this.oreInfos=oreInfos;
+        this.oreInfos = oreInfos;
         this.db.object('research').valueChanges().take(1).subscribe(
           (snapshot: any) => {
             this.FillResearch(snapshot);
           });
       }
-    )
+    );
 
     this.db.object('storage').valueChanges().take(1).subscribe(
       (snapshot: any) => {
