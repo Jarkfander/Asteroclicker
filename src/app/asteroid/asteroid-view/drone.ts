@@ -5,6 +5,7 @@ export class Drone {
     app: PIXI.Application;
     public drone: PIXI.extras.AnimatedSprite;
 
+
     public laser: PIXI.extras.AnimatedSprite;
     isBeginClick: boolean;
 
@@ -39,6 +40,13 @@ export class Drone {
 
         this.app.stage.addChild(this.drone);
 
+        /*
+        PIXI.loader.load(function(loader, resources) {
+            resources.laserSound.data.play();
+        });
+        */
+
+        
         // LaserAnim
         this.laserAnim = initSprite('laser', 946, 964, true, true);
         this.laserAnim.scale.set(0.60, 0.60);
