@@ -32,13 +32,9 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.user$ = this.authS.User;
     this.loadAnimation = new LoadAnimation();
-  }
-
-
-  public loadAnimationEnvironment() {
     setTimeout(() => {
-        this.loadingImage = false;
-    }, environment.loadingTime * 0); // TODO : Change 0 for 1000
+      this.loadingImage = false;
+    }, environment.loadingTime * 1000); // TODO : Change 0 for 1000
   }
 
   public ValiderLogIn(log, pswd) {

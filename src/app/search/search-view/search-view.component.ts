@@ -40,7 +40,6 @@ export class SearchViewComponent implements OnInit {
   ngOnInit() {
 
     this.searchS.search.subscribe((searchResult:ISearch)=>{
-      console.log("test");
         this.search=searchResult;
         this.timer = Utils.secondsToHHMMSS(this.search.timer / 1000);
         if (searchResult.result.length !== 3) {

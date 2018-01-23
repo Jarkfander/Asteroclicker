@@ -30,7 +30,8 @@
     <div (click)="levelUpOre()" class="cost row justify-around align-center">
             <div class="cost-ore row">
         <p *ngFor="let key of upgradeCostString">
-             <img src="../../../assets/oreIcon/{{key}}Icon.png" />
+
+             <img *ngIf="key != '???'" src="../../../assets/oreIcon/{{key}}Icon.png" />
             {{key.toUpperCase()}} : {{lvls[currentLvl.lvl + 1].costOreString[key]}}
          </p>
         </div>
