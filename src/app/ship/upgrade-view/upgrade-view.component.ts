@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostListener } from '@angular/core';
+import { Component, OnInit, Input, HostListener, ElementRef, Renderer2 } from '@angular/core';
 import { Upgrade, UpgradeType } from '../upgrade-class/upgrade';
 import { SocketService } from '../../shared/socket/socket.service';
 import { User, UserUpgrade } from '../../shared/user/user';
@@ -47,8 +47,12 @@ export class UpgradeViewComponent implements OnInit {
   public oreInfos: IOreInfos;
 
 
-  constructor(private socketS: SocketService, private userS: UserService,
-    private oreS: OreService, private upgradeS: UpgradeService) {
+  constructor(private socketS: SocketService,
+    private el: ElementRef,
+    private renderer: Renderer2,
+    private userS: UserService,
+    private oreS: OreService,
+    private upgradeS: UpgradeService) {
     this.currentLvl = {
       lvl: 1,
       start: 0,
@@ -56,14 +60,13 @@ export class UpgradeViewComponent implements OnInit {
     };
   }
 
-
   @HostListener('mouseenter', ['$event']) inHover() { this.isHover = true; }
   @HostListener('mouseleave', ['$event']) outHover() { this.isHover = false; }
 
   ngOnInit() {
+    this.renderer.setStyle(this.el.nativeElement, 'backgroundImage', `url('../../../assets/upgrade/img/${this.name}.jpg')`);
     this.oreS.OreInfos.take(1).subscribe((oreInfos: IOreInfos) => {
       this.oreInfos = oreInfos;
-
 
       this.userS.getUpgradeByName(this.name).subscribe((upgrade: IUpgrade) => {
         this.currentLvl = upgrade;
