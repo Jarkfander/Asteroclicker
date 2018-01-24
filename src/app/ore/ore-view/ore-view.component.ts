@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { OreService, IOreInfo } from '../ore.service';
 import { Observable } from 'rxjs/Observable';
-import { UserService, IUpgrade } from '../../shared/user/user.service';
+import { UserService, IUserUpgrade } from '../../shared/user/user.service';
 import { UpgradeType } from '../../ship/upgrade-class/upgrade';
 import { AsteroidService, IAsteroid } from '../../asteroid/asteroid.service';
 
@@ -35,7 +35,7 @@ export class OreViewComponent implements OnInit {
       });
 
     });
-    this.userS.getUpgradeByName("research").subscribe((upgrade:IUpgrade)=>{
+    this.userS.getUpgradeByName("research").subscribe((upgrade:IUserUpgrade)=>{
       this.researchLvl=upgrade.lvl;
     });
   }

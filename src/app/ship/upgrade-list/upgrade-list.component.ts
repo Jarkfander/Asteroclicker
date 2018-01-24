@@ -1,4 +1,4 @@
-import { UserService, IUpgrades, IUserCurrentUpgrade } from './../../shared/user/user.service';
+import { UserService, IUserUpgrade } from './../../shared/user/user.service';
 import { Component, OnInit } from '@angular/core';
 import { Research } from '../upgrade-class/research';
 import { MineRate } from '../upgrade-class/mineRate';
@@ -27,7 +27,7 @@ export class UpgradeListComponent implements OnInit {
     engineLvls: Upgrade[];
     QGLvls: Upgrade[];
 
-    $userCurrentUpgrade: Observable<IUserCurrentUpgrade[]>;
+    $userCurrentUpgrade: Observable<IUserUpgrade[]>;
 
     constructor(private upgradeS: UpgradeService, private userS: UserService) {
     }

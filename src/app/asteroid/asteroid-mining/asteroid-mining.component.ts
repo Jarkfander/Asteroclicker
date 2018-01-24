@@ -1,7 +1,7 @@
 import { mining } from './asteroid-mining.animations';
 import { Chart } from 'chart.js';
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { IFrenzyInfo, UserService, IUpgrades } from './../../shared/user/user.service';
+import { IFrenzyInfo, UserService, IUserUpgrade } from './../../shared/user/user.service';
 import { UpgradeService } from '../../ship/upgrade.service';
 import { IAsteroid, AsteroidService } from './../asteroid.service';
 import { User } from '../../shared/user/user';
@@ -55,10 +55,10 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
       .map((user: User) => user.currentMineRate)
       .subscribe((mineRate: number) => this.mineRate = mineRate);
 
-    this.userS.upgrade.subscribe((upgrade: IUpgrades) => {
-      this.userMineRateLvl = upgrade.mineRate.lvl;
-      this.baseMineRate = this.upgradeS.mineRate[upgrade.mineRate.lvl].baseRate;
-      this.progressBarMaxValue = this.upgradeS.mineRate[upgrade.mineRate.lvl].maxRate
+    this.userS.getUpgradeByName("mineRate").subscribe((upgrade: IUserUpgrade) => {
+      this.userMineRateLvl = upgrade.lvl;
+      this.baseMineRate = this.upgradeS.mineRate[upgrade.lvl].baseRate;
+      this.progressBarMaxValue = this.upgradeS.mineRate[upgrade.lvl].maxRate
                                   - this.baseMineRate;
       this.updateProgressBarValue();
     });

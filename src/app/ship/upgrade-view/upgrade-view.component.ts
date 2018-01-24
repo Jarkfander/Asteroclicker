@@ -2,7 +2,7 @@ import { Component, OnInit, Input, HostListener } from '@angular/core';
 import { Upgrade, UpgradeType } from '../upgrade-class/upgrade';
 import { SocketService } from '../../shared/socket/socket.service';
 import { User, UserUpgrade } from '../../shared/user/user';
-import { UserService, IUpgrades, IUserCurrentUpgrade } from '../../shared/user/user.service';
+import { UserService, IUserUpgrade } from '../../shared/user/user.service';
 import { Utils } from '../../shared/utils';
 import { UpgradeService } from '../upgrade.service';
 import { OreService, IOreAmounts, IOreInfos } from '../../ore/ore.service';
@@ -38,7 +38,12 @@ export class UpgradeViewComponent implements OnInit {
   public userResearchLvl = 1;
   public oreInfos: IOreInfos;
 
-  public currentLvl: IUserCurrentUpgrade;
+  public currentLvl: IUserUpgrade ={
+    lvl:1,
+    name:"",
+    start:0,
+    timer:0
+  };
 
 
   constructor(private socketS: SocketService,
@@ -57,16 +62,16 @@ export class UpgradeViewComponent implements OnInit {
     this.oreS.OreInfos.take(1).subscribe((oreInfos: IOreInfos) => {
       this.oreInfos = oreInfos;
 
-      this.userS.getUpgradeByName(this.name).subscribe((upgrade: IUserCurrentUpgrade) => {
+      this.userS.getUpgradeByName(this.name).subscribe((upgrade: IUserUpgrade) => {
         this.currentLvl = upgrade;
         this.valuesUpgradeLvl();
       });
 
-      this.userS.getUpgradeByName('QG').subscribe((upgrade: IUserCurrentUpgrade) => {
+      this.userS.getUpgradeByName('QG').subscribe((upgrade: IUserUpgrade) => {
         this.QGlvlMax = upgrade.lvl * 10;
       });
 
-      this.userS.getUpgradeByName('research').subscribe((upgrade: IUserCurrentUpgrade) => {
+      this.userS.getUpgradeByName('research').subscribe((upgrade: IUserUpgrade) => {
         this.userResearchLvl = upgrade.lvl;
         this.valuesUpgradeLvl();
       });

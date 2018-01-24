@@ -3,7 +3,6 @@ import { UserService } from './../../shared/user/user.service';
 import { OreService, IOreInfos } from './../../ore/ore.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { Utils } from '../../shared/utils';
-import { IUpgrade } from '../../shared/user/user.service';
 
 import 'rxjs/add/operator/first';
 import { Upgrade } from '../upgrade-class/upgrade';
