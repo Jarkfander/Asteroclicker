@@ -28,12 +28,12 @@
     -->
     <button *ngIf="currentLvl && currentLvl.start!=0" disabled="true" class="btn-upgrade">{{timer}}</button>
     <div (click)="levelUpOre()" class="cost row justify-around align-center">
-            <div class="cost-ore row">
-        <p *ngFor="let key of upgradeCostString">
-
-             <img *ngIf="key != '???'" src="../../../assets/oreIcon/{{key}}Icon.png" />
-            {{key.toUpperCase()}} : {{lvls[currentLvl.lvl + 1].costOreString[key]}}
-         </p>
+        <div class="cost-ore row">
+            <p *ngFor="let key of upgradeCostString">
+                <b class={{key}}>
+                    {{key.toUpperCase()}} {{lvls[currentLvl.lvl + 1].costOreString[key]}}
+                </b>
+            </p>
         </div>
     </div>
 </form>
