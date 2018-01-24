@@ -60,7 +60,8 @@ export interface IUpgrades {
   engine: IUpgrade
 }
 
-export interface IUpgrade {
+export interface IUserCurrentUpgrade {
+  name: string,
   lvl: number,
   start: number,
   timer: number,
@@ -141,14 +142,28 @@ export class UserService {
       .mergeMap((id: String) => this.db.object('users/' + id + '/profile').valueChanges<IProfile>());
   }
 
-  get upgrade(): Observable<IUpgrades> {
+  get upgrade(): Observable<IUserCurrentUpgrade[]> {
     return this.authS.UserId
-      .mergeMap((id: String) => this.db.object('users/' + id + '/upgrade').valueChanges<IUpgrades>());
+      .mergeMap((id: String) => this.db.object('users/' + id + '/upgrade').valueChanges<IUpgrades>())
+      .map((upgrades: IUpgrades) => {
+        let allCurrentUpgrade: IUserCurrentUpgrade[];
+        for(let key in upgrades ){
+          const currentUpgrade = upgrades[key];
+          currentUpgrade["name"] = key;
+          allCurrentUpgrade.push(currentUpgrade);
+        }
+        return allCurrentUpgrade;
+      });
   }
 
-  getUpgradeByName(upgradeName: string): Observable<IUpgrade> {
+  getUpgradeByName(upgradeName: string): Observable<IUserCurrentUpgrade> {
     return this.authS.UserId
-      .mergeMap((id: String) => this.db.object('users/' + id + '/upgrade/' + upgradeName).valueChanges<IUpgrade>());
+      .mergeMap((id: String) => this.db.object('users/' + id + '/upgrade/' + upgradeName).valueChanges())
+      .map((upgrade) => {
+        upgrade["name"] = upgradeName;
+        console.log(upgrade);
+        return <IUserCurrentUpgrade>upgrade;
+      });
   }
 
   FillChest(snapshot) {

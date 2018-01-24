@@ -2,7 +2,7 @@ import { Component, OnInit, Input, HostListener } from '@angular/core';
 import { Upgrade, UpgradeType } from '../upgrade-class/upgrade';
 import { SocketService } from '../../shared/socket/socket.service';
 import { User, UserUpgrade } from '../../shared/user/user';
-import { UserService, IUpgrades, IUpgrade } from '../../shared/user/user.service';
+import { UserService, IUpgrades, IUserCurrentUpgrade } from '../../shared/user/user.service';
 import { Utils } from '../../shared/utils';
 import { UpgradeService } from '../upgrade.service';
 import { OreService, IOreAmounts, IOreInfos } from '../../ore/ore.service';
@@ -19,7 +19,6 @@ export class UpgradeViewComponent implements OnInit {
   @Input() lvls: Upgrade[];
 
   public isHover: boolean;
-  public currentLvl: IUpgrade;
 
   public QGlvlMax: number = 0;
   public timer: string = "00:00:00";
@@ -39,6 +38,8 @@ export class UpgradeViewComponent implements OnInit {
   public userResearchLvl = 1;
   public oreInfos: IOreInfos;
 
+  public currentLvl: IUserCurrentUpgrade;
+
 
   constructor(private socketS: SocketService,
     private userS: UserService,
@@ -56,17 +57,16 @@ export class UpgradeViewComponent implements OnInit {
     this.oreS.OreInfos.take(1).subscribe((oreInfos: IOreInfos) => {
       this.oreInfos = oreInfos;
 
-
-      this.userS.getUpgradeByName(this.name).subscribe((upgrade: IUpgrade) => {
+      this.userS.getUpgradeByName(this.name).subscribe((upgrade: IUserCurrentUpgrade) => {
         this.currentLvl = upgrade;
         this.valuesUpgradeLvl();
       });
 
-      this.userS.getUpgradeByName('QG').subscribe((upgrade: IUpgrade) => {
+      this.userS.getUpgradeByName('QG').subscribe((upgrade: IUserCurrentUpgrade) => {
         this.QGlvlMax = upgrade.lvl * 10;
       });
 
-      this.userS.getUpgradeByName('research').subscribe((upgrade: IUpgrade) => {
+      this.userS.getUpgradeByName('research').subscribe((upgrade: IUserCurrentUpgrade) => {
         this.userResearchLvl = upgrade.lvl;
         this.valuesUpgradeLvl();
       });
