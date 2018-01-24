@@ -168,7 +168,7 @@ export class UpgradeViewComponent implements OnInit {
     this.upgradeCostString = Object.keys(temp);
   }
 
-
+ // if the cost is available 
   boolOreCost() {
     const tempUpgradeCost = this.lvls[this.currentLvl.lvl + 1].costOreString;
     const keysCost = Object.keys(tempUpgradeCost);
