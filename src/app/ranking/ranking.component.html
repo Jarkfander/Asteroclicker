@@ -1,11 +1,13 @@
 <li *ngFor="let ranked of rankingBtw">
-   
+  <div *ngIf=" iUser % 10 === ranked.id">
+    <b class='credit'>
         {{ ranked.id }} - {{ ranked.name }} : {{ ranked.score }}
-  
-  <!--   <div *ngIf=" iUser % 10 === ranked.id">
-      </div>
-    <div *ngIf=" iUser % 10 != ranked.id">
-        {{ ranked.id }} - {{ ranked.name }} : {{ ranked.score }}
-    </div>
-  -->
+    </b>
+  </div>
+  <div *ngIf=" iUser % 10 != ranked.id">
+    <b class='iron'>
+      {{ ranked.id }} - {{ ranked.name }} : {{ ranked.score }}
+    </b>
+  </div>
+
 </li>

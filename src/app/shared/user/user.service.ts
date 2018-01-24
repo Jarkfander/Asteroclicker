@@ -27,8 +27,6 @@ export interface IUser {
 
   currentMineRate: number;
 
-  score: number;
-
   quest: Quest;
   chest: Array<Chest>;
   numberOfChest: number;
@@ -84,8 +82,6 @@ export class UserService {
 
   mineRateSubject = new Subject<User>();
   eventSubject = new Subject<User>();
-
-
 
   cargoSubject = new Subject<User>();
 
