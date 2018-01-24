@@ -12,7 +12,7 @@ import { UpgradeService } from './upgrade.service';
     CommonModule
   ],
   declarations: [ShipViewComponent, UpgradeListComponent, UpgradeViewComponent],
-  exports: [ShipViewComponent, UpgradeListComponent, UpgradeViewComponent],
+  exports: [ShipViewComponent,UpgradeListComponent, UpgradeViewComponent],
   providers: [UserService, UpgradeService]
 })
 export class ShipModule { }
