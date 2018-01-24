@@ -97,7 +97,6 @@ export class MarketInfoComponent implements OnInit {
         });
 
         this.userS.getUpgradeByName('storage').subscribe((upgrade: IUpgrade) => {
-
           this.hasSpaceLeft = this.currentOreAmount
             < this.upgradeS.storage[this.userStorageLvl].capacity;
 

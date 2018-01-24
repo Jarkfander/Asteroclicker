@@ -26,6 +26,7 @@ export class AsteroidSprite {
     krashAnim: PIXI.extras.AnimatedSprite;
     kaboomAnim: PIXI.extras.AnimatedSprite;
     woomAnim: PIXI.extras.AnimatedSprite;
+    comboWrite: PIXI.extras.AnimatedSprite;
 
     spriteFxContainer: PIXI.Container;
 
@@ -405,6 +406,9 @@ export class AsteroidSprite {
 
         this.woomAnim = initSprite('woom', 236, 236, false, false, 0.28);
         this.initAnimScaleAndAnchor(this.woomAnim);
+
+        this.comboWrite = initSprite('comboWrite', 500, 500, false, false, 0.28);
+        this.initAnimScaleAndAnchor(this.comboWrite);
     }
 
     // When you click put a random animation 
@@ -511,7 +515,7 @@ export class AsteroidSprite {
                 this.emitDestructionParticle(this.arrowFrenzy[i].worldTransform.tx,
                     this.arrowFrenzy[i].worldTransform.ty);
                 this.animBoomOnClick(this.arrowFrenzy[i].worldTransform.tx,
-                    this.arrowFrenzy[i].worldTransform.ty, this.boomAnim, true);
+                    this.arrowFrenzy[i].worldTransform.ty, this.comboWrite, true);
                 this.checkAstero = true;
             }
             this.arrowFrenzy[i].visible = false;
