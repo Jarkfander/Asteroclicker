@@ -19,14 +19,7 @@ export class UpgradeViewComponent implements OnInit {
   @Input() lvls: Upgrade[];
 
   public isHover: boolean;
-  public caraKeys: string[];
-  public nextCaraKeys: string[];
-
-  public currentLvl: IUpgrade = {
-    lvl: 1,
-    start: 0,
-    timer: 0
-  };
+  public currentLvl: IUpgrade;
 
   public QGlvlMax: number = 0;
   public timer: string = "00:00:00";
@@ -41,19 +34,17 @@ export class UpgradeViewComponent implements OnInit {
   public isOkForBuy = false;
 
   public currentOreAmounts: IOreAmounts;
-  public currentUsercredit: number = 0;
+  public currentUsercredit = 0;
 
   public userResearchLvl = 1;
   public oreInfos: IOreInfos;
 
 
-  constructor(private socketS: SocketService, private userS: UserService,
-    private oreS: OreService, private upgradeS: UpgradeService) {
-    this.currentLvl = {
-      lvl: 1,
-      start: 0,
-      timer: 0
-    };
+  constructor(private socketS: SocketService,
+    private userS: UserService,
+    private oreS: OreService,
+    private upgradeS: UpgradeService) {
+
   }
 
 
@@ -61,13 +52,13 @@ export class UpgradeViewComponent implements OnInit {
   @HostListener('mouseleave', ['$event']) outHover() { this.isHover = false; }
 
   ngOnInit() {
+
     this.oreS.OreInfos.take(1).subscribe((oreInfos: IOreInfos) => {
       this.oreInfos = oreInfos;
 
 
       this.userS.getUpgradeByName(this.name).subscribe((upgrade: IUpgrade) => {
         this.currentLvl = upgrade;
-        this.updateData(upgrade);
         this.valuesUpgradeLvl();
       });
 
@@ -114,13 +105,6 @@ export class UpgradeViewComponent implements OnInit {
     }
   }
 
-  updateData(upgrade: IUpgrade) {
-    this.currentLvl = upgrade;
-    this.timer = Utils.secondsToHHMMSS(upgrade.timer / 1000);
-    this.caraKeys = Object.keys(this.lvls[upgrade.lvl].cara);
-    this.nextCaraKeys = Object.keys(this.lvls[upgrade.lvl + 1].cara);
-  }
-
   levelUpCredit() {
     this.socketS.upgradeShipCredit(this.userS.currentUser.uid, this.lvls[this.currentLvl.lvl].name);
   }
@@ -138,6 +122,7 @@ export class UpgradeViewComponent implements OnInit {
   costOreForCredit(nameOre: string, costCredit: number) {
     return costCredit / this.oreInfos[nameOre].meanValue;
   }
+
 
   valuesUpgradeLvl() {
     const tempUpgradeCost = this.lvls[this.currentLvl.lvl + 1].costOreString;

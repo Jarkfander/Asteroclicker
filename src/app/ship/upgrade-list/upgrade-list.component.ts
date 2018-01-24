@@ -1,3 +1,4 @@
+import { UserService, IUpgrades } from './../../shared/user/user.service';
 import { Component, OnInit } from '@angular/core';
 import { Research } from '../upgrade-class/research';
 import { MineRate } from '../upgrade-class/mineRate';
@@ -14,13 +15,18 @@ import { UpgradeService } from '../upgrade.service';
 })
 export class UpgradeListComponent implements OnInit {
 
+    public upgrades: {
+        name: string;
+        lvl: number;
+        timer: string;
+    };
     storageLvls: Upgrade[];
     mineRateLvls: Upgrade[];
     researchLvls: Upgrade[];
     engineLvls: Upgrade[];
     QGLvls: Upgrade[];
 
-    constructor(private upgradeS: UpgradeService) {
+    constructor(private upgradeS: UpgradeService, private userS: UserService) {
 
     }
 

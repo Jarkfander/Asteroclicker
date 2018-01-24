@@ -1,0 +1,18 @@
+<article class="upgrade row align-center border">
+  <img class="upgrade-icon" src="../../../assets/upgrade-icons/icon_{{name}}.gif" />
+  <div class="col justify-between">
+      <div class="current-lvl col">
+          <h3>Current Level: {{currentLvl.lvl}}</h3>
+          <p *ngFor="let key of caraKeys">
+              {{key}} : {{currentLvl.cara[key]}}
+          </p>
+      </div>
+      <div class="next-lvl col">
+          <h3>Next Level: {{nextLvl.lvl}}</h3>
+          <p *ngFor="let nextkey of nextCaraKeys">
+              {{nextkey}} : {{nextLvl.cara[nextkey]}}
+          </p>
+      </div>
+
+  </div>
+</article>
