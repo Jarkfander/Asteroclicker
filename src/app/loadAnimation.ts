@@ -86,7 +86,7 @@ export class LoadAnimation {
         }
 
         // Frenzy
-        this.addKeySpriteName('combo_erreur', './assets/frenzy/effets_combo/combo_erreur.png');
+        this.addKeySpriteName('comboFail', './assets/frenzy/effets_combo/combo_erreur.png');
         this.addKeySpriteName('comboWrite', './assets/frenzy/effets_combo/comboWrite.png');
         this.addKeySpriteName('intro_combo', './assets/frenzy/effets_combo/intro_combo.png');
         this.addKeySpriteName('loop_combo', './assets/frenzy/effets_combo/loop_combo.png');
