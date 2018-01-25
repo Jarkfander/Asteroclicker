@@ -75,7 +75,7 @@ constructor(private socketS: SocketService,
   @HostListener('mouseenter', ['$event']) inHover() { this.isHover = true; }
   @HostListener('mouseleave', ['$event']) outHover() { this.isHover = false; }
 
-  
+
   ngOnInit() {
     this.setTimer();
     this.renderer.setStyle(this.el.nativeElement, 'backgroundImage', `url('../../../assets/upgrade/img/${this.userUpgrade.name}.jpg')`);

@@ -22,10 +22,16 @@ main {
     grid-row: 1 / 6;
 }
 
+.qg {
+    display: block;
+    grid-column: 1 / 1;
+    grid-row: 6 / 7;
+}
+
 .upgrade {
     display: block;
     grid-column: 1 / 1;
-    grid-row: 6 / 11;
+    grid-row: 7 / 11;
 }
 
 .asteroid {

@@ -4,8 +4,16 @@ article {
     height: 100%;
     padding: 5px;
     margin-bottom: $gap;
-    background-color: rgb(90, 90, 90);
+    background-image: url('../../../assets/texture/market-bg.jpg');
+
+    .info {
+        width: 40%;
+    }
+    .curve {
+        width: 60%;
+    }
 }
+
 .name {
     height: 20px;
     h2 {
@@ -15,6 +23,13 @@ article {
     img {
         height: 100%;
         margin-right: 5px;
+    }
+}
+
+.action {
+    button, span {
+        width: 40%;
+        color: black;
     }
 }
 

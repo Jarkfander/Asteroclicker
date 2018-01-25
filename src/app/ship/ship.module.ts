@@ -6,14 +6,15 @@ import { UserService } from '../shared/user/user.service';
 import { UpgradeListComponent } from './upgrade-list/upgrade-list.component';
 import { UpgradeService } from './upgrade.service';
 import { UpgradeInfoComponent } from './upgrade-info/upgrade-info.component';
+import { QgViewComponent } from './qg-view/qg-view.component';
 
 
 @NgModule({
   imports: [
     CommonModule
   ],
-  declarations: [ShipViewComponent, UpgradeListComponent, UpgradeViewComponent, UpgradeInfoComponent],
-  exports: [ShipViewComponent,UpgradeListComponent, UpgradeViewComponent],
+  declarations: [ShipViewComponent, UpgradeListComponent, UpgradeViewComponent, UpgradeInfoComponent, QgViewComponent],
+  exports: [ShipViewComponent, UpgradeListComponent, UpgradeViewComponent, QgViewComponent],
   providers: [UserService, UpgradeService]
 })
 export class ShipModule { }

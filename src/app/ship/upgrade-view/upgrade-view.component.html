@@ -5,9 +5,9 @@
     -->
     <button *ngIf="userUpgrade.start !== 0" disabled="true" class="btn-upgrade">{{timer}}</button>
     <div (click)="levelUpOre()" class="cost row justify-around align-center">
-        <img class="lvl-up" src="../../../assets/oreIcon/carbonIcon.png" alt="levelUp"/>
-        <div class="ores col wrap">
-            <div class="cost-ore row align-center justify-between" *ngFor="let key of upgradeCostString">
+        <img class="lvl-up" src="../../../assets/icon/level-up.png" alt="levelUp"/>
+        <div class="ores col justify-around wrap">
+            <div class="cost-ore row align-center justify-around" *ngFor="let key of upgradeCostString">
                 <img *ngIf="key != '???'" src="../../../assets/oreIcon/{{key}}Icon.png" />
                 <p>{{nextUpgrade.costOreString[key]}}</p>
             </div>
