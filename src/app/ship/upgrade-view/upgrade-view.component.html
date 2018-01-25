@@ -5,12 +5,22 @@
     -->
     <button *ngIf="userUpgrade.start !== 0" disabled="true" class="btn-upgrade">{{timer}}</button>
     <div (click)="levelUpOre()" class="cost row justify-around align-center">
+<<<<<<< HEAD
         <img class="lvl-up" src="../../../assets/oreIcon/carbonIcon.png" alt="levelUp"/>
         <div class="ores col wrap">
             <div class="cost-ore row align-center justify-between" *ngFor="let key of upgradeCostString">
                 <img *ngIf="key != '???'" src="../../../assets/oreIcon/{{key}}Icon.png" />
                 <p>{{nextUpgrade.costOreString[key]}}</p>
             </div>
+=======
+        <div class="cost-ore row">
+            <p *ngFor="let key of upgradeCostString">
+                <b class={{key}}>
+                        <img *ngIf="key != '???'" src="../../../assets/oreIcon/{{key}}Icon.png" />
+                    {{key.toUpperCase()}} {{lvls[currentLvl.lvl + 1].costOreString[key]}}
+                </b>
+            </p>
+>>>>>>> a23714cf933ba79abacafbd57a293382e8efb522
         </div>
 
     </div>

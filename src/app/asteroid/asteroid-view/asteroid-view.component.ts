@@ -49,6 +49,11 @@ export class AsteroidViewComponent implements OnInit {
   private userMineRateLvl  = 1;
   public clicked: boolean;
 
+  private frenzyInfo: IFrenzyInfo = {
+    state: 0,
+    nextCombos: {}
+  };
+
   constructor(private el: ElementRef,
               private render: Renderer2,
               private userS: UserService,
@@ -181,6 +186,7 @@ export class AsteroidViewComponent implements OnInit {
 
     // frenzy Subject
     this.userS.frenzyInfo.subscribe((frenzy: IFrenzyInfo) => {
+      this.frenzyInfo = frenzy;
       if (!frenzy.state) {
         this.asteroidSprite.frenzyModTouchDown();
       } else {
@@ -346,12 +352,11 @@ export class AsteroidViewComponent implements OnInit {
 
   // frenzy mod
   frenzyModTouch(numTouchUserActu: number) {
-    if (this.userS.currentUser.frenzy.state) {
+    if (this.frenzyInfo.state) {
       this.socketS.validArrow(this.userS.currentUser.uid, numTouchUserActu - 37, this.userS.currentUser.frenzy.comboInd);
-      if (this.userS.currentUser.frenzy.nextCombos[this.userS.currentUser.frenzy.comboInd] == (numTouchUserActu - 37)) {
+      if (this.frenzyInfo.nextCombos[this.userS.currentUser.frenzy.comboInd] == (numTouchUserActu - 37)) {
         this.userS.currentUser.frenzy.comboInd++;
-        this.asteroidSprite.frenzyModTouch(this.userS.currentUser.frenzy.nextCombos[this.userS.currentUser.frenzy.comboInd]);
-
+        this.asteroidSprite.frenzyModTouch(this.frenzyInfo.nextCombos[this.userS.currentUser.frenzy.comboInd]);
       }
     }
   }

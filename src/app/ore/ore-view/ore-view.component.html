@@ -1,5 +1,5 @@
-<article class="row align-center border" *ngIf="!!oreInfo && researchLvl >= oreInfo.searchNewOre">
-  <img class="oreIcon" src="assets/oreIcon/{{name}}Icon.png" alt="{{name}}Icon">
+<article class="row align-center border no-selection" *ngIf="!!oreInfo && researchLvl >= oreInfo.searchNewOre">
+  <img class="oreIcon no-selection" unselectable="on" src="assets/oreIcon/{{name}}Icon.png" alt="{{name}}Icon">
 
   <div class="col">
     <p [ngStyle]="{'color': amount>=capacity ? 'red' : 'white'}"> {{name.toUpperCase()}} : {{ amount }} </p>

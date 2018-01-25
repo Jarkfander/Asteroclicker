@@ -12,8 +12,13 @@ import { UpgradeInfoComponent } from './upgrade-info/upgrade-info.component';
   imports: [
     CommonModule
   ],
+<<<<<<< HEAD
   declarations: [ShipViewComponent, UpgradeListComponent, UpgradeViewComponent, UpgradeInfoComponent],
   exports: [ShipViewComponent,UpgradeListComponent, UpgradeViewComponent],
+=======
+  declarations: [ShipViewComponent, UpgradeListComponent, UpgradeViewComponent],
+  exports: [ShipViewComponent, UpgradeListComponent, UpgradeViewComponent],
+>>>>>>> a23714cf933ba79abacafbd57a293382e8efb522
   providers: [UserService, UpgradeService]
 })
 export class ShipModule { }

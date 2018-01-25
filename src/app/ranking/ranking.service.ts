@@ -14,7 +14,6 @@ export class RankingService {
   constructor(db: AngularFireDatabase, private userS: UserService) {
     this.db = db;
     this.rankingTab = new Array<Ranking>();
-
     this.db.object('ranking').valueChanges().take(1).subscribe(
       (snapshot: any) => {
         this.FillRank(snapshot);

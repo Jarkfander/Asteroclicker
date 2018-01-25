@@ -35,8 +35,8 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
   };
 
   constructor(private userS: UserService,
-              private asteroidS: AsteroidService,
-              private upgradeS: UpgradeService) {
+    private asteroidS: AsteroidService,
+    private upgradeS: UpgradeService) {
   }
 
   ngOnInit() {
@@ -55,11 +55,19 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
       .map((user: User) => user.currentMineRate)
       .subscribe((mineRate: number) => this.mineRate = mineRate);
 
+<<<<<<< HEAD
     this.userS.getUpgradeByName("mineRate").subscribe((upgrade: IUserUpgrade) => {
       this.userMineRateLvl = upgrade.lvl;
       this.baseMineRate = this.upgradeS.mineRate[upgrade.lvl].baseRate;
       this.progressBarMaxValue = this.upgradeS.mineRate[upgrade.lvl].maxRate
                                   - this.baseMineRate;
+=======
+    this.userS.upgrade.subscribe((upgrade: IUpgrades) => {
+      this.userMineRateLvl = upgrade.mineRate.lvl;
+      this.baseMineRate = this.upgradeS.mineRate[upgrade.mineRate.lvl].baseRate;
+      this.progressBarMaxValue = this.upgradeS.mineRate[upgrade.mineRate.lvl].maxRate
+        - this.baseMineRate;
+>>>>>>> a23714cf933ba79abacafbd57a293382e8efb522
       this.updateProgressBarValue();
     });
     this.updateProgressBarValue();
@@ -76,7 +84,6 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
       this.progressBarValue = this.frenzyTimer / (frenzyTime * 1000);
     } else {
       this.progressBarValue = this.mineRate - this.baseMineRate > 0 ? this.mineRate - this.baseMineRate : 0;
-      this.progressBarValue /= this.progressBarMaxValue;
     }
     this.setMiningRate();
   }
@@ -89,11 +96,11 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
       data: {
         datasets: [{
           data: [0, 1],
-          backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(10, 10,10)'],
+          backgroundColor: ['rgba(255, 99, 132)'],
         }]
       }
     });
-    this.capacityMeter = new Chart(this.chartMiningRef.nativeElement, {
+    this.capacityMeter = new Chart(this.chartCapacityRef.nativeElement, {
       type: 'horizontalBar',
       data: {
         datasets: [{
@@ -106,8 +113,14 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
 
   /** Set the mining rate on the chart */
   private setMiningRate() {
+
     if (this.progressBarValue > 0) {
-      this.miningMeter.data.datasets[0].data = [this.progressBarValue, this.progressBarMaxValue - this.progressBarValue];
+      if (this.frenzyInfo.state) {
+        this.miningMeter.data.datasets[0].data = [this.progressBarValue,1-this.progressBarValue];
+      }
+      else {
+        this.miningMeter.data.datasets[0].data = [this.progressBarValue, this.progressBarMaxValue - this.progressBarValue ];
+      }
       this.miningMeter.update();
     }
   }
