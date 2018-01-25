@@ -140,11 +140,13 @@ export class UserService {
     return this.authS.UserId
       .mergeMap((id: String) => this.db.object('users/' + id + '/upgrade').valueChanges())
       .map((upgrades) => {
-        let allCurrentUpgrade: IUserUpgrade[] = new Array();
-        for (let key in upgrades) {
-          const currentUpgrade = upgrades[key];
-          currentUpgrade["name"] = key;
-          allCurrentUpgrade.push(currentUpgrade);
+        const allCurrentUpgrade: IUserUpgrade[] = new Array();
+        for (const key in upgrades) {
+          if (key in upgrades) {
+            const currentUpgrade = upgrades[key];
+            currentUpgrade['name'] = key;
+            allCurrentUpgrade.push(currentUpgrade);
+          }
         }
         return allCurrentUpgrade;
       });
@@ -154,7 +156,7 @@ export class UserService {
     return this.authS.UserId
       .mergeMap((id: String) => this.db.object('users/' + id + '/upgrade/' + upgradeName).valueChanges())
       .map((upgrade) => {
-        upgrade["name"] = upgradeName;
+        upgrade['name'] = upgradeName;
         return <IUserUpgrade>upgrade;
       });
   }

@@ -6,7 +6,10 @@ import { UserService, IUserUpgrade } from '../../shared/user/user.service';
 import { Utils } from '../../shared/utils';
 import { UpgradeService } from '../upgrade.service';
 import { OreService, IOreAmounts, IOreInfos } from '../../ore/ore.service';
+import { Observable } from 'rxjs/Observable';
 
+import 'rxjs/add/observable/interval';
+import 'rxjs/add/operator/filter';
 
 @Component({
   selector: 'app-upgrade-view',
@@ -15,13 +18,27 @@ import { OreService, IOreAmounts, IOreInfos } from '../../ore/ore.service';
 })
 export class UpgradeViewComponent implements OnInit {
 
-  @Input() name: string;
-  @Input() lvls: Upgrade[];
+  @Input() QGlvl: number;
+  @Input() researchLvl: number;
+  @Input() oreAmount: IOreAmounts;
+  @Input() credit: number;
+  @Input() set upgrade(userUpgrade: IUserUpgrade) {
+    this.userUpgrade = userUpgrade;
+    this.oreInfos = this.oreS.oreInfos;
+    this.currentUpgrade = this.upgradeS[userUpgrade.name][userUpgrade.lvl];
+    this.nextUpgrade = this.upgradeS[userUpgrade.name][userUpgrade.lvl + 1];
+    this.updateCost();
+  }
 
+  public userUpgrade: IUserUpgrade;
+  public currentUpgrade: Upgrade;
+  public nextUpgrade: Upgrade;
+  public oreInfos: IOreInfos;
+  public upgradeCostString: string[];
   public isHover: boolean;
-
-  public QGlvlMax: number = 0;
-  public timer: string = "00:00:00";
+/*
+  public QGlvlMax = 0;
+  public timer = '00:00:00';
 
   public enableButtonCredit = true;
 
@@ -38,13 +55,13 @@ export class UpgradeViewComponent implements OnInit {
   public userResearchLvl = 1;
   public oreInfos: IOreInfos;
 
-  public currentLvl: IUserUpgrade ={
-    lvl:1,
-    name:"",
-    start:0,
-    timer:0
+  public currentLvl: IUserUpgrade = {
+    lvl: 1,
+    name: '',
+    start: 0,
+    timer: 0
   };
-
+*/
 
   constructor(private socketS: SocketService,
     private userS: UserService,
@@ -58,7 +75,8 @@ export class UpgradeViewComponent implements OnInit {
   @HostListener('mouseleave', ['$event']) outHover() { this.isHover = false; }
 
   ngOnInit() {
-
+    this.setTimer();
+    /*
     this.oreS.OreInfos.take(1).subscribe((oreInfos: IOreInfos) => {
       this.oreInfos = oreInfos;
 
@@ -82,7 +100,6 @@ export class UpgradeViewComponent implements OnInit {
 
     });
 
-
     this.oreS.OreAmounts.subscribe((oreAmounts: IOreAmounts) => {
       this.currentOreAmounts = oreAmounts;
       this.enableButtonOre = this.boolOreCost();
@@ -92,34 +109,36 @@ export class UpgradeViewComponent implements OnInit {
       this.currentUsercredit = credit;
       this.enableButtonOre = this.boolOreCost();
     });
-
-    setInterval(() => {
-      this.updateTimer();
-    }, 1000);
+  */
 
   }
 
-  updateTimer() {
-    if (this.currentLvl.start !== 0) {
-      this.socketS.updateUpgradeTimer(this.userS.currentUser.uid, this.lvls[0].name);
-    }
+  /** Setup timer */
+  private setTimer() {
+    Observable.interval(1000)
+      .filter(() => this.userUpgrade.start !== 0)
+      .subscribe(() => this.socketS.updateUpgradeTimer(this.userS.currentUser.uid, this.userUpgrade.name));
+    /*
     for (let i = 1; i < 5; i++) {
       if (this.userS.currentUser.cargo['cargo' + i] && this.userS.currentUser.cargo['cargo' + i].start !== 0) {
         this.socketS.updateCargoTimer(this.userS.currentUser.uid);
       }
     }
+    */
   }
 
+  /** Update credit of user */
   levelUpCredit() {
-    this.socketS.upgradeShipCredit(this.userS.currentUser.uid, this.lvls[this.currentLvl.lvl].name);
+    this.socketS.upgradeShipCredit(this.userS.currentUser.uid, this.currentUpgrade.name);
   }
 
+  /** Update ore amount of user */
   levelUpOre() {
-    this.socketS.upgradeShipOre(this.userS.currentUser.uid, this.lvls[this.currentLvl.lvl].name);
+    this.socketS.upgradeShipOre(this.userS.currentUser.uid, this.currentUpgrade.name);
   }
 
   costOreUpgrade(costCredit: number, nameUpgrade: string) {
-    const tempname = this.lvls[this.currentLvl.lvl + 1].costOre;
+    const tempname = this.nextUpgrade.costOre;
     return [this.costOreForCredit(tempname[0], costCredit / 2),
     this.costOreForCredit(tempname[1], costCredit / 2)];
   }
@@ -128,9 +147,9 @@ export class UpgradeViewComponent implements OnInit {
     return costCredit / this.oreInfos[nameOre].meanValue;
   }
 
-
-  valuesUpgradeLvl() {
-    const tempUpgradeCost = this.lvls[this.currentLvl.lvl + 1].costOreString;
+  /** Change the cost depending on user's upgrade lvl */
+  private updateCost() {
+    const tempUpgradeCost = this.nextUpgrade.costOreString;
     const keysCost = Object.keys(tempUpgradeCost);
     const oreKeys = Object.keys(this.oreInfos);
 
@@ -139,7 +158,7 @@ export class UpgradeViewComponent implements OnInit {
       for (let j = 0; j < oreKeys.length; j++) {
         const tempName = oreKeys[j];
         if (tempName === keysCost[i]) {
-          if (this.upgradeS.research[this.userResearchLvl].lvl >=
+          if (this.upgradeS.research[this.researchLvl].lvl >=
             this.oreInfos[oreKeys[j]].searchNewOre) {
             temp[oreKeys[j]] = tempUpgradeCost[keysCost[i]];
           } else {
@@ -155,21 +174,22 @@ export class UpgradeViewComponent implements OnInit {
     this.upgradeCostString = Object.keys(temp);
   }
 
-
-  boolOreCost() {
-    const tempUpgradeCost = this.lvls[this.currentLvl.lvl + 1].costOreString;
+  /** Check if user has enough credit && credit to upgrade */
+  // TODO : Add notifications
+  public canBuy(): boolean {
+    const tempUpgradeCost = this.nextUpgrade.costOreString;
     const keysCost = Object.keys(tempUpgradeCost);
 
-    if (this.currentLvl.lvl + 1 > this.QGlvlMax) {
+    if (this.userUpgrade.lvl + 1 > this.QGlvl) {
       return false;
     }
     for (let i = 0; i < keysCost.length; i++) {
       if (keysCost[i] === 'credit') {
-        if (this.currentUsercredit < tempUpgradeCost[keysCost[i]]) {
+        if (this.credit < tempUpgradeCost[keysCost[i]]) {
           return false;
         }
       }
-      if (this.currentOreAmounts[keysCost[i]] < tempUpgradeCost[keysCost[i]]) {
+      if (this.oreAmount[keysCost[i]] < tempUpgradeCost[keysCost[i]]) {
         return false;
       }
     }

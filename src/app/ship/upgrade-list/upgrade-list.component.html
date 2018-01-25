@@ -1,6 +1,17 @@
+<!--
 <section class="row justify-between">
     <app-upgrade-view class="border" [name]="'storage'" [lvls]="storageLvls" ></app-upgrade-view>
     <app-upgrade-view class="border" [name]="'mineRate'" [lvls]="mineRateLvls" ></app-upgrade-view>
     <app-upgrade-view class="border" [name]="'research'" [lvls]="researchLvls" ></app-upgrade-view>
     <app-upgrade-view class="border" [name]="'engine'" [lvls]="engineLvls" ></app-upgrade-view>    
+</section>
+-->
+<section class="row justify-between">
+    <app-upgrade-view *ngFor="let upgrade of upgrades$ | async"
+        class="border"
+        [researchLvl]="researchLvl"
+        [oreAmount]="oreAmount$ | async"
+        [credit]="credit$ | async"
+        [upgrade]="upgrade">
+    </app-upgrade-view>
 </section>

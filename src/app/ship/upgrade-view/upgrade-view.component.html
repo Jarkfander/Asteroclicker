@@ -1,15 +1,17 @@
 <section class="col justify-between align-center">
-    <h1>{{lvls[currentLvl.lvl].displayName}}</h1>
+    <h1>{{currentUpgrade.displayName}}</h1>
     <!--
-    <button *ngIf="currentLvl && currentLvl.start==0" [disabled]="!enableButtonOre" class="btn-upgrade" (click)="levelUpOre()">Upgrade / Ore</button>
+    <button *ngIf="currentLvl && currentLvl.start==0" [disabled]="!canBuy" class="btn-upgrade" (click)="levelUpOre()">Upgrade / Ore</button>
     -->
-    <button *ngIf="currentLvl && currentLvl.start!=0" disabled="true" class="btn-upgrade">{{timer}}</button>
+    <button *ngIf="userUpgrade.start !== 0" disabled="true" class="btn-upgrade">{{timer}}</button>
     <div (click)="levelUpOre()" class="cost row justify-around align-center">
-            <div class="cost-ore row">
-        <p *ngFor="let key of upgradeCostString">
-             <img *ngIf="key != '???'" src="../../../assets/oreIcon/{{key}}Icon.png" />
-            {{key.toUpperCase()}} : {{lvls[currentLvl.lvl + 1].costOreString[key]}}
-         </p>
+        <img class="lvl-up" src="../../../assets/oreIcon/carbonIcon.png" alt="levelUp"/>
+        <div class="ores col wrap">
+            <div class="cost-ore row align-center justify-between" *ngFor="let key of upgradeCostString">
+                <img *ngIf="key != '???'" src="../../../assets/oreIcon/{{key}}Icon.png" />
+                <p>{{nextUpgrade.costOreString[key]}}</p>
+            </div>
         </div>
+
     </div>
 </section>

@@ -1,3 +1,4 @@
+import { OreService, IOreAmounts } from './../../ore/ore.service';
 import { UserService, IUserUpgrade } from './../../shared/user/user.service';
 import { Component, OnInit } from '@angular/core';
 import { Research } from '../upgrade-class/research';
@@ -7,7 +8,7 @@ import { Upgrade, UpgradeType } from '../upgrade-class/upgrade';
 import { UpgradeService } from '../upgrade.service';
 import { Observable } from 'rxjs/Observable';
 
-
+import 'rxjs/add/operator/do';
 
 @Component({
     selector: 'app-upgrade-list',
@@ -16,20 +17,20 @@ import { Observable } from 'rxjs/Observable';
 })
 export class UpgradeListComponent implements OnInit {
 
-    public upgrades: {
-        name: string;
-        lvl: number;
-        timer: string;
-    };
     storageLvls: Upgrade[];
     mineRateLvls: Upgrade[];
     researchLvls: Upgrade[];
     engineLvls: Upgrade[];
     QGLvls: Upgrade[];
 
-    $userCurrentUpgrade: Observable<IUserUpgrade[]>;
+    public upgrades$: Observable<IUserUpgrade[]>;
+    public oreAmount$: Observable<IOreAmounts>;
+    public credit$: Observable<number>;
+    public researchLvl: number;
 
-    constructor(private upgradeS: UpgradeService, private userS: UserService) {
+    constructor(private upgradeS: UpgradeService,
+                private userS: UserService,
+                private oreS: OreService) {
     }
 
     ngOnInit() {
@@ -39,7 +40,10 @@ export class UpgradeListComponent implements OnInit {
         this.engineLvls = this.upgradeS.engine;
         this.QGLvls = this.upgradeS.QG;
 
-        this.$userCurrentUpgrade = this.userS.upgrade;
+        this.oreAmount$ = this.oreS.OreAmounts;
+        this.credit$ = this.userS.credit;
+        this.upgrades$ = this.userS.upgrade
+            .do((upgrades: IUserUpgrade[]) => this.researchLvl = upgrades.find((upgrade) => upgrade.name === 'research').lvl)
     }
 
     // Managed time

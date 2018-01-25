@@ -3,7 +3,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import { Observable } from 'rxjs/Observable';
 import { AuthService } from '../signin/auth.service';
 
-export interface IOreInfos{
+export interface IOreInfos {
   carbon: IOreInfo;
   gold: IOreInfo;
   hyperium: IOreInfo;
@@ -33,25 +33,33 @@ export interface IOreAmounts {
 @Injectable()
 export class OreService {
 
-  constructor(private db: AngularFireDatabase, private authS:AuthService) {
+  public oreInfos: IOreInfos;
+
+  constructor(private db: AngularFireDatabase, private authS: AuthService) {
+    // Get all ore infos from the DB
+    this.db.object('oreInfo')
+      .valueChanges<IOreInfos>()
+      .first()
+      .subscribe((oreInfos: IOreInfos) => this.oreInfos = oreInfos);
   }
 
-  get OreInfos() : Observable<IOreInfos>{
+  // TODO : Remove
+  get OreInfos(): Observable<IOreInfos>{
     return  this.db.object('oreInfo').valueChanges<IOreInfos>();
   }
 
-  getOreInfoByString(name : string) : Observable<IOreInfo>{
-    return  this.db.object('oreInfo/'+name).valueChanges<IOreInfo>();
+  getOreInfoByString(name: string): Observable<IOreInfo> {
+    return  this.db.object('oreInfo/' + name).valueChanges<IOreInfo>();
   }
 
-  get OreAmounts() : Observable<IOreAmounts>{
+  get OreAmounts(): Observable<IOreAmounts>{
     return this.authS.UserId
-      .mergeMap((id: String) => this.db.object('users/' + id + '/ore').valueChanges<IOreAmounts>())
+      .mergeMap((id: String) => this.db.object('users/' + id + '/ore').valueChanges<IOreAmounts>());
   }
 
-  getOreAmountByString(name : string) : Observable<number>{
+  getOreAmountByString(name: string): Observable<number> {
     return this.authS.UserId
-      .mergeMap((id: String) => this.db.object('users/' + id + '/ore/' + name).valueChanges<number>())
+      .mergeMap((id: String) => this.db.object('users/' + id + '/ore/' + name).valueChanges<number>());
   }
 
 }
