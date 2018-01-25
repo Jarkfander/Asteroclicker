@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService, IUpgrades } from '../../shared/user/user.service';
+import { UserService, IUserUpgrade } from '../../shared/user/user.service';
 import { User } from '../../shared/user/user';
 import { UpgradeService } from '../../ship/upgrade.service';
 import { Observable } from 'rxjs/Observable';
@@ -26,8 +26,8 @@ export class OreListComponent implements OnInit {
     this.oreAmounts$ = this.oreInfoS.OreAmounts;
     this.mineRate = this.userS.currentUser.currentMineRate;
 
-    this.userS.upgrade
-      .map((upgrade: IUpgrades) => this.upgradeS.storage[upgrade.storage.lvl].capacity)
+    this.userS.getUpgradeByName("storage")
+      .map((upgrade: IUserUpgrade) => this.upgradeS.storage[upgrade.lvl].capacity)
       .subscribe((capacity: number) => this.capacity = capacity);
 
     this.userS.mineRateSubject

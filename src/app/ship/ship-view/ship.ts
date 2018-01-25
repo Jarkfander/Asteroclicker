@@ -62,20 +62,20 @@ export class Ship {
 
     app: PIXI.Application;
 
-    radarUpgrade: UpgradeShip;
+    research: UpgradeShip;
     currentLevelRadar: number;
     smokeRadarUpgrade: UpgradeShip;
 
-    reacteurUpgrade: UpgradeShip;
+    engine: UpgradeShip;
     reacteurLvl: number;
 
-    stockUpgrade: UpgradeShip;
+    storage: UpgradeShip;
     stockUpgradeLvl: number;
     boolNewTourelle: boolean;
     newTourelle: PIXI.extras.AnimatedSprite;
     iNewTourelle: number;
 
-    droneUpgrade: UpgradeShip;
+    mineRate: UpgradeShip;
     currentLevelDrone: number;
 
     chest: ChestSprite;
@@ -98,16 +98,16 @@ export class Ship {
 
         this.currentLevelRadar = 0;
 
-        this.radarUpgrade = this.initTabSprite(5, 'shipRadar_', this.currentLevelRadar, 500, 500, -20, 0, true);
+        this.research = this.initTabSprite(5, 'shipRadar_', this.currentLevelRadar, 500, 500, -20, 0, true);
         this.smokeRadarUpgrade = this.initTabSprite(7, 'smoke_', this.currentLevelRadar, 500, 500, -20, 0, true);
 
         this.reacteurLvl = 0;
-        this.reacteurUpgrade = this.initTabSprite(7, 'shipEngine_', this.reacteurLvl, 500, 500, 30, 0, false);
+        this.engine = this.initTabSprite(7, 'shipEngine_', this.reacteurLvl, 500, 500, 30, 0, false);
         this.currentLevelDrone = 0;
-        this.droneUpgrade = this.initTabSprite(5, 'droneUpdate_', this.currentLevelDrone, 500, 500, 30, 0, true);
+        this.mineRate = this.initTabSprite(5, 'droneUpdate_', this.currentLevelDrone, 500, 500, 30, 0, true);
 
         this.stockUpgradeLvl = 0;
-        this.stockUpgrade = this.initTabSprite(5, 'stockage_', this.stockUpgradeLvl, 500, 500, 30, 0, true);
+        this.storage = this.initTabSprite(5, 'stockage_', this.stockUpgradeLvl, 500, 500, 30, 0, true);
 
         this.transformShipY = this.ship.y;
         this.transformShipX = this.ship.x;
@@ -129,7 +129,7 @@ export class Ship {
 
                 this.ship.y = this.transformShipY + Math.sin(this.deltaSumShip) * 17;
                 this.ship.x = this.transformShipX + Math.cos(this.deltaSumShip) * 5;
-                this.initMoveXY(this.reacteurUpgrade, 30, 20, this.deltaSum);
+                this.initMoveXY(this.engine, 30, 20, this.deltaSum);
 
                 if (this.chest.boolParentChest) {
                     if (this.chest.spriteChestParent.y <= 151) {

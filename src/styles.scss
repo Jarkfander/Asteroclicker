@@ -62,7 +62,8 @@ body {
 .align-end { align-items: flex-end; }
 .align-center { align-items: center; }
 
-
+// Wrap
+.wrap { flex-wrap: wrap; }
 
 
 
@@ -137,4 +138,13 @@ body {
     background-color: rgb(130, 130, 130);
     box-shadow: 3px 3px 1px $black, inset 3px 3px 1px rgb(155, 155, 155);
     cursor: normal;
+}
+
+// BLOCK TEXT SELECTION
+.no-selection{
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select:none;
+    user-select:none;
+    -o-user-select:none;
 }

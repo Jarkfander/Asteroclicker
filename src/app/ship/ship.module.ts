@@ -5,14 +5,15 @@ import {  UpgradeViewComponent } from './upgrade-view/upgrade-view.component';
 import { UserService } from '../shared/user/user.service';
 import { UpgradeListComponent } from './upgrade-list/upgrade-list.component';
 import { UpgradeService } from './upgrade.service';
+import { UpgradeInfoComponent } from './upgrade-info/upgrade-info.component';
 
 
 @NgModule({
   imports: [
     CommonModule
   ],
-  declarations: [ShipViewComponent, UpgradeListComponent, UpgradeViewComponent],
-  exports: [ShipViewComponent, UpgradeListComponent, UpgradeViewComponent],
+  declarations: [ShipViewComponent, UpgradeListComponent, UpgradeViewComponent, UpgradeInfoComponent],
+  exports: [ShipViewComponent,UpgradeListComponent, UpgradeViewComponent],
   providers: [UserService, UpgradeService]
 })
 export class ShipModule { }

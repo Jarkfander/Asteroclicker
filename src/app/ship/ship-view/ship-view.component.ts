@@ -1,7 +1,7 @@
 import { Component, AfterViewInit, ElementRef, Renderer2, HostListener } from '@angular/core';
 import * as PIXI from 'pixi.js';
 import { Ship } from './ship';
-import { UserService, IUpgrades, IProfile } from '../../shared/user/user.service';
+import { UserService, IProfile, IUserUpgrade } from '../../shared/user/user.service';
 import { User } from '../../shared/user/user';
 import { UpgradeType } from '../upgrade-class/upgrade';
 import { getFramesFromSpriteSheet, initSprite, changeSpriteInAnime } from '../../loadAnimation';
@@ -71,24 +71,27 @@ export class ShipViewComponent implements AfterViewInit {
       this.animationGoodConfig(profile.badConfig === 1);
     });
 
-    this.userS.upgrade.subscribe((upgrades: IUpgrades) => {
+    this.userS.upgrade.subscribe((upgrades: IUserUpgrade[]) => {
 
       if (this.animationLoaded) {
-        this.ship.autoUpgrade(upgrades.storage.lvl, this.ship.stockUpgrade);
-        this.ship.autoUpgrade(upgrades.research.lvl, this.ship.radarUpgrade);
-        this.ship.autoUpgrade(upgrades.mineRate.lvl, this.ship.droneUpgrade);
-        this.ship.autoUpgrade(upgrades.engine.lvl, this.ship.reacteurUpgrade);
+
+        for (let i = 0; i < upgrades.length; i++) {
+          if(upgrades[i].name != "QG"){
+            this.ship.autoUpgrade(upgrades[i].lvl, this.ship[upgrades[i].name]);
+          }
+
+          if (upgrades[i].name == "storage") {
+            if (upgrades[i].lvl >= 2 && !this.boolShipTourelle) {
+              this.ship.initNewTourelle();
+              this.boolShipTourelle = true;
+            }
+          }
+        }
         this.ship.ship.cacheAsBitmap = false;
       }
-
-      if (upgrades.storage.lvl >= 2 && !this.boolShipTourelle) {
-        this.ship.initNewTourelle();
-        this.boolShipTourelle = true;
-      }
-
     });
 
-    this.userS.upgrade.take(1).subscribe((upgrades: IUpgrades) => {
+    this.userS.upgrade.take(1).subscribe((upgrades: IUserUpgrade[]) => {
       this.initWithTimeUpgrade(upgrades);
     });
 
@@ -100,19 +103,19 @@ export class ShipViewComponent implements AfterViewInit {
   }
 
 
-  initWithTimeUpgrade(upgrades: IUpgrades) {
+  initWithTimeUpgrade(upgrades: IUserUpgrade[]) {
     let i = 0;
     const tabTempUpgrade = new Array<any>();
     const tabTempUpgradeLvl = new Array<any>();
 
-    tabTempUpgrade.push(this.ship.stockUpgrade);
-    tabTempUpgradeLvl.push(upgrades.storage.lvl);
-    tabTempUpgrade.push(this.ship.radarUpgrade);
-    tabTempUpgradeLvl.push(upgrades.research.lvl);
-    tabTempUpgrade.push(this.ship.droneUpgrade);
-    tabTempUpgradeLvl.push(upgrades.mineRate.lvl);
-    tabTempUpgrade.push(this.ship.reacteurUpgrade);
-    tabTempUpgradeLvl.push(upgrades.engine.lvl);
+
+
+    for (let j = 0; j < upgrades.length; j++) {
+      if(upgrades[j].name!="QG"){
+        tabTempUpgrade.push(this.ship[upgrades[j].name]);
+        tabTempUpgradeLvl.push(upgrades[j].lvl);
+      }
+    }
 
     setInterval(() => {
       if (i < 4) {
@@ -212,10 +215,10 @@ export class ShipViewComponent implements AfterViewInit {
   }
 
   animationGoodConfig(isBadConfig: boolean) {
-    this.ship.radarUpgrade.allAnimBeginOrStop(isBadConfig);
-    this.ship.reacteurUpgrade.allAnimBeginOrStop(isBadConfig);
-    this.ship.stockUpgrade.allAnimBeginOrStop(isBadConfig);
-    this.ship.droneUpgrade.allAnimBeginOrStop(isBadConfig);
+    this.ship.research.allAnimBeginOrStop(isBadConfig);
+    this.ship.engine.allAnimBeginOrStop(isBadConfig);
+    this.ship.storage.allAnimBeginOrStop(isBadConfig);
+    this.ship.mineRate.allAnimBeginOrStop(isBadConfig);
     if (isBadConfig) {
       this.backgroundSky.stop();
       this.ship.tourelle.stop();

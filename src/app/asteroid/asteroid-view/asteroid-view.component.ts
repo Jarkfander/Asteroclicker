@@ -4,7 +4,7 @@ import * as PIXI from 'pixi.js';
 import { AsteroidSprite } from './asteroidSprite';
 import { Drone } from './drone';
 import { SocketService } from '../../shared/socket/socket.service';
-import { UserService, IFrenzyInfo, IProfile, IUpgrades, IUpgrade } from '../../shared/user/user.service';
+import { UserService, IFrenzyInfo, IProfile, IUserUpgrade } from '../../shared/user/user.service';
 import { ParticleBase } from '../../shared/pixiVisual/particleBase';
 import { User } from '../../shared/user/user';
 import { UpgradeType, Upgrade } from '../../ship/upgrade-class/upgrade';
@@ -75,7 +75,7 @@ export class AsteroidViewComponent implements OnInit {
               oreInfos[this.asteroid.ore].miningSpeed).toFixed(2)));
         }
       }, 1000);
-      this.userS.getUpgradeByName("mineRate").subscribe((upgrade: IUpgrade) => {
+      this.userS.getUpgradeByName("mineRate").subscribe((upgrade: IUserUpgrade) => {
         this.userMineRateLvl = upgrade.lvl;
         this.initNumberOfDroneBegin();
       });
@@ -202,14 +202,14 @@ export class AsteroidViewComponent implements OnInit {
     });
 
     // Upgrade Subject
-    this.userS.upgrade.subscribe((upgrade: IUpgrades) => {
-      const tempLvl = upgrade.mineRate.lvl;
+    this.userS.getUpgradeByName("mineRate").subscribe((upgrade: IUserUpgrade) => {
+      const tempLvl = upgrade.lvl;
       if (this.drone.length !== Math.floor(tempLvl / 40) + 1) {
         this.addNewDrone();
       }
       for (let i = 0; i < this.drone.length; i++) {
         if (this.drone[i]) {
-          this.drone[i].changeSpriteDrone(upgrade.mineRate.lvl, i);
+          this.drone[i].changeSpriteDrone(upgrade.lvl, i);
         }
       }
     });
