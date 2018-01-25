@@ -45,12 +45,14 @@ export class MarketInfoComponent implements OnInit {
 
   public userStorageLvl = 1;
 
+  credit: number;
+
   // Utiliser oreservcie pour recup bystring
   constructor(private marketS: MarketService,
-              private socketS: SocketService,
-              private userS: UserService,
-              private upgradeS: UpgradeService,
-              private oreS: OreService) {
+    private socketS: SocketService,
+    private userS: UserService,
+    private upgradeS: UpgradeService,
+    private oreS: OreService) {
 
   }
 
@@ -65,20 +67,19 @@ export class MarketInfoComponent implements OnInit {
           .map((upgrade: IUserUpgrade) => upgrade.lvl >= this.oreInfo.searchNewOre)
           .subscribe((isUnlocked: boolean) => this.boolOreUnlock = isUnlocked);
 
-  this.oreS.getOreAmountByString(this.oreName).subscribe((oreAmount: number) => {
-
-        this.hasMoney = this.userS.currentUser.credit > 0 ;
-        this.hasOreLeft = oreAmount > 0 ;
-        this.hasSpaceLeft = oreAmount
-          < this.upgradeS.storage[this.userStorageLvl].capacity;
+        this.oreS.getOreAmountByString(this.oreName).subscribe((oreAmount: number) => {
+          this.hasMoney = this.credit > 0;
+          this.hasOreLeft = oreAmount > 0;
+          this.hasSpaceLeft = oreAmount
+            < this.upgradeS.storage[this.userStorageLvl].capacity;
 
           this.value = this.marketS.oreCosts[this.oreName]
           [Object.keys(this.marketS.oreCosts[this.oreName])[Object.keys(this.marketS.oreCosts[this.oreName]).length - 1]];
 
-        this.unitValue = SharedModule.calculeMoneyWithSpace(this.value);
-        this.maxSliderValue = (this.upgradeS.storage[this.userStorageLvl].capacity * 0.02
-          * this.oreInfo.miningSpeed);
-        this.maxSliderValue = ((Math.floor(this.maxSliderValue / 50)) + 1) * 50;
+          this.unitValue = SharedModule.calculeMoneyWithSpace(this.value);
+          this.maxSliderValue = (this.upgradeS.storage[this.userStorageLvl].capacity * 0.02
+            * this.oreInfo.miningSpeed);
+          this.maxSliderValue = ((Math.floor(this.maxSliderValue / 50)) + 1) * 50;
 
           this.amountToSell = parseFloat((this.maxSliderValue / 2).toFixed(1));
 
@@ -90,14 +91,15 @@ export class MarketInfoComponent implements OnInit {
 
         });
 
-        this.userS.credit.subscribe((credit:number) => {
+        this.userS.credit.subscribe((credit: number) => {
+          this.credit = credit;
           this.hasMoney = credit > 0;
         });
 
         this.userS.getUpgradeByName('storage').subscribe((upgrade:IUserUpgrade) => {
-
+          
           this.hasSpaceLeft = this.currentOreAmount
-          < this.upgradeS.storage[this.userStorageLvl].capacity;
+            < this.upgradeS.storage[this.userStorageLvl].capacity;
 
           this.userStorageLvl = upgrade.lvl;
           this.maxSliderValue = (this.upgradeS.storage[upgrade.lvl].capacity * 0.02
@@ -121,7 +123,7 @@ export class MarketInfoComponent implements OnInit {
           this.histoValues = tab;
         });
 
-    });
+      });
   }
 
   public SellOre/*moon*/(amount: number) {

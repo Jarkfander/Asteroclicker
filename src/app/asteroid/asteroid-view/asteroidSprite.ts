@@ -26,6 +26,7 @@ export class AsteroidSprite {
     krashAnim: PIXI.extras.AnimatedSprite;
     kaboomAnim: PIXI.extras.AnimatedSprite;
     woomAnim: PIXI.extras.AnimatedSprite;
+    comboWrite: PIXI.extras.AnimatedSprite;
 
     spriteFxContainer: PIXI.Container;
 
@@ -38,10 +39,18 @@ export class AsteroidSprite {
     compteurEvent: number;
 
     arrowFrenzy: PIXI.Sprite[];
+    comboFail: PIXI.extras.AnimatedSprite;
+    comboSucces: PIXI.extras.AnimatedSprite;
+    comboSuccesLoop: PIXI.extras.AnimatedSprite;
 
     asteroidFolders;
-    constructor(x: number, y: number, app: PIXI.Application, asteroid: IAsteroid) {
 
+    height: number;
+    width: number;
+
+    constructor(width: number, height: number, app: PIXI.Application, asteroid: IAsteroid) {
+        this.height = height;
+        this.width = width;
         this.app = app;
         this.eventOk = 0;
         this.compteurEvent = 0;
@@ -49,13 +58,13 @@ export class AsteroidSprite {
         this.asteroid = new Array<PIXI.Sprite>();
 
         this.spriteStar = initSprite('etoile_filante', 500, 172, true, true, 0.30);
-        this.spriteStarXY = {x: -200, y: 800};
+        this.spriteStarXY = { x: -200, y: 800 };
         this.spriteStar.scale.set(0.5, 0.5);
         this.spriteStar.position.x = -200;
         this.spriteStar.position.y = 800;
         this.spriteStar.rotation = 100;
         this.spriteStar.loop = false;
-        this.spriteStar.onComplete = () =>  { this.spriteStar.visible = false; };
+        this.spriteStar.onComplete = () => { this.spriteStar.visible = false; };
 
         this.app.stage.addChild(this.spriteStar);
         // Frenzy init
@@ -121,10 +130,10 @@ export class AsteroidSprite {
                     this.spriteStar.position.x = this.spriteStarXY.x;
                     this.spriteStarXY.y = Math.random() * 1000 + 200;
                     this.spriteStar.position.y = this.spriteStarXY.y;
-                    const randScal = Math.random() * 0.75 +  0.25;
+                    const randScal = Math.random() * 0.75 + 0.25;
                     this.spriteStar.scale.set(randScal, randScal);
                     this.spriteStar.visible = true,
-                    this.spriteStar.gotoAndPlay(0);
+                        this.spriteStar.gotoAndPlay(0);
                 }
 
                 if (this.boolEvent) {
@@ -161,9 +170,9 @@ export class AsteroidSprite {
         if (x === 0 && y === 0) {
             sprite.x = this.app.renderer.width / 2;
             sprite.y = this.app.renderer.height / 2;
-            this.app.stage.addChildAt(sprite, 1);
+            this.app.stage.addChildAt(sprite, 2);
         } else {
-            this.asteroid[0].addChild(sprite);
+            this.asteroid[0].addChildAt(sprite, 2);
             sprite.x = x;
             sprite.y = y;
 
@@ -384,7 +393,7 @@ export class AsteroidSprite {
         );
     }
 
-    // init the position and the scale of spriteSheet    
+    // init the position and the scale of spriteSheet
     initAnimScaleAndAnchor(tempAnim: PIXI.extras.AnimatedSprite) {
         tempAnim.anchor.set(0.5, 0.04);
         tempAnim.scale.set(1, 1);
@@ -405,6 +414,9 @@ export class AsteroidSprite {
 
         this.woomAnim = initSprite('woom', 236, 236, false, false, 0.28);
         this.initAnimScaleAndAnchor(this.woomAnim);
+
+        this.comboWrite = initSprite('comboWrite', 500, 500, false, false, 0.28);
+        this.initAnimScaleAndAnchor(this.comboWrite);
     }
 
     // When you click put a random animation 
@@ -510,8 +522,8 @@ export class AsteroidSprite {
             if (this.arrowFrenzy[i].visible) {
                 this.emitDestructionParticle(this.arrowFrenzy[i].worldTransform.tx,
                     this.arrowFrenzy[i].worldTransform.ty);
-                this.animBoomOnClick(this.arrowFrenzy[i].worldTransform.tx,
-                    this.arrowFrenzy[i].worldTransform.ty, this.boomAnim, true);
+                /*this.animBoomOnClick(this.arrowFrenzy[i].worldTransform.tx,
+                    this.arrowFrenzy[i].worldTransform.ty, this.comboWrite, true);*/
                 this.checkAstero = true;
             }
             this.arrowFrenzy[i].visible = false;
@@ -526,6 +538,52 @@ export class AsteroidSprite {
             this.arrowFrenzy[i].scale.set(0.5, 0.5);
             this.app.stage.addChild(this.arrowFrenzy[i]);
         }
+
+        this.comboFail = initSprite('comboFail', 500, 500, false, false, 0.30);
+        this.comboSucces = initSprite('intro_combo', 500, 500, false, false, 0.30);
+        this.comboSuccesLoop = initSprite('loop_combo', 500, 500, false, false, 0.30);
+        this.comboSuccesLoop.loop = true;
+        this.comboFail.loop = false;
+        this.comboSucces.loop = false;
+        this.comboFail.width = this.width;
+        this.comboFail.height = this.height;
+        this.comboFail.position.set(this.width / 2, this.height / 2);
+        this.comboSuccesLoop.width = this.width;
+        this.comboSuccesLoop.height = this.height;
+        this.comboSuccesLoop.position.set(this.width / 2, this.height / 2);
+        this.comboSucces.position.set(this.width / 2, this.height / 2);
+
+        this.app.stage.addChildAt(this.comboSucces, 1);
+        this.app.stage.addChildAt(this.comboSuccesLoop, 1);
+        this.app.stage.addChild(this.comboFail);
     }
 
+    // finish the combo mod
+    frenzyModComboFinish() {
+        if (this.comboSuccesLoop.visible) {
+            this.animBoomOnClick(this.xBaseAsteroid, this.yBaseAsteroid, this.comboWrite, true);
+        }
+        this.comboSucces.visible = false;
+        this.comboSuccesLoop.visible = false;
+    }
+
+    frenzyFail() {
+        this.comboFail.visible = true;
+        this.comboFail.gotoAndPlay(0);
+        this.comboFail.onComplete = () => {
+            this.comboFail.visible = false;
+        };
+        this.comboSucces.visible = false;
+        this.comboSuccesLoop.visible = false;
+        this.frenzyModComboFinish();
+    }
+    frenzyBackgroundStart() {
+        this.comboSucces.visible = true;
+        this.comboSucces.gotoAndPlay(0);
+        this.comboSucces.onComplete = () => {
+            this.comboSuccesLoop.visible = true;
+            this.comboSuccesLoop.gotoAndPlay(0);
+            this.comboSucces.visible = false;
+        };
+    }
 }

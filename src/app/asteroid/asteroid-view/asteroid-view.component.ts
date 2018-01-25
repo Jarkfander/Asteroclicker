@@ -46,7 +46,7 @@ export class AsteroidViewComponent implements OnInit {
   private boolKeyboardFirst = true;
   private clicks: number[];
 
-  private userMineRateLvl  = 1;
+  private userMineRateLvl = 1;
   public clicked: boolean;
 
   private frenzyInfo: IFrenzyInfo = {
@@ -55,12 +55,12 @@ export class AsteroidViewComponent implements OnInit {
   };
 
   constructor(private el: ElementRef,
-              private render: Renderer2,
-              private userS: UserService,
-              private asteroidS: AsteroidService,
-              private upgradeS: UpgradeService,
-              private socketS: SocketService,
-              private oreS: OreService) { }
+    private render: Renderer2,
+    private userS: UserService,
+    private asteroidS: AsteroidService,
+    private upgradeS: UpgradeService,
+    private socketS: SocketService,
+    private oreS: OreService) { }
 
   ngOnInit(): void {
     this.clicks = new Array();
@@ -129,7 +129,7 @@ export class AsteroidViewComponent implements OnInit {
     // skyV1
     this.initSky(w, h);
 
-    this.asteroidSprite = new AsteroidSprite(0.25, 0.25, this.app, newAste);
+    this.asteroidSprite = new AsteroidSprite(w, h, this.app, newAste);
 
     this.asteroidSprite.asteroid[0].on('click', (event) => {
       this.asteroidClick();
@@ -189,8 +189,10 @@ export class AsteroidViewComponent implements OnInit {
       this.frenzyInfo = frenzy;
       if (!frenzy.state) {
         this.asteroidSprite.frenzyModTouchDown();
+        this.asteroidSprite.frenzyModComboFinish();
       } else {
-        this.asteroidSprite.frenzyModTouch(frenzy.nextCombos[0]);
+          this.asteroidSprite.frenzyBackgroundStart();
+          this.asteroidSprite.frenzyModTouch(frenzy.nextCombos[0]);
       }
     });
 
@@ -354,10 +356,14 @@ export class AsteroidViewComponent implements OnInit {
   frenzyModTouch(numTouchUserActu: number) {
     if (this.frenzyInfo.state) {
       this.socketS.validArrow(this.userS.currentUser.uid, numTouchUserActu - 37, this.userS.currentUser.frenzy.comboInd);
-      if (this.frenzyInfo.nextCombos[this.userS.currentUser.frenzy.comboInd] == (numTouchUserActu - 37)) {
+      if (this.frenzyInfo.nextCombos[this.userS.currentUser.frenzy.comboInd] === (numTouchUserActu - 37)) {
         this.userS.currentUser.frenzy.comboInd++;
         this.asteroidSprite.frenzyModTouch(this.frenzyInfo.nextCombos[this.userS.currentUser.frenzy.comboInd]);
+      } else {
+        this.asteroidSprite.frenzyFail();
       }
+    } else {
+        this.asteroidSprite.frenzyModComboFinish();
     }
   }
 
