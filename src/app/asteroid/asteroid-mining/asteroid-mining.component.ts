@@ -55,19 +55,11 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
       .map((user: User) => user.currentMineRate)
       .subscribe((mineRate: number) => this.mineRate = mineRate);
 
-<<<<<<< HEAD
     this.userS.getUpgradeByName("mineRate").subscribe((upgrade: IUserUpgrade) => {
       this.userMineRateLvl = upgrade.lvl;
       this.baseMineRate = this.upgradeS.mineRate[upgrade.lvl].baseRate;
       this.progressBarMaxValue = this.upgradeS.mineRate[upgrade.lvl].maxRate
                                   - this.baseMineRate;
-=======
-    this.userS.upgrade.subscribe((upgrade: IUpgrades) => {
-      this.userMineRateLvl = upgrade.mineRate.lvl;
-      this.baseMineRate = this.upgradeS.mineRate[upgrade.mineRate.lvl].baseRate;
-      this.progressBarMaxValue = this.upgradeS.mineRate[upgrade.mineRate.lvl].maxRate
-        - this.baseMineRate;
->>>>>>> a23714cf933ba79abacafbd57a293382e8efb522
       this.updateProgressBarValue();
     });
     this.updateProgressBarValue();

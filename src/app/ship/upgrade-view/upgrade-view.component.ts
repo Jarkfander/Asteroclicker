@@ -63,45 +63,27 @@ export class UpgradeViewComponent implements OnInit {
   };
 */
 
-  constructor(private socketS: SocketService,
-    private userS: UserService,
-    private oreS: OreService,
-    private upgradeS: UpgradeService) {
+constructor(private socketS: SocketService,
+  private el: ElementRef,
+  private renderer: Renderer2,
+  private userS: UserService,
+  private oreS: OreService,
+  private upgradeS: UpgradeService) {
+}
 
-<<<<<<< HEAD
-=======
-  constructor(private socketS: SocketService,
-    private el: ElementRef,
-    private renderer: Renderer2,
-    private userS: UserService,
-    private oreS: OreService,
-    private upgradeS: UpgradeService) {
-    this.currentLvl = {
-      lvl: 1,
-      start: 0,
-      timer: 0
-    };
->>>>>>> a23714cf933ba79abacafbd57a293382e8efb522
-  }
 
   @HostListener('mouseenter', ['$event']) inHover() { this.isHover = true; }
   @HostListener('mouseleave', ['$event']) outHover() { this.isHover = false; }
 
+  
   ngOnInit() {
-<<<<<<< HEAD
     this.setTimer();
+    this.renderer.setStyle(this.el.nativeElement, 'backgroundImage', `url('../../../assets/upgrade/img/${this.userUpgrade.name}.jpg')`);
     /*
     this.oreS.OreInfos.take(1).subscribe((oreInfos: IOreInfos) => {
       this.oreInfos = oreInfos;
 
       this.userS.getUpgradeByName(this.name).subscribe((upgrade: IUserUpgrade) => {
-=======
-    this.renderer.setStyle(this.el.nativeElement, 'backgroundImage', `url('../../../assets/upgrade/img/${this.name}.jpg')`);
-    this.oreS.OreInfos.take(1).subscribe((oreInfos: IOreInfos) => {
-      this.oreInfos = oreInfos;
-
-      this.userS.getUpgradeByName(this.name).subscribe((upgrade: IUpgrade) => {
->>>>>>> a23714cf933ba79abacafbd57a293382e8efb522
         this.currentLvl = upgrade;
         this.valuesUpgradeLvl();
       });
@@ -195,16 +177,10 @@ export class UpgradeViewComponent implements OnInit {
     this.upgradeCostString = Object.keys(temp);
   }
 
-<<<<<<< HEAD
   /** Check if user has enough credit && credit to upgrade */
   // TODO : Add notifications
   public canBuy(): boolean {
     const tempUpgradeCost = this.nextUpgrade.costOreString;
-=======
- // if the cost is available 
-  boolOreCost() {
-    const tempUpgradeCost = this.lvls[this.currentLvl.lvl + 1].costOreString;
->>>>>>> a23714cf933ba79abacafbd57a293382e8efb522
     const keysCost = Object.keys(tempUpgradeCost);
 
     if (this.userUpgrade.lvl + 1 > this.QGlvl) {
