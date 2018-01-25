@@ -92,7 +92,7 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
         }]
       }
     });
-    this.capacityMeter = new Chart(this.chartMiningRef.nativeElement, {
+    this.capacityMeter = new Chart(this.chartCapacityRef.nativeElement, {
       type: 'horizontalBar',
       data: {
         datasets: [{
