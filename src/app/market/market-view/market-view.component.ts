@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit } from '
 import { ManagedChart } from '../market-list/managedChart';
 import { MarketService } from '../market.service';
 import { SocketService } from '../../shared/socket/socket.service';
-import { UserService, IUpgrade } from '../../shared/user/user.service';
+import { UserService, IUserUpgrade } from '../../shared/user/user.service';
 import { UpgradeType } from '../../ship/upgrade-class/upgrade';
 import { SharedModule } from '../../shared/shared.module';
 import { UpgradeService } from '../../ship/upgrade.service';
@@ -62,7 +62,7 @@ export class MarketInfoComponent implements OnInit {
         this.oreInfo = oreInfo;
 
         this.userS.getUpgradeByName('research')
-          .map((upgrade: IUpgrade) => upgrade.lvl >= this.oreInfo.searchNewOre)
+          .map((upgrade: IUserUpgrade) => upgrade.lvl >= this.oreInfo.searchNewOre)
           .subscribe((isUnlocked: boolean) => this.boolOreUnlock = isUnlocked);
 
   this.oreS.getOreAmountByString(this.oreName).subscribe((oreAmount: number) => {
@@ -94,7 +94,7 @@ export class MarketInfoComponent implements OnInit {
           this.hasMoney = credit > 0;
         });
 
-        this.userS.getUpgradeByName('storage').subscribe((upgrade:IUpgrade) => {
+        this.userS.getUpgradeByName('storage').subscribe((upgrade:IUserUpgrade) => {
 
           this.hasSpaceLeft = this.currentOreAmount
           < this.upgradeS.storage[this.userStorageLvl].capacity;

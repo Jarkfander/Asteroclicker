@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService, IFrenzyInfo, IUpgrades } from '../../shared/user/user.service';
+import { UserService, IFrenzyInfo, IUserUpgrade } from '../../shared/user/user.service';
 import { Research } from '../../ship/upgrade-class/research';
 import { UpgradeService } from '../../ship/upgrade.service';
 import { Utils } from '../../shared/utils';
@@ -50,8 +50,8 @@ export class SearchViewComponent implements OnInit {
     this.researchInfo = new Research(1, 1, 1, 1, 100000, 1, 1);
     this.distance = this.researchInfo.maxDistance / 2;
 
-    this.userS.upgrade.subscribe((upgrade: IUpgrades) => {
-      this.researchInfo = this.upgradeS.research[upgrade.research.lvl];
+    this.userS.getUpgradeByName("research").subscribe((upgrade: IUserUpgrade) => {
+      this.researchInfo = this.upgradeS.research[upgrade.lvl];
       this.searchTimeUpdate();
     });
 
