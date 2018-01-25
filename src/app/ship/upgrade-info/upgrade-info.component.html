@@ -1,5 +1,5 @@
-<article class="upgrade row align-center border">
-  <img class="upgrade-icon" src="../../../assets/upgrade-icons/icon_{{name}}.gif" />
+<article [@enter] *ngIf="userUgrade" class="upgrade row align-center border">
+  <img class="upgrade-icon" src="../../../assets/upgrade-icons/icon_{{currentLvl.name}}.gif" />
   <div class="col justify-between">
       <div class="current-lvl col">
           <h3>Current Level: {{currentLvl.lvl}}</h3>

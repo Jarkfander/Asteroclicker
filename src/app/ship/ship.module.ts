@@ -1,3 +1,4 @@
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ShipViewComponent } from './ship-view/ship-view.component';
@@ -11,7 +12,8 @@ import { QgViewComponent } from './qg-view/qg-view.component';
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    BrowserAnimationsModule
   ],
   declarations: [ShipViewComponent, UpgradeListComponent, UpgradeViewComponent, UpgradeInfoComponent, QgViewComponent],
   exports: [ShipViewComponent, UpgradeListComponent, UpgradeViewComponent, QgViewComponent],

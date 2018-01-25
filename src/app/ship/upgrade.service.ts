@@ -10,11 +10,13 @@ import { Research } from './upgrade-class/research';
 import { Engine } from './upgrade-class/engine';
 import { OreService, IOreInfos } from '../ore/ore.service';
 import { QG } from './upgrade-class/qg';
+import { IUserUpgrade } from '../shared/user/user.service';
 
 
 @Injectable()
 export class UpgradeService {
 
+  public activeUserUpgrade$ = new Subject<IUserUpgrade>();
   db: AngularFireDatabase;
 
   storage: Storage[];

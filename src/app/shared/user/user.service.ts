@@ -138,7 +138,7 @@ export class UserService {
       .map((upgrades) => {
         const allCurrentUpgrade: IUserUpgrade[] = new Array();
         for (const key in upgrades) {
-          if (key in upgrades) {
+          if (key in upgrades && key !== 'QG') {
             const currentUpgrade = upgrades[key];
             currentUpgrade['name'] = key;
             allCurrentUpgrade.push(currentUpgrade);
