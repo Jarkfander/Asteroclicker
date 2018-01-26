@@ -170,9 +170,9 @@ export class AsteroidSprite {
         if (x === 0 && y === 0) {
             sprite.x = this.app.renderer.width / 2;
             sprite.y = this.app.renderer.height / 2;
-            this.app.stage.addChildAt(sprite, 2);
+            this.app.stage.addChildAt(sprite, 1);
         } else {
-            this.asteroid[0].addChildAt(sprite, 2);
+            this.asteroid[0].addChild(sprite);
             sprite.x = x;
             sprite.y = y;
 
