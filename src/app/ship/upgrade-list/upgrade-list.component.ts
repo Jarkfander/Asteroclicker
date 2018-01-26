@@ -23,10 +23,11 @@ export class UpgradeListComponent implements OnInit {
     engineLvls: Upgrade[];
     QGLvls: Upgrade[];
 
+    public upgradeNames = ['engine', 'research', 'mineRate', 'storage'];
     public upgrades$: Observable<IUserUpgrade[]>;
     public oreAmount$: Observable<IOreAmounts>;
     public credit$: Observable<number>;
-    public researchLvl: number;
+    public researchLvl$: Observable<number>;
 
     constructor(private upgradeS: UpgradeService,
                 private userS: UserService,
@@ -42,8 +43,7 @@ export class UpgradeListComponent implements OnInit {
 
         this.oreAmount$ = this.oreS.OreAmounts;
         this.credit$ = this.userS.credit;
-        this.upgrades$ = this.userS.upgrade
-            .do((upgrades: IUserUpgrade[]) => this.researchLvl = upgrades.find((upgrade) => upgrade.name === 'research').lvl)
+        this.researchLvl$ = this.userS.getUpgradeByName('research').map((upgrade) => upgrade.lvl);
     }
 
     // Managed time

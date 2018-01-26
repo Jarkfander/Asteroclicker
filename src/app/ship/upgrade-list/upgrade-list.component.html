@@ -6,12 +6,12 @@
     <app-upgrade-view class="border" [name]="'engine'" [lvls]="engineLvls" ></app-upgrade-view>    
 </section>
 -->
-<section class="row justify-between">
-    <app-upgrade-view *ngFor="let upgrade of upgrades$ | async"
+<section class="row justify-between" *ngIf="researchLvl$ | async as researchLvl">
+    <app-upgrade-view *ngFor="let name of upgradeNames"
         class="border"
         [researchLvl]="researchLvl"
         [oreAmount]="oreAmount$ | async"
         [credit]="credit$ | async"
-        [upgrade]="upgrade">
+        [name]="name">
     </app-upgrade-view>
 </section>

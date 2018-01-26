@@ -15,7 +15,7 @@ export class NgNotifComponent implements OnInit {
   /** Open a success notification */
   public success(title: string, content?: string): Notification {
     return this.service.success(title, content, {
-      timeOut: 3000,
+      timeOut: 2000,
       showProgressBar: true,
       pauseOnHover: true,
       clickToClose: true
@@ -25,7 +25,7 @@ export class NgNotifComponent implements OnInit {
   /** Open an alert notification */
   public alert(title: string, content: string): Notification {
     return this.service.bare(title, content, {
-      timeOut: 3000,
+      timeOut: 2000,
       showProgressBar: true,
       pauseOnHover: true,
       clickToClose: true,
@@ -37,7 +37,7 @@ export class NgNotifComponent implements OnInit {
   /** Open an error notification */
   public error(title: string, content: string): Notification {
     return this.service.bare(title, content, {
-      timeOut: 3000,
+      timeOut: 2000,
       showProgressBar: true,
       pauseOnHover: true,
       clickToClose: true,
