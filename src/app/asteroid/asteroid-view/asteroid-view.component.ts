@@ -374,7 +374,7 @@ export class AsteroidViewComponent implements OnInit {
 
     for (let i = 0; i < numOfDrone; i++) {
       random = (Math.floor(Math.random() * 4) + 1) * 0.01;
-      this.drone.push(new Drone(0.20 - random, 0.20 - random, 1, 1, this.app));
+      this.drone.push(new Drone(0.20 - random, 0.20 - random, 1, 1,this.asteroid.currentCapacity>0, this.app));
       this.drone[i].deltaTempAster = (i / 3) * (2 * Math.PI) / 1000;
       this.drone[i].changeSpriteDrone(this.userMineRateLvl, i);
     }
@@ -392,7 +392,7 @@ export class AsteroidViewComponent implements OnInit {
     }
     const tempLvl = this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl;
     const random = (Math.floor(Math.random() * 4) + 1) * 0.01;
-    this.drone.push(new Drone(0.20 - random, 0.20 - random, 1, 1, this.app));
+    this.drone.push(new Drone(0.20 - random, 0.20 - random, 1, 1,this.asteroid.currentCapacity>0, this.app));
     this.drone[this.drone.length - 1].deltaTempAster = ((this.drone.length - 1) / 3) * (2 * Math.PI) / 1000;
     this.drone[this.drone.length - 1].laserAnim.visible = this.drone[0].laserAnim.visible;
     this.drone[this.drone.length - 1].isMining = this.drone[0].isMining;

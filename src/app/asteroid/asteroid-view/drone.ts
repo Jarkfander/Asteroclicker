@@ -22,9 +22,9 @@ export class Drone {
     laserAnim_actif2: PIXI.extras.AnimatedSprite;
     laserAnim_actif3: PIXI.extras.AnimatedSprite;
 
-    constructor(x: number, y: number, xpos: number, ypos: number, app: PIXI.Application) {
+    constructor(x: number, y: number, xpos: number, ypos: number, isMining: boolean, app: PIXI.Application) {
         this.app = app;
-        this.isMining = true;
+        this.isMining = isMining;
         this.delta = 0;
 
         // Drone
@@ -46,7 +46,7 @@ export class Drone {
         });
         */
 
-        
+
         // LaserAnim
         this.laserAnim = initSprite('laser', 946, 964, true, true);
         this.laserAnim.scale.set(0.60, 0.60);

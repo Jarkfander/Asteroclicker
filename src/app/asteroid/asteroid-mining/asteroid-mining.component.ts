@@ -116,7 +116,7 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
         }]
       },
       options: {
-        responsive:false,
+        maintainAspectRatio: false,
         scales: {
           xAxes: [{
             display: true,
