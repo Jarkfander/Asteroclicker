@@ -18,10 +18,12 @@
   <article class="canvas-container">
     <canvas #chartMining></canvas>
   </article>
-  <article class="canvas-container">
-    <canvas  #chartCapacity></canvas>
+  <div class="canvas-container">
+    <div class="capacity-chart">
+        <canvas  #chartCapacity></canvas>
+    </div>
     <p class="justify-center" *ngIf="(asteroid$ | async)?.currentCapacity === 0">EMPTY</p>    
     <p class="justify-center" *ngIf="(asteroid$ | async)?.currentCapacity != 0">Size : {{capacityPercent}} %</p>    
-  </article>
+  </div>
 </section>
 
