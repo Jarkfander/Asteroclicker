@@ -7,15 +7,17 @@ import { UserService, IUserUpgrade } from '../../shared/user/user.service';
 import { Utils } from '../../shared/utils';
 import { UpgradeService } from '../upgrade.service';
 import { OreService, IOreAmounts, IOreInfos } from '../../ore/ore.service';
-import { Observable } from 'rxjs/Observable';
+import { enter } from '../../shared/animations';
 
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/interval';
 import 'rxjs/add/operator/filter';
 
 @Component({
   selector: 'app-upgrade-view',
   templateUrl: './upgrade-view.component.html',
-  styleUrls: ['./upgrade-view.component.scss']
+  styleUrls: ['./upgrade-view.component.scss'],
+  animations: [enter]
 })
 export class UpgradeViewComponent implements OnInit {
 
@@ -78,13 +80,13 @@ export class UpgradeViewComponent implements OnInit {
       }
     }, 1000);
 
-      /*
-    for (let i = 1; i < 5; i++) {
-      if (this.userS.currentUser.cargo['cargo' + i] && this.userS.currentUser.cargo['cargo' + i].start !== 0) {
-        this.socketS.updateCargoTimer(this.userS.currentUser.uid);
-      }
+    /*
+  for (let i = 1; i < 5; i++) {
+    if (this.userS.currentUser.cargo['cargo' + i] && this.userS.currentUser.cargo['cargo' + i].start !== 0) {
+      this.socketS.updateCargoTimer(this.userS.currentUser.uid);
     }
-    */
+  }
+  */
   }
 
   /** Update credit of user
@@ -138,7 +140,6 @@ export class UpgradeViewComponent implements OnInit {
   }
 
   /** Check if user has enough credit && credit to upgrade */
-  // TODO : Add notifications
   private canBuy(): boolean {
     const tempUpgradeCost = this.nextUpgrade.costOreString;
     const keysCost = Object.keys(tempUpgradeCost);
@@ -154,6 +155,10 @@ export class UpgradeViewComponent implements OnInit {
           return false;
         }
       }
+      if (!this.oreMiss(keysCost[i])) {
+        this.notif.alert('Research should be higher', 'You should upgrade research before');
+        return false;
+      }
       if (this.oreAmount[keysCost[i]] < tempUpgradeCost[keysCost[i]]) {
         this.notif.alert('Not enouh ' + keysCost[i], 'You need ' + tempUpgradeCost[keysCost[i]]);
         return false;
@@ -162,4 +167,22 @@ export class UpgradeViewComponent implements OnInit {
     return true;
   }
 
+
+  /**
+   * Check if you have a level of research enough to know this ore
+   * @param {string} oreName The name of the ore
+   */
+  oreMiss(oreName: string) {
+    const oreKeys = Object.keys(this.oreInfos);
+    for (let j = 0; j < oreKeys.length; j++) {
+      const tempName = oreKeys[j];
+      if (tempName === oreName) {
+      if (this.upgradeS.research[this.researchLvl].lvl <
+          this.oreInfos[oreKeys[j]].searchNewOre) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
 }

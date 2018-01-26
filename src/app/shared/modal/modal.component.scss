@@ -1,4 +1,4 @@
-:host{
+section{
     width: 100vw;
     height: 100vh;
     background-color: rgba(128, 128, 128, 0.5);
@@ -12,8 +12,7 @@
     z-index: 10;
 }
 
-section {
+.modal {
     width : 33%;
     height: 60%;
-    background-color: rgb(255, 255, 255);
 }

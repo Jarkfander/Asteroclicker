@@ -8,7 +8,6 @@
 -->
 <section class="row justify-between" *ngIf="researchLvl$ | async as researchLvl">
     <app-upgrade-view *ngFor="let name of upgradeNames"
-        class="border"
         [researchLvl]="researchLvl"
         [oreAmount]="oreAmount$ | async"
         [credit]="credit$ | async"

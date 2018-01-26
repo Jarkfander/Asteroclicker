@@ -1,4 +1,4 @@
-<section *ngIf="currentUpgrade" class="col justify-between align-center">
+<section *ngIf="currentUpgrade" class="col border justify-between align-center">
     <h1>{{currentUpgrade.displayName}}</h1>
     <!--
     <button *ngIf="currentLvl && currentLvl.start==0" [disabled]="!canBuy" class="btn-upgrade" (click)="levelUpOre()">Upgrade / Ore</button>
@@ -8,7 +8,7 @@
         <img class="lvl-up" src="../../../assets/icon/level-up.png" alt="levelUp"/>
         <div class="ores col justify-around wrap">
             <div class="cost-ore row align-center justify-around" *ngFor="let key of upgradeCostString">
-                <img *ngIf="key != '???'" src="../../../assets/oreIcon/{{key}}Icon.png" />
+                <img *ngIf="key !== '???'" src="../../../assets/oreIcon/{{key}}Icon.png" />
                 <p>{{nextUpgrade.costOreString[key]}}</p>
             </div>
         </div>

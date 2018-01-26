@@ -1,19 +1,22 @@
-<section>
+<section [@entrance]>
   <!-- Daily Quest open -->
-  <article class="col" *ngIf="quest.gain !== -1">
-    <h1>Daily Quest</h1>
-    <p>{{ quest.text }}</p>
-    <p>{{ quest.name }} : {{ quest.calculValueDisplay()  }} / {{ quest.valueWithSpace(userS.currentUser.quest.valuesFinal)}}</p>
-    <p>You Win: {{ quest.gain }} Capsule.</p>
+  <article class="row border" *ngIf="quest.gain !== -1">
+    <img class="upgrade-icon" src="../../../assets/Ivan.gif" />
+    <div class="col">
+        <h1>Daily Quest</h1>
+        <p>{{ quest.text }}</p>
+        <p>{{ quest.name }} : {{ quest.calculValueDisplay()  }} / {{ quest.valueWithSpace(userS.currentUser.quest.valuesFinal)}}</p>
+        <p>You Win: {{ quest.gain }} Capsule.</p>
+    </div> 
   </article>
   <!-- Daily Quest closed -->
-  <article class="col" *ngIf="quest.gain === -1">
+  <article class="col border" *ngIf="quest.gain === -1">
       <h1>Daily Quest</h1>
       <p>New quest every 1 hours ! </p>
   </article>
 
   <!-- Group Quest open -->
-  <article class="col" *ngIf="questGroup.values !== 0">
+  <article class="col border" *ngIf="questGroup.values !== 0">
     <h1>Glory Quest</h1>
     <p>{{ questGroup.name }}</p>
     <p>{{ questGroup.calculValueDisplay() }} / {{ questGroup.valueWithSpace(questS.questGroup.valuesFinal)}}</p>
@@ -22,10 +25,8 @@
     -->
   </article>
   <!-- Group Quest closed -->
-  <article class="col" *ngIf="questGroup.values === 0">
+  <article class="col border" *ngIf="questGroup.values === 0">
     <h1>Glory Quest</h1>
     <p>Wait new information !</p>
   </article>
 </section>
-
-  <img class="upgrade-icon" src="../../../assets/Ivan.gif" />

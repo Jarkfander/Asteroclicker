@@ -23,7 +23,7 @@ export class NgNotifComponent implements OnInit {
   }
 
   /** Open an alert notification */
-  public alert(title: string, content: string): Notification {
+  public alert(title: string, content?: string): Notification {
     return this.service.bare(title, content, {
       timeOut: 2000,
       showProgressBar: true,
@@ -35,7 +35,7 @@ export class NgNotifComponent implements OnInit {
   }
 
   /** Open an error notification */
-  public error(title: string, content: string): Notification {
+  public error(title: string, content?: string): Notification {
     return this.service.bare(title, content, {
       timeOut: 2000,
       showProgressBar: true,
