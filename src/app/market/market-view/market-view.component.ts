@@ -81,8 +81,6 @@ export class MarketInfoComponent implements OnInit {
             * this.oreInfo.miningSpeed);
           this.maxSliderValue = ((Math.floor(this.maxSliderValue / 50)) + 1) * 50;
 
-          this.amountToSell = parseFloat((this.maxSliderValue / 2).toFixed(1));
-
           this.valuesTotal = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell);
           this.valuesTotalWithTaxe = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell * 1.025);
 
