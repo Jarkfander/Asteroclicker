@@ -1,16 +1,21 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from './modal/modal.component';
+import { NgNotifComponent } from './ng-notif/ng-notif.component';
+import { SimpleNotificationsModule } from 'angular2-notifications';
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    SimpleNotificationsModule.forRoot()
   ],
   exports: [
-    ModalComponent
+    ModalComponent,
+    NgNotifComponent
   ],
-  declarations: [ModalComponent]
+  declarations: [ModalComponent, NgNotifComponent]
 })
+
 export class SharedModule {
 
   // 1000000 => 1 000 000

@@ -1,3 +1,4 @@
+
 import { Upgrade } from './../upgrade-class/upgrade';
 import { Component, OnInit } from '@angular/core';
 import { UserService, IUserUpgrade } from '../../shared/user/user.service';
@@ -18,6 +19,5 @@ export class QgViewComponent implements OnInit {
   ngOnInit() {
     this.userUpgrade = this.userS.getUpgradeByName('QG');
   }
-
 
 }

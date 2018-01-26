@@ -1,4 +1,5 @@
-import { Component, OnInit, Input, HostListener, ElementRef, Renderer2 } from '@angular/core';
+import { NgNotifComponent } from './../../shared/ng-notif/ng-notif.component';
+import { Component, OnInit, Input, HostListener, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import { Upgrade, UpgradeType } from '../upgrade-class/upgrade';
 import { SocketService } from '../../shared/socket/socket.service';
 import { User, UserUpgrade } from '../../shared/user/user';
@@ -18,17 +19,14 @@ import 'rxjs/add/operator/filter';
 })
 export class UpgradeViewComponent implements OnInit {
 
+  @Input() name: string;
   @Input() QGlvl: number;
   @Input() researchLvl: number;
   @Input() oreAmount: IOreAmounts;
   @Input() credit: number;
-  @Input() set upgrade(userUpgrade: IUserUpgrade) {
-    this.userUpgrade = userUpgrade;
-    this.oreInfos = this.oreS.oreInfos;
-    this.currentUpgrade = this.upgradeS[userUpgrade.name][userUpgrade.lvl];
-    this.nextUpgrade = this.upgradeS[userUpgrade.name][userUpgrade.lvl + 1];
-    this.updateCost();
-  }
+
+  @ViewChild('timer') timerRef: ElementRef;
+  @ViewChild(NgNotifComponent) notif: NgNotifComponent;
 
   public userUpgrade: IUserUpgrade;
   public currentUpgrade: Upgrade;
@@ -36,40 +34,14 @@ export class UpgradeViewComponent implements OnInit {
   public oreInfos: IOreInfos;
   public upgradeCostString: string[];
   public isHover: boolean;
-/*
-  public QGlvlMax = 0;
-  public timer = '00:00:00';
 
-  public enableButtonCredit = true;
-
-  public enableButtonOre = true;
-
-  public intervalDone = true;
-
-  public upgradeCostString: string[];
-  public isOkForBuy = false;
-
-  public currentOreAmounts: IOreAmounts;
-  public currentUsercredit = 0;
-
-  public userResearchLvl = 1;
-  public oreInfos: IOreInfos;
-
-  public currentLvl: IUserUpgrade = {
-    lvl: 1,
-    name: '',
-    start: 0,
-    timer: 0
-  };
-*/
-
-constructor(private socketS: SocketService,
-  private el: ElementRef,
-  private renderer: Renderer2,
-  private userS: UserService,
-  private oreS: OreService,
-  private upgradeS: UpgradeService) {
-}
+  constructor(private socketS: SocketService,
+    private el: ElementRef,
+    private renderer: Renderer2,
+    private userS: UserService,
+    private oreS: OreService,
+    private upgradeS: UpgradeService) {
+  }
 
 
   @HostListener('mouseenter', ['$event']) inHover() {
@@ -83,51 +55,30 @@ constructor(private socketS: SocketService,
 
 
   ngOnInit() {
-    this.setTimer();
-    this.renderer.setStyle(this.el.nativeElement, 'backgroundImage', `url('../../../assets/upgrade/img/${this.userUpgrade.name}.jpg')`);
-    /*
-    this.oreS.OreInfos.take(1).subscribe((oreInfos: IOreInfos) => {
-      this.oreInfos = oreInfos;
+    this.oreInfos = this.oreS.oreInfos;
 
-      this.userS.getUpgradeByName(this.name).subscribe((upgrade: IUserUpgrade) => {
-        this.currentLvl = upgrade;
-        this.valuesUpgradeLvl();
+    this.userS.getUpgradeByName(this.name)
+      .subscribe((userUpgrade) => {
+        this.userUpgrade = userUpgrade;
+        this.currentUpgrade = this.upgradeS[userUpgrade.name][userUpgrade.lvl];
+        this.nextUpgrade = this.upgradeS[userUpgrade.name][userUpgrade.lvl + 1];
+        this.updateCost();
+        this.setTimer();
+        this.renderer.setStyle(this.el.nativeElement, 'backgroundImage', `url('../../../assets/upgrade/img/${this.userUpgrade.name}.jpg')`);
       });
-
-      this.userS.getUpgradeByName('QG').subscribe((upgrade: IUserUpgrade) => {
-        this.QGlvlMax = upgrade.lvl * 10;
-      });
-
-      this.userS.getUpgradeByName('research').subscribe((upgrade: IUserUpgrade) => {
-        this.userResearchLvl = upgrade.lvl;
-        this.valuesUpgradeLvl();
-      });
-
-      setTimeout(() => {
-        this.valuesUpgradeLvl();
-      }, 1000);
-
-    });
-
-    this.oreS.OreAmounts.subscribe((oreAmounts: IOreAmounts) => {
-      this.currentOreAmounts = oreAmounts;
-      this.enableButtonOre = this.boolOreCost();
-    });
-
-    this.userS.credit.subscribe((credit: number) => {
-      this.currentUsercredit = credit;
-      this.enableButtonOre = this.boolOreCost();
-    });
-  */
-
   }
 
-  /** Setup timer */
+  /** Setup timer if upgrade starts */
   private setTimer() {
-    Observable.interval(1000)
-      .filter(() => this.userUpgrade.start !== 0)
-      .subscribe(() => this.socketS.updateUpgradeTimer(this.userS.currentUser.uid, this.userUpgrade.name));
-    /*
+    setTimeout(() => {
+      if (this.userUpgrade.start !== 0) {
+        const timeLeft = 100 - ((this.userUpgrade.timer - this.nextUpgrade.time) / (10 * this.nextUpgrade.time));
+        this.renderer.setStyle(this.timerRef.nativeElement, 'transform', `translateY(${timeLeft}%)`);
+        this.socketS.updateUpgradeTimer(this.userS.currentUser.uid, this.userUpgrade.name);
+      }
+    }, 1000);
+
+      /*
     for (let i = 1; i < 5; i++) {
       if (this.userS.currentUser.cargo['cargo' + i] && this.userS.currentUser.cargo['cargo' + i].start !== 0) {
         this.socketS.updateCargoTimer(this.userS.currentUser.uid);
@@ -136,23 +87,26 @@ constructor(private socketS: SocketService,
     */
   }
 
-  /** Update credit of user */
+  /** Update credit of user
   levelUpCredit() {
     this.socketS.upgradeShipCredit(this.userS.currentUser.uid, this.currentUpgrade.name);
+  } */
+
+  /** Update ore amount of user and update timer */
+  public levelUpOre() {
+    if (this.canBuy()) {
+      this.socketS.upgradeShipOre(this.userS.currentUser.uid, this.currentUpgrade.name);
+      this.socketS.updateUpgradeTimer(this.userS.currentUser.uid, this.userUpgrade.name);
+    }
   }
 
-  /** Update ore amount of user */
-  levelUpOre() {
-    this.socketS.upgradeShipOre(this.userS.currentUser.uid, this.currentUpgrade.name);
-  }
-
-  costOreUpgrade(costCredit: number, nameUpgrade: string) {
+  private costOreUpgrade(costCredit: number, nameUpgrade: string) {
     const tempname = this.nextUpgrade.costOre;
     return [this.costOreForCredit(tempname[0], costCredit / 2),
     this.costOreForCredit(tempname[1], costCredit / 2)];
   }
 
-  costOreForCredit(nameOre: string, costCredit: number) {
+  private costOreForCredit(nameOre: string, costCredit: number) {
     return costCredit / this.oreInfos[nameOre].meanValue;
   }
 
@@ -185,20 +139,23 @@ constructor(private socketS: SocketService,
 
   /** Check if user has enough credit && credit to upgrade */
   // TODO : Add notifications
-  public canBuy(): boolean {
+  private canBuy(): boolean {
     const tempUpgradeCost = this.nextUpgrade.costOreString;
     const keysCost = Object.keys(tempUpgradeCost);
 
     if (this.userUpgrade.lvl + 1 > this.QGlvl) {
+      this.notif.alert('QG Level', 'QG should be higher than ' + this.userUpgrade.lvl + 1);
       return false;
     }
     for (let i = 0; i < keysCost.length; i++) {
       if (keysCost[i] === 'credit') {
         if (this.credit < tempUpgradeCost[keysCost[i]]) {
+          this.notif.alert('Not enough credit', 'You need ' + tempUpgradeCost[keysCost[i]]);
           return false;
         }
       }
       if (this.oreAmount[keysCost[i]] < tempUpgradeCost[keysCost[i]]) {
+        this.notif.alert('Not enouh ' + keysCost[i], 'You need ' + tempUpgradeCost[keysCost[i]]);
         return false;
       }
     }

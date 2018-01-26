@@ -134,7 +134,7 @@ export class UserService {
 
   get upgrade(): Observable<IUserUpgrade[]> {
     return this.authS.UserId
-      .mergeMap((id: String) => this.db.object('users/' + id + '/upgrade').valueChanges())
+      .mergeMap((id: String) => this.db.object('users/' + id + '/upgrade').valueChanges<IUserUpgrade>())
       .map((upgrades) => {
         const allCurrentUpgrade: IUserUpgrade[] = new Array();
         for (const key in upgrades) {
@@ -150,10 +150,10 @@ export class UserService {
 
   getUpgradeByName(upgradeName: string): Observable<IUserUpgrade> {
     return this.authS.UserId
-      .mergeMap((id: String) => this.db.object('users/' + id + '/upgrade/' + upgradeName).valueChanges())
-      .map((upgrade) => {
-        upgrade['name'] = upgradeName;
-        return <IUserUpgrade>upgrade;
+      .mergeMap((id: String) => this.db.object('users/' + id + '/upgrade/' + upgradeName).valueChanges<IUserUpgrade>())
+      .map((upgrade: IUserUpgrade) => {
+        upgrade.name = upgradeName;
+        return upgrade;
       });
   }
 

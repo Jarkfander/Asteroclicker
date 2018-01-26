@@ -1,9 +1,9 @@
-<section class="col justify-between align-center">
+<section *ngIf="currentUpgrade" class="col justify-between align-center">
     <h1>{{currentUpgrade.displayName}}</h1>
     <!--
     <button *ngIf="currentLvl && currentLvl.start==0" [disabled]="!canBuy" class="btn-upgrade" (click)="levelUpOre()">Upgrade / Ore</button>
-    -->
     <button *ngIf="userUpgrade.start !== 0" disabled="true" class="btn-upgrade">{{timer}}</button>
+    -->
     <div (click)="levelUpOre()" class="cost row justify-around align-center">
         <img class="lvl-up" src="../../../assets/icon/level-up.png" alt="levelUp"/>
         <div class="ores col justify-around wrap">
@@ -12,6 +12,8 @@
                 <p>{{nextUpgrade.costOreString[key]}}</p>
             </div>
         </div>
-
     </div>
+
+    <div #timer *ngIf="userUpgrade.start !== 0" class="timer"></div>
 </section>
+<ng-notif></ng-notif>
