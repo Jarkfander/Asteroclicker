@@ -72,10 +72,16 @@ constructor(private socketS: SocketService,
 }
 
 
-  @HostListener('mouseenter', ['$event']) inHover() { this.isHover = true; }
-  @HostListener('mouseleave', ['$event']) outHover() { this.isHover = false; }
+  @HostListener('mouseenter', ['$event']) inHover() {
+    this.upgradeS.activeUserUpgrade$.next(this.userUpgrade);
+    this.isHover = true;
+  }
+  @HostListener('mouseleave', ['$event']) outHover() {
+    this.upgradeS.activeUserUpgrade$.next(null);
+    this.isHover = false;
+  }
 
-  
+
   ngOnInit() {
     this.setTimer();
     this.renderer.setStyle(this.el.nativeElement, 'backgroundImage', `url('../../../assets/upgrade/img/${this.userUpgrade.name}.jpg')`);

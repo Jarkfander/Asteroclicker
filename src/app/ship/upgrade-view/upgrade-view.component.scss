@@ -17,12 +17,12 @@ section {
         border-bottom: solid 3px $black;
         text-align: center;
         width: 100%;
-        transition: transform 0.3s ease-in-out;
+        transition: transform 0.3s cubic-bezier(.33,.01,.59,.99);
         transform: translateY(-200%);
     }
     button {
         opacity: 0;
-        transition: all 0.3s ease-in-out;
+        transition: all 0.3s cubic-bezier(.82,.01,.67,.99);
         transform: scale(0.5);
     }
     .cost {
@@ -31,7 +31,7 @@ section {
         padding: 5px;        
         background-color: rgb(17, 97, 17);
         border-top: solid 3px $black;
-        transition: transform 0.5s ease-in-out;
+        transition: transform 0.4s cubic-bezier(.33,.01,.59,.99);
         transform: translateY(200%);
         color: $black;
         cursor: pointer;
@@ -42,8 +42,8 @@ section {
             height: 100%;
             width: 80%;
             .cost-ore {
-                height: 50%;
-                width: 50%;
+                height: 40%;
+                width: 40%;
             }
             p {
                 margin: 0;
