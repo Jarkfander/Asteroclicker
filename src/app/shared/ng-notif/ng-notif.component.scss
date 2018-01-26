@@ -1,0 +1,17 @@
+@import '../../../theme';
+
+::ng-deep.alert-notif {
+    background-color: white;
+
+    .sn-title, .sn-content {
+        color: black;
+    }
+}
+
+::ng-deep.error-notif {
+    background-color: white;
+}
+
+::ng-deep.success-notif {
+    background-color: white;
+}
