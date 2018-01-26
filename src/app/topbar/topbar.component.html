@@ -31,17 +31,14 @@
   </article>
 </header>
 
-<app-modal *ngIf="isModalOpenQuest">
-    <a href="#" (click)="closeQuestModal()">Close</a>
+<app-modal (close)="closeQuestModal()" *ngIf="isModalOpenQuest">
     <app-quest></app-quest>
 </app-modal>
 
-<app-modal *ngIf="isModalOpenRank">
-  <a href="#" (click)="closeRankModal()">Close</a>
+<app-modal (close)="closeRankModal()" *ngIf="isModalOpenRank">
   <app-ranking></app-ranking>
 </app-modal> 
 
-<app-modal *ngIf="isModalProfile">
-  <a href="#" (click)="closeProfileModal()">Close</a>
+<app-modal (close)="closeProfileModal()" *ngIf="isModalProfile">
   <app-profile></app-profile>
 </app-modal> 

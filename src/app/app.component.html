@@ -3,10 +3,12 @@
   </app-signin>
 </div>
 
-
+<!--
 <main *ngIf="upgradeS && (user$|async)!=null && upgradeS.storageLoad && upgradeS.mineRateLoad
  && upgradeS.researchLoaded && upgradeS.engineLoad && marketS && marketS.marketLoad && loadAnimation.boolFinishLoad
   ">
+-->
+<main *ngIf="(user$|async) && loadAnimation.boolFinishLoad">
 
   <div *ngIf="loadingImage">
     <img class="image_loading" src="../assets/space2.png" />

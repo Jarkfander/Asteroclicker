@@ -1,3 +1,5 @@
-<section class="border">
-  <ng-content></ng-content>
+<section (click)="close.emit(true)">
+  <div class="modal">
+    <ng-content></ng-content>
+  </div>
 </section>

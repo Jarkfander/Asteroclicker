@@ -5,13 +5,15 @@ import { SocketService } from '../shared/socket/socket.service';
 import { SharedModule } from '../shared/shared.module';
 import { User } from '../shared/user/user';
 import { AuthService } from '../signin/auth.service';
+import { enter } from '../shared/animations';
 
 
 
 @Component({
   selector: 'app-topbar',
   templateUrl: './topbar.component.html',
-  styleUrls: ['./topbar.component.scss']
+  styleUrls: ['./topbar.component.scss'],
+  animations: [enter]
 })
 export class TopbarComponent implements AfterViewInit {
   public name: string;

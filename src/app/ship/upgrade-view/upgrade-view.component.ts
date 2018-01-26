@@ -7,15 +7,17 @@ import { UserService, IUserUpgrade } from '../../shared/user/user.service';
 import { Utils } from '../../shared/utils';
 import { UpgradeService } from '../upgrade.service';
 import { OreService, IOreAmounts, IOreInfos } from '../../ore/ore.service';
-import { Observable } from 'rxjs/Observable';
+import { enter } from '../../shared/animations';
 
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/interval';
 import 'rxjs/add/operator/filter';
 
 @Component({
   selector: 'app-upgrade-view',
   templateUrl: './upgrade-view.component.html',
-  styleUrls: ['./upgrade-view.component.scss']
+  styleUrls: ['./upgrade-view.component.scss'],
+  animations: [enter]
 })
 export class UpgradeViewComponent implements OnInit {
 
