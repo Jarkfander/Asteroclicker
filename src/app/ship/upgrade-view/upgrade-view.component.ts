@@ -73,7 +73,6 @@ constructor(private socketS: SocketService,
 
 
   @HostListener('mouseenter', ['$event']) inHover() {
-    console.log('MOUSE ENTER');
     this.upgradeS.activeUserUpgrade$.next(this.userUpgrade);
     this.isHover = true;
   }

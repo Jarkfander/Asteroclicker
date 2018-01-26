@@ -75,7 +75,7 @@ export class AsteroidViewComponent implements OnInit {
               oreInfos[this.asteroid.ore].miningSpeed).toFixed(2)));
         }
       }, 1000);
-      this.userS.getUpgradeByName("mineRate").subscribe((upgrade: IUserUpgrade) => {
+      this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
         this.userMineRateLvl = upgrade.lvl;
         this.initNumberOfDroneBegin();
       });
@@ -202,7 +202,7 @@ export class AsteroidViewComponent implements OnInit {
     });
 
     // Upgrade Subject
-    this.userS.getUpgradeByName("mineRate").subscribe((upgrade: IUserUpgrade) => {
+    this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
       const tempLvl = upgrade.lvl;
       if (this.drone.length !== Math.floor(tempLvl / 40) + 1) {
         this.addNewDrone();
