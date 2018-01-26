@@ -1,13 +1,13 @@
 <div *ngIf="search!=null && researchInfo!=null" unselectable="on" class="no-selection">
 
 
-  <app-modal class="col" *ngIf="isModalOpen">
+  <app-modal (close)="closeModal()" *ngIf="isModalOpen">
 
     <div class="closeLine">
       <a href="#" (click)="closeModal()">Close</a>
     </div>
 
-    <div class="result row">
+    <div class="border result row">
       <app-search-result class="asteroid-result" *ngFor="let aste of search.result; let i = index" [num]="i" [asteroid]="aste"></app-search-result>
     </div>
 
