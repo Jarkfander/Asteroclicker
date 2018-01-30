@@ -12,8 +12,8 @@ import { SearchService } from './search.service';
     SharedModule,
     FormsModule
   ],
-  declarations: [SearchResultComponent,SearchViewComponent],
-  exports:[SearchResultComponent,SearchViewComponent],
-  providers:[SearchService]
+  declarations: [SearchResultComponent, SearchViewComponent],
+  exports: [SearchResultComponent, SearchViewComponent],
+  providers: [SearchService]
 })
 export class SearchModule { }

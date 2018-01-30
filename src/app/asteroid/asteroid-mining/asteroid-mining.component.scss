@@ -3,6 +3,8 @@
 section {
     height: 100%;
     width: 100%;
+    background-image: url('../../../assets/mining/background.jpg');
+    background-size: cover;
 }
 article {
     height: 100%;
@@ -14,26 +16,28 @@ article {
 
 .mining {
     width: 30%;
-    border-right: solid 1px $black;
     .canvas-container {
         height: 60%;
-        border-bottom: solid 1px $black;
+        background-image: url('../../../assets/mining/top-left.png');
+        background-size: cover;
     }
     .time{
         height: 40%;
-        border-top: solid 1px $black;
+        background-image: url('../../../assets/mining/bottom-left.png');
+        background-size: cover;
     }
 }
 .capacity {
     width: 70%;
-    border-left: solid 1px $black;
     .canvas-container{
         height: 40%;
-        border-top: solid 1px $black;
+        background-image: url('../../../assets/mining/bottom-right.png');
+        background-size: cover;
     }
     .asteroid {
         height: 60%;
-        border-bottom: solid 1px $black;
+        background-image: url('../../../assets/mining/top-right.png');
+        background-size: cover;
     }
 
 }

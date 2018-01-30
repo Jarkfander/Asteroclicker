@@ -47,8 +47,8 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
     this.asteroidS.asteroid$.subscribe((asteroid: IAsteroid) => {
       this.asteroid$ = this.asteroidS.asteroid$;
       this.capacityPercent = parseFloat(((asteroid.currentCapacity * 100) / asteroid.capacity).toFixed(2));
-      this.capacityMeter.data.datasets[0].data = [this.capacityPercent + 20];
-      this.capacityMeter.update();
+      // this.capacityMeter.data.datasets[0].data = [this.capacityPercent + 20];
+      // sthis.capacityMeter.update();
     });
 
     this.userS.frenzyInfo
@@ -98,7 +98,8 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
         labels: ['mine rate', 'mine rate'],
         datasets: [{
           data: [0, 1],
-          backgroundColor: ['rgba(255, 99, 132)'],
+          backgroundColor: ['rgb(73, 141, 230)', 'rgb(30, 30, 100)'],
+          borderColor: ['rgb(190,190,190)', 'rgb(80, 80, 80)']
         }]
       },
       options : {
@@ -112,17 +113,25 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
       type: 'horizontalBar',
       data: {
         datasets: [{
-          data: [10],
-          backgroundColor: ['rgba(10, 10,10)'],
+          data: [20],
+          backgroundColor: ['rgb(200, 100, 100)']
+        }, {
+          data: [80],
+          backgroundColor: ['rgb(80, 20, 20)']
         }]
       },
       options: {
         maintainAspectRatio: false,
         legend: { display: false },
         scales: {
+          scaleLabel: { fontColor: 'white' },
           xAxes: [{
+            stacked: true,
             ticks: { min: 0, max: 100 },
             gridLines: { display: false }
+          }],
+          yAxes: [{
+            stacked: true
           }]
         }
       }

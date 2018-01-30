@@ -1,3 +1,46 @@
+<ng-slider>
+  <!-- Distance -->
+  <ng-slide>
+    <div *ngIf="search.start==0" id="slidecontainer">
+      Distance: {{distance}} light years.
+      <input type="range" min={{researchInfo.minDistance}} max={{researchInfo.maxDistance}} value="50" class="slider" [(ngModel)]="distance"
+        (ngModelChange)="searchTimeUpdate()">
+    </div>
+      
+
+    <div *ngIf="search.start==0">Search time : {{searchTime}}</div>
+    <button *ngIf="search.start==0" class="btn-upgrade" (click)="searchNewAster()">Search Another Asteroid</button>
+  
+  </ng-slide>
+
+  <!-- Wait : Searching -->
+  <ng-slide>
+    <button disabled="true" class="btn-upgrade">Searching : {{timer}}</button>
+  </ng-slide>
+
+  <!-- Select -->
+  <ng-slide>
+    <button class="btn-upgrade" (click)="showResult()">See search result</button>
+  </ng-slide>
+
+  <!-- Wait : Travel -->
+  <ng-slide>
+    <button disabled="true" class="btn-upgrade">Time before arriving : {{timer}}</button>
+  </ng-slide>
+</ng-slider>
+
+<app-modal (close)="closeModal()" *ngIf="isModalOpen">
+
+    <div class="border result row">
+      <app-search-result class="asteroid-result" *ngFor="let aste of search.result; let i = index" [num]="i" [asteroid]="aste"></app-search-result>
+    </div>
+
+    <div class="rejectLine">
+      <button class="btn-upgrade" (click)="rejectResults()">Reject</button>
+    </div>
+
+</app-modal>
+<!--
 <div *ngIf="search!=null && researchInfo!=null" unselectable="on" class="no-selection">
 
 
@@ -18,7 +61,7 @@
   </app-modal>
 
   <button *ngIf="search.start!=0 && search.result.length==3" class="btn-upgrade" (click)="showResult()">See search result</button>
-  <button *ngIf="search.start!=0 && search.result == 0" disabled="true" class="btn-upgrade">Searching : {{timer}}</button>
+  <button *ngIf="search.start!=0 && search.result === 0" disabled="true" class="btn-upgrade">Searching : {{timer}}</button>
   <button *ngIf="search.start!=0 && search.result.length==1" disabled="true" class="btn-upgrade">Time before arriving : {{timer}}</button>
   <div *ngIf="search.start==0" id="slidecontainer">
     Distance: {{distance}} light years.
@@ -29,3 +72,4 @@
   <button *ngIf="search.start==0" class="btn-upgrade" (click)="searchNewAster()">Search Another Asteroid</button>
 
 </div>
+-->
