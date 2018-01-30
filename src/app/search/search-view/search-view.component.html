@@ -18,7 +18,7 @@
   </app-modal>
 
   <button *ngIf="search.start!=0 && search.result.length==3" class="btn-upgrade" (click)="showResult()">See search result</button>
-  <button *ngIf="search.start!=0 && search.result==0" disabled="true" class="btn-upgrade">Searching : {{timer}}</button>
+  <button *ngIf="search.start!=0 && search.result == 0" disabled="true" class="btn-upgrade">Searching : {{timer}}</button>
   <button *ngIf="search.start!=0 && search.result.length==1" disabled="true" class="btn-upgrade">Time before arriving : {{timer}}</button>
   <div *ngIf="search.start==0" id="slidecontainer">
     Distance: {{distance}} light years.

@@ -1,11 +1,8 @@
-<article class="row align-center border no-selection" *ngIf="!!oreInfo && researchLvl >= oreInfo.searchNewOre">
-  <img class="oreIcon no-selection" unselectable="on" src="assets/oreIcon/{{name}}Icon.png" alt="{{name}}Icon">
-
-  <div class="col">
-    <p [ngStyle]="{'color': amount>=capacity ? 'red' : 'white'}"> {{name.toUpperCase()}} : {{ amount }} </p>
-    <p *ngIf="isRateDisplayed">{{(this.oreCoef * this.rate).toFixed(2)}} {{name}}/s</p>
-  </div>
+<article class="col align-end no-selection" *ngIf="!!oreInfo">
+  <h3>{{name.toUpperCase()}}</h3>
+  <p [ngStyle]="{'color': amount>=capacity ? 'red' : 'white'}">{{ amount }} </p>
+  <p>{{ mineRate$ | async | number: '1.0-2' }} / s</p>
+  <!--
+  <p *ngIf="isRateDisplayed">{{(this.oreCoef * this.rate).toFixed(2)}}/s</p>
+  -->
 </article>
-<!---
-"(asteroid$|async)?.ore==info.name && (asteroid$|async)?.currentCapacity>0 && oreAmount[info.name]<capacity?(info.miningSpeed*((asteroid$|async)?.purity/100)*mineRate).toFixed(2):0"
--->

@@ -39,24 +39,32 @@ section {
         transform: scale(0.5);
     }
     .cost {
-        width: 100%;
+        width: 90%;
         height: 20%;
-        padding: 5px;        
-        background-color: rgb(17, 97, 17);
-        border-top: solid 3px $black;
+        padding: 5px;
+        margin-bottom: 10px;
+        background-image: url('../../../assets/upgrade/img/lvl-up-background.jpg');
+        background-size: cover;
+        border: solid 3px $black;
         transition: transform 0.4s cubic-bezier(.33,.01,.59,.99);
         transform: translateY(200%);
         color: $black;
         cursor: pointer;
         .lvl-up {
-            width: 20%;
+            height: 90%;
+            position: absolute;
+            margin: auto;
         }
         .ores {
             height: 100%;
-            width: 80%;
+            width: 100%;
             .cost-ore {
                 height: 40%;
                 width: 40%;
+                background-color: $black;
+                color: white;
+                border: solid 5px;
+                border-image: url('../../../assets/upgrade/img/lvl-up-border.png') 15;
             }
             p {
                 margin: 0;
@@ -64,6 +72,7 @@ section {
             }
             img {
                 height: 90%;
+                margin-right: 10px;
             }
         }
 

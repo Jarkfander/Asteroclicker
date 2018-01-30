@@ -143,7 +143,7 @@ export class AsteroidViewComponent implements OnInit {
   // Subject
   subjectManage() {
     // Asteroid Subject
-    this.asteroidS.asteroid.subscribe((asteroid: IAsteroid) => {
+    this.asteroidS.asteroid$.subscribe((asteroid: IAsteroid) => {
       if (this.asteroid == null) {
         this.initAsteroid(asteroid);
         this.asteroid = asteroid;

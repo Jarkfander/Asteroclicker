@@ -16,13 +16,20 @@
 </div>
 -->
 <perfect-scrollbar class="col">
-  <div class="ore" *ngFor="let ore of ores">
-    <app-ore-view *ngIf="(oreAmounts$|async) as amount"
-      [name]="ore"
-      [amount]="amount[ore]"
+  <div *ngFor="let ore of oreData$ | async">
+    <app-ore-view *ngIf="ore.amount > 0"
+      class="ore border"
+      [style.backgroundImage]="'url(assets/oreIcon/'+ore.name+'Background.jpg)'"
+      [name]="ore.name"
+      [amount]="ore.amount"
       [capacity]="capacity"
       [rate]="mineRate" >
     </app-ore-view>
+  </div>
+  <div class="next ore border"
+    *ngIf="oreData$ | async"
+    [style.backgroundImage]="'url(assets/oreIcon/'+nextOre.name+'Background.jpg)'">
+      <h1>{{ nextOre.name }}</h1>
   </div>
 
     

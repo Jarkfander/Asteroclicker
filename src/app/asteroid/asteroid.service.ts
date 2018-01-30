@@ -20,7 +20,7 @@ export class AsteroidService {
 
   constructor(private db: AngularFireDatabase, private authS: AuthService) { }
 
-  get asteroid(): Observable<IAsteroid> {
+  get asteroid$(): Observable<IAsteroid> {
     return this.authS.UserId
       .mergeMap((id: String) => this.db.object('users/' + id + '/asteroid').valueChanges<IAsteroid>())
   }

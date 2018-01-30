@@ -58,7 +58,7 @@ export class MarketInfoComponent implements OnInit {
 
   ngOnInit() {
 
-    this.oreS.getOreInfoByString(this.oreName)
+    this.oreS.getOreInfoByName(this.oreName)
       .first()
       .subscribe((oreInfo: IOreInfo) => {
         this.oreInfo = oreInfo;

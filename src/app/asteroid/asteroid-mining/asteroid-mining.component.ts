@@ -44,9 +44,9 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
   ngOnInit() {
 
 
-    this.asteroidS.asteroid.subscribe((asteroid: IAsteroid) => {
-      this.asteroid$ = this.asteroidS.asteroid;
-      this.capacityPercent=parseFloat(((asteroid.currentCapacity * 100) / asteroid.capacity).toFixed(2));
+    this.asteroidS.asteroid$.subscribe((asteroid: IAsteroid) => {
+      this.asteroid$ = this.asteroidS.asteroid$;
+      this.capacityPercent = parseFloat(((asteroid.currentCapacity * 100) / asteroid.capacity).toFixed(2));
       this.capacityMeter.data.datasets[0].data = [this.capacityPercent];
       this.capacityMeter.update();
     });

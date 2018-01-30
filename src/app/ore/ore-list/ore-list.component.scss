@@ -1,11 +1,23 @@
 @import '../../../theme';
 
-section {
-    .ore {
-        height: calc(25% - #{$gap});
-    }
+.ore {
+    height: calc(25% - #{$gap});
+    margin-bottom: $gap;
+    background-size: cover;    
 }
 
+.next {
+    width: 100%;
+    background-size: cover;
+    h1 {
+        margin: 0;
+        padding: 15px;
+        background-color: rgba($black, 0.8);
+        text-transform: uppercase;
+        color: white;
+        text-align: center;
+    }
+}
 
 
 .closeLine, .rejectLine {

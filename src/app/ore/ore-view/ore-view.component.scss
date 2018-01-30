@@ -1,18 +1,24 @@
 @import '../../../theme';
 
+:host {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
 article {
-    background-color: $black;
+    width: 60%;
+    background: linear-gradient(to left, $black, transparent);    
     color: white;
-    margin-bottom: $gap;
+    padding: 10px;
 }
 
-img {
-    width : 30%;
-    margin: 0 5px;
-}
-
-p {
+h3 {
     font-size: 1rem;
+    margin: 0;
+}
+p {
+    font-size: 0.8rem;
     text-align : right;
+    margin: 0;
 }
 
