@@ -42,8 +42,6 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-
-
     this.asteroid$ = this.asteroidS.asteroid$
       .do((asteroid: IAsteroid) => {
         this.capacityMeter.data.datasets[0].data = [Math.floor(asteroid.currentCapacity)];
@@ -102,8 +100,8 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
           borderColor: ['rgb(190,190,190)', 'rgb(80, 80, 80)']
         }]
       },
-      options : {
-        maintainAspectRatio : false,
+      options: {
+        maintainAspectRatio: false,
         legend: { display: false },
         tooltips: { enabled: false },
       }

@@ -5,6 +5,7 @@ import { NgNotifComponent } from './ng-notif/ng-notif.component';
 import { SimpleNotificationsModule } from 'angular2-notifications';
 import { NgSliderComponent, NgSlideComponent } from './ng-slider/ng-slider.component';
 
+
 @NgModule({
   imports: [
     CommonModule,
