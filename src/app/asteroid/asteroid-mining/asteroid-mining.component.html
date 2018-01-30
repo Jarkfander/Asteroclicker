@@ -15,15 +15,22 @@
 -->
 
 <section unselectable="on" class="row align-center no-selection" >
-  <article class="canvas-container">
-    <canvas #chartMining></canvas>
-  </article>
-  <div class="canvas-container">
-    <div class="capacity-chart">
-        <canvas  #chartCapacity></canvas>
+  <article class="mining col">
+    <div class="canvas-container">
+      <canvas #chartMining></canvas>
     </div>
-    <p class="justify-center" *ngIf="(asteroid$ | async)?.currentCapacity === 0">EMPTY</p>    
-    <p class="justify-center" *ngIf="(asteroid$ | async)?.currentCapacity != 0">Size : {{capacityPercent}} %</p>    
-  </div>
+    <div class="time">
+
+    </div>
+  </article>
+  <article class="capacity col-reverse justify-between">
+    <div class="canvas-container">
+      <canvas  #chartCapacity></canvas>
+    </div>
+    <div class="asteroid">
+      <p *ngIf="(asteroid$ | async)?.currentCapacity === 0">EMPTY</p>    
+      <p *ngIf="(asteroid$ | async)?.currentCapacity != 0">Size : {{capacityPercent}} %</p>  
+    </div>
+  </article>
 </section>
 

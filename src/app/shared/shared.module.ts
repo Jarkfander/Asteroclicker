@@ -14,7 +14,7 @@ import { NgSliderComponent } from './ng-slider/ng-slider.component';
     ModalComponent,
     NgNotifComponent
   ],
-  declarations: [ModalComponent, NgNotifComponent, NgSliderComponent]
+  declarations: [ModalComponent, NgNotifComponent, NgSlideComponent, NgSliderComponent]
 })
 
 export class SharedModule {

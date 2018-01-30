@@ -1,18 +1,43 @@
+@import '../../../theme';
+
 section {
     height: 100%;
     width: 100%;
 }
-.canvas-container {
-    width: 50%;
-    canvas {
-        height: 100%;
-        width: 100%;
+article {
+    height: 100%;
+    .canvas-container {
+        position: relative;
+        padding: 5px;        
     }
 }
 
-.capacity-chart{
-    position: relative;
-    height: 100%;
-    width: 50%;
+.mining {
+    width: 30%;
+    border-right: solid 1px $black;
+    .canvas-container {
+        height: 60%;
+        border-bottom: solid 1px $black;
+    }
+    .time{
+        height: 40%;
+        border-top: solid 1px $black;
+    }
 }
+.capacity {
+    width: 70%;
+    border-left: solid 1px $black;
+    .canvas-container{
+        height: 40%;
+        border-top: solid 1px $black;
+    }
+    .asteroid {
+        height: 60%;
+        border-bottom: solid 1px $black;
+    }
+
+}
+
+
+
 

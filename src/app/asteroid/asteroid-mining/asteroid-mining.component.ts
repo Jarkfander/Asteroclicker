@@ -34,7 +34,7 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
     nextCombos: {}
   };
 
-  public capacityPercent: number = 0;
+  public capacityPercent = 0;
 
   constructor(private userS: UserService,
     private asteroidS: AsteroidService,
@@ -47,7 +47,7 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
     this.asteroidS.asteroid$.subscribe((asteroid: IAsteroid) => {
       this.asteroid$ = this.asteroidS.asteroid$;
       this.capacityPercent = parseFloat(((asteroid.currentCapacity * 100) / asteroid.capacity).toFixed(2));
-      this.capacityMeter.data.datasets[0].data = [this.capacityPercent];
+      this.capacityMeter.data.datasets[0].data = [this.capacityPercent + 20];
       this.capacityMeter.update();
     });
 
@@ -64,11 +64,10 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
       .map((user: User) => user.currentMineRate)
       .subscribe((mineRate: number) => this.mineRate = mineRate);
 
-    this.userS.getUpgradeByName("mineRate").subscribe((upgrade: IUserUpgrade) => {
+    this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
       this.userMineRateLvl = upgrade.lvl;
       this.baseMineRate = this.upgradeS.mineRate[upgrade.lvl].baseRate;
-      this.progressBarMaxValue = this.upgradeS.mineRate[upgrade.lvl].maxRate
-        - this.baseMineRate;
+      this.progressBarMaxValue = this.upgradeS.mineRate[upgrade.lvl].maxRate - this.baseMineRate;
       this.updateProgressBarValue();
     });
     this.updateProgressBarValue();
@@ -92,39 +91,38 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
 
   /** Setup the chart */
   private setCharts() {
-
+    // Circular chart for mining rate
     this.miningMeter = new Chart(this.chartMiningRef.nativeElement, {
       type: 'doughnut',
       data: {
+        labels: ['mine rate', 'mine rate'],
         datasets: [{
           data: [0, 1],
           backgroundColor: ['rgba(255, 99, 132)'],
         }]
       },
       options : {
-        maintainAspectRatio : true
+        maintainAspectRatio : false,
+        legend: { display: false }
       }
     });
 
+    // Horizontal bar for capacity
     this.capacityMeter = new Chart(this.chartCapacityRef.nativeElement, {
       type: 'horizontalBar',
       data: {
         datasets: [{
-          label: "Asteroid size",
-          data: [0],
+          data: [10],
           backgroundColor: ['rgba(10, 10,10)'],
         }]
       },
       options: {
         maintainAspectRatio: false,
+        legend: { display: false },
         scales: {
           xAxes: [{
-            display: true,
-            barThickness:1,
-            ticks: {
-              min: 0,
-              max: 100,
-            }
+            ticks: { min: 0, max: 100 },
+            gridLines: { display: false }
           }]
         }
       }
@@ -134,12 +132,10 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
 
   /** Set the mining rate on the chart */
   private setMiningRate() {
-
     if (this.progressBarValue > 0) {
       if (this.frenzyInfo.state) {
         this.miningMeter.data.datasets[0].data = [this.progressBarValue, 1 - this.progressBarValue];
-      }
-      else {
+      } else {
         this.miningMeter.data.datasets[0].data = [this.progressBarValue, this.progressBarMaxValue - this.progressBarValue];
       }
       this.miningMeter.update();
