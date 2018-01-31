@@ -1,4 +1,3 @@
-
 import { Upgrade } from './../upgrade-class/upgrade';
 import { Component, OnInit, ElementRef, Renderer2, ViewChild, Input } from '@angular/core';
 import { UserService, IUserUpgrade } from '../../shared/user/user.service';
@@ -15,9 +14,6 @@ import { NgNotifComponent } from '../../shared/ng-notif/ng-notif.component';
 })
 export class QgViewComponent implements OnInit {
 
-  @Input() credit: number;
-  @Input() oreAmount: IOreAmounts;
-
   @ViewChild('timer') timerRef: ElementRef;
   @ViewChild(NgNotifComponent) notif: NgNotifComponent;
 
@@ -26,6 +22,9 @@ export class QgViewComponent implements OnInit {
   public nextUpgrade: Upgrade;
   public oreInfos: IOreInfos;
   public upgradeCostString: string[];
+  public oreAmount: IOreAmounts;
+  public credit: number;
+  public lvlResearch: number;
 
   constructor(private socketS: SocketService,
     private el: ElementRef,
@@ -36,14 +35,30 @@ export class QgViewComponent implements OnInit {
 
   ngOnInit() {
     this.oreInfos = this.oreS.oreInfos;
+    this.oreS.OreAmounts
+      .subscribe((oreAmount: IOreAmounts) => {
+        this.oreAmount = oreAmount;
+      });
+    this.userS.credit
+      .subscribe((credit: number) => {
+        this.credit = credit;
+      });
+
+    this.userS.getUpgradeByName('research')
+      .subscribe((userUpgrade) => {
+        this.lvlResearch = userUpgrade.lvl;
+      });
 
     this.userS.getUpgradeByName('QG')
       .subscribe((userUpgrade) => {
         this.userUpgrade = userUpgrade;
+        this.currentUpgrade = this.upgradeS['QG'][userUpgrade.lvl];
         this.nextUpgrade = this.upgradeS['QG'][userUpgrade.lvl + 1];
         this.updateCost();
         this.setTimer();
+        this.renderer.setStyle(this.el.nativeElement, 'backgroundImage', `url('../../../assets/upgrade/img/${this.userUpgrade.name}.jpg')`);
       });
+
   }
 
   /** Setup timer if upgrade starts */
@@ -51,7 +66,7 @@ export class QgViewComponent implements OnInit {
     setTimeout(() => {
       if (this.userUpgrade.start !== 0) {
         const timeLeft = 100 - ((this.userUpgrade.timer - this.nextUpgrade.time) / (10 * this.nextUpgrade.time));
-        this.renderer.setStyle(this.timerRef.nativeElement, 'transform', `translateY(${timeLeft}%)`);
+        //this.renderer.setStyle(this.timerRef.nativeElement, 'transform', `translateY(${timeLeft}%)`);
         this.socketS.updateUpgradeTimer(this.userS.currentUser.uid, this.userUpgrade.name);
       }
     }, 1000);
@@ -90,15 +105,15 @@ export class QgViewComponent implements OnInit {
   }
 
   /**
- * Check if you have a level of research enough to know this ore
- * @param {string} oreName The name of the ore
- */
+  * Check if you have a level of research enough to know this ore
+  * @param {string} oreName The name of the ore
+  */
   oreMiss(oreName: string) {
     const oreKeys = Object.keys(this.oreInfos);
     for (let j = 0; j < oreKeys.length; j++) {
       const tempName = oreKeys[j];
       if (tempName === oreName) {
-        if (this.userUpgrade.lvl <
+        if (this.lvlResearch <
           this.oreInfos[oreKeys[j]].searchNewOre) {
           return false;
         }
@@ -107,8 +122,8 @@ export class QgViewComponent implements OnInit {
     return true;
   }
 
-   /** Change the cost depending on user's upgrade lvl */
-   private updateCost() {
+  /** Change the cost depending on user's upgrade lvl */
+  private updateCost() {
     const tempUpgradeCost = this.nextUpgrade.costOreString;
     const keysCost = Object.keys(tempUpgradeCost);
     const oreKeys = Object.keys(this.oreInfos);
