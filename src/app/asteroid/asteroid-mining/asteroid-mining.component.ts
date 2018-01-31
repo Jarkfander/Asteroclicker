@@ -126,10 +126,10 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
         maintainAspectRatio: false,
         legend: { display: false },
         scales: {
-          scaleLabel: { display: false },
           xAxes: [{
             stacked: true,
-            gridLines: { display: false }
+            gridLines: { display: false },
+            ticks: { display: false }
           }],
           yAxes: [{ stacked: true }]
         },
