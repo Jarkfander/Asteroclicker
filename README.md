@@ -28,14 +28,4 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ## To install
 
-npm install firebase angularfire2 --save
-
-npm install pixi-particles --save
-
-For type script : Add "import * as PIXI from 'pixi.js';" in Asteroclicker\node_modules\pixi-particles\index.d.ts 
-
-npm install tween.js --save
-
-npm install chart.js --save 
-
-npm install ng2-charts --save
+just ````npm install```` 
