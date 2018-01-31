@@ -44,12 +44,12 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
   ngOnInit() {
 
 
-    this.asteroidS.asteroid$.subscribe((asteroid: IAsteroid) => {
-      this.asteroid$ = this.asteroidS.asteroid$;
-      this.capacityMeter.data.datasets[0].data = [asteroid.currentCapacity];
-      this.capacityMeter.data.datasets[1].data = [asteroid.capacity - asteroid.currentCapacity];
-      this.capacityMeter.update();
-    });
+    this.asteroid$ = this.asteroidS.asteroid$
+      .do((asteroid: IAsteroid) => {
+        this.capacityMeter.data.datasets[0].data = [Math.floor(asteroid.currentCapacity)];
+        this.capacityMeter.data.datasets[1].data = [Math.floor(asteroid.capacity - asteroid.currentCapacity)];
+        this.capacityMeter.update();
+      });
 
     this.userS.frenzyInfo
       .subscribe((fInfo: IFrenzyInfo) => this.frenzyInfo = fInfo);
@@ -104,38 +104,36 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
       },
       options : {
         maintainAspectRatio : false,
-        legend: { display: false }
+        legend: { display: false },
+        tooltips: { enabled: false },
       }
     });
 
+    Chart.defaults.global.legend.display = false;
     // Horizontal bar for capacity
     this.capacityMeter = new Chart(this.chartCapacityRef.nativeElement, {
       type: 'horizontalBar',
       data: {
         datasets: [{
-          data: [0],
+          label: 'Remains',
           backgroundColor: ['rgb(200, 100, 100)']
         }, {
-          data: [100],
+          label: 'Total',
           backgroundColor: ['rgb(80, 20, 20)']
         }]
       },
       options: {
         maintainAspectRatio: false,
-        legend: {
-          display: false,
-          labels: { fontColor: 'white' }
-        },
+        legend: { display: false },
         scales: {
-          scaleLabel: { fontColor: 'white' },
+          scaleLabel: { display: false },
           xAxes: [{
             stacked: true,
             gridLines: { display: false }
           }],
-          yAxes: [{
-            stacked: true
-          }]
-        }
+          yAxes: [{ stacked: true }]
+        },
+        tooltips: { mode: 'point' }
       }
     });
   }
