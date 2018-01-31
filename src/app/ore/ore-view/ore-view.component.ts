@@ -4,13 +4,15 @@ import { Observable } from 'rxjs/Observable';
 import { UserService, IUserUpgrade } from '../../shared/user/user.service';
 import { UpgradeType } from '../../ship/upgrade-class/upgrade';
 import { AsteroidService, IAsteroid } from '../../asteroid/asteroid.service';
+import { figuesChange } from './../../shared/animations';
 
 import 'rxjs/add/operator/first';
 
 @Component({
   selector: 'app-ore-view',
   templateUrl: './ore-view.component.html',
-  styleUrls: ['./ore-view.component.scss']
+  styleUrls: ['./ore-view.component.scss'],
+  animations: [figuesChange]
 })
 export class OreViewComponent implements OnInit {
 
