@@ -14,26 +14,37 @@ article {
     }
 }
 
+// Left part
 .mining {
     width: 30%;
+    //Top Left
     .canvas-container {
         height: 60%;
         background-image: url('../../../assets/mining/top-left.png');
         background-size: cover;
     }
+    // Bottom Left
     .time{
         height: 40%;
         background-image: url('../../../assets/mining/bottom-left.png');
         background-size: cover;
     }
 }
+// Right Part
 .capacity {
     width: 70%;
+    // Bottom Right
     .canvas-container{
         height: 40%;
         background-image: url('../../../assets/mining/bottom-right.png');
         background-size: cover;
+        p {
+            text-align: center;
+            text-transform: uppercase;
+            color: white;
+        }
     }
+    // Top Right
     .asteroid {
         height: 60%;
         background-image: url('../../../assets/mining/top-right.png');

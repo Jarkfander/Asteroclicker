@@ -46,9 +46,9 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
 
     this.asteroidS.asteroid$.subscribe((asteroid: IAsteroid) => {
       this.asteroid$ = this.asteroidS.asteroid$;
-      this.capacityPercent = parseFloat(((asteroid.currentCapacity * 100) / asteroid.capacity).toFixed(2));
-      // this.capacityMeter.data.datasets[0].data = [this.capacityPercent + 20];
-      // sthis.capacityMeter.update();
+      this.capacityMeter.data.datasets[0].data = [asteroid.currentCapacity];
+      this.capacityMeter.data.datasets[1].data = [asteroid.capacity - asteroid.currentCapacity];
+      this.capacityMeter.update();
     });
 
     this.userS.frenzyInfo
@@ -113,21 +113,23 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
       type: 'horizontalBar',
       data: {
         datasets: [{
-          data: [20],
+          data: [0],
           backgroundColor: ['rgb(200, 100, 100)']
         }, {
-          data: [80],
+          data: [100],
           backgroundColor: ['rgb(80, 20, 20)']
         }]
       },
       options: {
         maintainAspectRatio: false,
-        legend: { display: false },
+        legend: {
+          display: false,
+          labels: { fontColor: 'white' }
+        },
         scales: {
           scaleLabel: { fontColor: 'white' },
           xAxes: [{
             stacked: true,
-            ticks: { min: 0, max: 100 },
             gridLines: { display: false }
           }],
           yAxes: [{
@@ -135,7 +137,6 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
           }]
         }
       }
-
     });
   }
 

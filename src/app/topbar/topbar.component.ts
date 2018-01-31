@@ -5,7 +5,7 @@ import { SocketService } from '../shared/socket/socket.service';
 import { SharedModule } from '../shared/shared.module';
 import { User } from '../shared/user/user';
 import { AuthService } from '../signin/auth.service';
-import { enter } from '../shared/animations';
+import { staggerTile } from '../shared/animations';
 
 
 
@@ -13,7 +13,7 @@ import { enter } from '../shared/animations';
   selector: 'app-topbar',
   templateUrl: './topbar.component.html',
   styleUrls: ['./topbar.component.scss'],
-  animations: [enter]
+  animations: [staggerTile]
 })
 export class TopbarComponent implements AfterViewInit {
   public name: string;
@@ -24,7 +24,7 @@ export class TopbarComponent implements AfterViewInit {
   public isModalProfile: boolean;
   public creditValue: string;
 
-  constructor(private authS:AuthService, public userS: UserService, public questS: QuestService, private socketS: SocketService) {
+  constructor(private authS: AuthService, public userS: UserService, public questS: QuestService, private socketS: SocketService) {
     this.name = userS.currentUser.name;
     this.credit = userS.currentUser.credit;
     this.creditValue = SharedModule.calculeMoneyWithSpace(userS.currentUser.credit);
