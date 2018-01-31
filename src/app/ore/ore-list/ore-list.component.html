@@ -1,20 +1,3 @@
-<!--
-<br>
-
-<table style="width:100%">
-  <tr style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;"
-    unselectable="on" onselectstart="return false;" onmousedown="return false;">
-    <td align="left">Type of Asteroid : {{ (asteroid$|async)?.ore }} </td>
-    <td *ngIf="(asteroid$|async)?.currentCapacity>0" align="right">{{ (asteroid$|async)?.currentCapacity }}/{{ (asteroid$|async)?.capacity }} </td>
-    <td *ngIf="(asteroid$|async)?.currentCapacity==0" style="color:red" align="right">EMPTY</td>
-  </tr>
-</table>
-
-<div class="progressBar" >
-    <progress value="{{progressBarValue}}" >
-    </progress>
-</div>
--->
 <perfect-scrollbar class="col">
   <div *ngFor="let ore of oreData$ | async">
     <app-ore-view *ngIf="ore.amount > 0"
@@ -25,43 +8,11 @@
       [capacity]="capacity"
       [rate]="mineRate" >
     </app-ore-view>
-  </div>
-  <div class="next ore border"
-    *ngIf="oreData$ | async"
-    [style.backgroundImage]="'url(assets/oreIcon/'+nextOre.name+'Background.jpg)'">
-      <h1>{{ nextOre.name }}</h1>
-  </div>
 
-    
-    <!--
-    <app-ore-view [name]="'iron'" [amount]="(oreAmounts$|async)?.iron" [capacity]="capacity"
-    [rate]="mineRate" >
-    </app-ore-view>
-    
-    <app-ore-view [name]="'titanium'" [amount]="(oreAmounts$|async)?.titanium" [capacity]="capacity"
-    [rate]="mineRate" >
-    </app-ore-view>
-    
-    <app-ore-view [name]="'gold'" [amount]="(oreAmounts$|async)?.gold" [capacity]="capacity"
-    [rate]="mineRate" >
-    </app-ore-view>
-    
-    <app-ore-view [name]="'hyperium'" [amount]="(oreAmounts$|async)?.hyperium" [capacity]="capacity"
-    [rate]="mineRate" >
-    </app-ore-view>
-  -->
+    <div class="next ore border"
+      *ngIf="ore.amount === 0"
+      [style.backgroundImage]="'url(assets/oreIcon/'+ore.name+'Background.jpg)'">
+      <h1></h1>
+    </div>
+  </div>
 </perfect-scrollbar>
-
-
-<!--
-<br>
-<table style="width:100%">
-      <tr >
-
-
-      </tr>
-</table>
-<br>
-
-<br>
--->

@@ -32,10 +32,7 @@ export class OreListComponent implements OnInit {
     this.oreData$ = this.oreInfoS.OreAmounts
       .map((oreAmounts: IOreAmounts) => Object.keys(oreAmounts).map(oreName => {
         return { name: oreName, amount: oreAmounts[oreName] };
-      }))
-      .do((oreDatas: IOreData[]) => {
-        this.nextOre = oreDatas.find((data: IOreData) => data.amount === 0);
-      });
+      }));
 
     this.userS.getUpgradeByName('storage')
       .map((upgrade: IUserUpgrade) => this.upgradeS.storage[upgrade.lvl].capacity)
