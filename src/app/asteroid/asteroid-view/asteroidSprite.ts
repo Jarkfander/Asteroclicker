@@ -56,7 +56,6 @@ export class AsteroidSprite {
         this.compteurEvent = 0;
         this.boolEvent = false;
         this.asteroid = new Array<PIXI.Sprite>();
-
         this.spriteStar = initSprite('etoile_filante', 500, 172, true, true, 0.30);
         this.spriteStarXY = { x: -200, y: 800 };
         this.spriteStar.scale.set(0.5, 0.5);
@@ -170,7 +169,8 @@ export class AsteroidSprite {
         if (x === 0 && y === 0) {
             sprite.x = this.app.renderer.width / 2;
             sprite.y = this.app.renderer.height / 2;
-            this.app.stage.addChildAt(sprite, 1);
+            this.asteroid[0].name = 'aste';
+            this.app.stage.addChildAt(sprite, 2);
         } else {
             this.asteroid[0].addChild(sprite);
             sprite.x = x;
@@ -419,7 +419,7 @@ export class AsteroidSprite {
         this.initAnimScaleAndAnchor(this.comboWrite);
     }
 
-    // When you click put a random animation 
+    // When you click put a random animation
     animBoomOnClick(x: number, y: number, pixiAnimate: PIXI.extras.AnimatedSprite, boolForce = false) {
         if (this.compteurBoom % 25 === 0 || boolForce) {
             this.compteurBoom = 1 + Math.floor(Math.random() * 12);
@@ -553,7 +553,9 @@ export class AsteroidSprite {
         this.comboSuccesLoop.position.set(this.width / 2, this.height / 2);
         this.comboSucces.position.set(this.width / 2, this.height / 2);
 
-        this.app.stage.addChildAt(this.comboSucces, 1);
+        this.comboSuccesLoop.name = 'combotSuccesLoop';
+
+        this.app.stage.addChild(this.comboSucces);
         this.app.stage.addChildAt(this.comboSuccesLoop, 1);
         this.app.stage.addChild(this.comboFail);
     }

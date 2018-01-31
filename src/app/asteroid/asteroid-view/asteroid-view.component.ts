@@ -325,7 +325,7 @@ export class AsteroidViewComponent implements OnInit {
 
     this.backgroundSky.width = w;
     this.backgroundSky.height = h;
-
+    this.backgroundSky.name = 'backgroundSky';
     this.app.stage.addChild(this.backgroundSky);
 
     this.backgroundSky.onComplete = () => {
