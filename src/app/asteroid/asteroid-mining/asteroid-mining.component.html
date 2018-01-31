@@ -9,9 +9,9 @@
   </article>
 
   <article class="capacity col-reverse justify-between">
-    <div class="canvas-container">
+    <div class="col justify-center align-center canvas-container">
       <canvas *ngIf="(asteroid$ | async)?.currentCapacity !== 0" #chartCapacity></canvas>
-      <p *ngIf="(asteroid$ | async)?.currentCapacity === 0">EMPTY</p>
+      <p class="empty" *ngIf="(asteroid$ | async)?.currentCapacity === 0">EMPTY</p>
     </div>
     <div class="asteroid">
 

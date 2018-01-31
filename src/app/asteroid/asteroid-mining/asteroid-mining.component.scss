@@ -38,10 +38,13 @@ article {
         height: 40%;
         background-image: url('../../../assets/mining/bottom-right.png');
         background-size: cover;
-        p {
+
+        p.empty {
             text-align: center;
             text-transform: uppercase;
-            color: white;
+            animation: warning 0.8s ease-in-out infinite alternate;
+            font-size: 1.3rem;
+            margin: 0;
         }
     }
     // Top Right
@@ -54,5 +57,13 @@ article {
 }
 
 
-
-
+@keyframes warning {
+    from {
+        transform: scale(1);
+        color: rgb(255, 80, 80);
+    }
+    to {
+        transform: scale(0.8);
+        color: rgb(220, 50, 50);
+    }
+}
