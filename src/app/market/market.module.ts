@@ -23,7 +23,7 @@ import { UserService } from '../shared/user/user.service';
     FormsModule
   ],
   declarations: [MarketViewComponent, MarketListComponent, CurveViewComponent],
-  exports: [MarketViewComponent],
+  exports: [MarketListComponent],
   providers: [UserService, MarketService]
 })
 export class MarketModule { }
