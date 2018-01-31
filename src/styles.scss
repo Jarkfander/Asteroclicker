@@ -114,23 +114,23 @@ body {
 // BTN SELL
 .btn-sell{
     @extend .btn;
-    background-color: rgb(49, 124, 49);
-    box-shadow: 3px 3px 1px $black, inset 3px 3px 1px rgb(83, 133, 83);
+    background-color: rgb(141, 47, 47);
+    box-shadow: 3px 3px 1px $black, inset 3px 3px 1px rgb(145, 84, 84);
 }
 
 .btn-sell:hover{
-    background-color: rgb(83, 133, 83);
+    background-color: rgb(145, 84, 84);
 }
 
 // BTN BUY
 .btn-buy{
     @extend .btn;
-    background-color: rgb(141, 47, 47);
-    box-shadow: 3px 3px 1px $black, inset 3px 3px 1px rgb(145, 84, 84);
+    background-color: rgb(49, 124, 49);
+    box-shadow: 3px 3px 1px $black, inset 3px 3px 1px rgb(83, 133, 83);
 }
 
 .btn-buy:hover{
-    background-color: rgb(145, 84, 84);
+    background-color: rgb(83, 133, 83);
 }
 
 // BUY DISABLED
