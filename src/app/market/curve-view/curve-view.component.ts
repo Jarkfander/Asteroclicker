@@ -30,7 +30,6 @@ export class CurveViewComponent implements OnInit {
         const line = this.canvas.nativeElement.getContext('2d');
         this.chart = new ManagedChart(line, this.size, 'rgba(' + this.color + ')');
         this.chart.initTab(tab);
-        console.log(tab);
         this.init = true;
       } else {
         this.chart.addNew(tab);

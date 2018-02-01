@@ -41,12 +41,10 @@ export class MarketListComponent implements OnInit {
     this.oreS.OreInfos
       .first()
       .subscribe((oreInfos: IOreInfos) => {
-
         this.userS.getUpgradeByName('research')
           .subscribe((upgrade: IUserUpgrade) => {
-            for (let i; i < this.allOre.length; i++) {
+            for (let i=0; i < this.allOre.length; i++) {
               this.allOre[i].unlocked = upgrade.lvl >= oreInfos[this.allOre[i].name].searchNewOre;
-              console.log(this.allOre[i].name+" : "+this.allOre[i].unlocked);
             }
           });
 
