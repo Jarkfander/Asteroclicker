@@ -9,6 +9,7 @@ export interface ISearch {
   result: IAsteroid[];
   timer: number;
   start: number;
+  state: 0 | 1 | 2 | 3;
 }
 
 @Injectable()
@@ -20,5 +21,5 @@ export class SearchService {
     return this.authS.UserId
       .mergeMap((id: String) => this.db.object('users/' + id + '/search').valueChanges<ISearch>())
   }
-  
+
 }

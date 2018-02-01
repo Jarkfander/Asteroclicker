@@ -9,13 +9,13 @@ import { UpgradeService } from '../upgrade.service';
 import { Observable } from 'rxjs/Observable';
 
 import 'rxjs/add/operator/do';
-import { enter } from '../upgrade-info/upgrade-info.animations';
+import { staggerTile } from './../../shared/animations';
 
 @Component({
     selector: 'app-upgrade-list',
     templateUrl: './upgrade-list.component.html',
     styleUrls: ['./upgrade-list.component.scss'],
-    animations: [enter]
+    animations: [staggerTile]
 })
 export class UpgradeListComponent implements OnInit {
 

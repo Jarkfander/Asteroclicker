@@ -3,17 +3,25 @@ import { CommonModule } from '@angular/common';
 import { ModalComponent } from './modal/modal.component';
 import { NgNotifComponent } from './ng-notif/ng-notif.component';
 import { SimpleNotificationsModule } from 'angular2-notifications';
+import { NgSliderComponent, NgSlideComponent } from './ng-slider/ng-slider.component';
 
 @NgModule({
   imports: [
     CommonModule,
     SimpleNotificationsModule.forRoot()
   ],
+  declarations: [
+    ModalComponent,
+    NgNotifComponent,
+    NgSlideComponent,
+    NgSliderComponent
+  ],
   exports: [
     ModalComponent,
-    NgNotifComponent
-  ],
-  declarations: [ModalComponent, NgNotifComponent]
+    NgNotifComponent,
+    NgSlideComponent,
+    NgSliderComponent
+  ]
 })
 
 export class SharedModule {

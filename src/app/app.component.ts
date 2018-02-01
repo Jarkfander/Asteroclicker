@@ -11,11 +11,13 @@ import { AuthService } from './signin/auth.service';
 import { Observable } from 'rxjs/Observable';
 import { User } from 'firebase/app';
 
+import { staggerTile } from './shared/animations';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  animations: [staggerTile]
 })
 export class AppComponent implements OnInit {
 

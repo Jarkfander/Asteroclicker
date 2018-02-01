@@ -5,10 +5,10 @@ import { AuthService } from '../signin/auth.service';
 
 export interface IOreInfos {
   carbon: IOreInfo;
-  gold: IOreInfo;
-  hyperium: IOreInfo;
   iron: IOreInfo;
   titanium: IOreInfo;
+  gold: IOreInfo;
+  hyperium: IOreInfo;
 }
 
 export interface IOreInfo {
@@ -23,10 +23,10 @@ export interface IOreInfo {
 
 export interface IOreAmounts {
   carbon: number;
-  gold: number;
-  hyperium: number;
   iron: number;
   titanium: number;
+  gold: number;
+  hyperium: number;
 }
 
 
@@ -48,7 +48,8 @@ export class OreService {
     return  this.db.object('oreInfo').valueChanges<IOreInfos>();
   }
 
-  getOreInfoByString(name: string): Observable<IOreInfo> {
+  /** Get the infos of an ore based on its name */
+  public getOreInfoByName(name: string): Observable<IOreInfo> {
     return  this.db.object('oreInfo/' + name).valueChanges<IOreInfo>();
   }
 

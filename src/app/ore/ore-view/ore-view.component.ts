@@ -5,6 +5,7 @@ import { UserService, IUserUpgrade } from '../../shared/user/user.service';
 import { UpgradeType } from '../../ship/upgrade-class/upgrade';
 import { AsteroidService, IAsteroid } from '../../asteroid/asteroid.service';
 
+import 'rxjs/add/operator/first';
 
 @Component({
   selector: 'app-ore-view',
@@ -19,24 +20,29 @@ export class OreViewComponent implements OnInit {
   @Input('capacity') capacity: number;
 
   public oreInfo: IOreInfo;
-  public researchLvl: number=1;
-  public oreCoef: number = 0;
+  public mineRate$: Observable<number>;
+  public researchLvl = 1;
+  public oreCoef = 0;
   public displayRate: string;
 
-  public isRateDisplayed : boolean=false;
+  public isRateDisplayed = false;
   constructor(private oreS: OreService, private userS: UserService, private asteroidS: AsteroidService) { }
 
   ngOnInit() {
-    this.oreS.getOreInfoByString(this.name).take(1).subscribe((oreInfo: IOreInfo) => {
-      this.oreInfo = oreInfo;
-      this.asteroidS.asteroid.subscribe((aste: IAsteroid) => {
-        this.oreCoef = oreInfo.miningSpeed * (aste.purity / 100);
-        this.isRateDisplayed=aste.ore==this.name;
+    this.oreInfo = this.oreS.oreInfos[this.name];
+    this.mineRate$ = this.asteroidS.asteroid$
+      .filter((aste: IAsteroid) => aste.ore === this.name)
+      .map((aste: IAsteroid) => {
+        return this.oreInfo.miningSpeed * (aste.purity / 100) * this.rate;
       });
-
-    });
-    this.userS.getUpgradeByName("research").subscribe((upgrade:IUserUpgrade)=>{
-      this.researchLvl=upgrade.lvl;
-    });
+    /*
+      this.asteroidS.asteroid
+      .subscribe((aste: IAsteroid) => {
+        this.oreCoef = this.oreInfo.miningSpeed * (aste.purity / 100);
+        this.isRateDisplayed = (aste.ore === this.name);
+      });
+    */
   }
 }
+
+// (this.oreCoef * this.rate)

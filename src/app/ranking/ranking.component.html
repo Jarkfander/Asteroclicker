@@ -1,5 +1,5 @@
-<section>
-  <article class="border" *ngFor="let ranked of rankingBtw">
+<section [@stagger-tile]>
+  <article class="border tile" *ngFor="let ranked of rankingBtw">
       <div *ngIf=" iUser % 10 === ranked.id">
         <b class='credit'>
             {{ ranked.id }} - {{ ranked.name }} : {{ ranked.score }}
