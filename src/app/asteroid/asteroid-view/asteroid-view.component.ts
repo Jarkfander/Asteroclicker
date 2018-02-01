@@ -18,10 +18,10 @@ import { OreService, IOreInfos } from '../../ore/ore.service';
 
 
 export enum KEY_CODE {
-  RIGHT_ARROW = 39,
+  LEFT_ARROW = 37,
   UP_ARROW = 38,
-  DOWN_ARROW = 40,
-  LEFT_ARROW = 37
+  RIGHT_ARROW = 39,
+  DOWN_ARROW = 40
 }
 
 @Component({
@@ -36,7 +36,7 @@ export class AsteroidViewComponent implements OnInit {
   private asteroidSprite: AsteroidSprite;
   private asteroid: IAsteroid;
   private state: number;
-  private drone: Array<Drone>;
+  private drone: Drone;
   private emitter: ParticleBase;
 
   private backgroundSky: PIXI.extras.AnimatedSprite;
@@ -91,9 +91,7 @@ export class AsteroidViewComponent implements OnInit {
         this.boolKeyboard = false;
         this.boolKeyboardFirst = false;
       }
-
     }
-
     if (event.keyCode === KEY_CODE.LEFT_ARROW) {
       this.frenzyModTouch(KEY_CODE.LEFT_ARROW);
       if (!this.boolKeyboard) {
@@ -125,7 +123,6 @@ export class AsteroidViewComponent implements OnInit {
     this.app = new PIXI.Application(w, h, { backgroundColor: 0x1079bb });
     this.render.appendChild(this.el.nativeElement, this.app.view);
 
-    this.drone = new Array<Drone>();
     // skyV1
     this.initSky(w, h);
 
@@ -146,12 +143,12 @@ export class AsteroidViewComponent implements OnInit {
   // Subject
   subjectManage() {
     // Asteroid Subject
-
     this.asteroidS.asteroid.subscribe((asteroid: IAsteroid) => {
       if (this.asteroid == null) {
         this.initAsteroid(asteroid);
         this.asteroid = asteroid;
       }
+      this.initNumberOfDroneBegin();
 
       const state = asteroid.currentCapacity === asteroid.capacity ? 4 :
         Math.floor((asteroid.currentCapacity / asteroid.capacity) * 5);
@@ -168,13 +165,13 @@ export class AsteroidViewComponent implements OnInit {
 
       if (asteroid.currentCapacity > this.asteroid.currentCapacity) {
         this.asteroidSprite.changeSprite(asteroid);
-        this.miningLaser(true);
+        this.drone.laserAnim.visible = true;
       }
       this.asteroid = asteroid;
     });
 
     this.asteroidS.isEmpty.subscribe((isEmpty: boolean) => {
-      this.miningDrone(!isEmpty);
+      this.drone.isMining = !isEmpty;
     });
 
     // Event Subject
@@ -188,11 +185,12 @@ export class AsteroidViewComponent implements OnInit {
     this.userS.frenzyInfo.subscribe((frenzy: IFrenzyInfo) => {
       this.frenzyInfo = frenzy;
       if (!frenzy.state) {
+        this.userS.currentUser.frenzy.comboInd = 0;
         this.asteroidSprite.frenzyModTouchDown();
         this.asteroidSprite.frenzyModComboFinish();
       } else {
-          this.asteroidSprite.frenzyBackgroundStart();
-          this.asteroidSprite.frenzyModTouch(frenzy.nextCombos[0]);
+        this.asteroidSprite.frenzyBackgroundStart();
+        this.asteroidSprite.frenzyModTouch(frenzy.nextCombos[0]);
       }
     });
 
@@ -204,14 +202,7 @@ export class AsteroidViewComponent implements OnInit {
     // Upgrade Subject
     this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
       const tempLvl = upgrade.lvl;
-      if (this.drone.length !== Math.floor(tempLvl / 40) + 1) {
-        this.addNewDrone();
-      }
-      for (let i = 0; i < this.drone.length; i++) {
-        if (this.drone[i]) {
-          this.drone[i].changeSpriteDrone(upgrade.lvl, i);
-        }
-      }
+      this.drone.changeSpriteDrone(upgrade.lvl);
     });
   }
 
@@ -242,16 +233,11 @@ export class AsteroidViewComponent implements OnInit {
     }
 
     if (coefClick > 0.5) {
-      for (let i = 0; i < this.drone.length; i++) {
-        this.drone[i].activeLaser();
-        this.drone[i].laserAnim.visible = false;
-      }
-
+      this.drone.activeLaser();
+      this.drone.laserAnim.visible = false;
       this.asteroidSprite.checkAstero = true;
     } else {
-      for (let i = 0; i < this.drone.length; i++) {
-        this.drone[i].desactivLaser();
-      }
+      this.drone.desactivLaser();
       this.asteroidSprite.checkAstero = false;
     }
   }
@@ -324,7 +310,7 @@ export class AsteroidViewComponent implements OnInit {
 
     this.backgroundSky.width = w;
     this.backgroundSky.height = h;
-
+    this.backgroundSky.name = 'backgroundSky';
     this.app.stage.addChild(this.backgroundSky);
 
     this.backgroundSky.onComplete = () => {
@@ -352,7 +338,7 @@ export class AsteroidViewComponent implements OnInit {
     }
   }
 
-  // frenzy mod
+  // frenzy mod - - - - -  - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - - -  - - - - - -
   frenzyModTouch(numTouchUserActu: number) {
     if (this.frenzyInfo.state) {
       this.socketS.validArrow(this.userS.currentUser.uid, numTouchUserActu - 37, this.userS.currentUser.frenzy.comboInd);
@@ -363,45 +349,16 @@ export class AsteroidViewComponent implements OnInit {
         this.asteroidSprite.frenzyFail();
       }
     } else {
-        this.asteroidSprite.frenzyModComboFinish();
+      this.asteroidSprite.frenzyModComboFinish();
     }
   }
 
-  // Manage lot of drone - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Manage Drone - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   initNumberOfDroneBegin() {
-    let random = 1;
-    const numOfDrone = this.userS.currentUser.boolBadConfig ? 1 : Math.floor(this.userMineRateLvl / 50) + 1;
-
-    for (let i = 0; i < numOfDrone; i++) {
-      random = (Math.floor(Math.random() * 4) + 1) * 0.01;
-      this.drone.push(new Drone(0.20 - random, 0.20 - random, 1, 1,this.asteroid.currentCapacity>0, this.app));
-      this.drone[i].deltaTempAster = (i / 3) * (2 * Math.PI) / 1000;
-      this.drone[i].changeSpriteDrone(this.userMineRateLvl, i);
+    if (!this.drone) {
+      this.drone = new Drone(0.20, 0.20, 1, 1, this.asteroid.currentCapacity > 0, this.app);
+      this.drone.deltaTempAster = (1 / 3) * (2 * Math.PI) / 1000;
     }
+    this.drone.changeSpriteDrone(this.userMineRateLvl);
   }
-
-  miningDrone(booltemp: boolean) {
-    for (let i = 0; i < this.drone.length; i++) {
-      this.drone[i].isMining = booltemp;
-    }
-  }
-
-  addNewDrone() {
-    if (this.userS.currentUser.boolBadConfig) {
-      return;
-    }
-    const tempLvl = this.userS.currentUser.upgrades[UpgradeType.mineRate].lvl;
-    const random = (Math.floor(Math.random() * 4) + 1) * 0.01;
-    this.drone.push(new Drone(0.20 - random, 0.20 - random, 1, 1,this.asteroid.currentCapacity>0, this.app));
-    this.drone[this.drone.length - 1].deltaTempAster = ((this.drone.length - 1) / 3) * (2 * Math.PI) / 1000;
-    this.drone[this.drone.length - 1].laserAnim.visible = this.drone[0].laserAnim.visible;
-    this.drone[this.drone.length - 1].isMining = this.drone[0].isMining;
-  }
-
-  miningLaser(booltemp: boolean) {
-    for (let i = 0; i < this.drone.length; i++) {
-      this.drone[i].laserAnim.visible = booltemp;
-    }
-  }
-
 }
