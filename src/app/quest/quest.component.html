@@ -1,6 +1,6 @@
-<section [@entrance]>
+<section [@stagger-tile]>
   <!-- Daily Quest open -->
-  <article class="row border" *ngIf="quest.gain !== -1">
+  <article class="row border tile" *ngIf="quest.gain !== -1">
     <img class="upgrade-icon" src="../../../assets/Ivan.gif" />
     <div class="col">
         <h1>Daily Quest</h1>
@@ -10,13 +10,13 @@
     </div> 
   </article>
   <!-- Daily Quest closed -->
-  <article class="col border" *ngIf="quest.gain === -1">
+  <article class="col border tile" *ngIf="quest.gain === -1">
       <h1>Daily Quest</h1>
       <p>New quest every 1 hours ! </p>
   </article>
 
   <!-- Group Quest open -->
-  <article class="col border" *ngIf="questGroup.values !== 0">
+  <article class="col border tile" *ngIf="questGroup.values !== 0">
     <h1>Glory Quest</h1>
     <p>{{ questGroup.name }}</p>
     <p>{{ questGroup.calculValueDisplay() }} / {{ questGroup.valueWithSpace(questS.questGroup.valuesFinal)}}</p>
@@ -25,7 +25,7 @@
     -->
   </article>
   <!-- Group Quest closed -->
-  <article class="col border" *ngIf="questGroup.values === 0">
+  <article class="col border tile" *ngIf="questGroup.values === 0">
     <h1>Glory Quest</h1>
     <p>Wait new information !</p>
   </article>

@@ -14,11 +14,11 @@ export const enter = trigger('enter', [
     transition(':leave', [show, animate('0.2s cubic-bezier(.82,.01,.67,.99)', hidden)])
 ]);
 
-export const entrance = trigger('entrance', [
-    transition('* => *', [
-        query(':enter', [hidden]),
-        query(':enter', stagger('100ms', [
-            animate('0.3s ease-in-out', show)
+export const staggerTile =  trigger('stagger-tile', [
+    transition(':enter', [
+        query('.tile', [hidden]),
+        query('.tile', stagger('100ms', [
+            animate('0.3s cubic-bezier(.82,.01,.67,.99)', show)
         ]))
-    ])
+    ]),
 ]);

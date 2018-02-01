@@ -17,7 +17,7 @@ import { CurveViewComponent } from '../curve-view/curve-view.component';
   templateUrl: './market-view.component.html',
   styleUrls: ['./market-view.component.scss']
 })
-export class MarketInfoComponent implements OnInit {
+export class MarketViewComponent implements OnInit {
 
   @Input('oreName') oreName: string;
   @Input('color') color: string;
@@ -60,7 +60,7 @@ export class MarketInfoComponent implements OnInit {
 
   ngOnInit() {
 
-    this.oreS.getOreInfoByString(this.oreName)
+    this.oreS.getOreInfoByName(this.oreName)
       .first()
       .subscribe((oreInfo: IOreInfo) => {
         this.oreInfo = oreInfo;

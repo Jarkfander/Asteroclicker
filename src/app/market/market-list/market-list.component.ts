@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
   templateUrl: './market-list.component.html',
   styleUrls: ['./market-list.component.scss']
 })
-export class MarketViewComponent {
+export class MarketListComponent {
 
   // TODO : set color elsewhere (BDD ?)
   public ores = [{

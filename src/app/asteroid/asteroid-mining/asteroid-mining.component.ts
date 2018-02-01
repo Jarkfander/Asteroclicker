@@ -34,7 +34,7 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
     nextCombos: {}
   };
 
-  public capacityPercent: number = 0;
+  public capacityPercent = 0;
 
   constructor(private userS: UserService,
     private asteroidS: AsteroidService,
@@ -44,12 +44,12 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
   ngOnInit() {
 
 
-    this.asteroidS.asteroid.subscribe((asteroid: IAsteroid) => {
-      this.asteroid$ = this.asteroidS.asteroid;
-      this.capacityPercent=parseFloat(((asteroid.currentCapacity * 100) / asteroid.capacity).toFixed(2));
-      this.capacityMeter.data.datasets[0].data = [this.capacityPercent];
-      this.capacityMeter.update();
-    });
+    this.asteroid$ = this.asteroidS.asteroid$
+      .do((asteroid: IAsteroid) => {
+        this.capacityMeter.data.datasets[0].data = [Math.floor(asteroid.currentCapacity)];
+        this.capacityMeter.data.datasets[1].data = [Math.floor(asteroid.capacity - asteroid.currentCapacity)];
+        this.capacityMeter.update();
+      });
 
     this.userS.frenzyInfo
       .subscribe((fInfo: IFrenzyInfo) => this.frenzyInfo = fInfo);
@@ -64,11 +64,10 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
       .map((user: User) => user.currentMineRate)
       .subscribe((mineRate: number) => this.mineRate = mineRate);
 
-    this.userS.getUpgradeByName("mineRate").subscribe((upgrade: IUserUpgrade) => {
+    this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
       this.userMineRateLvl = upgrade.lvl;
       this.baseMineRate = this.upgradeS.mineRate[upgrade.lvl].baseRate;
-      this.progressBarMaxValue = this.upgradeS.mineRate[upgrade.lvl].maxRate
-        - this.baseMineRate;
+      this.progressBarMaxValue = this.upgradeS.mineRate[upgrade.lvl].maxRate - this.baseMineRate;
       this.updateProgressBarValue();
     });
     this.updateProgressBarValue();
@@ -92,54 +91,59 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
 
   /** Setup the chart */
   private setCharts() {
-
+    // Circular chart for mining rate
     this.miningMeter = new Chart(this.chartMiningRef.nativeElement, {
       type: 'doughnut',
       data: {
+        labels: ['mine rate', 'mine rate'],
         datasets: [{
           data: [0, 1],
-          backgroundColor: ['rgba(255, 99, 132)'],
+          backgroundColor: ['rgb(73, 141, 230)', 'rgb(30, 30, 100)'],
+          borderColor: ['rgb(190,190,190)', 'rgb(80, 80, 80)']
         }]
       },
       options : {
-        maintainAspectRatio : true
+        maintainAspectRatio : false,
+        legend: { display: false },
+        tooltips: { enabled: false },
       }
     });
 
+    Chart.defaults.global.legend.display = false;
+    // Horizontal bar for capacity
     this.capacityMeter = new Chart(this.chartCapacityRef.nativeElement, {
       type: 'horizontalBar',
       data: {
         datasets: [{
-          label: "Asteroid size",
-          data: [0],
-          backgroundColor: ['rgba(10, 10,10)'],
+          label: 'Remains',
+          backgroundColor: ['rgb(200, 100, 100)']
+        }, {
+          label: 'Total',
+          backgroundColor: ['rgb(80, 20, 20)']
         }]
       },
       options: {
         maintainAspectRatio: false,
+        legend: { display: false },
         scales: {
           xAxes: [{
-            display: true,
-            barThickness:1,
-            ticks: {
-              min: 0,
-              max: 100,
-            }
-          }]
-        }
+            stacked: true,
+            gridLines: { display: false },
+            ticks: { display: false }
+          }],
+          yAxes: [{ stacked: true }]
+        },
+        tooltips: { mode: 'point' }
       }
-
     });
   }
 
   /** Set the mining rate on the chart */
   private setMiningRate() {
-
     if (this.progressBarValue > 0) {
       if (this.frenzyInfo.state) {
         this.miningMeter.data.datasets[0].data = [this.progressBarValue, 1 - this.progressBarValue];
-      }
-      else {
+      } else {
         this.miningMeter.data.datasets[0].data = [this.progressBarValue, this.progressBarMaxValue - this.progressBarValue];
       }
       this.miningMeter.update();

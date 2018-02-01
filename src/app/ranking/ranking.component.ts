@@ -1,4 +1,4 @@
-import { entrance } from './../shared/animations';
+import { staggerTile } from './../shared/animations';
 import { Component, AfterViewInit } from '@angular/core';
 import { Ranking } from './ranking';
 import { UserService, IUser, IProfile } from '../shared/user/user.service';
@@ -10,7 +10,7 @@ import { RankingService } from './ranking.service';
   selector: 'app-ranking',
   templateUrl: './ranking.component.html',
   styleUrls: ['./ranking.component.scss'],
-  animations: [entrance]
+  animations: [staggerTile]
 })
 export class RankingComponent implements AfterViewInit {
 

@@ -1,11 +1,11 @@
 <div *ngIf="(user$|async)==null">
-  <app-signin>
-  </app-signin>
+  <app-signin></app-signin>
 </div>
 
 
-<main *ngIf="upgradeS && (user$|async)!=null && upgradeS.storageLoad && upgradeS.mineRateLoad
+<main [@stagger-tile] *ngIf="upgradeS && (user$|async)!=null && upgradeS.storageLoad && upgradeS.mineRateLoad
  && upgradeS.researchLoaded && upgradeS.engineLoad && loadAnimation.boolFinishLoad
+
   ">
 
 <!--

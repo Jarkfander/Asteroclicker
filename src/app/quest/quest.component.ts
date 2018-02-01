@@ -1,4 +1,4 @@
-import { entrance } from '../shared/animations';
+import { staggerTile } from '../shared/animations';
 import { Component, OnInit } from '@angular/core';
 import { QuestService } from './quest.service';
 import { UserService } from '../shared/user/user.service';
@@ -9,7 +9,7 @@ import { Quest } from './quest';
   selector: 'app-quest',
   templateUrl: './quest.component.html',
   styleUrls: ['./quest.component.scss'],
-  animations: [entrance]
+  animations: [staggerTile]
 })
 export class QuestComponent implements OnInit {
 

@@ -1,16 +1,26 @@
+@import '../../../theme';
 
 section {
     height: 100%;
     width: 100%;
     overflow: hidden;
+    background-image: url('../../../assets/upgrade/img/QG.jpg');
+    background-size: cover;
 }
 
 .level-up {
     width: 30%;
     height: 100%;
-    background-color: rgb(173, 173, 173);
-    transition: transform 0.5s ease-in-out;
+    padding: 10px;
+    background: linear-gradient(to left, $black, transparent);
+    transition: transform 0.3s ease-in-out;
     transform: translateX(100%);
+
+    h3 {
+        margin: 0;
+        color: white;
+        text-align: right;
+    }
 }
 
 :host:hover {

@@ -1,18 +1,69 @@
+@import '../../../theme';
+
 section {
     height: 100%;
     width: 100%;
+    background-image: url('../../../assets/mining/background.jpg');
+    background-size: cover;
 }
-.canvas-container {
-    width: 50%;
-    canvas {
-        height: 100%;
-        width: 100%;
+article {
+    height: 100%;
+    .canvas-container {
+        position: relative;
+        padding: 5px 10px;        
     }
 }
 
-.capacity-chart{
-    position: relative;
-    height: 100%;
-    width: 50%;
+// Left part
+.mining {
+    width: 30%;
+    //Top Left
+    .canvas-container {
+        height: 60%;
+        background-image: url('../../../assets/mining/top-left.png');
+        background-size: cover;
+    }
+    // Bottom Left
+    .time{
+        height: 40%;
+        background-image: url('../../../assets/mining/bottom-left.png');
+        background-size: cover;
+    }
+}
+// Right Part
+.capacity {
+    width: 70%;
+    // Bottom Right
+    .canvas-container{
+        height: 40%;
+        background-image: url('../../../assets/mining/bottom-right.png');
+        background-size: cover;
+
+        p.empty {
+            text-align: center;
+            text-transform: uppercase;
+            animation: warning 0.8s ease-in-out infinite alternate;
+            font-size: 1.3rem;
+            margin: 0;
+        }
+    }
+    // Top Right
+    .asteroid {
+        height: 60%;
+        background-image: url('../../../assets/mining/top-right.png');
+        background-size: cover;
+    }
+
 }
 
+
+@keyframes warning {
+    from {
+        transform: scale(1);
+        color: rgb(255, 80, 80);
+    }
+    to {
+        transform: scale(0.8);
+        color: rgb(220, 50, 50);
+    }
+}

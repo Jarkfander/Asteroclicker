@@ -5,6 +5,11 @@ import { UpgradeService } from '../../ship/upgrade.service';
 import { Observable } from 'rxjs/Observable';
 import { OreService, IOreAmounts } from '../ore.service';
 
+interface IOreData {
+  name: string;
+  amount: number;
+}
+
 @Component({
   selector: 'app-ore-list',
   templateUrl: './ore-list.component.html',
@@ -13,8 +18,8 @@ import { OreService, IOreAmounts } from '../ore.service';
 
 export class OreListComponent implements OnInit {
 
-  public ores = ['carbon', 'iron', 'titanium', 'gold', 'hyperium'];
-  public oreAmounts$: Observable<IOreAmounts>;
+  public oreData$: Observable<IOreData[]>;
+  public nextOre: IOreData;
   public mineRate: number;
   public capacity: number;
 
@@ -23,10 +28,13 @@ export class OreListComponent implements OnInit {
               private oreInfoS: OreService) {}
 
   ngOnInit() {
-    this.oreAmounts$ = this.oreInfoS.OreAmounts;
     this.mineRate = this.userS.currentUser.currentMineRate;
+    this.oreData$ = this.oreInfoS.OreAmounts
+      .map((oreAmounts: IOreAmounts) => Object.keys(oreAmounts).map(oreName => {
+        return { name: oreName, amount: oreAmounts[oreName] };
+      }));
 
-    this.userS.getUpgradeByName("storage")
+    this.userS.getUpgradeByName('storage')
       .map((upgrade: IUserUpgrade) => this.upgradeS.storage[upgrade.lvl].capacity)
       .subscribe((capacity: number) => this.capacity = capacity);
 
