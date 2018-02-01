@@ -1,5 +1,4 @@
 <section *ngIf="currentUpgrade" class="col border justify-between align-center">
-    <h1>{{currentUpgrade.displayName}}</h1>
     <!--
     <button *ngIf="currentLvl && currentLvl.start==0" [disabled]="!canBuy" class="btn-upgrade" (click)="levelUpOre()">Upgrade / Ore</button>
     <button *ngIf="userUpgrade.start !== 0" disabled="true" class="btn-upgrade">{{timer}}</button>
@@ -13,6 +12,7 @@
             </div>
         </div>
     </div>
+    <h1>{{currentUpgrade.displayName}}</h1>    
 
     <div #timer *ngIf="userUpgrade.start !== 0" class="timer"></div>
 </section>

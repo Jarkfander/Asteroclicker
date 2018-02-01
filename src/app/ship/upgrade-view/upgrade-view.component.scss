@@ -31,7 +31,7 @@ section {
         text-align: center;
         width: 100%;
         transition: transform 0.3s cubic-bezier(.33,.01,.59,.99);
-        transform: translateY(-200%);
+        transform: translateY(200%);
     }
     button {
         opacity: 0;
@@ -47,7 +47,7 @@ section {
         background-size: cover;
         border: solid 3px $black;
         transition: transform 0.4s cubic-bezier(.33,.01,.59,.99);
-        transform: translateY(200%);
+        transform: translateY(-200%);
         color: $black;
         cursor: pointer;
         .lvl-up {

@@ -1,12 +1,6 @@
-<article class="col align-end no-selection" *ngIf="!!oreInfo">
-  <h3>{{name.toUpperCase()}}</h3>
+<article class="col align-end no-selection">
+  <h3>{{ name }}</h3>
   <p [@figures-change]="amount" [ngStyle]="{'color': amount >= capacity ? 'red' : 'white'}">
     {{ amount | number: '1.0-0' }}
   </p>
-  <p>
-    <span [@figures-change]="(mineRate$ | async)">{{ mineRate$ | async | number: '1.0-2' }}</span> / s
-  </p>
-  <!--
-  <p *ngIf="isRateDisplayed">{{(this.oreCoef * this.rate).toFixed(2)}}/s</p>
-  -->
 </article>
