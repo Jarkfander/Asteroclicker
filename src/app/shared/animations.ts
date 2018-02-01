@@ -1,4 +1,4 @@
-import { trigger, state, style, transition, animate, keyframes, query, stagger } from '@angular/animations';
+import { group, trigger, state, style, transition, animate, keyframes, query, stagger } from '@angular/animations';
 
 /**
  * Styles
@@ -20,5 +20,16 @@ export const staggerTile =  trigger('stagger-tile', [
         query('.tile', stagger('100ms', [
             animate('0.3s cubic-bezier(.82,.01,.67,.99)', show)
         ]))
+    ]),
+]);
+
+export const figuesChange = trigger('figures-change', [
+    transition(':increment', [
+        style({ textShadow: '0 0 5px rgb(200, 200, 0)' }),
+        animate('0.8s ease-out', style('*'))
+    ]),
+    transition(':decrement', [
+        style({ textShadow: '0 0 5px rgb(200, 0, 0)' }),
+        animate('0.8s ease-out', style('*'))
     ]),
 ]);

@@ -1,17 +1,11 @@
 <perfect-scrollbar class="col">
   <div *ngFor="let ore of oreData$ | async">
-    <app-ore-view *ngIf="ore.amount > 0"
-      class="ore border"
-      [style.backgroundImage]="'url(assets/oreIcon/'+ore.name+'Background.jpg)'"
-      [name]="ore.name"
-      [amount]="ore.amount"
-      [capacity]="capacity"
-      [rate]="mineRate" >
+    <!-- Current Ores -->
+    <app-ore-view *ngIf="ore.amount > 0" class="ore border" [style.backgroundImage]="'url(assets/oreIcon/'+ore.name+'Background.jpg)'"
+      [name]="ore.name" [amount]="ore.amount" [capacity]="capacity" [rate]="mineRate">
     </app-ore-view>
-
-    <div class="next ore border"
-      *ngIf="ore.amount === 0"
-      [style.backgroundImage]="'url(assets/oreIcon/'+ore.name+'Background.jpg)'">
+    <!-- Next ores -->
+    <div class="next ore border" *ngIf="ore.amount === 0" [style.backgroundImage]="'url(assets/oreIcon/'+ore.name+'Background.jpg)'">
       <h1></h1>
     </div>
   </div>
