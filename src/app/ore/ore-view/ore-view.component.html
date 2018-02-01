@@ -4,7 +4,6 @@
     {{ amount | number: '1.0-0' }}
   </p>
   <p>
-    <span [@figures-change]="(mineRate$ | async)">{{ mineRate$ | async | number: '1.0-2' }}</span> / s
   </p>
   <!--
   <p *ngIf="isRateDisplayed">{{(this.oreCoef * this.rate).toFixed(2)}}/s</p>
