@@ -1,15 +1,18 @@
-.result {
-    height: 80%;
-    width : 100%;
+:host {
+    height: 90%;
+    padding: 10px;
+    background-color: white;
 }
 
-app-search-result {
-    height: 100%;
-    width: calc(100% / 3);
-}
-
-.asteroid-icon{
-    display: block;
+img {
     height: 50%;
-    width: 100%;
+}
+
+h1 {
+    text-align: center;
+    text-transform: uppercase;
+}
+
+button {
+    cursor: pointer;
 }

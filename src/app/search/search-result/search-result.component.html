@@ -1,17 +1,15 @@
-<img  class="asteroid-icon" src="../../../assets/AsteroidIcon/{{asteroid.ore}}.png"/>
+<img [src]="'../../../assets/AsteroidIcon/'+asteroid.ore+'.png'"/>
+<h1>{{ asteroid.ore }}</h1>
 <div class="data col align-center">
     <p>
-        Capacity : {{asteroid.capacity}}
-      </p>
-      <p>
-        Purity : {{asteroid.purity}}
-      </p>
-      <p>
-        Ore : {{asteroid.ore}}
-      </p>
-      <p>
-        Time to go : {{asteroid.timeToGo}} s
-      </p>
-      <button class="btn-upgrade" (click)="chooseAsteroid()">Go !</button>
+      Capacity : {{asteroid.capacity}}
+    </p>
+    <p>
+      Purity : {{asteroid.purity}}
+    </p>
+    <p>
+      Time : {{asteroid.timeToGo | timer}}
+    </p>
+    <button (click)="chooseAsteroid()">Travel !</button>
 </div>
 
