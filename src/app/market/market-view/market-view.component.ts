@@ -33,7 +33,6 @@ export class MarketViewComponent implements OnInit {
   public unitValue: string;
   public valuesTotal: any;
   public valuesTotalWithTaxe: any;
-  public boolOreUnlock: boolean;
 
   public hasMoney: boolean;
   public hasOreLeft: boolean;
@@ -64,10 +63,6 @@ export class MarketViewComponent implements OnInit {
       .first()
       .subscribe((oreInfo: IOreInfo) => {
         this.oreInfo = oreInfo;
-
-        this.userS.getUpgradeByName('research')
-          .map((upgrade: IUserUpgrade) => upgrade.lvl >= this.oreInfo.searchNewOre)
-          .subscribe((isUnlocked: boolean) => this.boolOreUnlock = isUnlocked);
 
         this.oreS.getOreAmountByString(this.oreName).subscribe((oreAmount: number) => {
           this.hasOreLeft = oreAmount > 0;
