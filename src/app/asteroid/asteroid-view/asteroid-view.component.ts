@@ -176,6 +176,7 @@ export class AsteroidViewComponent implements OnInit {
         this.drone.laserAnim.visible = true;
       }
       this.asteroid = asteroid;
+      this.drone.droneMiningVerif();
     });
 
     // Asteroid is empty
