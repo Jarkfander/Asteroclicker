@@ -1,5 +1,5 @@
-<article class="col align-end no-selection" *ngIf="!!oreInfo">
-  <h3>{{name.toUpperCase()}}</h3>
+<article class="col align-end no-selection">
+  <h3>{{ name }}</h3>
   <p [@figures-change]="amount" [ngStyle]="{'color': amount >= capacity ? 'red' : 'white'}">
     {{ amount | number: '1.0-0' }}
   </p>
