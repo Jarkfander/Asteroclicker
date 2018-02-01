@@ -2,6 +2,8 @@ import * as PIXI from 'pixi.js';
 import { getFramesFromSpriteSheet, initSprite } from '../../loadAnimation';
 
 export class Drone {
+    private isUserHaveMaxCapacityStorage: boolean;
+    private isAsteLifeSupZero: boolean;
     app: PIXI.Application;
     public drone: PIXI.extras.AnimatedSprite;
 
@@ -164,4 +166,22 @@ export class Drone {
         }
     }
 
+
+    setIsAsteLifeSupZero(bool: boolean) {
+        this.isAsteLifeSupZero = bool;
+        this.droneMiningVerif();
+    }
+
+    setIsUserHaveMaxCapacityStorage(bool: boolean) {
+        this.isUserHaveMaxCapacityStorage = bool;
+        this.droneMiningVerif();
+    }
+
+    droneMiningVerif() {
+        if (this.isAsteLifeSupZero === undefined || this.isUserHaveMaxCapacityStorage === undefined) {
+            this.isMining = false;
+        } else {
+            this.isMining = this.isAsteLifeSupZero && !this.isUserHaveMaxCapacityStorage;
+        }
+    }
 }

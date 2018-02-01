@@ -3,4 +3,9 @@
   <p [@figures-change]="amount" [ngStyle]="{'color': amount >= capacity ? 'red' : 'white'}">
     {{ amount | number: '1.0-0' }}
   </p>
+  <p>
+  </p>
+  <!--
+  <p *ngIf="isRateDisplayed">{{(this.oreCoef * this.rate).toFixed(2)}}/s</p>
+  -->
 </article>
