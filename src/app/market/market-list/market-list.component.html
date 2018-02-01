@@ -1,5 +1,7 @@
 <perfect-scrollbar class="col">
-  <app-market-view *ngFor="let ore of ores"
+    <ng-container *ngFor="let ore of allOre">
+  <app-market-view *ngIf="ore.unlocked"
     [oreName]="ore.name"
     [color]="ore.color"></app-market-view>
+  </ng-container>
 </perfect-scrollbar>
