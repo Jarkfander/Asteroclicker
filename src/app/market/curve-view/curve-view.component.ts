@@ -15,25 +15,27 @@ export class CurveViewComponent implements OnInit {
 
   @Input('color') color: string;
   @Input('size') size: number;
-
-  @Input('tab')
-  set allowDay(tab: number[]) {
-    if (!this.init) {
-      const line = this.canvas.nativeElement.getContext('2d');
-      this.chart = new ManagedChart(line, this.size, 'rgba(' + this.color + ')');
-      this.chart.initTab(tab);
-      this.init = true;
-    } else {
-      this.chart.addNew(tab);
-    }
-  }
-
+  
   public chart: ManagedChart;
 
   constructor() { }
 
   ngOnInit() {
 
+  }
+
+  public updateInfo(tab: number[]){
+    if(tab.length>0){
+      if (!this.init) {
+        const line = this.canvas.nativeElement.getContext('2d');
+        this.chart = new ManagedChart(line, this.size, 'rgba(' + this.color + ')');
+        this.chart.initTab(tab);
+        console.log(tab);
+        this.init = true;
+      } else {
+        this.chart.addNew(tab);
+      }
+    }
   }
 
 }

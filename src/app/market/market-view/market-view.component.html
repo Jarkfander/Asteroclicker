@@ -4,7 +4,7 @@
   </div>
   History of {{oreName.toUpperCase()}} cost for the last 24 hours
   <div class="histo-curve">
-    <app-curve-view *ngIf="histoValues!=null" [color]='color' [size]='24' [tab]='histoValues'></app-curve-view>
+    <app-curve-view *ngIf="histoValues!=null" [color]='color' [size]='24'></app-curve-view>
   </div>
 </app-modal>
 
@@ -34,6 +34,6 @@
   </div>
 
   <div class="col curve">
-    <app-curve-view *ngIf="!!recentValues" [color]="color" [size]="500" [tab]="recentValues"></app-curve-view>
+    <app-curve-view #currentCostView [color]="color" [size]="500" ></app-curve-view>
   </div>
 </article>

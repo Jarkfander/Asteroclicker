@@ -10,6 +10,7 @@ import { OreService, IOreInfo } from '../../ore/ore.service';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/first';
+import { CurveViewComponent } from '../curve-view/curve-view.component';
 
 @Component({
   selector: 'app-market-view',
@@ -21,6 +22,7 @@ export class MarketInfoComponent implements OnInit {
   @Input('oreName') oreName: string;
   @Input('color') color: string;
 
+  @ViewChild('currentCostView') currentCostView:CurveViewComponent;
 
   public value: number;
 
@@ -68,25 +70,9 @@ export class MarketInfoComponent implements OnInit {
           .subscribe((isUnlocked: boolean) => this.boolOreUnlock = isUnlocked);
 
         this.oreS.getOreAmountByString(this.oreName).subscribe((oreAmount: number) => {
-          this.hasMoney = this.credit > 0;
           this.hasOreLeft = oreAmount > 0;
           this.hasSpaceLeft = oreAmount
             < this.upgradeS.storage[this.userStorageLvl].capacity;
-
-          this.value = this.marketS.oreCosts[this.oreName]
-          [Object.keys(this.marketS.oreCosts[this.oreName])[Object.keys(this.marketS.oreCosts[this.oreName]).length - 1]];
-
-          this.unitValue = SharedModule.calculeMoneyWithSpace(this.value);
-          this.maxSliderValue = (this.upgradeS.storage[this.userStorageLvl].capacity * 0.02
-            * this.oreInfo.miningSpeed);
-          this.maxSliderValue = ((Math.floor(this.maxSliderValue / 50)) + 1) * 50;
-
-          this.valuesTotal = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell);
-          this.valuesTotalWithTaxe = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell * 1.025);
-
-          this.recentValues = this.marketS.oreCosts[this.oreName];
-          this.histoValues = this.marketS.oreHistory[this.oreName];
-
         });
 
         this.userS.credit.subscribe((credit: number) => {
@@ -94,8 +80,8 @@ export class MarketInfoComponent implements OnInit {
           this.hasMoney = credit > 0;
         });
 
-        this.userS.getUpgradeByName('storage').subscribe((upgrade:IUserUpgrade) => {
-          
+        this.userS.getUpgradeByName('storage').subscribe((upgrade: IUserUpgrade) => {
+
           this.hasSpaceLeft = this.currentOreAmount
             < this.upgradeS.storage[this.userStorageLvl].capacity;
 
@@ -106,21 +92,27 @@ export class MarketInfoComponent implements OnInit {
 
           this.valuesTotal = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell);
           this.valuesTotalWithTaxe = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell * 1.025);
+
+          this.amountToSell = this.maxSliderValue / 2;
         });
 
-        this.marketS.oreCostsSubject[this.oreName].subscribe((tab: number[]) => {
-          this.value = tab[Object.keys(tab)[Object.keys(tab).length - 1]];
+        this.marketS.currentCostsSubject[this.oreName].subscribe((newVal: number) => {
+          this.value = newVal;
           this.unitValue = SharedModule.calculeMoneyWithSpace(this.value);
 
           this.valuesTotal = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell);
           this.valuesTotalWithTaxe = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell * 1.025);
-          this.recentValues = tab;
+
+          this.currentCostView.updateInfo(this.marketS.allCurrentOreCosts[this.oreName]);
         });
 
-        this.marketS.oreHistorySubject[this.oreName].subscribe((tab: number[]) => {
-          this.histoValues = tab;
+        this.recentValues = this.marketS.allCurrentOreCosts[this.oreName];
+
+        this.marketS.historyCostsSubject[this.oreName].subscribe((newVal: number) => {
+          this.histoValues = this.marketS.allHistoryOreCosts[this.oreName];
         });
 
+        this.histoValues = this.marketS.allHistoryOreCosts[this.oreName];
       });
   }
 
