@@ -1,6 +1,14 @@
 import * as PIXI from 'pixi.js';
 import { getFramesFromSpriteSheet, initSprite } from '../../loadAnimation';
 
+export enum STATS_DRONE {
+    MINING = 0,
+    GO_OUT = 1,
+    GO_IN = 2,
+    NO_MINING = 3
+}
+
+
 export class Drone {
     isFirstTimeBack: boolean;
     private isUserHaveMaxCapacityStorage: boolean;
@@ -15,6 +23,9 @@ export class Drone {
     delta: number;
     deltaGo: number;
     public isMining: boolean;
+    statsActu: STATS_DRONE;
+
+
     xBaseDrone: number;
     yBaseDrone: number;
     laserAnim: PIXI.extras.AnimatedSprite;
@@ -26,6 +37,7 @@ export class Drone {
     constructor(x: number, y: number, xpos: number, ypos: number, isMining: boolean, app: PIXI.Application) {
         this.app = app;
         this.isMining = isMining;
+        this.statsActu = STATS_DRONE.MINING;
         this.delta = 0;
 
         // Drone
@@ -66,37 +78,93 @@ export class Drone {
                     this.delta = 0;
                 }
                 this.delta += (2 * Math.PI) / 1000;
-                if (!this.isMining) {
-                    if (this.deltaGo < 8) {
-                        this.deltaGo += 0.08;
-                        this.drone.x = this.drone.x - this.deltaGo;
-                        this.drone.y = this.drone.y - Math.sin(this.deltaGo);
-                        this.LaserAnimVisible(false, false, false, false);
-                        this.drone.rotation = 0;
-                    } else {
-                        this.drone.y = this.yBaseDrone - 15;
-                        this.drone.visible = false;
-                    }
-                } else {
-                    this.drone.visible = true;
-                    if (this.deltaGo >= 0) {
-                        this.deltaGo -= 0.08;
-                        this.drone.x += this.deltaGo;
-                        this.drone.y += Math.sin(this.deltaGo);
-                        this.laserAnim.visible = this.deltaGo <= 1 ? true : false;
-                        this.isFirstTimeBack = true;
-                    } else {
-                        this.delta = this.isFirstTimeBack ? 0 : this.delta;
-                        this.drone.x = this.xBaseDrone + Math.cos(this.delta) * 50;
-                        this.drone.y = this.yBaseDrone + Math.sin(this.delta) * 50;
-                        this.drone.rotation = Math.sin(this.delta) * 0.25;
-                        this.isFirstTimeBack = false;
-                    }
-                }
+
+                this.moveDroneAffectStats();
+                this.moveDroneInTermsOfStats();
+                this.displayStats();
             }
         });
     }
 
+    /*
+    *   MANAGE DRONE MOVEMENT - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    */
+    // affect the stats of drone
+    moveDroneAffectStats() {
+        if (!this.isMining) {
+            if (this.deltaGo < 8) {
+                this.statsActu = STATS_DRONE.GO_OUT;
+            } else {
+                this.statsActu = STATS_DRONE.NO_MINING;
+            }
+        } else {
+            if (this.deltaGo >= 0) {
+                this.statsActu = STATS_DRONE.GO_IN;
+            } else {
+                this.statsActu = STATS_DRONE.MINING;
+            }
+        }
+    }
+    // stats Drone apply move
+    moveDroneInTermsOfStats() {
+        this.drone.visible = true;
+        switch (this.statsActu) {
+            case STATS_DRONE.MINING:
+                this.drone.x = this.xBaseDrone;
+                this.drone.y = this.yBaseDrone;
+                this.drone.rotation = Math.sin(this.delta) * 0.25;
+                break;
+
+            case STATS_DRONE.GO_OUT:
+                this.deltaGo += 0.08;
+                this.drone.rotation = 0;
+                this.drone.x = this.drone.x - this.deltaGo;
+                this.drone.y = this.drone.y - Math.sin(this.deltaGo);
+                this.LaserAnimVisible(false, false, false, false);
+                break;
+
+            case STATS_DRONE.NO_MINING:
+                this.drone.visible = false;
+                break;
+
+            case STATS_DRONE.GO_IN:
+                this.deltaGo -= 0.08;
+                this.drone.x += this.deltaGo;
+                this.drone.y += Math.sin(this.deltaGo);
+                this.laserAnim.visible = this.deltaGo <= 1 ? true : false;
+                this.delta = 0;
+                break;
+
+            default: return;
+        }
+    }
+
+    // DIsplay the stats
+    displayStats() {
+        switch (this.statsActu) {
+            case STATS_DRONE.MINING:
+                console.log('MINING');
+                break;
+
+            case STATS_DRONE.GO_OUT:
+                console.log('GO_OUT');
+                break;
+
+            case STATS_DRONE.NO_MINING:
+                console.log('NO_MINING');
+                break;
+
+            case STATS_DRONE.GO_IN:
+                console.log('GO_IN');
+                break;
+
+            default: return;
+        }
+    }
+
+    /*
+    *   MANAGE LASER - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    */
     LaserAnimVisible(laserAnimBool, laserAnim1Bool, laserAnim2Bool, laserAnim3Bool) {
         this.laserAnim.visible = laserAnimBool;
         this.laserAnim_actif1.visible = laserAnim1Bool;
