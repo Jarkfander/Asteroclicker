@@ -1,0 +1,10 @@
+<article
+  [@enter]="toast.state | async"
+  [ngStyle]="toast.styles"
+  [ngClass]="toast.type" >
+  <div class="timer">
+    <div #sliderRef class="timer-slide"></div>
+  </div>
+  <h1>{{ toast.title }}</h1>
+  <p>{{ toast.content }}</p>
+</article>
