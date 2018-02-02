@@ -119,7 +119,9 @@ export class AsteroidViewComponent implements OnInit {
     this.render.appendChild(this.el.nativeElement, this.app.view);
 
     this.initAsteroid(this.asteroid);
+    delete this.drone;
     this.initNumberOfDroneBegin();
+    this.drone.statsActu = STATS_DRONE.MINING;
   }
 
   private initAsteroid(newAste: IAsteroid) {

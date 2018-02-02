@@ -151,6 +151,7 @@ export class Drone {
                     this.drone.x = vect.x;
                     this.drone.y = vect.y;
                     this.drone.rotation = vect.rotate;
+                    this.delta = 0;
                 } else {
                     this.drone.x = this.xBaseDrone;
                     this.drone.y = this.yBaseDrone;
