@@ -6,6 +6,24 @@ import { Engine } from '../../ship/upgrade-class/engine';
 import { QG } from '../../ship/upgrade-class/qg';
 import { storage } from 'firebase/app';
 
+export interface IOreInfos {
+  carbon: IOreInfo;
+  iron: IOreInfo;
+  titanium: IOreInfo;
+  gold: IOreInfo;
+  hyperium: IOreInfo;
+}
+
+export interface IOreInfo {
+  order: number;
+  name: string;
+  maxValue: number;
+  meanValue: number;
+  minValue: number;
+  miningSpeed: number;
+  searchNewOre: number;
+}
+
 @Injectable()
 export class ResourcesService {
 
@@ -16,6 +34,8 @@ export class ResourcesService {
   QG: QG[];
 
   resourcesLoaded : boolean=false;
+  
+  oreInfos: IOreInfos;  
 
   constructor() {
   }
@@ -26,7 +46,8 @@ export class ResourcesService {
     this.FillQG(data.QG);
     this.FillResearch(data.research);
     this.FillStorage(data.storage);
-
+    this.oreInfos=data.oreInfos;
+    console.log(data);
     this.resourcesLoaded=true;
   }
 

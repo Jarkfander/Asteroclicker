@@ -6,7 +6,7 @@ import { User, UserUpgrade } from '../../shared/user/user';
 import { UserService, IUserUpgrade } from '../../shared/user/user.service';
 import { Utils } from '../../shared/utils';
 import { UpgradeService } from '../upgrade.service';
-import { OreService, IOreAmounts, IOreInfos } from '../../ore/ore.service';
+import { OreService, IOreAmounts } from '../../ore/ore.service';
 import { enter } from '../../shared/animations';
 
 import { Observable } from 'rxjs/Observable';
@@ -34,7 +34,6 @@ export class UpgradeViewComponent implements OnInit {
   public userUpgrade: IUserUpgrade;
   public currentUpgrade: Upgrade;
   public nextUpgrade: Upgrade;
-  public oreInfos: IOreInfos;
   public upgradeCostString: string[];
   public isHover: boolean;
 
@@ -59,7 +58,6 @@ export class UpgradeViewComponent implements OnInit {
 
 
   ngOnInit() {
-    this.oreInfos = this.oreS.oreInfos;
 
     this.userS.getUpgradeByName(this.name)
       .subscribe((userUpgrade) => {
@@ -111,14 +109,14 @@ export class UpgradeViewComponent implements OnInit {
   }
 
   private costOreForCredit(nameOre: string, costCredit: number) {
-    return costCredit / this.oreInfos[nameOre].meanValue;
+    return costCredit / this.resourcesS.oreInfos[nameOre].meanValue;
   }
 
   /** Change the cost depending on user's upgrade lvl */
   private updateCost() {
     const tempUpgradeCost = this.nextUpgrade.costOreString;
     const keysCost = Object.keys(tempUpgradeCost);
-    const oreKeys = Object.keys(this.oreInfos);
+    const oreKeys = Object.keys(this.resourcesS.oreInfos);
 
     const temp = {};
     for (let i = 0; i < keysCost.length; i++) {
@@ -126,7 +124,7 @@ export class UpgradeViewComponent implements OnInit {
         const tempName = oreKeys[j];
         if (tempName === keysCost[i]) {
           if (this.resourcesS.research[this.researchLvl].lvl >=
-            this.oreInfos[oreKeys[j]].searchNewOre) {
+            this.resourcesS.oreInfos[oreKeys[j]].searchNewOre) {
             temp[oreKeys[j]] = tempUpgradeCost[keysCost[i]];
           } else {
             temp['???'] = tempUpgradeCost[keysCost[i]];
@@ -175,12 +173,12 @@ export class UpgradeViewComponent implements OnInit {
    * @param {string} oreName The name of the ore
    */
   oreMiss(oreName: string) {
-    const oreKeys = Object.keys(this.oreInfos);
+    const oreKeys = Object.keys(this.resourcesS.oreInfos);
     for (let j = 0; j < oreKeys.length; j++) {
       const tempName = oreKeys[j];
       if (tempName === oreName) {
         if (this.resourcesS.research[this.researchLvl].lvl <
-          this.oreInfos[oreKeys[j]].searchNewOre) {
+          this.resourcesS.oreInfos[oreKeys[j]].searchNewOre) {
           return false;
         }
       }

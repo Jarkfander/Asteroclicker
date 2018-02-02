@@ -1,5 +1,5 @@
 import { Component, AfterViewInit, Input, ChangeDetectionStrategy } from '@angular/core';
-import { OreService, IOreInfo } from '../ore.service';
+import { OreService } from '../ore.service';
 import { Observable } from 'rxjs/Observable';
 import { UserService, IUserUpgrade } from '../../shared/user/user.service';
 import { UpgradeType } from '../../ship/upgrade-class/upgrade';

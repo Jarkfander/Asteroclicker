@@ -8,7 +8,7 @@ import { Storage } from './upgrade-class/storage';
 import { MineRate } from './upgrade-class/mineRate';
 import { Research } from './upgrade-class/research';
 import { Engine } from './upgrade-class/engine';
-import { OreService, IOreInfos } from '../ore/ore.service';
+import { OreService } from '../ore/ore.service';
 import { QG } from './upgrade-class/qg';
 import { IUserUpgrade } from '../shared/user/user.service';
 

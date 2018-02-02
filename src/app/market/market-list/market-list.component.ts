@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { OreService, IOreInfos } from '../../ore/ore.service';
+import { OreService } from '../../ore/ore.service';
 import { UserService, IUserUpgrade } from '../../shared/user/user.service';
+import { ResourcesService } from '../../shared/resources/resources.service';
 
 
 @Component({
@@ -33,21 +34,17 @@ export class MarketListComponent implements OnInit {
     unlocked: false,
   }];
 
-  constructor(private oreS: OreService, private userS: UserService) {
+  constructor(private oreS: OreService, private userS: UserService,private resourcesS:ResourcesService) {
 
   }
 
   ngOnInit(): void {
-    this.oreS.OreInfos
-      .first()
-      .subscribe((oreInfos: IOreInfos) => {
-        this.userS.getUpgradeByName('research')
-          .subscribe((upgrade: IUserUpgrade) => {
-            for (let i=0; i < this.allOre.length; i++) {
-              this.allOre[i].unlocked = upgrade.lvl >= oreInfos[this.allOre[i].name].searchNewOre;
-            }
-          });
 
+    this.userS.getUpgradeByName('research')
+      .subscribe((upgrade: IUserUpgrade) => {
+        for (let i = 0; i < this.allOre.length; i++) {
+          this.allOre[i].unlocked = upgrade.lvl >= this.resourcesS.oreInfos[this.allOre[i].name].searchNewOre;
+        }
       });
   }
 

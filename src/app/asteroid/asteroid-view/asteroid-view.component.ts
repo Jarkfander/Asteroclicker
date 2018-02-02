@@ -14,7 +14,7 @@ import { UpgradeService } from '../../ship/upgrade.service';
 import { IAsteroid, AsteroidService } from '../asteroid.service';
 import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Observable } from 'rxjs/Observable';
-import { OreService, IOreInfos, IOreAmounts } from '../../ore/ore.service';
+import { OreService, IOreAmounts } from '../../ore/ore.service';
 import { ResourcesService } from '../../shared/resources/resources.service';
 
 
@@ -69,21 +69,19 @@ export class AsteroidViewComponent implements OnInit {
     this.clicks = new Array();
     this.subjectManage();
 
-    this.oreS.OreInfos.take(1).subscribe((oreInfos: IOreInfos) => {
-      setInterval(() => {
-        if (this.asteroid != null && this.asteroid.currentCapacity > 0) {
-          this.socketS.incrementOre(this.userS.currentUser.uid, this.asteroid.ore,
-            parseFloat((this.userS.currentUser.currentMineRate *
-              this.asteroid.purity / 100 *
-              oreInfos[this.asteroid.ore].miningSpeed).toFixed(2)));
-        }
-      }, 1000);
-      this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
-        this.userMineRateLvl = upgrade.lvl;
-        this.initNumberOfDroneBegin();
-      });
-      setInterval(() => { this.updateClick(); }, 100);
+    setInterval(() => {
+      if (this.asteroid != null && this.asteroid.currentCapacity > 0) {
+        this.socketS.incrementOre(this.userS.currentUser.uid, this.asteroid.ore,
+          parseFloat((this.userS.currentUser.currentMineRate *
+            this.asteroid.purity / 100 *
+            this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2)));
+      }
+    }, 1000);
+    this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
+      this.userMineRateLvl = upgrade.lvl;
+      this.initNumberOfDroneBegin();
     });
+    setInterval(() => { this.updateClick(); }, 100);
   }
 
   // tslint:disable-next-line:member-ordering
@@ -228,7 +226,7 @@ export class AsteroidViewComponent implements OnInit {
     // User ore amounts
     this.oreS.OreAmounts
       .subscribe((oreAmount: IOreAmounts) => {
-         this.drone.setIsUserHaveMaxCapacityStorage(this.asteroid && oreAmount[this.asteroid.ore] >= this.storageCapacityMax)
+        this.drone.setIsUserHaveMaxCapacityStorage(this.asteroid && oreAmount[this.asteroid.ore] >= this.storageCapacityMax)
       });
 
   }

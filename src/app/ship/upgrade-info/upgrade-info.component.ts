@@ -1,7 +1,7 @@
 import { enter } from './upgrade-info.animations';
 import { OreInfo } from './../../ore/ore-view/oreInfo';
 import { UserService, IUserUpgrade } from './../../shared/user/user.service';
-import { OreService, IOreInfos } from './../../ore/ore.service';
+import { OreService } from './../../ore/ore.service';
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Utils } from '../../shared/utils';
 import { Upgrade } from '../upgrade-class/upgrade';
