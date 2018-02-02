@@ -2,17 +2,17 @@ import * as PIXI from 'pixi.js';
 import { getFramesFromSpriteSheet, initSprite } from '../../loadAnimation';
 
 export enum STATS_DRONE {
-    MINING = 0,
-    GO_OUT = 1,
-    GO_IN = 2,
-    NO_MINING = 3,
-    MOD_FRENZY = 4
+    MINING,
+    GO_OUT,
+    GO_IN,
+    NO_MINING,
+    MOD_FRENZY
 }
-
 
 export class Vector2 {
     x: number;
     y: number;
+    rotate: number;
     constructor() { }
 
     initXY(_x: number, _y: number) {
@@ -29,6 +29,12 @@ export class Vector2 {
         this.x += (_x - this.x) * delta;
         this.y += (_y - this.y) * delta;
         return this;
+    }
+
+    // LERP Rotation - - - - - - -
+    lerpRotate(_rotate: number, delta: number) {
+        this.rotate += (_rotate - this.rotate) * delta;
+        return this.rotate;
     }
 }
 
@@ -135,13 +141,16 @@ export class Drone {
         this.drone.visible = true;
         switch (this.statsActu) {
             case STATS_DRONE.MINING:
-            if ( Math.abs(this.drone.x - this.xBaseDrone) > 0.1 && Math.abs(this.drone.y - this.yBaseDrone) > 0.1) {
-                    const vect = new Vector2();
-                    const vectorTemp = new Vector2();
+                if (Math.abs(this.drone.x - this.xBaseDrone) > 0.1 && Math.abs(this.drone.y - this.yBaseDrone) > 0.1) {
+                    const vect = new Vector2(); const vectorTemp = new Vector2();
                     vectorTemp.initXY(this.drone.x, this.drone.y);
+                    vectorTemp.rotate = this.drone.rotation;
                     vect.initXYVector(vectorTemp.lerp(this.xBaseDrone, this.yBaseDrone, 0.025));
+                    vect.rotate = vectorTemp.lerpRotate(0, 0.2);
+
                     this.drone.x = vect.x;
                     this.drone.y = vect.y;
+                    this.drone.rotation = vect.rotate;
                 } else {
                     this.drone.x = this.xBaseDrone;
                     this.drone.y = this.yBaseDrone;
