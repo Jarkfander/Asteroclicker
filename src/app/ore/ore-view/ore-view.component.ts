@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, AfterViewInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { OreService, IOreInfo } from '../ore.service';
 import { Observable } from 'rxjs/Observable';
 import { UserService, IUserUpgrade } from '../../shared/user/user.service';
@@ -10,42 +10,20 @@ import 'rxjs/add/operator/first';
 import { ResourcesService } from '../../shared/resources/resources.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-ore-view',
   templateUrl: './ore-view.component.html',
   styleUrls: ['./ore-view.component.scss'],
   animations: [figuesChange]
 })
-export class OreViewComponent implements OnInit {
+export class OreViewComponent {
 
   @Input('name') name: string;
   @Input('amount') amount: number;
-  @Input('rate') rate: number;
   @Input('capacity') capacity: number;
 
-  public oreInfo: IOreInfo;
-  public mineRate$: Observable<number>;
-  public researchLvl = 1;
-  public oreCoef = 0;
-  public displayRate: string;
+  constructor() { }
 
-  public isRateDisplayed = false;
-  constructor(private oreS: OreService, private userS: UserService, private asteroidS: AsteroidService, private resourceS:ResourcesService) { }
-
-  ngOnInit() {
-    this.oreInfo = this.oreS.oreInfos[this.name];
-    this.mineRate$ = this.asteroidS.asteroid$
-      .filter((aste: IAsteroid) => aste.ore === this.name)
-      .map((aste: IAsteroid) => {
-        return this.oreInfo.miningSpeed * (aste.purity / 100) * this.rate;
-      });
-    /*
-      this.asteroidS.asteroid
-      .subscribe((aste: IAsteroid) => {
-        this.oreCoef = this.oreInfo.miningSpeed * (aste.purity / 100);
-        this.isRateDisplayed = (aste.ore === this.name);
-      });
-    */
-  }
 }
 
 // (this.oreCoef * this.rate)

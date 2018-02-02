@@ -14,8 +14,9 @@ import { UpgradeService } from '../../ship/upgrade.service';
 import { IAsteroid, AsteroidService } from '../asteroid.service';
 import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Observable } from 'rxjs/Observable';
-import { OreService, IOreInfos } from '../../ore/ore.service';
+import { OreService, IOreInfos, IOreAmounts } from '../../ore/ore.service';
 import { ResourcesService } from '../../shared/resources/resources.service';
+
 
 
 export enum KEY_CODE {
@@ -32,6 +33,7 @@ export enum KEY_CODE {
 })
 
 export class AsteroidViewComponent implements OnInit {
+  storageCapacityMax: number;
 
   private app: PIXI.Application;
   private asteroidSprite: AsteroidSprite;
@@ -114,6 +116,10 @@ export class AsteroidViewComponent implements OnInit {
     this.render.removeChild(this.el.nativeElement, this.app.view);
     delete this.asteroidSprite;
     this.app.destroy();
+
+    this.app = new PIXI.Application(this.el.nativeElement.offsetWidth, this.el.nativeElement.offsetHeight, { backgroundColor: 0x1079bb });
+    this.render.appendChild(this.el.nativeElement, this.app.view);
+
     this.initAsteroid(this.asteroid);
     this.initNumberOfDroneBegin();
   }
@@ -121,9 +127,6 @@ export class AsteroidViewComponent implements OnInit {
   private initAsteroid(newAste: IAsteroid) {
     const w = this.el.nativeElement.offsetWidth;
     const h = this.el.nativeElement.offsetHeight;
-    this.app = new PIXI.Application(w, h, { backgroundColor: 0x1079bb });
-    this.render.appendChild(this.el.nativeElement, this.app.view);
-
     // skyV1
     this.initSky(w, h);
 
@@ -143,13 +146,19 @@ export class AsteroidViewComponent implements OnInit {
 
   // Subject
   subjectManage() {
+    const w = this.el.nativeElement.offsetWidth;
+    const h = this.el.nativeElement.offsetHeight;
+    this.app = new PIXI.Application(w, h, { backgroundColor: 0x1079bb });
+    this.render.appendChild(this.el.nativeElement, this.app.view);
+    this.initNumberOfDroneBegin();
+
     // Asteroid Subject
     this.asteroidS.asteroid$.subscribe((asteroid: IAsteroid) => {
       if (this.asteroid == null) {
         this.initAsteroid(asteroid);
         this.asteroid = asteroid;
       }
-      this.initNumberOfDroneBegin();
+      this.drone.isMining = false;
 
       const state = asteroid.currentCapacity === asteroid.capacity ? 4 :
         Math.floor((asteroid.currentCapacity / asteroid.capacity) * 5);
@@ -169,15 +178,19 @@ export class AsteroidViewComponent implements OnInit {
         this.drone.laserAnim.visible = true;
       }
       this.asteroid = asteroid;
+      this.drone.droneMiningVerif();
     });
 
+    // Asteroid is empty
     this.asteroidS.isEmpty.subscribe((isEmpty: boolean) => {
-      this.drone.isMining = !isEmpty;
+      this.drone.setIsAsteLifeSupZero(!isEmpty);
     });
 
     // Event Subject
     this.userS.eventSubject.subscribe((user: User) => {
-      this.asteroidSprite.eventOk = user.event;
+      if (this.asteroidSprite.eventOk) {
+        this.asteroidSprite.eventOk = user.event;
+      }
       this.asteroidSprite.activEvent();
       this.clickCapsule();
     });
@@ -205,6 +218,19 @@ export class AsteroidViewComponent implements OnInit {
       const tempLvl = upgrade.lvl;
       this.drone.changeSpriteDrone(upgrade.lvl);
     });
+
+    // upgrade Storage
+    this.userS.getUpgradeByName('storage')
+      .subscribe((userUpgrade) => {
+        this.storageCapacityMax = this.resourcesS[userUpgrade.name][userUpgrade.lvl].capacity;
+      });
+
+    // User ore amounts
+    this.oreS.OreAmounts
+      .subscribe((oreAmount: IOreAmounts) => {
+         this.drone.setIsUserHaveMaxCapacityStorage(this.asteroid && oreAmount[this.asteroid.ore] >= this.storageCapacityMax)
+      });
+
   }
 
   asteroidClick() {
@@ -234,12 +260,20 @@ export class AsteroidViewComponent implements OnInit {
     }
 
     if (coefClick > 0.5) {
-      this.drone.activeLaser();
-      this.drone.laserAnim.visible = false;
-      this.asteroidSprite.checkAstero = true;
+      if (this.drone) {
+        this.drone.activeLaser();
+        this.drone.laserAnim.visible = false;
+      }
+      if (this.asteroidSprite) {
+        this.asteroidSprite.checkAstero = true;
+      }
     } else {
-      this.drone.desactivLaser();
-      this.asteroidSprite.checkAstero = false;
+      if (this.drone) {
+        this.drone.desactivLaser();
+      }
+      if (this.asteroidSprite) {
+        this.asteroidSprite.checkAstero = false;
+      }
     }
   }
 
@@ -312,7 +346,7 @@ export class AsteroidViewComponent implements OnInit {
     this.backgroundSky.width = w;
     this.backgroundSky.height = h;
     this.backgroundSky.name = 'backgroundSky';
-    this.app.stage.addChild(this.backgroundSky);
+    this.app.stage.addChildAt(this.backgroundSky, 0);
 
     this.backgroundSky.onComplete = () => {
       this.numberOfSky = changeSpriteInAnime(this.backgroundSky, 'ciel3_', this.numberOfSky, 3);
@@ -357,7 +391,7 @@ export class AsteroidViewComponent implements OnInit {
   // Manage Drone - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   initNumberOfDroneBegin() {
     if (!this.drone) {
-      this.drone = new Drone(0.20, 0.20, 1, 1, this.asteroid.currentCapacity > 0, this.app);
+      this.drone = new Drone(0.20, 0.20, 1, 1, false, this.app);
       this.drone.deltaTempAster = (1 / 3) * (2 * Math.PI) / 1000;
     }
     this.drone.changeSpriteDrone(this.userMineRateLvl);

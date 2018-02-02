@@ -29,7 +29,6 @@ export class OreListComponent implements OnInit {
               private oreInfoS: OreService) {}
 
   ngOnInit() {
-    this.mineRate = this.userS.currentUser.currentMineRate;
     this.oreData$ = this.oreInfoS.OreAmounts
       .map((oreAmounts: IOreAmounts) => Object.keys(oreAmounts).map(oreName => {
         return { name: oreName, amount: oreAmounts[oreName] };

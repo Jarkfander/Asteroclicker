@@ -20,11 +20,10 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
   private miningMeter: Chart;
   public asteroid: IAsteroid;
   public isEmpty: boolean;
+  public mineRate: number;
 
-  private mineRate: number;
   private baseMineRate = 0;
   private userMineRateLvl: number;
-
   private progressBarMaxValue: number;
   public progressBarValue: number;
 
