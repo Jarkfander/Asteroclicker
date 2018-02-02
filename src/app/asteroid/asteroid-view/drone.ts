@@ -5,7 +5,31 @@ export enum STATS_DRONE {
     MINING = 0,
     GO_OUT = 1,
     GO_IN = 2,
-    NO_MINING = 3
+    NO_MINING = 3,
+    MOD_FRENZY = 4
+}
+
+
+export class Vector2 {
+    x: number;
+    y: number;
+    constructor() { }
+
+    initXY(_x: number, _y: number) {
+        this.x = _x;
+        this.y = _y;
+    }
+
+    initXYVector(vect: Vector2) {
+        this.x = vect.x;
+        this.y = vect.y;
+    }
+    // LERP - - - - - - -
+    lerp(_x: number, _y: number, delta: number) {
+        this.x += (_x - this.x) * delta;
+        this.y += (_y - this.y) * delta;
+        return this;
+    }
 }
 
 
@@ -81,7 +105,6 @@ export class Drone {
 
                 this.moveDroneAffectStats();
                 this.moveDroneInTermsOfStats();
-                this.displayStats();
             }
         });
     }
@@ -98,10 +121,12 @@ export class Drone {
                 this.statsActu = STATS_DRONE.NO_MINING;
             }
         } else {
-            if (this.deltaGo >= 0) {
-                this.statsActu = STATS_DRONE.GO_IN;
-            } else {
-                this.statsActu = STATS_DRONE.MINING;
+            if (this.statsActu !== STATS_DRONE.MOD_FRENZY) {
+                if (this.deltaGo >= 0) {
+                    this.statsActu = STATS_DRONE.GO_IN;
+                } else {
+                    this.statsActu = STATS_DRONE.MINING;
+                }
             }
         }
     }
@@ -110,9 +135,18 @@ export class Drone {
         this.drone.visible = true;
         switch (this.statsActu) {
             case STATS_DRONE.MINING:
-                this.drone.x = this.xBaseDrone;
-                this.drone.y = this.yBaseDrone;
-                this.drone.rotation = Math.sin(this.delta) * 0.25;
+            if ( Math.abs(this.drone.x - this.xBaseDrone) > 0.1 && Math.abs(this.drone.y - this.yBaseDrone) > 0.1) {
+                    const vect = new Vector2();
+                    const vectorTemp = new Vector2();
+                    vectorTemp.initXY(this.drone.x, this.drone.y);
+                    vect.initXYVector(vectorTemp.lerp(this.xBaseDrone, this.yBaseDrone, 0.025));
+                    this.drone.x = vect.x;
+                    this.drone.y = vect.y;
+                } else {
+                    this.drone.x = this.xBaseDrone;
+                    this.drone.y = this.yBaseDrone;
+                    this.drone.rotation = Math.sin(this.delta) * 0.45;
+                }
                 break;
 
             case STATS_DRONE.GO_OUT:
@@ -133,6 +167,16 @@ export class Drone {
                 this.drone.y += Math.sin(this.deltaGo);
                 this.laserAnim.visible = this.deltaGo <= 1 ? true : false;
                 this.delta = 0;
+                break;
+
+            case STATS_DRONE.MOD_FRENZY:
+                if (this.laserAnim.visible) {
+                    this.laserAnim.visible = false;
+                    this.activeLaser();
+                }
+                this.drone.x = this.xBaseDrone + Math.cos(this.delta * 5) * 25 - 25;
+                this.drone.y = this.yBaseDrone + Math.sin(this.delta * 5) * 50;
+                this.drone.rotation = Math.sin(this.delta * 5) * 0.50;
                 break;
 
             default: return;
@@ -156,6 +200,10 @@ export class Drone {
 
             case STATS_DRONE.GO_IN:
                 console.log('GO_IN');
+                break;
+
+            case STATS_DRONE.MOD_FRENZY:
+                console.log('MOD_FRENZY');
                 break;
 
             default: return;
@@ -234,6 +282,9 @@ export class Drone {
     }
 
 
+    /*
+    *   MANAGED IF THE DRONE MINE OF NOT
+    */
     setIsAsteLifeSupZero(bool: boolean) {
         this.isAsteLifeSupZero = bool;
         this.droneMiningVerif();
@@ -251,4 +302,7 @@ export class Drone {
             this.isMining = this.isAsteLifeSupZero && !this.isUserHaveMaxCapacityStorage;
         }
     }
+
+
+
 }
