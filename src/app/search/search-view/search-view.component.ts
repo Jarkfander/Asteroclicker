@@ -94,7 +94,7 @@ export class SearchViewComponent implements OnInit {
   private updateTimer() {
     if (!this.search || this.search.start === 0) { return; }
     if (this.search.state === 1 || this.search.state === 3) {
-      console.log(this.timer);
+     // console.log(this.timer);
       this.socketS.updateAsteroidTimer(this.userS.currentUser.uid, this.distance);
     }
   }

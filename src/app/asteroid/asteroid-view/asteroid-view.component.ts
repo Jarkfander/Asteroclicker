@@ -2,7 +2,7 @@ import { Component, AfterViewInit, ElementRef, Renderer2, HostListener } from '@
 import * as PIXI from 'pixi.js';
 
 import { AsteroidSprite } from './asteroidSprite';
-import { Drone } from './drone';
+import { Drone, STATS_DRONE } from './drone';
 import { SocketService } from '../../shared/socket/socket.service';
 import { UserService, IFrenzyInfo, IProfile, IUserUpgrade } from '../../shared/user/user.service';
 import { ParticleBase } from '../../shared/pixiVisual/particleBase';
@@ -31,6 +31,7 @@ export enum KEY_CODE {
 })
 
 export class AsteroidViewComponent implements OnInit {
+  frenzyMOD: boolean;
   storageCapacityMax: number;
 
   private app: PIXI.Application;
@@ -196,16 +197,8 @@ export class AsteroidViewComponent implements OnInit {
     // frenzy Subject
     this.userS.frenzyInfo.subscribe((frenzy: IFrenzyInfo) => {
       this.frenzyInfo = frenzy;
-      if (!frenzy.state) {
-        this.userS.currentUser.frenzy.comboInd = 0;
-        this.asteroidSprite.frenzyModTouchDown();
-        this.asteroidSprite.frenzyModComboFinish();
-      } else {
-        this.asteroidSprite.frenzyBackgroundStart();
-        this.asteroidSprite.frenzyModTouch(frenzy.nextCombos[0]);
-      }
+      this.frenzyModGoOrNot(frenzy);
     });
-
     // Profile Subject
     this.userS.profile.subscribe((profile: IProfile) => {
       profile.badConfig ? this.backgroundSky.stop() : this.backgroundSky.play();
@@ -226,7 +219,7 @@ export class AsteroidViewComponent implements OnInit {
     // User ore amounts
     this.oreS.OreAmounts
       .subscribe((oreAmount: IOreAmounts) => {
-         this.drone.setIsUserHaveMaxCapacityStorage(this.asteroid && oreAmount[this.asteroid.ore] >= this.storageCapacityMax)
+        this.drone.setIsUserHaveMaxCapacityStorage(this.asteroid && oreAmount[this.asteroid.ore] >= this.storageCapacityMax);
       });
 
   }
@@ -256,21 +249,18 @@ export class AsteroidViewComponent implements OnInit {
     if (coefClick >= 1) {
       this.socketS.reachFrenzy(this.userS.currentUser.uid);
     }
-
-    if (coefClick > 0.5) {
-      if (this.drone) {
+    if (!this.frenzyMOD) {
+      if (coefClick > 0.5) {
         this.drone.activeLaser();
         this.drone.laserAnim.visible = false;
-      }
-      if (this.asteroidSprite) {
-        this.asteroidSprite.checkAstero = true;
-      }
-    } else {
-      if (this.drone) {
+        if (this.asteroidSprite) {
+          this.asteroidSprite.checkAstero = true;
+        }
+      } else {
         this.drone.desactivLaser();
-      }
-      if (this.asteroidSprite) {
-        this.asteroidSprite.checkAstero = false;
+        if (this.asteroidSprite) {
+          this.asteroidSprite.checkAstero = false;
+        }
       }
     }
   }
@@ -371,7 +361,28 @@ export class AsteroidViewComponent implements OnInit {
     }
   }
 
-  // frenzy mod - - - - -  - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - - -  - - - - - -
+
+  /*
+  * MOD FRENZY MANAGED - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  */
+  frenzyModGoOrNot(frenzy) {
+    if (!frenzy.state) {
+      this.frenzyMOD = false;
+      this.userS.currentUser.frenzy.comboInd = 0;
+      this.asteroidSprite.frenzyModTouchDown();
+      this.drone.statsActu = STATS_DRONE.MINING;
+      this.asteroidSprite.frenzyModComboFinish();
+    } else {
+      this.frenzyMOD = true;
+      this.drone.delta = 0;
+      this.asteroidSprite.frenzyBackgroundStart();
+      this.drone.statsActu = STATS_DRONE.MOD_FRENZY;
+      this.asteroidSprite.checkAstero = true;
+      this.asteroidSprite.frenzyModTouch(frenzy.nextCombos[0]);
+    }
+  }
+
+  // frenzy Touch
   frenzyModTouch(numTouchUserActu: number) {
     if (this.frenzyInfo.state) {
       this.socketS.validArrow(this.userS.currentUser.uid, numTouchUserActu - 37, this.userS.currentUser.frenzy.comboInd);
@@ -390,7 +401,6 @@ export class AsteroidViewComponent implements OnInit {
   initNumberOfDroneBegin() {
     if (!this.drone) {
       this.drone = new Drone(0.20, 0.20, 1, 1, false, this.app);
-      this.drone.deltaTempAster = (1 / 3) * (2 * Math.PI) / 1000;
     }
     this.drone.changeSpriteDrone(this.userMineRateLvl);
   }
