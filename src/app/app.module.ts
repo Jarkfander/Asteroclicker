@@ -23,7 +23,7 @@ import { OreModule } from './ore/ore.module';
 import { SearchViewComponent } from './search/search-view/search-view.component';
 import { SearchModule } from './search/search.module';
 import { ResourcesService } from './shared/resources/resources.service';
-
+import { ToasterModule } from './shared/toaster/toaster.module';
 
 @NgModule({
   declarations: [
@@ -43,7 +43,8 @@ import { ResourcesService } from './shared/resources/resources.service';
     SharedModule,
     MarketModule,
     OreModule,
-    SearchModule
+    SearchModule,
+    ToasterModule
   ],
   providers: [UserService, UpgradeService, MarketService, QuestService, RankingService, AuthService,ResourcesService],
   bootstrap: [AppComponent]

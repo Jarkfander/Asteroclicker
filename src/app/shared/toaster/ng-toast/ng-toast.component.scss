@@ -1,0 +1,38 @@
+:host {
+    height: 100px;
+    width: 100%;
+}
+
+article {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0;
+
+    .timer {
+        width: 100%;
+        height: 10px;
+        overflow: hidden;
+        .timer-slide {
+            height: 100%;
+            width: 100%;
+        }
+    }
+}
+
+.success {
+    background-color: rgb(92, 92, 168);
+    color: white;
+    .timer-slide {
+        background-color: rgb(53, 53, 97);        
+    }
+}
+
+.alert {
+    background-color: rgb(156, 44, 44);
+    color: white;
+    .timer-slide {
+        background-color: rgb(71, 7, 7);        
+    }
+}
