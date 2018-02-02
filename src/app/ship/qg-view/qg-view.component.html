@@ -1,24 +1,13 @@
-<div (click)="levelUpOre()" class="cost row justify-around align-center">
-  <section class="row-reverse">
-    <div class="level-up">
-      <h1>QG</h1>
-    </div>
-  </section>
-</div>
-<!--
-<div (click)="levelUpOre()" class="cost row justify-around align-center">
-  <img class="lvl-up" src="../../../assets/icon/level-up.png" alt="levelUp"/>
-  <div class="ores col justify-around wrap">
-      <div class="cost-ore row align-center justify-around" *ngFor="let key of upgradeCostString">
-          <img *ngIf="key !== '???'" src="../../../assets/oreIcon/{{key}}Icon.png" />
-          <p>{{nextUpgrade.costOreString[key]}}</p>
-      </div>
-<section class="row-reverse">
-  <div class="level-up col">
-    <h3>Head Quarter</h3>
-    <div class="cost row justify-around align-center">
-
+<section class="row-reverse justify-between">
+  <div class="name">
+    <h1>Head Quarter</h1>
+  </div>
+  <div (click)="levelUpOre()" class="level-up row align-center justify-between">
+    <img src="../../../assets/icon/level-up.png" alt="levelUp"/>
+    <div class="cost-ore col align-center justify-around" *ngFor="let key of upgradeCostString">
+      <img *ngIf="key !== '???'" src="../../../assets/oreIcon/{{key}}Icon.png" />
+      <p>{{nextUpgrade.costOreString[key]}}</p>
     </div>
   </div>
-</div> -->
+</section>
 <ng-notif></ng-notif>

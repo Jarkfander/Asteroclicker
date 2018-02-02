@@ -6,8 +6,9 @@
     <div class="cost col-reverse justify-between align-center">
         <div class="ores row justify-around">
             <div class="cost-ore col justify-around align-center" *ngFor="let key of upgradeCostString">
-                <img *ngIf="key !== '???'" src="../../../assets/oreIcon/{{key}}Icon.png" />
+                <img *ngIf="key != '???'" src="../../../assets/oreIcon/{{key}}Icon.png" />
                 <p>{{nextUpgrade.costOreString[key]}}</p>
+                <p *ngIf="key == '???'">{{key}}</p>
             </div>
         </div>
         <button (click)="levelUpOre()">Upgrade</button>        
