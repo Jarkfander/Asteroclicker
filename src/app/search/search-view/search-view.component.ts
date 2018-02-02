@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserService, IUserUpgrade } from '../../shared/user/user.service';
 import { Research } from '../../ship/upgrade-class/research';
-import { UpgradeService } from '../../ship/upgrade.service';
 import { Utils } from '../../shared/utils';
 import { User } from '../../shared/user/user';
 import { SocketService } from '../../shared/socket/socket.service';
@@ -95,7 +94,6 @@ export class SearchViewComponent implements OnInit {
   private updateTimer() {
     if (!this.search || this.search.start === 0) { return; }
     if (this.search.state === 1 || this.search.state === 3) {
-     // console.log(this.timer);
       this.socketS.updateAsteroidTimer(this.userS.currentUser.uid, this.distance);
     }
   }

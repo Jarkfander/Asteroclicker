@@ -10,7 +10,6 @@ import { User } from '../../shared/user/user';
 import { UpgradeType, Upgrade } from '../../ship/upgrade-class/upgrade';
 import { getFramesFromSpriteSheet, initSprite, changeSpriteInAnime } from '../../loadAnimation';
 import { Frenzy } from '../../shared/user/frenzy';
-import { UpgradeService } from '../../ship/upgrade.service';
 import { IAsteroid, AsteroidService } from '../asteroid.service';
 import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Observable } from 'rxjs/Observable';
@@ -187,11 +186,11 @@ export class AsteroidViewComponent implements OnInit {
 
     // Event Subject
     this.userS.eventSubject.subscribe((user: User) => {
-      if (this.asteroidSprite.eventOk) {
+      if (this.asteroidSprite) {
         this.asteroidSprite.eventOk = user.event;
+        this.asteroidSprite.activEvent();
+        this.clickCapsule();
       }
-      this.asteroidSprite.activEvent();
-      this.clickCapsule();
     });
 
     // frenzy Subject

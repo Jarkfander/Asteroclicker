@@ -11,6 +11,7 @@ import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/takeWhile';
 import 'rxjs/add/operator/filter';
+import { ResourcesService } from '../../shared/resources/resources.service';
 
 @Component({
   selector: 'app-upgrade-info',
@@ -27,7 +28,7 @@ export class UpgradeInfoComponent implements OnInit, OnDestroy {
   public caraKeys: string[];
   public nextCaraKeys: string[];
 
-  constructor(private oreS: OreService, private userS: UserService, private upgradeS: UpgradeService) { }
+  constructor(private oreS: OreService, private userS: UserService, private resourcesS: ResourcesService, private upgradeS: UpgradeService) { }
 
   ngOnInit() {
     this.upgradeS.activeUserUpgrade$
@@ -35,8 +36,8 @@ export class UpgradeInfoComponent implements OnInit, OnDestroy {
       .do((userUpgrade: IUserUpgrade) => this.userUgrade = userUpgrade)
       .filter((userUgrade: IUserUpgrade) => !!userUgrade)
       .subscribe((userUgrade: IUserUpgrade) => {
-        this.currentLvl = this.upgradeS[userUgrade.name][userUgrade.lvl];
-        this.nextLvl = this.upgradeS[userUgrade.name][userUgrade.lvl + 1];
+        this.currentLvl = this.resourcesS[userUgrade.name][userUgrade.lvl];
+        this.nextLvl = this.resourcesS[userUgrade.name][userUgrade.lvl + 1];
         this.caraKeys = Object.keys(this.currentLvl.cara);
         this.nextCaraKeys = Object.keys(this.nextLvl.cara);
       });

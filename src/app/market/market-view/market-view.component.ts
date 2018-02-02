@@ -5,7 +5,6 @@ import { SocketService } from '../../shared/socket/socket.service';
 import { UserService, IUserUpgrade } from '../../shared/user/user.service';
 import { UpgradeType } from '../../ship/upgrade-class/upgrade';
 import { SharedModule } from '../../shared/shared.module';
-import { UpgradeService } from '../../ship/upgrade.service';
 import { OreService } from '../../ore/ore.service';
 
 import 'rxjs/add/operator/map';

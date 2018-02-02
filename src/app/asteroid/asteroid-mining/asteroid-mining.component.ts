@@ -1,7 +1,7 @@
 import { Chart } from 'chart.js';
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { IFrenzyInfo, UserService, IUserUpgrade } from './../../shared/user/user.service';
-import { UpgradeService } from '../../ship/upgrade.service';
+
 import { IAsteroid, AsteroidService } from './../asteroid.service';
 import { User } from '../../shared/user/user';
 import { Observable } from 'rxjs/Observable';

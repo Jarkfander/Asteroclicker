@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService, IUserUpgrade } from '../../shared/user/user.service';
 import { User } from '../../shared/user/user';
-import { UpgradeService } from '../../ship/upgrade.service';
 import { Observable } from 'rxjs/Observable';
 import { OreService, IOreAmounts } from '../ore.service';
 import { ResourcesService } from '../../shared/resources/resources.service';

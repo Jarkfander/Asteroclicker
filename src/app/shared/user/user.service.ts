@@ -7,7 +7,6 @@ import { MarketService } from '../../market/market.service';
 import { UpgradeType } from '../../ship/upgrade-class/upgrade';
 import { SocketService } from '../socket/socket.service';
 import { Frenzy } from './frenzy';
-import { UpgradeService } from '../../ship/upgrade.service';
 import { Quest } from '../../quest/quest';
 import { IAsteroid } from '../../asteroid/asteroid.service';
 import { AuthService } from '../../signin/auth.service';
@@ -80,8 +79,7 @@ export class UserService {
 
   cargoSubject = new Subject<User>();
 
-  constructor(db: AngularFireDatabase, afAuth: AngularFireAuth,
-    private upgradeS: UpgradeService, private marketS: MarketService,
+  constructor(db: AngularFireDatabase, afAuth: AngularFireAuth, private marketS: MarketService,
     private socketS: SocketService, private authS: AuthService) {
 
     this.db = db;

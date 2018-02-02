@@ -5,7 +5,6 @@ import { Research } from '../upgrade-class/research';
 import { MineRate } from '../upgrade-class/mineRate';
 import { Storage } from '../upgrade-class/storage';
 import { Upgrade, UpgradeType } from '../upgrade-class/upgrade';
-import { UpgradeService } from '../upgrade.service';
 import { Observable } from 'rxjs/Observable';
 
 import 'rxjs/add/operator/do';

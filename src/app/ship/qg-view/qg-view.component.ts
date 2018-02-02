@@ -4,7 +4,6 @@ import { UserService, IUserUpgrade } from '../../shared/user/user.service';
 import { Observable } from 'rxjs/Observable';
 import { SocketService } from '../../shared/socket/socket.service';
 import { OreService, IOreAmounts } from '../../ore/ore.service';
-import { UpgradeService } from '../upgrade.service';
 import { NgNotifComponent } from '../../shared/ng-notif/ng-notif.component';
 import { ResourcesService } from '../../shared/resources/resources.service';
 

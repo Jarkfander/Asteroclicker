@@ -25,7 +25,6 @@ export class AuthService {
   public CreateAccount(email, pswd, pseudo) {
     this.afAuth.auth.createUserWithEmailAndPassword(email, pswd).then((message) => {
       this.socketS.initializeUser(message.uid, email, pseudo);
-      console.log('New account !');
     });
   }
 

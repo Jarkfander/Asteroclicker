@@ -47,7 +47,6 @@ export class ResourcesService {
     this.FillResearch(data.research);
     this.FillStorage(data.storage);
     this.oreInfos=data.oreInfos;
-    console.log(data);
     this.resourcesLoaded=true;
   }
 
