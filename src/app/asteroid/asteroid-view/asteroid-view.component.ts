@@ -390,7 +390,6 @@ export class AsteroidViewComponent implements OnInit {
   initNumberOfDroneBegin() {
     if (!this.drone) {
       this.drone = new Drone(0.20, 0.20, 1, 1, false, this.app);
-      this.drone.deltaTempAster = (1 / 3) * (2 * Math.PI) / 1000;
     }
     this.drone.changeSpriteDrone(this.userMineRateLvl);
   }

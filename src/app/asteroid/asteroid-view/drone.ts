@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 import { getFramesFromSpriteSheet, initSprite } from '../../loadAnimation';
 
 export class Drone {
+    isFirstTimeBack: boolean;
     private isUserHaveMaxCapacityStorage: boolean;
     private isAsteLifeSupZero: boolean;
     app: PIXI.Application;
@@ -17,8 +18,6 @@ export class Drone {
     xBaseDrone: number;
     yBaseDrone: number;
     laserAnim: PIXI.extras.AnimatedSprite;
-
-    deltaTempAster: number;
 
     laserAnim_actif1: PIXI.extras.AnimatedSprite;
     laserAnim_actif2: PIXI.extras.AnimatedSprite;
@@ -67,7 +66,6 @@ export class Drone {
                     this.delta = 0;
                 }
                 this.delta += (2 * Math.PI) / 1000;
-                this.delta += this.deltaTempAster;
                 if (!this.isMining) {
                     if (this.deltaGo < 8) {
                         this.deltaGo += 0.08;
@@ -75,23 +73,24 @@ export class Drone {
                         this.drone.y = this.drone.y - Math.sin(this.deltaGo);
                         this.LaserAnimVisible(false, false, false, false);
                         this.drone.rotation = 0;
-                        this.delta = 0;
                     } else {
+                        this.drone.y = this.yBaseDrone - 15;
                         this.drone.visible = false;
                     }
-                    this.delta = 0;
                 } else {
                     this.drone.visible = true;
                     if (this.deltaGo >= 0) {
                         this.deltaGo -= 0.08;
-                        this.drone.x = this.drone.x + this.deltaGo;
-                        this.drone.y = this.drone.y + Math.sin(this.deltaGo);
-                        this.delta = 0;
+                        this.drone.x += this.deltaGo;
+                        this.drone.y += Math.sin(this.deltaGo);
                         this.laserAnim.visible = this.deltaGo <= 1 ? true : false;
+                        this.isFirstTimeBack = true;
                     } else {
+                        this.delta = this.isFirstTimeBack ? 0 : this.delta;
                         this.drone.x = this.xBaseDrone + Math.cos(this.delta) * 50;
                         this.drone.y = this.yBaseDrone + Math.sin(this.delta) * 50;
                         this.drone.rotation = Math.sin(this.delta) * 0.25;
+                        this.isFirstTimeBack = false;
                     }
                 }
             }
