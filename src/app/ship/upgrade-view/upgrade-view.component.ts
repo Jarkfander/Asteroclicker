@@ -1,4 +1,3 @@
-import { NgNotifComponent } from './../../shared/ng-notif/ng-notif.component';
 import { Component, OnInit, Input, HostListener, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import { Upgrade, UpgradeType } from '../upgrade-class/upgrade';
 import { SocketService } from '../../shared/socket/socket.service';
@@ -7,12 +6,14 @@ import { UserService, IUserUpgrade } from '../../shared/user/user.service';
 import { Utils } from '../../shared/utils';
 import { UpgradeService } from '../upgrade.service';
 import { OreService, IOreAmounts } from '../../ore/ore.service';
+import { ResourcesService } from '../../shared/resources/resources.service';
+import { ToasterService } from '../../shared/toaster/toaster.service';
 import { enter } from '../../shared/animations';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/interval';
 import 'rxjs/add/operator/filter';
-import { ResourcesService } from '../../shared/resources/resources.service';
+
 
 @Component({
   selector: 'app-upgrade-view',
@@ -29,7 +30,6 @@ export class UpgradeViewComponent implements OnInit {
   @Input() credit: number;
 
   @ViewChild('timer') timerRef: ElementRef;
-  @ViewChild(NgNotifComponent) notif: NgNotifComponent;
 
   public userUpgrade: IUserUpgrade;
   public currentUpgrade: Upgrade;
@@ -38,13 +38,13 @@ export class UpgradeViewComponent implements OnInit {
   public isHover: boolean;
 
   constructor(private socketS: SocketService,
+    private toasterS: ToasterService,
     private el: ElementRef,
     private renderer: Renderer2,
     private userS: UserService,
     private oreS: OreService,
     private resourcesS: ResourcesService,
-    private upgradeS: UpgradeService
-    ) {}
+    private upgradeS: UpgradeService) {}
 
 
   @HostListener('mouseenter', ['$event']) inHover() {
@@ -88,11 +88,6 @@ export class UpgradeViewComponent implements OnInit {
   }
   */
   }
-
-  /** Update credit of user
-  levelUpCredit() {
-    this.socketS.upgradeShipCredit(this.userS.currentUser.uid, this.currentUpgrade.name);
-  } */
 
   /** Update ore amount of user and update timer */
   public levelUpOre() {
@@ -145,22 +140,22 @@ export class UpgradeViewComponent implements OnInit {
     const keysCost = Object.keys(tempUpgradeCost);
 
     if (this.userUpgrade.lvl + 1 > this.QGlvl) {
-      this.notif.alert('QG Level', 'QG should be higher than ' + this.userUpgrade.lvl + 1);
+      this.toasterS.alert('QG Level', 'QG should be higher than ' + this.userUpgrade.lvl + 1);
       return false;
     }
     for (let i = 0; i < keysCost.length; i++) {
       if (keysCost[i] === 'credit') {
         if (this.credit < tempUpgradeCost[keysCost[i]]) {
-          this.notif.alert('Not enough credit', 'You need ' + tempUpgradeCost[keysCost[i]]);
+          this.toasterS.alert('Not enough credit', 'You need ' + tempUpgradeCost[keysCost[i]]);
           return false;
         }
       }
       if (!this.oreMiss(keysCost[i])) {
-        this.notif.alert('Research should be higher', 'You should upgrade research before');
+        this.toasterS.alert('Research should be higher', 'You should upgrade research before');
         return false;
       }
       if (this.oreAmount[keysCost[i]] < tempUpgradeCost[keysCost[i]]) {
-        this.notif.alert('Not enouh ' + keysCost[i], 'You need ' + tempUpgradeCost[keysCost[i]]);
+        this.toasterS.alert('Not enouh ' + keysCost[i], 'You need ' + tempUpgradeCost[keysCost[i]]);
         return false;
       }
     }
