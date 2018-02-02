@@ -55,6 +55,8 @@ export class Drone {
     public isMining: boolean;
     statsActu: STATS_DRONE;
 
+    frenzyTouchX: number;
+    frenzyTouchY: number;
 
     xBaseDrone: number;
     yBaseDrone: number;
@@ -80,6 +82,9 @@ export class Drone {
 
         this.xBaseDrone = this.drone.x;
         this.yBaseDrone = this.drone.y;
+
+        this.frenzyTouchX = this.drone.x;
+        this.frenzyTouchY = this.drone.y;
 
         this.app.stage.addChild(this.drone);
 
@@ -142,15 +147,9 @@ export class Drone {
         switch (this.statsActu) {
             case STATS_DRONE.MINING:
                 if (Math.abs(this.drone.x - this.xBaseDrone) > 0.1 && Math.abs(this.drone.y - this.yBaseDrone) > 0.1) {
-                    const vect = new Vector2(); const vectorTemp = new Vector2();
-                    vectorTemp.initXY(this.drone.x, this.drone.y);
-                    vectorTemp.rotate = this.drone.rotation;
-                    vect.initXYVector(vectorTemp.lerp(this.xBaseDrone, this.yBaseDrone, 0.025));
-                    vect.rotate = vectorTemp.lerpRotate(0, 0.2);
-
+                    const vect = this.lerpVector2(this.drone.x, this.drone.y, this.xBaseDrone, this.yBaseDrone, 0.02, true);
                     this.drone.x = vect.x;
                     this.drone.y = vect.y;
-                    this.drone.rotation = vect.rotate;
                     this.delta = 0;
                 } else {
                     this.drone.x = this.xBaseDrone;
@@ -184,9 +183,14 @@ export class Drone {
                     this.laserAnim.visible = false;
                     this.activeLaser();
                 }
+
+                const vectFrenzy = this.lerpVector2(this.drone.x, this.drone.y, this.frenzyTouchX, this.frenzyTouchY, 0.2, true);
+                this.drone.x = vectFrenzy.x;
+                this.drone.y = vectFrenzy.y;
+/*  
                 this.drone.x = this.xBaseDrone + Math.cos(this.delta * 5) * 25 - 25;
-                this.drone.y = this.yBaseDrone + Math.sin(this.delta * 5) * 50;
-                this.drone.rotation = Math.sin(this.delta * 5) * 0.50;
+                this.drone.y = this.yBaseDrone + Math.sin(this.delta * 5) * 50;*/
+                // this.drone.rotation = Math.sin(this.delta * 5) * 0.50;
                 break;
 
             default: return;
@@ -220,6 +224,17 @@ export class Drone {
         }
     }
 
+    lerpVector2(sourceX, sourceY, destX, destY, delta, isRotate = false) {
+        const vect = new Vector2(); const vectorTemp = new Vector2();
+        vectorTemp.initXY(sourceX, sourceY);
+        vect.initXYVector(vectorTemp.lerp(destX, destY, delta));
+        if (isRotate) {
+            vectorTemp.rotate = this.drone.rotation;
+            vect.rotate = vectorTemp.lerpRotate(0, 0.2);
+            this.drone.rotation = vect.rotate;
+        } 
+        return vect;
+    }
     /*
     *   MANAGE LASER - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
     */

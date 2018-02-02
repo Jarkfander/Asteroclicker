@@ -45,6 +45,9 @@ export class AsteroidSprite {
 
     asteroidFolders;
 
+    posXArrow: number;
+    posYArrow: number;
+
     height: number;
     width: number;
 
@@ -508,10 +511,12 @@ export class AsteroidSprite {
     frenzyModTouch(numTouch: number) {
         this.frenzyModTouchDown();
         if (this.asteroid[0].visible) {
-            const randomX = Math.floor(Math.random() * 100) - 100;
-            const randomY = Math.floor(Math.random() * 100) - 100;
+            const randomX = Math.floor(Math.random() * 150) - 150;
+            const randomY = Math.floor(Math.random() * 150) - 150;
 
-            this.arrowFrenzy[numTouch].position.set(this.xBaseAsteroid + randomX, this.yBaseAsteroid + randomY);
+            this.posXArrow = this.xBaseAsteroid + randomX;
+            this.posYArrow = this.yBaseAsteroid + randomY;
+            this.arrowFrenzy[numTouch].position.set(this.posXArrow, this.posYArrow );
             this.arrowFrenzy[numTouch].visible = true;
         }
 

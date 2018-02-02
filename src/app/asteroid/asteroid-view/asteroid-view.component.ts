@@ -380,6 +380,8 @@ export class AsteroidViewComponent implements OnInit {
       this.drone.statsActu = STATS_DRONE.MOD_FRENZY;
       this.asteroidSprite.checkAstero = true;
       this.asteroidSprite.frenzyModTouch(frenzy.nextCombos[0]);
+      this.drone.frenzyTouchX = this.asteroidSprite.posXArrow + 40;
+      this.drone.frenzyTouchY = this.asteroidSprite.posYArrow - 150;
     }
   }
 
@@ -390,6 +392,8 @@ export class AsteroidViewComponent implements OnInit {
       if (this.frenzyInfo.nextCombos[this.userS.currentUser.frenzy.comboInd] === (numTouchUserActu - 37)) {
         this.userS.currentUser.frenzy.comboInd++;
         this.asteroidSprite.frenzyModTouch(this.frenzyInfo.nextCombos[this.userS.currentUser.frenzy.comboInd]);
+        this.drone.frenzyTouchX = this.asteroidSprite.posXArrow + 50;
+        this.drone.frenzyTouchY = this.asteroidSprite.posYArrow - 150;
       } else {
         this.asteroidSprite.frenzyFail();
       }
