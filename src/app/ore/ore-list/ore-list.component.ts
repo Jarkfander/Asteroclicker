@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService, IUserUpgrade } from '../../shared/user/user.service';
 import { User } from '../../shared/user/user';
 import { Observable } from 'rxjs/Observable';
-import { ResourcesService } from '../../shared/resources/resources.service';
+import { ResourcesService, IOreInfos } from '../../shared/resources/resources.service';
 import { UpgradeService } from '../../ship/upgrade.service';
 import { OreService, IOreAmounts } from '../ore.service';
 import { staggerTile } from './../../shared/animations';
@@ -38,7 +38,7 @@ export class OreListComponent implements OnInit {
               private oreInfoS: OreService) {}
 
   ngOnInit() {
-    this.oreInfos = this.oreInfoS.oreInfos;
+    this.oreInfos = this.resourcesS.oreInfos;
     this.oreData = Object.keys(this.oreInfos)
       .map((name: string) => {
         return {
@@ -70,7 +70,7 @@ export class OreListComponent implements OnInit {
     return this.userS.getUpgradeByName('research')
       .map((upgrade) => upgrade.lvl)
       .map((researchLvl) => {
-        return this.upgradeS.research[researchLvl].lvl >= this.oreInfos[name].searchNewOre;
+        return this.resourcesS.research[researchLvl].lvl >= this.oreInfos[name].searchNewOre;
       });
   }
 

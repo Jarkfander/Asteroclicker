@@ -31,9 +31,7 @@ export class ToasterService {
       take(1),
       mergeMap((toasts: Toast[]) => toasts),
       filter((toast: Toast) => toast.id !== id),
-      reduce((acc: Toast[], curr: Toast) => acc = [...acc, curr], []),
-      // tap((toasts) => console.log(toasts)),
-      // map((toasts: Toast[]) => toasts.splice(toasts.map(toast => toast.id).indexOf(id), 1))
+      reduce((acc: Toast[], curr: Toast) => acc = [...acc, curr], [])
     ).subscribe((toasts: Toast[]) => this.toastsSubject.next([...toasts]));
   }
 
