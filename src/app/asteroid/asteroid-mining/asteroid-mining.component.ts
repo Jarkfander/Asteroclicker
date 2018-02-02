@@ -1,11 +1,12 @@
 import { Chart } from 'chart.js';
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { IFrenzyInfo, UserService, IUserUpgrade } from './../../shared/user/user.service';
-import { UpgradeService } from '../../ship/upgrade.service';
+
 import { IAsteroid, AsteroidService } from './../asteroid.service';
 import { User } from '../../shared/user/user';
 import { Observable } from 'rxjs/Observable';
 import { figuesChange } from './../../shared/animations';
+import { ResourcesService } from '../../shared/resources/resources.service';
 
 @Component({
   selector: 'app-asteroid-mining',
@@ -35,7 +36,7 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
 
   constructor(private userS: UserService,
               private asteroidS: AsteroidService,
-              private upgradeS: UpgradeService) {
+              private resourcesS: ResourcesService) {
   }
 
   ngOnInit() {
@@ -54,8 +55,8 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
 
     this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
       this.userMineRateLvl = upgrade.lvl;
-      this.baseMineRate = this.upgradeS.mineRate[upgrade.lvl].baseRate;
-      this.progressBarMaxValue = this.upgradeS.mineRate[upgrade.lvl].maxRate - this.baseMineRate;
+      this.baseMineRate = this.resourcesS.mineRate[upgrade.lvl].baseRate;
+      this.progressBarMaxValue = this.resourcesS.mineRate[upgrade.lvl].maxRate - this.baseMineRate;
       this.updateMining();
     });
     this.updateMining();
@@ -71,7 +72,7 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
   /** Update the mining rate chart */
   private updateMining() {
     if (this.frenzyInfo.state) {
-      const frenzyTime = this.upgradeS.mineRate[this.userMineRateLvl].frenzyTime;
+      const frenzyTime = this.resourcesS.mineRate[this.userMineRateLvl].frenzyTime;
       this.progressBarValue = this.frenzyTimer / (frenzyTime * 1000);
     } else {
       this.progressBarValue = this.mineRate - this.baseMineRate > 0 ? this.mineRate - this.baseMineRate : 0;

@@ -10,11 +10,12 @@ import { User } from '../../shared/user/user';
 import { UpgradeType, Upgrade } from '../../ship/upgrade-class/upgrade';
 import { getFramesFromSpriteSheet, initSprite, changeSpriteInAnime } from '../../loadAnimation';
 import { Frenzy } from '../../shared/user/frenzy';
-import { UpgradeService } from '../../ship/upgrade.service';
 import { IAsteroid, AsteroidService } from '../asteroid.service';
 import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Observable } from 'rxjs/Observable';
-import { OreService, IOreInfos, IOreAmounts } from '../../ore/ore.service';
+import { OreService, IOreAmounts } from '../../ore/ore.service';
+import { ResourcesService } from '../../shared/resources/resources.service';
+
 
 
 export enum KEY_CODE {
@@ -60,7 +61,7 @@ export class AsteroidViewComponent implements OnInit {
     private render: Renderer2,
     private userS: UserService,
     private asteroidS: AsteroidService,
-    private upgradeS: UpgradeService,
+    private resourcesS: ResourcesService,
     private socketS: SocketService,
     private oreS: OreService) { }
 
@@ -68,21 +69,19 @@ export class AsteroidViewComponent implements OnInit {
     this.clicks = new Array();
     this.subjectManage();
 
-    this.oreS.OreInfos.take(1).subscribe((oreInfos: IOreInfos) => {
-      setInterval(() => {
-        if (this.asteroid != null && this.asteroid.currentCapacity > 0) {
-          this.socketS.incrementOre(this.userS.currentUser.uid, this.asteroid.ore,
-            parseFloat((this.userS.currentUser.currentMineRate *
-              this.asteroid.purity / 100 *
-              oreInfos[this.asteroid.ore].miningSpeed).toFixed(2)));
-        }
-      }, 1000);
-      this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
-        this.userMineRateLvl = upgrade.lvl;
-        this.initNumberOfDroneBegin();
-      });
-      setInterval(() => { this.updateClick(); }, 100);
+    setInterval(() => {
+      if (this.asteroid != null && this.asteroid.currentCapacity > 0) {
+        this.socketS.incrementOre(this.userS.currentUser.uid, this.asteroid.ore,
+          parseFloat((this.userS.currentUser.currentMineRate *
+            this.asteroid.purity / 100 *
+            this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2)));
+      }
+    }, 1000);
+    this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
+      this.userMineRateLvl = upgrade.lvl;
+      this.initNumberOfDroneBegin();
     });
+    setInterval(() => { this.updateClick(); }, 100);
   }
 
   // tslint:disable-next-line:member-ordering
@@ -187,11 +186,11 @@ export class AsteroidViewComponent implements OnInit {
 
     // Event Subject
     this.userS.eventSubject.subscribe((user: User) => {
-      if (this.asteroidSprite.eventOk) {
+      if (this.asteroidSprite) {
         this.asteroidSprite.eventOk = user.event;
+        this.asteroidSprite.activEvent();
+        this.clickCapsule();
       }
-      this.asteroidSprite.activEvent();
-      this.clickCapsule();
     });
 
     // frenzy Subject
@@ -213,7 +212,7 @@ export class AsteroidViewComponent implements OnInit {
     // upgrade Storage
     this.userS.getUpgradeByName('storage')
       .subscribe((userUpgrade) => {
-        this.storageCapacityMax = this.upgradeS[userUpgrade.name][userUpgrade.lvl].capacity;
+        this.storageCapacityMax = this.resourcesS[userUpgrade.name][userUpgrade.lvl].capacity;
       });
 
     // User ore amounts
@@ -232,8 +231,8 @@ export class AsteroidViewComponent implements OnInit {
   }
 
   updateClick() {
-    const max = this.upgradeS.mineRate[this.userMineRateLvl].maxRate;
-    const base = this.upgradeS.mineRate[this.userMineRateLvl].baseRate;
+    const max = this.resourcesS.mineRate[this.userMineRateLvl].maxRate;
+    const base = this.resourcesS.mineRate[this.userMineRateLvl].baseRate;
 
     const clickTmp = this.clicks;
     for (let i = 0; i < clickTmp.length; i++) {

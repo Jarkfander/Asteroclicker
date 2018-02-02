@@ -6,7 +6,6 @@ import { SharedModule } from '../shared/shared.module';
 import { UserService } from '../shared/user/user.service';
 import { SocketService } from '../shared/socket/socket.service';
 import { FormsModule } from '@angular/forms';
-import { UpgradeService } from '../ship/upgrade.service';
 import { AsteroidService } from './asteroid.service';
 import { OreService } from '../ore/ore.service';
 import { AsteroidMiningComponent } from './asteroid-mining/asteroid-mining.component';
@@ -20,6 +19,6 @@ import { AsteroidMiningComponent } from './asteroid-mining/asteroid-mining.compo
   ],
   declarations: [AsteroidViewComponent, AsteroidMiningComponent],
   exports: [AsteroidViewComponent, AsteroidMiningComponent],
-  providers: [UserService, UpgradeService, SocketService, OreService, AsteroidService]
+  providers: [UserService, SocketService, OreService, AsteroidService]
 })
 export class AsteroidModule { }

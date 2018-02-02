@@ -1,20 +1,20 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserService, IUserUpgrade } from '../../shared/user/user.service';
 import { Research } from '../../ship/upgrade-class/research';
-import { UpgradeService } from '../../ship/upgrade.service';
 import { Utils } from '../../shared/utils';
 import { User } from '../../shared/user/user';
 import { SocketService } from '../../shared/socket/socket.service';
 import { ISearch, SearchService } from '../search.service';
+import { ResourcesService } from '../../shared/resources/resources.service';
 import { NgSliderComponent } from './../../shared/ng-slider/ng-slider.component';
 
 import { staggerTile } from './../../shared/animations';
 
 export enum searchState {
-  launchSearch,
-  searching,
-  chooseAsteroid,
-  traveling
+    launchSearch,
+    searching,
+    chooseAsteroid,
+    traveling
 }
 
 @Component({
@@ -34,13 +34,13 @@ export class SearchViewComponent implements OnInit {
   public researchInfo: Research;
 
   constructor(private userS: UserService,
-              private upgradeS: UpgradeService,
+              private resourcesS: ResourcesService,
               private socketS: SocketService,
               private searchS: SearchService) {
   }
 
   ngOnInit() {
-    this.researchInfo = new Research(1, 1, 1, 1, 100000, 1, 1);
+    this.researchInfo = new Research(1, 1, 1, 1, 100000, 1);
     this.distance = this.researchInfo.minDistance;
 
     this.searchS.search
@@ -49,7 +49,7 @@ export class SearchViewComponent implements OnInit {
       .subscribe((searchResult: ISearch) => this.search = searchResult);
 
     this.userS.getUpgradeByName('research').subscribe((upgrade: IUserUpgrade) => {
-      this.researchInfo = this.upgradeS.research[upgrade.lvl];
+      this.researchInfo = this.resourcesS.research[upgrade.lvl];
       this.searchTimeUpdate(this.distance);
     });
 
@@ -94,7 +94,6 @@ export class SearchViewComponent implements OnInit {
   private updateTimer() {
     if (!this.search || this.search.start === 0) { return; }
     if (this.search.state === 1 || this.search.state === 3) {
-     // console.log(this.timer);
       this.socketS.updateAsteroidTimer(this.userS.currentUser.uid, this.distance);
     }
   }

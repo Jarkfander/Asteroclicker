@@ -5,11 +5,11 @@ import { Research } from '../upgrade-class/research';
 import { MineRate } from '../upgrade-class/mineRate';
 import { Storage } from '../upgrade-class/storage';
 import { Upgrade, UpgradeType } from '../upgrade-class/upgrade';
-import { UpgradeService } from '../upgrade.service';
 import { Observable } from 'rxjs/Observable';
 
 import 'rxjs/add/operator/do';
 import { staggerTile } from './../../shared/animations';
+import { ResourcesService } from '../../shared/resources/resources.service';
 
 @Component({
     selector: 'app-upgrade-list',
@@ -31,17 +31,17 @@ export class UpgradeListComponent implements OnInit {
     public credit$: Observable<number>;
     public researchLvl$: Observable<number>;
 
-    constructor(private upgradeS: UpgradeService,
-                private userS: UserService,
+    constructor(private userS: UserService,
+                private resourcesS: ResourcesService,
                 private oreS: OreService) {
     }
 
     ngOnInit() {
-        this.storageLvls = this.upgradeS.storage;
-        this.mineRateLvls = this.upgradeS.mineRate;
-        this.researchLvls = this.upgradeS.research;
-        this.engineLvls = this.upgradeS.engine;
-        this.QGLvls = this.upgradeS.QG;
+        this.storageLvls = this.resourcesS.storage;
+        this.mineRateLvls = this.resourcesS.mineRate;
+        this.researchLvls = this.resourcesS.research;
+        this.engineLvls = this.resourcesS.engine;
+        this.QGLvls = this.resourcesS.QG;
 
         this.oreAmount$ = this.oreS.OreAmounts;
         this.credit$ = this.userS.credit;

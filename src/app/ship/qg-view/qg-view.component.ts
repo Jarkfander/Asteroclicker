@@ -3,9 +3,9 @@ import { Component, OnInit, ElementRef, Renderer2, ViewChild, Input } from '@ang
 import { UserService, IUserUpgrade } from '../../shared/user/user.service';
 import { Observable } from 'rxjs/Observable';
 import { SocketService } from '../../shared/socket/socket.service';
-import { OreService, IOreAmounts, IOreInfos } from '../../ore/ore.service';
-import { UpgradeService } from '../upgrade.service';
+import { OreService, IOreAmounts } from '../../ore/ore.service';
 import { NgNotifComponent } from '../../shared/ng-notif/ng-notif.component';
+import { ResourcesService } from '../../shared/resources/resources.service';
 
 @Component({
   selector: 'app-qg-view',
@@ -20,7 +20,6 @@ export class QgViewComponent implements OnInit {
   public userUpgrade: IUserUpgrade;
   public currentUpgrade: Upgrade;
   public nextUpgrade: Upgrade;
-  public oreInfos: IOreInfos;
   public upgradeCostString: string[];
   public oreAmount: IOreAmounts;
   public credit: number;
@@ -31,10 +30,9 @@ export class QgViewComponent implements OnInit {
     private renderer: Renderer2,
     private userS: UserService,
     private oreS: OreService,
-    private upgradeS: UpgradeService) { }
+    private resourcesS: ResourcesService) { }
 
   ngOnInit() {
-    this.oreInfos = this.oreS.oreInfos;
     this.oreS.OreAmounts
       .subscribe((oreAmount: IOreAmounts) => {
         this.oreAmount = oreAmount;
@@ -52,8 +50,8 @@ export class QgViewComponent implements OnInit {
     this.userS.getUpgradeByName('QG')
       .subscribe((userUpgrade) => {
         this.userUpgrade = userUpgrade;
-        this.currentUpgrade = this.upgradeS['QG'][userUpgrade.lvl];
-        this.nextUpgrade = this.upgradeS['QG'][userUpgrade.lvl + 1];
+        this.currentUpgrade = this.resourcesS.QG[userUpgrade.lvl];
+        this.nextUpgrade = this.resourcesS.QG[userUpgrade.lvl + 1];
         this.updateCost();
         this.setTimer();
         this.renderer.setStyle(this.el.nativeElement, 'backgroundImage', `url('../../../assets/upgrade/img/${this.userUpgrade.name}.jpg')`);
@@ -109,12 +107,12 @@ export class QgViewComponent implements OnInit {
   * @param {string} oreName The name of the ore
   */
   oreMiss(oreName: string) {
-    const oreKeys = Object.keys(this.oreInfos);
+    const oreKeys = Object.keys(this.resourcesS.oreInfos);
     for (let j = 0; j < oreKeys.length; j++) {
       const tempName = oreKeys[j];
       if (tempName === oreName) {
         if (this.lvlResearch <
-          this.oreInfos[oreKeys[j]].searchNewOre) {
+          this.resourcesS.oreInfos[oreKeys[j]].searchNewOre) {
           return false;
         }
       }
@@ -126,7 +124,7 @@ export class QgViewComponent implements OnInit {
   private updateCost() {
     const tempUpgradeCost = this.nextUpgrade.costOreString;
     const keysCost = Object.keys(tempUpgradeCost);
-    const oreKeys = Object.keys(this.oreInfos);
+    const oreKeys = Object.keys(this.resourcesS.oreInfos);
 
     const temp = {};
     for (let i = 0; i < keysCost.length; i++) {
@@ -134,7 +132,7 @@ export class QgViewComponent implements OnInit {
         const tempName = oreKeys[j];
         if (tempName === keysCost[i]) {
           if (this.userUpgrade.lvl >=
-            this.oreInfos[oreKeys[j]].searchNewOre) {
+            this.resourcesS.oreInfos[oreKeys[j]].searchNewOre) {
             temp[oreKeys[j]] = tempUpgradeCost[keysCost[i]];
           } else {
             temp['???'] = tempUpgradeCost[keysCost[i]];

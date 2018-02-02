@@ -3,13 +3,14 @@ import { IAsteroid } from '../asteroid/asteroid.service';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { Observable } from 'rxjs/Observable';
 import { AuthService } from '../signin/auth.service';
+import { searchState } from './search-view/search-view.component';
 
 
 export interface ISearch {
   result: IAsteroid[];
   timer: number;
   start: number;
-  state: 0 | 1 | 2 | 3;
+  state: searchState;
 }
 
 @Injectable()

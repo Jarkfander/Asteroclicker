@@ -1,5 +1,5 @@
 import { Component, AfterViewInit, Input, ChangeDetectionStrategy } from '@angular/core';
-import { OreService, IOreInfo } from '../ore.service';
+import { OreService } from '../ore.service';
 import { Observable } from 'rxjs/Observable';
 import { UserService, IUserUpgrade } from '../../shared/user/user.service';
 import { UpgradeType } from '../../ship/upgrade-class/upgrade';
@@ -7,6 +7,7 @@ import { AsteroidService, IAsteroid } from '../../asteroid/asteroid.service';
 import { figuesChange } from './../../shared/animations';
 
 import 'rxjs/add/operator/first';
+import { ResourcesService } from '../../shared/resources/resources.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
