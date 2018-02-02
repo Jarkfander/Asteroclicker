@@ -9,5 +9,5 @@ export const environment = {
     messagingSenderId: '298728737915'
   },
   socketUrl: 'https://asteroclickerserver.herokuapp.com/',
-  loadingTime: 10
+  loadingTime: 5
 };
