@@ -7,6 +7,7 @@ import { AsteroidService, IAsteroid } from '../../asteroid/asteroid.service';
 import { figuesChange } from './../../shared/animations';
 
 import 'rxjs/add/operator/first';
+import { ResourcesService } from '../../shared/resources/resources.service';
 
 @Component({
   selector: 'app-ore-view',
@@ -28,7 +29,7 @@ export class OreViewComponent implements OnInit {
   public displayRate: string;
 
   public isRateDisplayed = false;
-  constructor(private oreS: OreService, private userS: UserService, private asteroidS: AsteroidService) { }
+  constructor(private oreS: OreService, private userS: UserService, private asteroidS: AsteroidService, private resourceS:ResourcesService) { }
 
   ngOnInit() {
     this.oreInfo = this.oreS.oreInfos[this.name];

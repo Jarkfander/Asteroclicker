@@ -12,6 +12,7 @@ import { Observable } from 'rxjs/Observable';
 import { User } from 'firebase/app';
 
 import { staggerTile } from './shared/animations';
+import { ResourcesService } from './shared/resources/resources.service';
 
 @Component({
   selector: 'app-root',
@@ -26,10 +27,11 @@ export class AppComponent implements OnInit {
   public loadingImage = true;
 
   constructor(public authS: AuthService,
-              public upgradeS: UpgradeService,
-              public marketS: MarketService,
-              public questS: QuestService,
-              public rankingS: RankingService) {}
+    public upgradeS: UpgradeService,
+    public marketS: MarketService,
+    public questS: QuestService,
+    public rankingS: RankingService,
+    public resourcesS: ResourcesService) { }
 
   ngOnInit() {
     this.user$ = this.authS.User;

@@ -8,12 +8,13 @@ import { User } from '../../shared/user/user';
 import { SocketService } from '../../shared/socket/socket.service';
 import { ISearch, SearchService } from '../search.service';
 import { SearchModule } from '../search.module';
+import { ResourcesService } from '../../shared/resources/resources.service';
 
 export enum searchState {
-  launchSearch,
-  searching,
-  chooseAsteroid,
-  traveling
+    launchSearch,
+    searching,
+    chooseAsteroid,
+    traveling
 }
 
 @Component({
@@ -37,7 +38,7 @@ export class SearchViewComponent implements OnInit {
     result: [],
     start: 0,
     timer: 0,
-    state: 0
+    state: searchState.launchSearch
   };
 
   public isModalOpen = false;
@@ -46,7 +47,7 @@ export class SearchViewComponent implements OnInit {
 
 
   constructor(private userS: UserService,
-              private upgradeS: UpgradeService,
+              private resourcesS: ResourcesService,
               private socketS: SocketService,
               private searchS: SearchService) {
   }
@@ -63,11 +64,11 @@ export class SearchViewComponent implements OnInit {
         }
     });
 
-    this.researchInfo = new Research(1, 1, 1, 1, 100000, 1, 1);
+    this.researchInfo = new Research(1, 1, 1, 1, 100000, 1);
     this.distance = this.researchInfo.maxDistance / 2;
 
     this.userS.getUpgradeByName('research').subscribe((upgrade: IUserUpgrade) => {
-      this.researchInfo = this.upgradeS.research[upgrade.lvl];
+      this.researchInfo = this.resourcesS.research[upgrade.lvl];
       this.searchTimeUpdate();
     });
 

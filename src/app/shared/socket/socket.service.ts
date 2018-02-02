@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
 import { environment } from '../../../environments/environment';
+import { UpgradeService } from '../../ship/upgrade.service';
+import { ResourcesService } from '../resources/resources.service';
 
 
 @Injectable()
@@ -10,8 +12,15 @@ export class SocketService {
 
   private socket;
 
-  constructor() {
+  constructor(resourceS:ResourcesService) {
     this.socket = io(this.url);
+    this.socket.on('sendResources', (message) => {
+      resourceS.FillAll(message);
+    });
+  }
+
+  loadResources(toExecute) {
+    this.socket.emit('loadResources', toExecute);
   }
 
   incrementOre(userId: string, oreName: string, delta: number) {

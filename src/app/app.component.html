@@ -3,9 +3,7 @@
 </div>
 
 
-<main [@stagger-tile] *ngIf="upgradeS && (user$|async)!=null && upgradeS.storageLoad && upgradeS.mineRateLoad
- && upgradeS.researchLoaded && upgradeS.engineLoad && loadAnimation.boolFinishLoad
-
+<main [@stagger-tile] *ngIf=" (user$|async)!=null && resourcesS && resourcesS.resourcesLoaded && loadAnimation.boolFinishLoad
   ">
 
 <!--

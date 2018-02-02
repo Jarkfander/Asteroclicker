@@ -6,6 +6,7 @@ import { SocketService } from '../../shared/socket/socket.service';
 import { OreService, IOreAmounts, IOreInfos } from '../../ore/ore.service';
 import { UpgradeService } from '../upgrade.service';
 import { NgNotifComponent } from '../../shared/ng-notif/ng-notif.component';
+import { ResourcesService } from '../../shared/resources/resources.service';
 
 @Component({
   selector: 'app-qg-view',
@@ -31,7 +32,7 @@ export class QgViewComponent implements OnInit {
     private renderer: Renderer2,
     private userS: UserService,
     private oreS: OreService,
-    private upgradeS: UpgradeService) { }
+    private resourcesS: ResourcesService) { }
 
   ngOnInit() {
     this.oreInfos = this.oreS.oreInfos;
@@ -52,8 +53,8 @@ export class QgViewComponent implements OnInit {
     this.userS.getUpgradeByName('QG')
       .subscribe((userUpgrade) => {
         this.userUpgrade = userUpgrade;
-        this.currentUpgrade = this.upgradeS['QG'][userUpgrade.lvl];
-        this.nextUpgrade = this.upgradeS['QG'][userUpgrade.lvl + 1];
+        this.currentUpgrade = this.resourcesS.QG[userUpgrade.lvl];
+        this.nextUpgrade = this.resourcesS.QG[userUpgrade.lvl + 1];
         this.updateCost();
         this.setTimer();
         this.renderer.setStyle(this.el.nativeElement, 'backgroundImage', `url('../../../assets/upgrade/img/${this.userUpgrade.name}.jpg')`);

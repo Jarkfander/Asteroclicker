@@ -11,6 +11,7 @@ import { OreService, IOreInfo } from '../../ore/ore.service';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/first';
 import { CurveViewComponent } from '../curve-view/curve-view.component';
+import { ResourcesService } from '../../shared/resources/resources.service';
 
 @Component({
   selector: 'app-market-view',
@@ -52,7 +53,7 @@ export class MarketViewComponent implements OnInit {
   constructor(private marketS: MarketService,
     private socketS: SocketService,
     private userS: UserService,
-    private upgradeS: UpgradeService,
+    private resourcesS:ResourcesService,
     private oreS: OreService) {
 
   }
@@ -67,7 +68,7 @@ export class MarketViewComponent implements OnInit {
         this.oreS.getOreAmountByString(this.oreName).subscribe((oreAmount: number) => {
           this.hasOreLeft = oreAmount > 0;
           this.hasSpaceLeft = oreAmount
-            < this.upgradeS.storage[this.userStorageLvl].capacity;
+            < this.resourcesS.storage[this.userStorageLvl].capacity;
         });
 
         this.userS.credit.subscribe((credit: number) => {
@@ -78,10 +79,10 @@ export class MarketViewComponent implements OnInit {
         this.userS.getUpgradeByName('storage').subscribe((upgrade: IUserUpgrade) => {
 
           this.hasSpaceLeft = this.currentOreAmount
-            < this.upgradeS.storage[this.userStorageLvl].capacity;
+            < this.resourcesS.storage[this.userStorageLvl].capacity;
 
           this.userStorageLvl = upgrade.lvl;
-          this.maxSliderValue = (this.upgradeS.storage[upgrade.lvl].capacity * 0.02
+          this.maxSliderValue = (this.resourcesS.storage[upgrade.lvl].capacity * 0.02
             * this.oreInfo.miningSpeed);
           this.maxSliderValue = ((Math.floor(this.maxSliderValue / 50)) + 1) * 50;
 

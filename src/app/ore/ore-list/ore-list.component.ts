@@ -4,6 +4,7 @@ import { User } from '../../shared/user/user';
 import { UpgradeService } from '../../ship/upgrade.service';
 import { Observable } from 'rxjs/Observable';
 import { OreService, IOreAmounts } from '../ore.service';
+import { ResourcesService } from '../../shared/resources/resources.service';
 
 interface IOreData {
   name: string;
@@ -24,7 +25,7 @@ export class OreListComponent implements OnInit {
   public capacity: number;
 
   constructor(private userS: UserService,
-              private upgradeS: UpgradeService,
+              private resourcesS: ResourcesService,
               private oreInfoS: OreService) {}
 
   ngOnInit() {
@@ -35,7 +36,7 @@ export class OreListComponent implements OnInit {
       }));
 
     this.userS.getUpgradeByName('storage')
-      .map((upgrade: IUserUpgrade) => this.upgradeS.storage[upgrade.lvl].capacity)
+      .map((upgrade: IUserUpgrade) => this.resourcesS.storage[upgrade.lvl].capacity)
       .subscribe((capacity: number) => this.capacity = capacity);
 
     this.userS.mineRateSubject

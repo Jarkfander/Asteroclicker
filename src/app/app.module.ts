@@ -22,6 +22,7 @@ import { AuthService } from './signin/auth.service';
 import { OreModule } from './ore/ore.module';
 import { SearchViewComponent } from './search/search-view/search-view.component';
 import { SearchModule } from './search/search.module';
+import { ResourcesService } from './shared/resources/resources.service';
 
 
 @NgModule({
@@ -44,7 +45,7 @@ import { SearchModule } from './search/search.module';
     OreModule,
     SearchModule
   ],
-  providers: [UserService, UpgradeService, MarketService, QuestService, RankingService, AuthService],
+  providers: [UserService, UpgradeService, MarketService, QuestService, RankingService, AuthService,ResourcesService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

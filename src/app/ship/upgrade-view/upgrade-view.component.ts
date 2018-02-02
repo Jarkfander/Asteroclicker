@@ -12,6 +12,7 @@ import { enter } from '../../shared/animations';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/interval';
 import 'rxjs/add/operator/filter';
+import { ResourcesService } from '../../shared/resources/resources.service';
 
 @Component({
   selector: 'app-upgrade-view',
@@ -42,8 +43,9 @@ export class UpgradeViewComponent implements OnInit {
     private renderer: Renderer2,
     private userS: UserService,
     private oreS: OreService,
-    private upgradeS: UpgradeService) {
-  }
+    private resourcesS: ResourcesService,
+    private upgradeS: UpgradeService
+    ) {}
 
 
   @HostListener('mouseenter', ['$event']) inHover() {
@@ -62,8 +64,8 @@ export class UpgradeViewComponent implements OnInit {
     this.userS.getUpgradeByName(this.name)
       .subscribe((userUpgrade) => {
         this.userUpgrade = userUpgrade;
-        this.currentUpgrade = this.upgradeS[userUpgrade.name][userUpgrade.lvl];
-        this.nextUpgrade = this.upgradeS[userUpgrade.name][userUpgrade.lvl + 1];
+        this.currentUpgrade = this.resourcesS[userUpgrade.name][userUpgrade.lvl];
+        this.nextUpgrade = this.resourcesS[userUpgrade.name][userUpgrade.lvl + 1];
         this.updateCost();
         this.setTimer();
         this.renderer.setStyle(this.el.nativeElement, 'backgroundImage', `url('../../../assets/upgrade/img/${this.userUpgrade.name}.jpg')`);
@@ -123,7 +125,7 @@ export class UpgradeViewComponent implements OnInit {
       for (let j = 0; j < oreKeys.length; j++) {
         const tempName = oreKeys[j];
         if (tempName === keysCost[i]) {
-          if (this.upgradeS.research[this.researchLvl].lvl >=
+          if (this.resourcesS.research[this.researchLvl].lvl >=
             this.oreInfos[oreKeys[j]].searchNewOre) {
             temp[oreKeys[j]] = tempUpgradeCost[keysCost[i]];
           } else {
@@ -177,7 +179,7 @@ export class UpgradeViewComponent implements OnInit {
     for (let j = 0; j < oreKeys.length; j++) {
       const tempName = oreKeys[j];
       if (tempName === oreName) {
-      if (this.upgradeS.research[this.researchLvl].lvl <
+        if (this.resourcesS.research[this.researchLvl].lvl <
           this.oreInfos[oreKeys[j]].searchNewOre) {
           return false;
         }

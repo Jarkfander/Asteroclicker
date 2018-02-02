@@ -15,6 +15,7 @@ import { IAsteroid, AsteroidService } from '../asteroid.service';
 import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Observable } from 'rxjs/Observable';
 import { OreService, IOreInfos } from '../../ore/ore.service';
+import { ResourcesService } from '../../shared/resources/resources.service';
 
 
 export enum KEY_CODE {
@@ -58,7 +59,7 @@ export class AsteroidViewComponent implements OnInit {
     private render: Renderer2,
     private userS: UserService,
     private asteroidS: AsteroidService,
-    private upgradeS: UpgradeService,
+    private resourcesS: ResourcesService,
     private socketS: SocketService,
     private oreS: OreService) { }
 
@@ -214,8 +215,8 @@ export class AsteroidViewComponent implements OnInit {
   }
 
   updateClick() {
-    const max = this.upgradeS.mineRate[this.userMineRateLvl].maxRate;
-    const base = this.upgradeS.mineRate[this.userMineRateLvl].baseRate;
+    const max = this.resourcesS.mineRate[this.userMineRateLvl].maxRate;
+    const base = this.resourcesS.mineRate[this.userMineRateLvl].baseRate;
 
     const clickTmp = this.clicks;
     for (let i = 0; i < clickTmp.length; i++) {
