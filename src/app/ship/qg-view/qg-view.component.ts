@@ -1,11 +1,12 @@
 import { Upgrade } from './../upgrade-class/upgrade';
-import { Component, OnInit, ElementRef, Renderer2, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ElementRef, Renderer2, ViewChild, Input, HostListener } from '@angular/core';
 import { UserService, IUserUpgrade } from '../../shared/user/user.service';
 import { Observable } from 'rxjs/Observable';
 import { SocketService } from '../../shared/socket/socket.service';
 import { OreService, IOreAmounts } from '../../ore/ore.service';
 import { NgNotifComponent } from '../../shared/ng-notif/ng-notif.component';
 import { ResourcesService } from '../../shared/resources/resources.service';
+import { UpgradeService } from '../upgrade.service';
 
 @Component({
   selector: 'app-qg-view',
@@ -30,7 +31,16 @@ export class QgViewComponent implements OnInit {
     private renderer: Renderer2,
     private userS: UserService,
     private oreS: OreService,
+    private upgradeS: UpgradeService,
     private resourcesS: ResourcesService) { }
+
+
+  @HostListener('mouseenter', ['$event']) inHover() {
+    this.upgradeS.activeUserUpgrade$.next(this.userUpgrade);
+  }
+  @HostListener('mouseleave', ['$event']) outHover() {
+    this.upgradeS.activeUserUpgrade$.next(null);
+  }
 
   ngOnInit() {
     this.oreS.OreAmounts
@@ -64,7 +74,6 @@ export class QgViewComponent implements OnInit {
     setTimeout(() => {
       if (this.userUpgrade.start !== 0) {
         const timeLeft = 100 - ((this.userUpgrade.timer - this.nextUpgrade.time) / (10 * this.nextUpgrade.time));
-        //this.renderer.setStyle(this.timerRef.nativeElement, 'transform', `translateY(${timeLeft}%)`);
         this.socketS.updateUpgradeTimer(this.userS.currentUser.uid, this.userUpgrade.name);
       }
     }, 1000);

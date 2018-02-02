@@ -9,6 +9,7 @@ import { ResourcesService } from '../../shared/resources/resources.service';
 import { NgSliderComponent } from './../../shared/ng-slider/ng-slider.component';
 
 import { staggerTile } from './../../shared/animations';
+import { ToasterService } from '../../shared/toaster/toaster.service';
 
 export enum searchState {
     launchSearch,
@@ -26,6 +27,7 @@ export enum searchState {
 export class SearchViewComponent implements OnInit {
 
   @ViewChild(NgSliderComponent) slider: NgSliderComponent;
+  private currentState: number;
   public search: ISearch;
   public distance: number;
   public searchTime: string;
@@ -35,6 +37,7 @@ export class SearchViewComponent implements OnInit {
 
   constructor(private userS: UserService,
               private resourcesS: ResourcesService,
+              private toasterS: ToasterService,
               private socketS: SocketService,
               private searchS: SearchService) {
   }
@@ -44,7 +47,7 @@ export class SearchViewComponent implements OnInit {
     this.distance = this.researchInfo.minDistance;
 
     this.searchS.search
-      .do((search: ISearch) => this.slider.slideTo(search.state))
+      .do((search: ISearch) => this.changeState(search.state))
       .do((search: ISearch) => this.timer = search.timer)
       .subscribe((searchResult: ISearch) => this.search = searchResult);
 
@@ -56,6 +59,15 @@ export class SearchViewComponent implements OnInit {
     this.searchTimeUpdate(this.distance);
     setInterval(() => { this.updateTimer(); }, 1000);
 
+  }
+
+  /**
+   * STATES
+   */
+  private changeState(state: number) {
+    if (state === this.currentState) { return; }
+    this.currentState = state;
+    this.slider.slideTo(state);
   }
 
   /**

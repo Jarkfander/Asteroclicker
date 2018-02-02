@@ -6,6 +6,7 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
 import { NgSliderComponent, NgSlideComponent } from './ng-slider/ng-slider.component';
 import { NgProgressComponent } from './ng-progress/ng-progress.component';
 import { TimerPipe } from './timer.pipe';
+import { NotifyService } from './notify/notify.service';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { TimerPipe } from './timer.pipe';
     NgSliderComponent,
     NgProgressComponent,
     TimerPipe
-  ]
+  ],
+  providers: [NotifyService]
 })
 
 export class SharedModule {
