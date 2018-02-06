@@ -11,6 +11,7 @@ export interface ISearch {
   timer: number;
   start: number;
   state: searchState;
+  distance:number;
 }
 
 @Injectable()
