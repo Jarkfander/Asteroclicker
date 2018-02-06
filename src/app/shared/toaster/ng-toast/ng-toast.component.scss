@@ -1,5 +1,4 @@
 :host {
-    height: 100px;
     width: 100%;
 }
 
@@ -19,11 +18,22 @@ article {
             width: 100%;
         }
     }
+
+    .content {
+        padding: 10px;
+        h1 {
+            margin: 5px;
+        }
+        p {
+            margin: 3px;
+        }
+    }
 }
 
 .success {
     background-color: rgb(92, 92, 168);
     color: white;
+    border: solid 5px black;
     .timer-slide {
         background-color: rgb(53, 53, 97);        
     }
@@ -32,6 +42,7 @@ article {
 .alert {
     background-color: rgb(156, 44, 44);
     color: white;
+    border: solid 5px black;
     .timer-slide {
         background-color: rgb(71, 7, 7);        
     }

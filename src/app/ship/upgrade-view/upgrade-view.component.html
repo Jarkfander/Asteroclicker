@@ -3,7 +3,7 @@
     <button *ngIf="currentLvl && currentLvl.start==0" [disabled]="!canBuy" class="btn-upgrade" (click)="levelUpOre()">Upgrade / Ore</button>
     <button *ngIf="userUpgrade.start !== 0" disabled="true" class="btn-upgrade">{{timer}}</button>
     -->
-    <div class="cost col-reverse justify-between align-center">
+    <div (click)="levelUpOre()" class="cost col-reverse justify-between align-center">
         <div class="ores row justify-around">
             <div class="cost-ore col justify-around align-center" *ngFor="let key of upgradeCostString">
                 <img *ngIf="key != '???'" src="../../../assets/oreIcon/{{key}}Icon.png" />
@@ -11,7 +11,7 @@
                 <p *ngIf="key == '???'">{{key}}</p>
             </div>
         </div>
-        <button (click)="levelUpOre()">Upgrade</button>        
+        <button>Upgrade</button>        
     </div>
 
     <h1>{{currentUpgrade.displayName}}</h1>

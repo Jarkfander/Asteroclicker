@@ -66,6 +66,18 @@ export class SearchViewComponent implements OnInit {
    */
   private changeState(state: number) {
     if (state === this.currentState) { return; }
+    if (!!this.currentState) {
+      switch (state) {
+        case (0) : {
+          this.toasterS.success('Captain, we are arrived !', 'Let\'s mine this asteroid ');
+          break;
+        }
+        case (2) : {
+          this.toasterS.success('Captain, we found some asteroids !', 'Pick up your favorite');
+          break;
+        }
+      }
+    }
     this.currentState = state;
     this.slider.slideTo(state);
   }
