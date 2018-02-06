@@ -11,7 +11,7 @@ export class SocketService {
 
   private socket;
 
-  constructor(resourceS:ResourcesService) {
+  constructor(resourceS: ResourcesService) {
     this.socket = io(this.url);
     this.socket.on('sendResources', (message) => {
       resourceS.FillAll(message);
@@ -87,10 +87,11 @@ export class SocketService {
     this.socket.emit('buyOre', json);
   }
 
-  searchAsteroid(userId: string) {
+  searchAsteroid(userId: string, distance: number) {
     const json = {};
 
     json['user'] = userId;
+    json['distance'] = distance;
 
     this.socket.emit('searchAster', json);
   }
@@ -104,11 +105,11 @@ export class SocketService {
     this.socket.emit('chooseAsteroid', json);
   }
 
-  updateAsteroidTimer(userId: string, distance: number) {
+  updateAsteroidTimer(userId: string) {
     const json = {};
 
     json['user'] = userId;
-    json['distance'] = distance;
+
     this.socket.emit('updateAsteroidTimer', json);
   }
 
