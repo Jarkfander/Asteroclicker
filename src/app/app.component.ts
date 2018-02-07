@@ -13,6 +13,7 @@ import { User } from 'firebase/app';
 
 import { staggerTile } from './shared/animations';
 import { ResourcesService } from './shared/resources/resources.service';
+import { NexiumService } from './web3-m/nexium.service';
 
 @Component({
   selector: 'app-root',
@@ -31,7 +32,8 @@ export class AppComponent implements OnInit {
     public marketS: MarketService,
     public questS: QuestService,
     public rankingS: RankingService,
-    public resourcesS: ResourcesService) { }
+    public resourcesS: ResourcesService,
+    public neximu: NexiumService) { }
 
   ngOnInit() {
     this.user$ = this.authS.User;

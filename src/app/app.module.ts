@@ -24,6 +24,8 @@ import { SearchViewComponent } from './search/search-view/search-view.component'
 import { SearchModule } from './search/search.module';
 import { ResourcesService } from './shared/resources/resources.service';
 import { ToasterModule } from './shared/toaster/toaster.module';
+import { NexiumService } from './web3-m/nexium.service';
+import { Web3MModule } from './web3-m/web3-m.module';
 
 @NgModule({
   declarations: [
@@ -44,9 +46,10 @@ import { ToasterModule } from './shared/toaster/toaster.module';
     MarketModule,
     OreModule,
     SearchModule,
-    ToasterModule
+    ToasterModule,
+    Web3MModule
   ],
-  providers: [UserService, UpgradeService, MarketService, QuestService, RankingService, AuthService,ResourcesService],
+  providers: [UserService, UpgradeService, MarketService, QuestService, RankingService, AuthService, ResourcesService, NexiumService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
