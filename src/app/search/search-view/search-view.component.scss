@@ -1,6 +1,7 @@
 @import '../../../theme';
 
 ng-slide {
+    transition: background-color 0.2s ease-in-out;
     p {
         opacity: 0;
         transform: translateY(20px);
@@ -15,6 +16,7 @@ ng-slide {
 }
 
 ng-slide:hover {
+    background-color: rgba($black, 0.8);
     p {
         opacity: 1;
         transform: translateY(0);
@@ -47,16 +49,23 @@ ng-slide:hover {
         opacity: 1;
     }
     
-    input[type="range"]::-webkit-slider-thumb,  {
+    input[type=range]::-webkit-slider-thumb,  {
         -webkit-appearance: none;
-        appearance: none;
         width: 25px;
-        height: 10%;
+        height: 1000%;
+        margin-top: -2%;
+        border: solid 1px rgba(white, 0.8);
         background: $black;
         cursor: pointer;
     }
     
-    input[type="range"]::-moz-range-thumb {
+    input[type=range]::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 10%;
+        background: rgba(white, 0.8);
+      }
+
+    input[type=range]::-moz-range-thumb {
         width: 25px;
         height: 100%;
         background: $black;
