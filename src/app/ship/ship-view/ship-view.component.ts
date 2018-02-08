@@ -7,6 +7,9 @@ import { UpgradeType } from '../upgrade-class/upgrade';
 import { getFramesFromSpriteSheet, initSprite, changeSpriteInAnime } from '../../loadAnimation';
 import { SocketService } from '../../shared/socket/socket.service';
 import { ChestSprite } from './chestSprite';
+import { UpgradeService } from '../upgrade.service';
+import { Observable } from 'rxjs/Observable';
+
 
 @Component({
   selector: 'app-ship-view',
@@ -24,10 +27,16 @@ export class ShipViewComponent implements AfterViewInit {
   private numberOfSky: number;
 
   private animationLoaded = false;
+  public activeUpgrade$: Observable<IUserUpgrade>;
 
-  constructor(private el: ElementRef, private render: Renderer2, private userS: UserService, private socketS: SocketService) { }
+  constructor(private el: ElementRef,
+              private render: Renderer2,
+              private userS: UserService,
+              private upgradeS: UpgradeService,
+              private socketS: SocketService) { }
 
   ngAfterViewInit() {
+    this.activeUpgrade$ = this.upgradeS.activeUserUpgrade$.asObservable();
     setTimeout(() => this.initPixi(), 0);
   }
 
@@ -76,11 +85,11 @@ export class ShipViewComponent implements AfterViewInit {
       if (this.animationLoaded) {
 
         for (let i = 0; i < upgrades.length; i++) {
-          if(upgrades[i].name != "QG"){
+          if (upgrades[i].name !== 'QG'){
             this.ship.autoUpgrade(upgrades[i].lvl, this.ship[upgrades[i].name]);
           }
 
-          if (upgrades[i].name == "storage") {
+          if (upgrades[i].name === 'storage') {
             if (upgrades[i].lvl >= 2 && !this.boolShipTourelle) {
               this.ship.initNewTourelle();
               this.boolShipTourelle = true;
@@ -111,7 +120,7 @@ export class ShipViewComponent implements AfterViewInit {
 
 
     for (let j = 0; j < upgrades.length; j++) {
-      if(upgrades[j].name!="QG"){
+      if (upgrades[j].name !== 'QG') {
         tabTempUpgrade.push(this.ship[upgrades[j].name]);
         tabTempUpgradeLvl.push(upgrades[j].lvl);
       }

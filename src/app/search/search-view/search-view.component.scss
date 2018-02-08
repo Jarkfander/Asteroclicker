@@ -4,6 +4,7 @@ ng-slide {
     transition: background-color 0.2s ease-in-out;
     p {
         opacity: 0;
+        font-size: 1.2rem;
         transform: translateY(20px);
         color: white;
         text-align: center;
@@ -34,7 +35,7 @@ ng-slide:hover {
         cursor: pointer;
     }
 
-    input[type="range"] {
+    input[type=range] {
         margin: 0;
         -webkit-appearance: none;
         width: 100%;
@@ -45,7 +46,7 @@ ng-slide:hover {
         transition: opacity .2s;
     }
     
-    input[type="range"]:hover {
+    input[type=range]:hover {
         opacity: 1;
     }
     
@@ -55,14 +56,14 @@ ng-slide:hover {
         height: 1000%;
         margin-top: -2%;
         border: solid 1px rgba(white, 0.8);
-        background: $black;
+        background-color: rgb(100, 100, 100);
         cursor: pointer;
     }
     
     input[type=range]::-webkit-slider-runnable-track {
         width: 100%;
         height: 10%;
-        background: rgba(white, 0.8);
+        background-color: rgb(100, 100, 100);
       }
 
     input[type=range]::-moz-range-thumb {

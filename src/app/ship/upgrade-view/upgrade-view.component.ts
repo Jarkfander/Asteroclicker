@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostListener, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import { Upgrade, UpgradeType } from '../upgrade-class/upgrade';
 import { SocketService } from '../../shared/socket/socket.service';
 import { User, UserUpgrade } from '../../shared/user/user';
@@ -8,7 +8,7 @@ import { UpgradeService } from '../upgrade.service';
 import { OreService, IOreAmounts } from '../../ore/ore.service';
 import { ResourcesService } from '../../shared/resources/resources.service';
 import { ToasterService } from '../../shared/toaster/toaster.service';
-import { enter } from '../../shared/animations';
+import { enter, staggerTile } from '../../shared/animations';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/interval';
@@ -19,7 +19,7 @@ import 'rxjs/add/operator/filter';
   selector: 'app-upgrade-view',
   templateUrl: './upgrade-view.component.html',
   styleUrls: ['./upgrade-view.component.scss'],
-  animations: [enter]
+  animations: [enter, staggerTile]
 })
 export class UpgradeViewComponent implements OnInit {
 
@@ -35,7 +35,7 @@ export class UpgradeViewComponent implements OnInit {
   public currentUpgrade: Upgrade;
   public nextUpgrade: Upgrade;
   public upgradeCostString: string[];
-  public isHover: boolean;
+  public lvlUpModal: boolean;
 
   constructor(private socketS: SocketService,
     private toasterS: ToasterService,
@@ -45,17 +45,6 @@ export class UpgradeViewComponent implements OnInit {
     private oreS: OreService,
     private resourcesS: ResourcesService,
     private upgradeS: UpgradeService) {}
-
-
-  @HostListener('mouseenter', ['$event']) inHover() {
-    this.upgradeS.activeUserUpgrade$.next(this.userUpgrade);
-    this.isHover = true;
-  }
-  @HostListener('mouseleave', ['$event']) outHover() {
-    this.upgradeS.activeUserUpgrade$.next(null);
-    this.isHover = false;
-  }
-
 
   ngOnInit() {
 
@@ -179,5 +168,25 @@ export class UpgradeViewComponent implements OnInit {
       }
     }
     return true;
+  }
+
+  /**************
+   * INTERACTIONS
+   */
+  public openInfos() {
+    this.upgradeS.activeUserUpgrade$.next(this.userUpgrade);
+  }
+
+  public closeInfos() {
+    this.upgradeS.activeUserUpgrade$.next(null);
+  }
+
+  public openModal() {
+    this.lvlUpModal = true;
+    this.upgradeS.activeUserUpgrade$.next(null);
+  }
+
+  public closeModal() {
+    this.lvlUpModal = false;
   }
 }

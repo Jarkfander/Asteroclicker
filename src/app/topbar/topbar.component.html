@@ -1,5 +1,5 @@
 <header class="col justify-between">
-  <article [@stagger-tile] class="row-reverse">
+  <article [@stagger-tile] class="row-reverse align-center justify-start">
     <!--
     <div>
         <a href="#" (click)="openQuestModal()">Glory quest</a> <br>  
@@ -21,9 +21,10 @@
       </div>
     </div>
     -->
-    <button class="border tile" (click)="openProfileModal()">Profile</button> 
+
+    <img class="border tile" (click)="openProfileModal()" src="../../assets/quest/topbar-icon.jpg"/>
     <button class="border tile" (click)="openRankModal()">Rank</button>           
-    <button class="border tile" (click)="openQuestModal()">Quest</button>
+    <button class="quest border tile" (click)="openQuestModal()">Quest</button>
     <button class="border tile" (click)="LogOut()">Log Out</button>
   </article>
 

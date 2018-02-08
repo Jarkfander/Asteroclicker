@@ -1,1 +1,5 @@
-<app-upgrade-info class="info"></app-upgrade-info>
+<app-upgrade-info
+    *ngIf="activeUpgrade$ | async as upgrade"
+    [upgrade]="upgrade" 
+    class="info">
+</app-upgrade-info>

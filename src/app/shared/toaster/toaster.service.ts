@@ -54,4 +54,9 @@ export class ToasterService {
   public error(title: string, content?: string, options?: IToastOptions): Toast {
     return this.add(new Toast('error', title, content, options));
   }
+
+  /** Create an error toast */
+  public searchInfo(title: string, content?: string, options?: IToastOptions): Toast {
+    return this.add(new Toast('search-info', title, content, options));
+  }
 }
