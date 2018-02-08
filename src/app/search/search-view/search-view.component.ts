@@ -71,7 +71,7 @@ export class SearchViewComponent implements OnInit {
         case (0) : {
           this.toasterS.searchInfo('Captain, we are arrived !', '', {
             styles: {
-              backgroundImage: 'url(assets/toaster/search-found.jpg',
+              backgroundImage: 'url(assets/toaster/search-arrived.jpg',
               height: '200px'
           }});
           break;

@@ -27,8 +27,7 @@ export class NexiumService {
       .then((amount: number) => this.nexiumSubject.next(amount));
   }
 
-
-  /** 
+  /**
    * Return the amount of nexium of the address
    * @param {string} address Address of the account to check
    */
