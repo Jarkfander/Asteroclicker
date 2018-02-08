@@ -49,7 +49,7 @@ import { Web3MModule } from './web3-m/web3-m.module';
     ToasterModule,
     Web3MModule
   ],
-  providers: [UserService, UpgradeService, MarketService, QuestService, RankingService, AuthService, ResourcesService, NexiumService],
+  providers: [UserService, UpgradeService, MarketService, QuestService, RankingService, AuthService, ResourcesService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
