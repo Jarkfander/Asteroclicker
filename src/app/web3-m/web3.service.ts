@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as Web3 from 'web3-eth'
-import ZeroClientProvider from "web3-provider-engine/zero"
+import * as ZeroClientProvider from "web3-provider-engine/zero"
 import { environment } from '../../environments/environment';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -16,6 +16,7 @@ export class Web3Service {
   public authWindow: Window;
 
   constructor() {
+  
     this.web3 = new Web3 ( Web3.givenProvider || this.provider);
     this.address$ = this.addressSubject.asObservable();
   }
