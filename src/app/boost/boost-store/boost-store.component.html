@@ -1,0 +1,8 @@
+<boost-list [boosts]="boosts" (select)="boost = $event"></boost-list>
+<boost-view [boost]="boost"></boost-view>
+
+<footer class="border row justify-between">
+  <input #amount type="number" placeholder="Amount to buy" value="1"/>
+  <p>Price: {{ boost.price / 1000 }}/unit</p>
+  <button (click)="buy(amount.value)">Buy</button>
+</footer>

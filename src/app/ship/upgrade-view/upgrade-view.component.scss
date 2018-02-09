@@ -11,6 +11,7 @@ section {
     width : 100%;
     overflow: hidden;
     position: relative;
+    cursor: pointer;
 
     .timer {
         width: 100%;
@@ -33,49 +34,6 @@ section {
         transition: transform 0.3s cubic-bezier(.33,.01,.59,.99);
         transform: translateY(200%);
     }
-    .cost {
-        width: 100%;
-        height: 20%;
-        transition: transform 0.4s cubic-bezier(.33,.01,.59,.99);
-        transform: translateY(-200%);
-        color: $black;
-        cursor: pointer;
-
-        .ores {
-            width: 100%;
-            height: 70%;
-            transform: translateY(-100%);
-            transition: transform 0.3s ease-in-out;
-            .cost-ore {
-                height: 100%;
-                width: 20%;
-                padding: 5px;
-                border: solid 3px $black;
-                border-top: none;
-                background-color: white;
-                color: black;
-            }
-            p {
-                margin: 0;
-                font-size: 0.8rem;
-            }
-            img {
-                width: 80%;
-                margin-right: 10px;
-            }
-        }
-
-        button {
-            width: 100%;
-            height: 30%;
-            background-color: white;
-            font-weight: bold;
-            text-transform: uppercase;
-            border: none;
-            border-bottom: solid 3px $black;
-            cursor: pointer;
-        }
-    }
 }
 
 :host:hover {
@@ -86,5 +44,42 @@ section {
     section .cost .ores {
         transition-delay: 0.6s;
         transform: translateY(0);
+    }
+}
+
+.modal {
+    height: 100%;
+
+    .info {
+        height: 30%;
+        display: block;
+    }
+    .description {
+        background-color: white;
+    }
+    .cost-ore {
+        width: 20%;
+        padding: 10px;
+        background-color: white;
+        color: black;
+        margin-right: 10px;
+    }
+    p {
+        margin: 0;
+        font-size: 0.8rem;
+    }
+    img {
+        width: 80%;
+        margin-right: 10px;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        font-size: 1.2rem;
+        background-color: white;
+        font-weight: bold;
+        text-transform: uppercase;
+        cursor: pointer;
     }
 }

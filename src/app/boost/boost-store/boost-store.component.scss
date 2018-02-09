@@ -1,0 +1,18 @@
+@import '../../../theme';
+
+boost-view {
+    height: 20%;
+    display: block;
+}
+
+footer {
+    padding: 5px;
+    margin-top: $gap;
+    background-color: white;
+
+    button {
+        font-weight: bold;
+        text-transform: uppercase;
+        cursor: pointer;
+    }
+}

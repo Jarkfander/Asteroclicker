@@ -19,9 +19,10 @@ export class TopbarComponent implements AfterViewInit {
   public name: string;
   public credit: number;
 
-  public isModalOpenQuest: boolean;
-  public isModalOpenRank: boolean;
+  public isModalQuest: boolean;
+  public isModalRank: boolean;
   public isModalProfile: boolean;
+  public isModalBoost: boolean;
   public creditValue: string;
 
   constructor(private authS: AuthService, public userS: UserService, public questS: QuestService, private socketS: SocketService) {
@@ -44,6 +45,7 @@ export class TopbarComponent implements AfterViewInit {
     this.authS.LogOut();
   }
 
+  /*
   public openQuestModal() {
     this.isModalOpenQuest = true;
   }
@@ -67,4 +69,5 @@ export class TopbarComponent implements AfterViewInit {
   public closeProfileModal() {
     this.isModalProfile = false;
   }
+  */
 }
