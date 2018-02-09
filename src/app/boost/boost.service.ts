@@ -6,7 +6,7 @@ import { NexiumService } from '../web3-m/nexium.service';
 import { IBoost, IUserBoost } from './boost';
 
 import { Observable } from 'rxjs/Observable';
-import { take, map, tap, reduce } from 'rxjs/operators';
+import { take, map, tap, reduce, filter, mergeMap, scan } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { environment } from '../../environments/environment';
 import { SocketService } from '../shared/socket/socket.service';
@@ -21,9 +21,7 @@ export class BoostService {
               private db: AngularFireDatabase,
               private socketS: SocketService,
               private userS: UserService) {
-                this.getStore()
-                .do(console.log)
-                .subscribe((boosts: IBoost[]) => this.boosts = boosts);
+                this.getStore().subscribe((boosts: IBoost[]) => this.boosts = boosts);
               }
 
   private getStore(): Observable<IBoost[]> {
@@ -38,12 +36,19 @@ export class BoostService {
   }
 
   public getInventory(): Observable<IUserBoost[]> {
-    return this.db.list<IUserBoost>(`users/${this.userS.currentUser.uid}/boosts`)
-                  .valueChanges<IUserBoost>()
+    return this.db.list<any>(`users/${this.userS.currentUser.uid}/boosts`)
+                  .valueChanges<any>()
                   .pipe(
-                    map((boosts: IUserBoost[], index: number) => boosts.map((boost: IUserBoost) => {
-                      return { ...boost, ...this.boosts[index] };
-                    }))
+                    map((boosts: any[], index: number) => boosts.map((boost: any) => {
+                      return { ...boost, ...this.boosts[index], quantity: (boost.boughtQuantity - boost.usedQuantity) };
+                    })),
+                    tap(console.log),
+                    mergeMap((boosts) => boosts),
+                    tap(console.log),
+                    filter((boost: IUserBoost) => boost.quantity > 0),
+                    tap(console.log),
+                    scan((acc: IUserBoost[], add: IUserBoost) => acc = [...acc, add], []),
+                    tap(console.log)
                   );
   }
 

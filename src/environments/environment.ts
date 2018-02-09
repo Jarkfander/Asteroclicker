@@ -17,7 +17,7 @@ export const environment = {
   loadingTime: 0,
   addresses: {
     nexium: '0xab904d9c85388653e6fb1c75b41fbc0465d39b90',
-    boostMarket: '0xcbf3d97cf7812bcbf1aaaa375e40a4ca10f181d1'
+    boostMarket: '0x1129c0721a4200b3d0839e2a6079992e0b685959'
   },
   provider: 'https://ropsten.infura.io/Ge8pLCXZNKUB86c7miUf',
   authClient: 'http://localhost:4201/',
