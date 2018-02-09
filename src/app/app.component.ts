@@ -1,3 +1,4 @@
+import { Web3Service } from './web3-m/web3.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MarketService } from './market/market.service';
@@ -33,11 +34,13 @@ export class AppComponent implements OnInit {
     public questS: QuestService,
     public rankingS: RankingService,
     public resourcesS: ResourcesService,
+    private web3S: Web3Service,
     public neximu: NexiumService) { }
 
   ngOnInit() {
     this.user$ = this.authS.User;
     this.loadAnimation = new LoadAnimation();
+    this.web3S.setAddress();
     setTimeout(() => {
       this.loadingImage = false;
     }, environment.loadingTime * 1000); // TODO : Change 0 for 1000

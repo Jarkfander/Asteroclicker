@@ -1,0 +1,7 @@
+<boost-list [boosts]="(boosts$ | async)" (select)="boost = $event"></boost-list>
+<boost-view *ngIf="boost" [boost]="boost"></boost-view>
+
+<footer *ngIf="boost" class="row justify-between border">
+  <p>Start the boost</p>
+  <button (click)="activate()">Activate</button>
+</footer>

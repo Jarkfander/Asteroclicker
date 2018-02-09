@@ -1,5 +1,5 @@
 <section (click)="close.emit(true)">
-  <div class="modal">
+  <div (click)="$event.stopPropagation()" class="modal">
     <ng-content></ng-content>
   </div>
 </section>

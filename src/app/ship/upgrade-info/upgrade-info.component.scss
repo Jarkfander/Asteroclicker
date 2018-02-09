@@ -1,6 +1,7 @@
 article {
     background-color: white;
     padding: 5px;
+    height: 100%;
 }
 
 h1, h3, p {
@@ -10,6 +11,6 @@ h1 { font-size: 1.2rem;}
 h3 { font-size: 1rem; }
 p { font-size : 0.8rem; }
 img {
-    width: 30%;
+    height: 80%;
     margin: 0 5px;
 }

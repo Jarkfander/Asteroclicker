@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
 import { environment } from '../../../environments/environment';
 import { ResourcesService } from '../resources/resources.service';
+import { IUserBoost } from '../../boost/boost';
 
 
 @Injectable()
@@ -167,5 +168,15 @@ export class SocketService {
     json['user'] = userId;
     json['isBadConfig'] = isBadConfig;
     this.socket.emit('changeBadConfig', json);
+  }
+
+  /**
+   * Activate the boost of a user
+   */
+  public activateBoost(userId: string, type: number) {
+    this.socket.emit('activateBoost', {
+      user: userId,
+      type: type
+    });
   }
 }

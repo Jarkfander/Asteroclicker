@@ -28,5 +28,6 @@ section {
     display: flex;
     flex-direction: row;
     height: 100%;
+    background-size: cover;
     transition: transform 0.5s ease-in-out;
 }

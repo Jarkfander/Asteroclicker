@@ -1,0 +1,15 @@
+@import '../../../theme';
+
+article {
+    background-color: white;
+    height: 100%;
+
+    h1, p {
+        margin: 0;
+        padding-left: 5px;
+    }
+
+    img {
+        height: 100%;
+    }
+}

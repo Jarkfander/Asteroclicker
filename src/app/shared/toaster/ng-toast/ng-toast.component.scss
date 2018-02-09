@@ -20,7 +20,7 @@ article {
     }
 
     .content {
-        padding: 10px;
+        padding: 5px;
         h1 {
             margin: 5px;
         }
@@ -45,5 +45,18 @@ article {
     border: solid 5px black;
     .timer-slide {
         background-color: rgb(71, 7, 7);        
+    }
+}
+
+.search-info {
+    border: solid 5px black;
+    .timer-slide {
+        background-color: rgb(15, 110, 95);
+    }
+    h1 {
+        padding-left: 5px;
+        border: solid 2px black;
+        background-color: white;
+        font-size: 1rem;
     }
 }

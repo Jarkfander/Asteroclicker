@@ -40,33 +40,33 @@ export interface IUser {
 }
 
 export interface IFrenzyInfo {
-  nextCombos,
-  state: number
+  nextCombos;
+  state: number;
 }
 
 export interface IProfile {
-  badConfig: number,
-  email: string,
-  name: string
+  badConfig: number;
+  email: string;
+  name: string;
 }
 
 
 export interface IUserUpgrade {
-  name: string,
-  lvl: number,
-  start: number,
-  timer: number,
+  name: string;
+  lvl: number;
+  start: number;
+  timer: number;
 }
 
 @Injectable()
 export class UserService {
 
-  loadedTrigger: number = 3;
-  loadedCounter: number = 0;
+  loadedTrigger = 3;
+  loadedCounter = 0;
 
   db: AngularFireDatabase;
   currentUser: User;
-  userLoad: boolean = false;
+  userLoad = false;
   afAuth: AngularFireAuth;
 
   chestSubject = new Subject<User>();

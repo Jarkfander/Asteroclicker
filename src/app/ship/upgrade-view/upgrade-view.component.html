@@ -1,20 +1,25 @@
-<section *ngIf="currentUpgrade" class="col border justify-between align-center">
-    <!--
-    <button *ngIf="currentLvl && currentLvl.start==0" [disabled]="!canBuy" class="btn-upgrade" (click)="levelUpOre()">Upgrade / Ore</button>
-    <button *ngIf="userUpgrade.start !== 0" disabled="true" class="btn-upgrade">{{timer}}</button>
-    -->
-    <div (click)="levelUpOre()" class="cost col-reverse justify-between align-center">
-        <div class="ores row justify-around">
-            <div class="cost-ore col justify-around align-center" *ngFor="let key of upgradeCostString">
-                <img *ngIf="key != '???'" src="../../../assets/oreIcon/{{key}}Icon.png" />
-                <p>{{nextUpgrade.costOreString[key]}}</p>
-                <p *ngIf="key == '???'">{{key}}</p>
-            </div>
-        </div>
-        <button>Upgrade</button>        
-    </div>
-
+<section *ngIf="currentUpgrade" class="col-reverse border" (mouseenter)="openInfos()" (mouseleave)="closeInfos()" (click)="openModal()">
     <h1>{{currentUpgrade.displayName}}</h1>
     <div #timer *ngIf="userUpgrade.start !== 0" class="timer"></div>
 </section>
-<ng-notif></ng-notif>
+
+<app-modal [@stagger-tile] (close)="closeModal()" *ngIf="lvlUpModal">
+    <div class="modal col justify-between">
+        <app-upgrade-info [upgrade]="currentUpgrade" class="info"></app-upgrade-info>
+        <div class="description border tile">
+            <p>Description of the upgrade here</p>
+        </div>
+        <div class="ores row">
+            <div class="cost-ore border tile">
+                <h2>Price to Level Up</h2>
+            </div>
+            <div class="cost-ore col justify-around align-center border tile" *ngFor="let key of upgradeCostString">
+                <img *ngIf="key !== '???'" src="../../../assets/oreIcon/{{key}}Icon.png" />
+                <p>{{nextUpgrade.costOreString[key]}}</p>
+                <p *ngIf="key === '???'">{{key}}</p>
+            </div>
+        </div>
+    
+        <button class="border tile" (click)="levelUpOre()">Level Up</button>
+    </div>
+</app-modal>

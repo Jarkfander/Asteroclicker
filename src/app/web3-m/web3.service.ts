@@ -1,23 +1,23 @@
 import { Injectable } from '@angular/core';
-import * as Web3 from 'web3-eth'
-import * as ZeroClientProvider from "web3-provider-engine/zero"
 import { environment } from '../../environments/environment';
+import { IMessage } from './message';
+import * as Web3 from 'web3-eth';
+import { ABIDefinition, Contract } from 'web3/types';
+import * as ZeroClientProvider from 'web3-provider-engine/zero';
+
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { IMessage } from './message';
-import { ABIDefinition, Contract } from 'web3/types';
 
 @Injectable()
 export class Web3Service {
 
-  private web3 : any;
+  private web3: any;
   public addressSubject = new BehaviorSubject<string>(null);
   public address$: Observable<string>;
   public authWindow: Window;
 
   constructor() {
-  
-    this.web3 = new Web3 ( Web3.givenProvider || this.provider);
+    this.web3 = new Web3(Web3.givenProvider || this.provider);
     this.address$ = this.addressSubject.asObservable();
   }
 

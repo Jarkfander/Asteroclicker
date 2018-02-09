@@ -43,7 +43,7 @@ export class SearchViewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.researchInfo = new Research(1, 1, 1, 1, 100000, 1);
+    this.researchInfo = new Research(1, 1, 1, 1, 100000, 100);
     this.distance = this.researchInfo.minDistance;
 
     this.searchS.search
@@ -69,11 +69,19 @@ export class SearchViewComponent implements OnInit {
     if (!!this.currentState) {
       switch (state) {
         case (0) : {
-          this.toasterS.success('Captain, we are arrived !', 'Let\'s mine this asteroid ');
+          this.toasterS.searchInfo('Captain, we are arrived !', '', {
+            styles: {
+              backgroundImage: 'url(assets/toaster/search-arrived.jpg',
+              height: '200px'
+          }});
           break;
         }
         case (2) : {
-          this.toasterS.success('Captain, we found some asteroids !', 'Pick up your favorite');
+          this.toasterS.searchInfo('Captain, we found an asteroid !', '', {
+            styles: {
+              backgroundImage: 'url(assets/toaster/search-found.jpg',
+              height: '200px'
+          }});
           break;
         }
       }
@@ -87,7 +95,7 @@ export class SearchViewComponent implements OnInit {
    */
   /** Launch search asteroid */
   public searchNewAster() {
-    this.socketS.searchAsteroid(this.userS.currentUser.uid,this.distance);
+    this.socketS.searchAsteroid(this.userS.currentUser.uid, this.distance);
   }
   /** Set distance and estimated time for searching */
   public searchTimeUpdate(distance: number) {
@@ -121,14 +129,5 @@ export class SearchViewComponent implements OnInit {
       this.socketS.updateAsteroidTimer(this.userS.currentUser.uid);
     }
   }
-
-
-
-
-
-
-
-
-
 
 }

@@ -10,7 +10,13 @@ export const environment = {
   },
   socketUrl: 'https://asteroclickerserver.herokuapp.com/',
   loadingTime: 5,
-  provider: "https://ropsten.infura.io/Ge8pLCXZNKUB86c7miUf",
-  authClient: 'http://localhost:4201/', //authClient: 'https://b2e-auth-client.herokuapp.com/',
-  clientId: 'urn:b2e:nxcrus'
+  provider: 'https://ropsten.infura.io/Ge8pLCXZNKUB86c7miUf',
+  authClient: 'http://localhost:4201/', // authClient: 'https://b2e-auth-client.herokuapp.com/',
+  clientId: 'urn:b2e:nxcrus',
+
+  // Testing addresses to be changed
+  addresses: {
+    nexium: '0xab904d9c85388653e6fb1c75b41fbc0465d39b90',
+    boostMarket: '0xcbf3d97cf7812bcbf1aaaa375e40a4ca10f181d1'
+  }
 };
