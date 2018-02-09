@@ -1,0 +1,6 @@
+<boost-list [boosts]="(boosts$ | async)" (select)="boost = $event"></boost-list>
+<boost-view [boost]="boost"></boost-view>
+<footer>
+  <p>{{ boost.price / 1000 }}</p>
+  <button>Buy</button>
+</footer>

@@ -1,0 +1,13 @@
+<header class="row justify-between" [@stagger-tile]>
+  <article class="row align-center justify-center tile border" (click)="route = 'inventory'">
+    <h1>Inventory</h1>
+  </article>
+  <article class="row align-center justify-center tile border" (click)="route = 'store'">
+    <h1>Store</h1>
+  </article>
+</header>
+
+<section [@stagger-tile]>
+  <boost-inventory *ngIf="route === 'inventory'"></boost-inventory>
+  <boost-store *ngIf="route === 'store'"></boost-store>
+</section>

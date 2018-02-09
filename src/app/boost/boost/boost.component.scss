@@ -1,0 +1,23 @@
+@import '../../../theme';
+
+:host {
+    height: 100%;
+    width: 100%;
+    display: block;
+}
+
+header {
+    height: 10%;
+    width: 100%;
+    margin-bottom: $gap;
+
+    article {
+        width: calc(50% - #{$gap}/2);
+        background-color: white;
+        cursor: pointer;
+    }
+
+    h1 {
+        text-transform: uppercase;
+    }
+}

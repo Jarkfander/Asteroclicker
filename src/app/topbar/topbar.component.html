@@ -22,9 +22,10 @@
     </div>
     -->
 
-    <img class="border tile" (click)="openProfileModal()" src="../../assets/quest/topbar-icon.jpg"/>
-    <button class="border tile" (click)="openRankModal()">Rank</button>           
-    <button class="quest border tile" (click)="openQuestModal()">Quest</button>
+    <img class="border tile" (click)="isModalProfile = true" src="../../assets/quest/topbar-icon.jpg"/>
+    <img class="border tile" (click)="isModalBoost = true" src="../../assets/boost/topbar-icon.png"/>
+    <button class="border tile" (click)="isModalRank = true">Rank</button>           
+    <button class="quest border tile" (click)="isModalQuest = true">Quest</button>
     <button class="border tile" (click)="LogOut()">Log Out</button>
   </article>
 
@@ -33,14 +34,18 @@
   </article>
 </header>
 
-<app-modal (close)="closeQuestModal()" *ngIf="isModalOpenQuest">
+<app-modal (close)="isModalQuest = false" *ngIf="isModalQuest">
     <app-quest></app-quest>
 </app-modal>
 
-<app-modal (close)="closeRankModal()" *ngIf="isModalOpenRank">
+<app-modal (close)="isModalRank = false" *ngIf="isModalRank">
   <app-ranking></app-ranking>
 </app-modal> 
 
-<app-modal (close)="closeProfileModal()" *ngIf="isModalProfile">
+<app-modal (close)="isModalProfile = false" *ngIf="isModalProfile">
   <app-profile></app-profile>
+</app-modal> 
+
+<app-modal (close)="isModalBoost = false" *ngIf="isModalBoost">
+  <app-boost></app-boost>
 </app-modal> 

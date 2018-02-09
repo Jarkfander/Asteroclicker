@@ -3,7 +3,7 @@ import { environment } from '../../environments/environment';
 import { IMessage } from './message';
 import * as Web3 from 'web3-eth';
 import { ABIDefinition, Contract } from 'web3/types';
-import ZeroClientProvider from 'web3-provider-engine/zero';
+import * as ZeroClientProvider from 'web3-provider-engine/zero';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';

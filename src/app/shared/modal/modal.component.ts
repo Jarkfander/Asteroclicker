@@ -10,6 +10,7 @@ export class ModalComponent implements OnInit {
   @Output('close') close = new EventEmitter<boolean>();
   constructor() { }
 
+
   ngOnInit() {
   }
 

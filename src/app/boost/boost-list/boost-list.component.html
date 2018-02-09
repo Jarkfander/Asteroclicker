@@ -1,0 +1,5 @@
+<article class="row wrap">
+  <div class="boost border tile" *ngFor="let boost of boosts" (click)="selection(boost)">
+    <p>{{ boost.name }}</p>
+  </div>
+</article>

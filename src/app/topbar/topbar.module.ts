@@ -1,3 +1,4 @@
+import { BoostModule } from './../boost/boost.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../shared/shared.module';
@@ -15,7 +16,8 @@ import { QuestService } from '../quest/quest.service';
     SharedModule,
     QuestModule,
     RankingModule,
-    ProfileModule
+    ProfileModule,
+    BoostModule
   ],
   exports: [
     TopbarComponent
