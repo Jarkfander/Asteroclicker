@@ -6,10 +6,12 @@ import { BoostListComponent } from './boost-list/boost-list.component';
 import { BoostStoreComponent } from './boost-store/boost-store.component';
 import { BoostInventoryComponent } from './boost-inventory/boost-inventory.component';
 import { BoostComponent } from './boost/boost.component';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    SharedModule
   ],
   declarations: [
     BoostViewComponent,

@@ -1,4 +1,9 @@
-<article class="border tile">
-  <h1>{{ boost.name }}</h1>
-  <p>{{ boost.description }}</p>
+<article class="row border tile">
+  <img [src]="'../../../assets/boost/boost-'+boost.id+'.png'"/>
+  <div class="col">
+      <h1>{{ boost.name }}</h1>
+      <p>{{ boost.description }}</p>
+      <p>Duration: {{ boost.duration | timer }}</p>
+      <p *ngIf="boost.quantity">Amount: {{ boost.quantity }}</p>
+  </div>
 </article>

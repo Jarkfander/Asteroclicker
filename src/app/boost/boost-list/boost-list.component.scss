@@ -1,5 +1,11 @@
 @import '../../../theme';
 
 .boost {
+    width: 20%;
     margin: calc(#{$gap} / 2);
+    background-color: white;
+
+    img {
+        width: 100%;
+    }
 }

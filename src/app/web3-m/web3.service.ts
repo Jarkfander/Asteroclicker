@@ -17,7 +17,7 @@ export class Web3Service {
   public authWindow: Window;
 
   constructor() {
-    this.web3 = new Web3 ( Web3.givenProvider || this.provider);
+    this.web3 = new Web3(Web3.givenProvider || this.provider);
     this.address$ = this.addressSubject.asObservable();
   }
 

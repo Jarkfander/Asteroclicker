@@ -1,8 +1,9 @@
 import { BoostService } from './../boost.service';
 import { Component, OnInit } from '@angular/core';
 
-import { IBoost } from './../boost';
+import { IBoost, IUserBoost } from './../boost';
 import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 import { tap } from 'rxjs/operators';
 
 @Component({
@@ -12,14 +13,19 @@ import { tap } from 'rxjs/operators';
 })
 export class BoostInventoryComponent implements OnInit {
 
-  public boosts$: Observable<IBoost[]>;
-  public boost: IBoost;
+  public boosts$: Observable<IUserBoost[]>;
+  public boost: IUserBoost;
 
   constructor(private boostS: BoostService) { }
 
+  /** Activate the boost */
+  public activate() {
+    this.boostS.activate(this.boost);
+  }
+
   ngOnInit() {
     this.boosts$ = this.boostS.getInventory().pipe(
-      tap((boosts: IBoost[]) => this.boost = boosts[0])
+      tap((boosts: IUserBoost[]) => this.boost = boosts[0])
     );
   }
 

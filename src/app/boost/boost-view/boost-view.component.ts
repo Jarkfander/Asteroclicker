@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { IBoost } from '../boost';
+import { IBoost, IUserBoost } from '../boost';
 
 @Component({
   selector: 'boost-view',
@@ -8,11 +8,12 @@ import { IBoost } from '../boost';
 })
 export class BoostViewComponent implements OnInit {
 
-  @Input() boost: IBoost;
+  @Input() boost: IUserBoost;
 
   constructor() { }
 
   ngOnInit() {
+
   }
 
 }

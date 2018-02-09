@@ -18,6 +18,7 @@ export class NexiumService {
 
   constructor(private web3S: Web3Service) {
     this.contract = this.web3S.createContract(abi, environment.addresses.nexium);
+    this.nexium$ = this.nexiumSubject.asObservable();
     this.web3S.address$.subscribe((address: string) => this.changeNexium());
   }
 
@@ -36,5 +37,17 @@ export class NexiumService {
       .call()
       .then((amount: string) => parseInt(amount, 10));
   }
+
+  /**
+   * Approve the transaction and call it
+   * @param {string} shopAddress: the address of the shop you're in
+   * @param {number} amount: amount of MilliNxc used to sell/buy this asset
+  */
+  public approveAndCall(shopAddress: string, amount: number, extraData: string): PromiEvent<any> {
+    return this.contract.methods.approveAndCall(shopAddress, amount, extraData).send({
+        from : this.web3S.defaultAccount,
+        gas: 200000
+    });
+}
 }
 

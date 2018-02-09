@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { IBoost } from './../boost';
 import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 import { tap } from 'rxjs/operators';
 
 @Component({
@@ -12,14 +13,19 @@ import { tap } from 'rxjs/operators';
 })
 export class BoostStoreComponent implements OnInit {
 
-  public boosts$: Observable<IBoost[]>;
+  public boosts: IBoost[];
   public boost: IBoost;
 
   constructor(private boostS: BoostService) { }
 
+  public buy(amount: number) {
+    this.boostS.buyBoost(this.boost, amount)
+      .then((tx) => console.log(tx))
+      .catch((err) => console.log(err));
+  }
+
   ngOnInit() {
-    this.boosts$ = this.boostS.getStore().pipe(
-      tap((boosts: IBoost[]) => this.boost = boosts[0])
-    );
+    this.boosts = this.boostS.boosts;
+    this.boost = this.boosts[0];
   }
 }
