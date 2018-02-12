@@ -15,7 +15,6 @@ import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Observable } from 'rxjs/Observable';
 import { OreService, IOreAmounts } from '../../ore/ore.service';
 import { ResourcesService } from '../../shared/resources/resources.service';
-import { toArray } from 'rxjs/operators/toArray';
 
 
 
