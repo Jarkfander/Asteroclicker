@@ -22,7 +22,9 @@ export enum KEY_CODE {
   LEFT_ARROW = 37,
   UP_ARROW = 38,
   RIGHT_ARROW = 39,
-  DOWN_ARROW = 40
+  DOWN_ARROW = 40,
+  A_KEY = 65,
+  E_KEY = 69
 }
 
 @Component({
@@ -32,6 +34,7 @@ export enum KEY_CODE {
 })
 
 export class AsteroidViewComponent implements OnInit {
+  coefClick: number;
   frenzyMOD: boolean;
   storageCapacityMax: number;
 
@@ -86,26 +89,32 @@ export class AsteroidViewComponent implements OnInit {
 
   // tslint:disable-next-line:member-ordering
   @HostListener('window:keyup', ['$event']) keyEvent(event: KeyboardEvent) {
-    if (event.keyCode === KEY_CODE.RIGHT_ARROW) {
-      this.frenzyModTouch(KEY_CODE.RIGHT_ARROW);
-      if (this.boolKeyboard || this.boolKeyboardFirst) {
-        this.boolKeyboard = false;
-        this.boolKeyboardFirst = false;
-      }
-    }
-    if (event.keyCode === KEY_CODE.LEFT_ARROW) {
-      this.frenzyModTouch(KEY_CODE.LEFT_ARROW);
-      if (!this.boolKeyboard) {
-        this.boolKeyboard = true;
-        this.boolKeyboardFirst = false;
-        this.asteroidClick();
-      }
-    }
-    if (event.keyCode === KEY_CODE.UP_ARROW) {
-      this.frenzyModTouch(KEY_CODE.UP_ARROW);
-    }
-    if (event.keyCode === KEY_CODE.DOWN_ARROW) {
-      this.frenzyModTouch(KEY_CODE.DOWN_ARROW);
+    switch (event.keyCode) {
+      case KEY_CODE.A_KEY:
+        if (this.boolKeyboard || this.boolKeyboardFirst) {
+          this.boolKeyboard = false;
+          this.boolKeyboardFirst = false;
+        }
+        break;
+      case KEY_CODE.E_KEY:
+        if (!this.boolKeyboard) {
+          this.boolKeyboard = true;
+          this.boolKeyboardFirst = false;
+          this.asteroidClick();
+        }
+        break;
+      case KEY_CODE.RIGHT_ARROW:
+        this.frenzyModTouch(KEY_CODE.RIGHT_ARROW);
+        break;
+      case KEY_CODE.LEFT_ARROW:
+        this.frenzyModTouch(KEY_CODE.LEFT_ARROW);
+        break;
+      case KEY_CODE.UP_ARROW:
+        this.frenzyModTouch(KEY_CODE.UP_ARROW);
+        break;
+      case KEY_CODE.DOWN_ARROW:
+        this.frenzyModTouch(KEY_CODE.DOWN_ARROW);
+        break;
     }
   }
 
@@ -243,15 +252,15 @@ export class AsteroidViewComponent implements OnInit {
       }
     }
 
-    const coefClick = this.clicks.length / 16;
-    const newRate = base + ((max - base) * coefClick);
+    this.coefClick = this.clicks.length / 16;
+    const newRate = base + ((max - base) * this.coefClick);
     this.userS.modifyCurrentMineRate(newRate <= max ? newRate : max);
 
-    if (coefClick >= 1) {
+    if (this.coefClick >= 1) {
       this.socketS.reachFrenzy(this.userS.currentUser.uid);
     }
     if (!this.frenzyMOD) {
-      if (coefClick > 0.5) {
+      if (this.coefClick > 0.5) {
         this.drone.activeLaser();
         this.drone.laserAnim.visible = false;
         if (this.asteroidSprite) {
@@ -395,6 +404,8 @@ export class AsteroidViewComponent implements OnInit {
         this.drone.frenzyTouchX = this.asteroidSprite.posXArrow + 50;
         this.drone.frenzyTouchY = this.asteroidSprite.posYArrow - 150;
       } else {
+        this.coefClick = 0;
+        this.clicks = new Array();
         this.asteroidSprite.frenzyFail();
       }
     } else {
