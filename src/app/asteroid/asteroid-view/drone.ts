@@ -187,7 +187,7 @@ export class Drone {
                 const vectFrenzy = this.lerpVector2(this.drone.x, this.drone.y, this.frenzyTouchX, this.frenzyTouchY, 0.2, true);
                 this.drone.x = vectFrenzy.x;
                 this.drone.y = vectFrenzy.y;
-/*  
+/*
                 this.drone.x = this.xBaseDrone + Math.cos(this.delta * 5) * 25 - 25;
                 this.drone.y = this.yBaseDrone + Math.sin(this.delta * 5) * 50;*/
                 // this.drone.rotation = Math.sin(this.delta * 5) * 0.50;
@@ -232,7 +232,7 @@ export class Drone {
             vectorTemp.rotate = this.drone.rotation;
             vect.rotate = vectorTemp.lerpRotate(0, 0.2);
             this.drone.rotation = vect.rotate;
-        } 
+        }
         return vect;
     }
     /*
