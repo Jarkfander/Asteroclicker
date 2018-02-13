@@ -7,6 +7,9 @@ import { IAsteroid } from '../asteroid.service';
 
 export class AsteroidSprite {
     asteroid: PIXI.Sprite[];
+
+    pieceAster: PIXI.Sprite[];
+
     app: PIXI.Application;
     clickEmitter: ParticleBase;
     destructionEmitter: ParticleBase;
@@ -59,6 +62,8 @@ export class AsteroidSprite {
         this.compteurEvent = 0;
         this.boolEvent = false;
         this.asteroid = new Array<PIXI.Sprite>();
+        this.pieceAster = new Array<PIXI.Sprite>();
+
         this.spriteStar = initSprite('etoile_filante', 500, 172, true, true, 0.30);
         this.spriteStarXY = { x: -200, y: 800 };
         this.spriteStar.scale.set(0.5, 0.5);
@@ -516,7 +521,7 @@ export class AsteroidSprite {
 
             this.posXArrow = this.xBaseAsteroid + randomX;
             this.posYArrow = this.yBaseAsteroid + randomY;
-            this.arrowFrenzy[numTouch].position.set(this.posXArrow, this.posYArrow );
+            this.arrowFrenzy[numTouch].position.set(this.posXArrow, this.posYArrow);
             this.arrowFrenzy[numTouch].visible = true;
         }
 
@@ -592,5 +597,22 @@ export class AsteroidSprite {
             this.comboSuccesLoop.gotoAndPlay(0);
             this.comboSucces.visible = false;
         };
+    }
+
+    // Piece of aste
+    generatePiece(oreName: string) {
+        const sprite = PIXI.Sprite.fromImage('assets/AsteroidParticle/' + oreName + 'Particle.png');
+        sprite.texture.baseTexture.mipmap = true;
+        sprite.anchor.set(0.5);
+        sprite.x = this.app.renderer.width / 2;
+        sprite.y = this.app.renderer.height / 2;
+        this.pieceAster.push(sprite);
+
+        sprite.interactive = true;
+        sprite.buttonMode = true;
+
+        sprite.on('over', (event) => {
+            console.log('over');
+        });
     }
 }

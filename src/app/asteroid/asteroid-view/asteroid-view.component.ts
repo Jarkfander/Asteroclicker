@@ -146,6 +146,8 @@ export class AsteroidViewComponent implements OnInit {
     });
 
 
+    this.asteroidSprite.generatePiece('carbon');
+    
     this.asteroidSprite.eventOk = this.userS.currentUser.event;
     this.asteroidSprite.activEvent();
     this.clickCapsule();
@@ -206,15 +208,6 @@ export class AsteroidViewComponent implements OnInit {
       }
     });
 
-    // frenzy Subject
-    this.userS.frenzyInfo.subscribe((frenzy: IFrenzyInfo) => {
-      this.frenzyInfo = frenzy;
-      this.frenzyModGoOrNot(frenzy);
-    });
-    // Profile Subject
-    this.userS.profile.subscribe((profile: IProfile) => {
-      profile.badConfig ? this.backgroundSky.stop() : this.backgroundSky.play();
-    });
 
     // Upgrade Subject
     this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
@@ -227,6 +220,16 @@ export class AsteroidViewComponent implements OnInit {
       .subscribe((userUpgrade) => {
         this.storageCapacityMax = this.resourcesS[userUpgrade.name][userUpgrade.lvl].capacity;
       });
+    // frenzy Subject
+    this.userS.frenzyInfo.subscribe((frenzy: IFrenzyInfo) => {
+      this.frenzyInfo = frenzy;
+      this.frenzyModGoOrNot(frenzy);
+    });
+    // Profile Subject
+    this.userS.profile.subscribe((profile: IProfile) => {
+      profile.badConfig ? this.backgroundSky.stop() : this.backgroundSky.play();
+    });
+
 
     // User ore amounts
     this.oreS.OreAmounts
