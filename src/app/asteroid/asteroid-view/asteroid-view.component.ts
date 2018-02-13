@@ -161,36 +161,38 @@ export class AsteroidViewComponent implements OnInit {
     this.render.appendChild(this.el.nativeElement, this.app.view);
     this.initNumberOfDroneBegin();
 
-    // Asteroid Subject
-    this.asteroidS.asteroid$.subscribe((asteroid: IAsteroid) => {
-      if (this.asteroid == null) {
-        this.initAsteroid(asteroid);
-        this.asteroid = asteroid;
-      }
-      this.drone.isMining = false;
+    this.asteroidS.asteroid$.take(1).subscribe((asteroid: IAsteroid) => {
 
-      const state = asteroid.currentCapacity === asteroid.capacity ? 4 :
-        Math.floor((asteroid.currentCapacity / asteroid.capacity) * 5);
-
-      if (asteroid.currentCapacity === 0 && this.asteroid.currentCapacity !== 0) {
-        this.asteroidSprite.destructBase();
-      }
-
-      if (state < this.state) {
-        this.asteroidSprite.destructOnePart();
-      }
-
-      this.state = state;
-
-      if (asteroid.currentCapacity > this.asteroid.currentCapacity) {
-        this.asteroidSprite.changeSprite(asteroid);
-        this.drone.laserAnim.visible = true;
-      }
+      this.initAsteroid(asteroid);
       this.asteroid = asteroid;
-      this.drone.droneMiningVerif();
-    });
 
-    // Asteroid is empty
+      // Asteroid Subject
+      this.asteroidS.asteroid$.subscribe((asteroid: IAsteroid) => {
+        this.drone.isMining = false;
+
+        const state = asteroid.currentCapacity === asteroid.capacity ? 4 :
+          Math.floor((asteroid.currentCapacity / asteroid.capacity) * 5);
+
+        if (asteroid.currentCapacity === 0 && this.asteroid.currentCapacity !== 0) {
+          this.asteroidSprite.destructBase();
+        }
+
+        if (state < this.state) {
+          this.asteroidSprite.destructOnePart();
+        }
+
+        this.state = state;
+
+        if (asteroid.currentCapacity > this.asteroid.currentCapacity) {
+          this.asteroidSprite.changeSprite(asteroid);
+          this.drone.laserAnim.visible = true;
+        }
+        this.asteroid = asteroid;
+        this.drone.droneMiningVerif();
+
+      });
+
+          // Asteroid is empty
     this.asteroidS.isEmpty.subscribe((isEmpty: boolean) => {
       this.drone.setIsAsteLifeSupZero(!isEmpty);
     });
@@ -231,6 +233,8 @@ export class AsteroidViewComponent implements OnInit {
       .subscribe((oreAmount: IOreAmounts) => {
         this.drone.setIsUserHaveMaxCapacityStorage(this.asteroid && oreAmount[this.asteroid.ore] >= this.storageCapacityMax);
       });
+
+    });
 
   }
 
@@ -397,7 +401,7 @@ export class AsteroidViewComponent implements OnInit {
   // frenzy Touch
   frenzyModTouch(numTouchUserActu: number) {
     if (this.frenzyInfo.state) {
-      this.socketS.validArrow( numTouchUserActu - 37, this.userS.currentUser.frenzy.comboInd);
+      this.socketS.validArrow(numTouchUserActu - 37, this.userS.currentUser.frenzy.comboInd);
       if (this.frenzyInfo.nextCombos[this.userS.currentUser.frenzy.comboInd] === (numTouchUserActu - 37)) {
         this.userS.currentUser.frenzy.comboInd++;
         this.asteroidSprite.frenzyModTouch(this.frenzyInfo.nextCombos[this.userS.currentUser.frenzy.comboInd]);
