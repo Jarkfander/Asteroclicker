@@ -19,7 +19,7 @@ export class ProfileComponent implements AfterViewInit {
 
   toggleVisibility(e) {
     this.isBadConfig = e.target.checked;
-    this.socketS.badConfigBdd(this.userS.currentUser.uid, this.isBadConfig);
+    this.socketS.badConfigBdd(this.isBadConfig);
   }
 
 }

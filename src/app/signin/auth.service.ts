@@ -6,17 +6,25 @@ import { environment } from '../../environments/environment';
 import { User } from 'firebase/app';
 
 import 'rxjs/add/operator/map';
+import { UserService } from '../shared/user/user.service';
 
-export interface IUser{
+export interface IUser {
 
 }
 
 @Injectable()
 export class AuthService {
 
-  private userLogged : boolean=false;
-  
-  constructor(private afAuth: AngularFireAuth, private socketS : SocketService) { }
+  private userLogged: boolean = false;
+
+  constructor(private afAuth: AngularFireAuth, private socketS: SocketService, private userS:UserService) { 
+    afAuth.authState.subscribe((auth) => {
+      if (auth != null) {
+        userS.initializeUser(auth.uid);
+        socketS.openSocket(auth.uid);
+      }
+    });
+  }
 
   public LogIn(log, pswd) {
     this.afAuth.auth.signInWithEmailAndPassword(log, pswd);
@@ -24,7 +32,7 @@ export class AuthService {
 
   public CreateAccount(email, pswd, pseudo) {
     this.afAuth.auth.createUserWithEmailAndPassword(email, pswd).then((message) => {
-      this.socketS.initializeUser(message.uid, email, pseudo);
+      this.socketS.initializeUser(email, pseudo);
     });
   }
 
@@ -35,16 +43,16 @@ export class AuthService {
     });
   }
 
-  get User() : Observable<User>{
+  get User(): Observable<User> {
     return this.afAuth.authState;
   }
 
-  get UserId() : Observable<string>{
-    return this.afAuth.authState.map((user:User)=>user.uid);
+  get UserId(): Observable<string> {
+    return this.afAuth.authState.map((user: User) => user.uid);
   }
 
   get isAuth(): Observable<boolean> {
-    return this.afAuth.authState.map((user: User) => user!=null);
+    return this.afAuth.authState.map((user: User) => user != null);
   }
 
 }

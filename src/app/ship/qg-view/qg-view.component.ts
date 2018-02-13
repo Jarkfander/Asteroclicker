@@ -74,7 +74,7 @@ export class QgViewComponent implements OnInit {
     setTimeout(() => {
       if (this.userUpgrade.start !== 0) {
         const timeLeft = 100 - ((this.userUpgrade.timer - this.nextUpgrade.time) / (10 * this.nextUpgrade.time));
-        this.socketS.updateUpgradeTimer(this.userS.currentUser.uid, this.userUpgrade.name);
+        this.socketS.updateUpgradeTimer(this.userUpgrade.name);
       }
     }, 1000);
   }
@@ -82,8 +82,8 @@ export class QgViewComponent implements OnInit {
   /** Update ore amount of user and update timer */
   public levelUpOre() {
     if (this.canBuy()) {
-      this.socketS.upgradeShipOre(this.userS.currentUser.uid, this.currentUpgrade.name);
-      this.socketS.updateUpgradeTimer(this.userS.currentUser.uid, this.userUpgrade.name);
+      this.socketS.upgradeShipOre(this.currentUpgrade.name);
+      this.socketS.updateUpgradeTimer(this.userUpgrade.name);
     }
   }
 

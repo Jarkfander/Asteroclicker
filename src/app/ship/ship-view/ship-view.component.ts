@@ -213,7 +213,7 @@ export class ShipViewComponent implements AfterViewInit {
               };
 
               tempSprite[5].onComplete = () => {
-                this.socketS.removeChest(this.userS.currentUser.uid, this.userS.currentUser.numberOfChest);
+                this.socketS.removeChest(this.userS.currentUser.numberOfChest);
               };
             };
           });

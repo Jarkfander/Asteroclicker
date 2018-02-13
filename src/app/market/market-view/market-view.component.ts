@@ -107,11 +107,11 @@ export class MarketViewComponent implements OnInit {
   }
 
   public SellOre/*moon*/(amount: number) {
-    this.socketS.sellOre(this.userS.currentUser.uid, this.oreName, amount);
+    this.socketS.sellOre(this.oreName, amount);
   }
 
   public BuyOre(amount: number) {
-    this.socketS.buyOre(this.userS.currentUser.uid, this.oreName, amount);
+    this.socketS.buyOre(this.oreName, amount);
   }
 
   public OpenHistory() {

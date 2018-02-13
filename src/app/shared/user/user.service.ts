@@ -9,7 +9,6 @@ import { SocketService } from '../socket/socket.service';
 import { Frenzy } from './frenzy';
 import { Quest } from '../../quest/quest';
 import { IAsteroid } from '../../asteroid/asteroid.service';
-import { AuthService } from '../../signin/auth.service';
 import { Observable } from 'rxjs/Observable';
 import { Research } from '../../ship/upgrade-class/research';
 import { storage } from 'firebase';
@@ -79,60 +78,54 @@ export class UserService {
 
   cargoSubject = new Subject<User>();
 
-  constructor(db: AngularFireDatabase, afAuth: AngularFireAuth, private marketS: MarketService,
-    private socketS: SocketService, private authS: AuthService) {
+  constructor(db: AngularFireDatabase, afAuth: AngularFireAuth, private marketS: MarketService) {
 
     this.db = db;
     this.afAuth = afAuth;
-    afAuth.authState.subscribe((auth) => {
-      if (auth != null) {
-        this.currentUser = new User();
-        this.currentUser.frenzy = new Frenzy(false, 0, {});
-        this.currentUser.uid = auth.uid;
-        this.db.object('users/' + auth.uid + '/chest').valueChanges().subscribe(
-          (snapshot: any) => {
-            this.FillChest(snapshot);
-          });
-        this.db.object('users/' + auth.uid + '/quest').valueChanges().subscribe(
-          (snapshot: any) => {
-            this.FillQuest(snapshot);
-          });
-        this.db.object('users/' + auth.uid + '/event').valueChanges().subscribe(
-          (snapshot: any) => {
-            this.FillEvent(snapshot);
-          });
 
-        this.db.object('users/' + auth.uid + '/cargo').valueChanges().subscribe(
-          (snapshot: any) => {
-            this.FillCargo(snapshot);
-          });
-      }
-    });
+  }
+
+  initializeUser(id: string) {
+    this.currentUser = new User();
+    this.currentUser.frenzy = new Frenzy(false, 0, {});
+    this.currentUser.uid = id;
+    this.db.object('users/' + id + '/chest').valueChanges().subscribe(
+      (snapshot: any) => {
+        this.FillChest(snapshot);
+      });
+    this.db.object('users/' + id + '/quest').valueChanges().subscribe(
+      (snapshot: any) => {
+        this.FillQuest(snapshot);
+      });
+    this.db.object('users/' + id + '/event').valueChanges().subscribe(
+      (snapshot: any) => {
+        this.FillEvent(snapshot);
+      });
+
+    this.db.object('users/' + id + '/cargo').valueChanges().subscribe(
+      (snapshot: any) => {
+        this.FillCargo(snapshot);
+      });
   }
 
   get credit(): Observable<number> {
-    return this.authS.UserId
-      .mergeMap((id: String) => this.db.object('users/' + id + '/credit').valueChanges<number>());
+    return this.db.object('users/' + this.currentUser.uid + '/credit').valueChanges<number>();
   }
 
   get frenzyInfo(): Observable<IFrenzyInfo> {
-    return this.authS.UserId
-      .mergeMap((id: String) => this.db.object('users/' + id + '/frenzy/info').valueChanges<IFrenzyInfo>());
+    return this.db.object('users/' + this.currentUser.uid + '/frenzy/info').valueChanges<IFrenzyInfo>();
   }
 
   get frenzyTimer(): Observable<number> {
-    return this.authS.UserId
-      .mergeMap((id: String) => this.db.object('users/' + id + '/frenzy/time/timer').valueChanges<number>());
+    return this.db.object('users/' + this.currentUser.uid + '/frenzy/time/timer').valueChanges<number>();
   }
 
   get profile(): Observable<IProfile> {
-    return this.authS.UserId
-      .mergeMap((id: String) => this.db.object('users/' + id + '/profile').valueChanges<IProfile>());
+    return this.db.object('users/' + this.currentUser.uid + '/profile').valueChanges<IProfile>();
   }
 
   get upgrade(): Observable<IUserUpgrade[]> {
-    return this.authS.UserId
-      .mergeMap((id: String) => this.db.object('users/' + id + '/upgrade').valueChanges<IUserUpgrade>())
+    return this.db.object('users/' + this.currentUser.uid + '/upgrade').valueChanges<IUserUpgrade>()
       .map((upgrades) => {
         const allCurrentUpgrade: IUserUpgrade[] = new Array();
         for (const key in upgrades) {
@@ -147,8 +140,7 @@ export class UserService {
   }
 
   getUpgradeByName(upgradeName: string): Observable<IUserUpgrade> {
-    return this.authS.UserId
-      .mergeMap((id: String) => this.db.object('users/' + id + '/upgrade/' + upgradeName).valueChanges<IUserUpgrade>())
+    return this.db.object('users/' + this.currentUser.uid + '/upgrade/' + upgradeName).valueChanges<IUserUpgrade>()
       .map((upgrade: IUserUpgrade) => {
         upgrade.name = upgradeName;
         return upgrade;

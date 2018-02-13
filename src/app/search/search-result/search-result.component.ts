@@ -19,6 +19,6 @@ export class SearchResultComponent implements AfterViewInit {
   ngAfterViewInit() { }
 
   chooseAsteroid() {
-    this.socketS.chooseAsteroid(this.userS.currentUser.uid, this.num);
+    this.socketS.chooseAsteroid(this.num);
   }
 }

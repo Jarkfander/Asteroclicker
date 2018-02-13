@@ -53,7 +53,7 @@ export class BoostService {
   }
 
   public activate(boost: IUserBoost) {
-    this.socketS.activateBoost(this.userS.currentUser.uid, boost.id);
+    this.socketS.activateBoost(boost.id);
   }
 
   /**

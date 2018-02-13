@@ -3,169 +3,180 @@ import * as io from 'socket.io-client';
 import { environment } from '../../../environments/environment';
 import { ResourcesService } from '../resources/resources.service';
 import { IUserBoost } from '../../boost/boost';
+import { UserService } from '../user/user.service';
 
 
 @Injectable()
 export class SocketService {
 
-  private url = environment.socketUrl;
+  public userId: string;
 
   private socket;
 
-  constructor(resourceS: ResourcesService) {
-    this.socket = io(this.url);
+  constructor(private resourceS: ResourcesService) {
+
+  }
+
+  openSocket(userId: string) {
+    this.socket = io(environment.socketUrl);
+    this.userId = userId;
+    
+
     this.socket.on('sendResources', (message) => {
-      resourceS.FillAll(message);
+      this.resourceS.FillAll(message);
     });
+
+    this.socket.emit('authentify', userId);
+
   }
 
   loadResources(toExecute) {
     this.socket.emit('loadResources', toExecute);
   }
 
-  incrementOre(userId: string, oreName: string, delta: number) {
+  incrementOre(oreName: string, delta: number) {
     const json = {};
 
-    json['user'] = userId;
+    json['user'] = this.userId;
     json['ore'] = oreName;
     json['amount'] = delta;
 
     this.socket.emit('incrementOre', json);
   }
 
-  upgradeShipCredit(userId: string, upgradeName: string) {
+  upgradeShipCredit(upgradeName: string) {
     const json = {};
 
-    json['user'] = userId;
+    json['user'] = this.userId;
     json['upgrade'] = upgradeName;
 
     this.socket.emit('upgradeShipCredit', json);
   }
 
-  upgradeShipOre(userId: string, upgradeName: string) {
+  upgradeShipOre(upgradeName: string) {
     const json = {};
 
-    json['user'] = userId;
+    json['user'] = this.userId;
     json['upgrade'] = upgradeName;
 
     this.socket.emit('upgradeShipOre', json);
   }
 
-  updateUpgradeTimer(userId: string, upgradeName: string) {
+  updateUpgradeTimer(upgradeName: string) {
     const json = {};
 
-    json['user'] = userId;
+    json['user'] = this.userId;
     json['upgrade'] = upgradeName;
 
     this.socket.emit('updateUpgradeTimer', json);
   }
 
-  updateCargoTimer(userId: string) {
+  updateCargoTimer() {
     const json = {};
 
-    json['user'] = userId;
+    json['user'] = this.userId;
     this.socket.emit('updateCargoTimer', json);
   }
 
 
-  sellOre(userId: string, oreName: string, amount: number) {
+  sellOre(oreName: string, amount: number) {
     const json = {};
 
-    json['user'] = userId;
+    json['user'] = this.userId;
     json['ore'] = oreName;
     json['amount'] = amount;
 
     this.socket.emit('sellOre', json);
   }
 
-  buyOre(userId: string, oreName: string, amount: number) {
+  buyOre(oreName: string, amount: number) {
     const json = {};
 
-    json['user'] = userId;
+    json['user'] = this.userId;
     json['ore'] = oreName;
     json['amount'] = amount;
 
     this.socket.emit('buyOre', json);
   }
 
-  searchAsteroid(userId: string, distance: number) {
+  searchAsteroid(distance: number) {
     const json = {};
 
-    json['user'] = userId;
+    json['user'] = this.userId;
     json['distance'] = distance;
 
     this.socket.emit('searchAster', json);
   }
 
-  chooseAsteroid(userId: string, ind: number) {
+  chooseAsteroid(ind: number) {
     const json = {};
 
-    json['user'] = userId;
+    json['user'] = this.userId;
     json['ind'] = ind;
 
     this.socket.emit('chooseAsteroid', json);
   }
 
-  updateAsteroidTimer(userId: string) {
+  updateAsteroidTimer() {
     const json = {};
 
-    json['user'] = userId;
+    json['user'] = this.userId;
 
     this.socket.emit('updateAsteroidTimer', json);
   }
 
-  rejectResults(userId: string) {
+  rejectResults() {
     const json = {};
 
-    json['user'] = userId;
+    json['user'] = this.userId;
 
     this.socket.emit('rejectResults', json);
   }
 
-  removeChest(userId: string, numberOfChest: number) {
+  removeChest(numberOfChest: number) {
     const json = {};
     json['numberOfChest'] = numberOfChest - 1;
-    json['user'] = userId;
+    json['user'] = this.userId;
 
     this.socket.emit('removeChest', json);
   }
 
-  newChest(userId: string) {
+  newChest() {
     const json = {};
-    json['userID'] = userId;
+    json['userID'] = this.userId;
     this.socket.emit('newChest', json);
   }
 
-  deleteEvent(userId: string) {
+  deleteEvent() {
     const json = {};
-    json['userID'] = userId;
+    json['userID'] = this.userId;
     this.socket.emit('deleteEvent', json);
   }
 
-  initializeUser(userId: string, email: string, pseudo: string) {
+  initializeUser(email: string, pseudo: string) {
     const json = {};
-    json['user'] = userId;
+    json['user'] = this.userId;
     json['email'] = email;
     json['pseudo'] = pseudo;
     this.socket.emit('initializeUser', json);
   }
 
-  reachFrenzy(userId: string) {
+  reachFrenzy() {
     const json = {};
-    json['user'] = userId;
+    json['user'] = this.userId;
     this.socket.emit('reachFrenzy', json);
   }
-  validArrow(userId: string, keyCode: number, keyInd: number) {
+  validArrow(keyCode: number, keyInd: number) {
     const json = {};
-    json['user'] = userId;
+    json['user'] = this.userId;
     json['keyCode'] = keyCode;
     json['keyInd'] = keyInd;
     this.socket.emit('validArrow', json);
   }
 
-  badConfigBdd(userId: string, isBadConfig: boolean) {
+  badConfigBdd(isBadConfig: boolean) {
     const json = {};
-    json['user'] = userId;
+    json['user'] = this.userId;
     json['isBadConfig'] = isBadConfig;
     this.socket.emit('changeBadConfig', json);
   }
@@ -173,9 +184,9 @@ export class SocketService {
   /**
    * Activate the boost of a user
    */
-  public activateBoost(userId: string, type: number) {
+  public activateBoost(type: number) {
     this.socket.emit('activateBoost', {
-      user: userId,
+      user: this.userId,
       type: type
     });
   }

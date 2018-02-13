@@ -71,7 +71,7 @@ export class AsteroidViewComponent implements OnInit {
 
     setInterval(() => {
       if (this.asteroid != null && this.asteroid.currentCapacity > 0) {
-        this.socketS.incrementOre(this.userS.currentUser.uid, this.asteroid.ore,
+        this.socketS.incrementOre(this.asteroid.ore,
           parseFloat((this.userS.currentUser.currentMineRate *
             this.asteroid.purity / 100 *
             this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2)));
@@ -248,7 +248,7 @@ export class AsteroidViewComponent implements OnInit {
     this.userS.modifyCurrentMineRate(newRate <= max ? newRate : max);
 
     if (coefClick >= 1) {
-      this.socketS.reachFrenzy(this.userS.currentUser.uid);
+      this.socketS.reachFrenzy();
     }
     if (!this.frenzyMOD) {
       if (coefClick > 0.5) {
@@ -355,8 +355,8 @@ export class AsteroidViewComponent implements OnInit {
         tempSprite[1].gotoAndPlay(0);
         tempSprite[2].gotoAndPlay(0);
         tempSprite[2].onComplete = () => {
-          this.socketS.newChest(this.userS.currentUser.uid);
-          this.socketS.deleteEvent(this.userS.currentUser.uid);
+          this.socketS.newChest();
+          this.socketS.deleteEvent();
         };
       });
     }
@@ -388,7 +388,7 @@ export class AsteroidViewComponent implements OnInit {
   // frenzy Touch
   frenzyModTouch(numTouchUserActu: number) {
     if (this.frenzyInfo.state) {
-      this.socketS.validArrow(this.userS.currentUser.uid, numTouchUserActu - 37, this.userS.currentUser.frenzy.comboInd);
+      this.socketS.validArrow( numTouchUserActu - 37, this.userS.currentUser.frenzy.comboInd);
       if (this.frenzyInfo.nextCombos[this.userS.currentUser.frenzy.comboInd] === (numTouchUserActu - 37)) {
         this.userS.currentUser.frenzy.comboInd++;
         this.asteroidSprite.frenzyModTouch(this.frenzyInfo.nextCombos[this.userS.currentUser.frenzy.comboInd]);

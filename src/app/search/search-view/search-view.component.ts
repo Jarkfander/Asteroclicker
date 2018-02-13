@@ -95,7 +95,7 @@ export class SearchViewComponent implements OnInit {
    */
   /** Launch search asteroid */
   public searchNewAster() {
-    this.socketS.searchAsteroid(this.userS.currentUser.uid, this.distance);
+    this.socketS.searchAsteroid(this.distance);
   }
   /** Set distance and estimated time for searching */
   public searchTimeUpdate(distance: number) {
@@ -116,7 +116,7 @@ export class SearchViewComponent implements OnInit {
   }
   /** Look for new asteroids */
   public rejectResults() {
-    this.socketS.rejectResults(this.userS.currentUser.uid);
+    this.socketS.rejectResults();
   }
 
   /**
@@ -126,7 +126,7 @@ export class SearchViewComponent implements OnInit {
   private updateTimer() {
     if (!this.search || this.search.start === 0) { return; }
     if (this.search.state === 1 || this.search.state === 3) {
-      this.socketS.updateAsteroidTimer(this.userS.currentUser.uid);
+      this.socketS.updateAsteroidTimer();
     }
   }
 
