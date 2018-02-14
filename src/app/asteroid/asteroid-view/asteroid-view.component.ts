@@ -55,6 +55,8 @@ export class AsteroidViewComponent implements OnInit {
   private userMineRateLvl = 1;
   public clicked: boolean;
 
+  private numberOfClick: number = 0;
+
   private frenzyInfo: IFrenzyInfo = {
     state: 0,
     nextCombos: {}
@@ -74,10 +76,13 @@ export class AsteroidViewComponent implements OnInit {
 
     setInterval(() => {
       if (this.asteroid != null && this.asteroid.currentCapacity > 0) {
-        this.socketS.incrementOre(this.asteroid.ore,
+        this.socketS.breakIntoCollectible(
           parseFloat((this.userS.currentUser.currentMineRate *
             this.asteroid.purity / 100 *
             this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2)));
+            
+        this.socketS.updateClickGauge(this.numberOfClick);
+        this.numberOfClick = 0;
       }
     }, 1000);
     this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
@@ -192,47 +197,47 @@ export class AsteroidViewComponent implements OnInit {
 
       });
 
-          // Asteroid is empty
-    this.asteroidS.isEmpty.subscribe((isEmpty: boolean) => {
-      this.drone.setIsAsteLifeSupZero(!isEmpty);
-    });
-
-    // Event Subject
-    this.userS.eventSubject.subscribe((user: User) => {
-      if (this.asteroidSprite) {
-        this.asteroidSprite.eventOk = user.event;
-        this.asteroidSprite.activEvent();
-        this.clickCapsule();
-      }
-    });
-
-    // frenzy Subject
-    this.userS.frenzyInfo.subscribe((frenzy: IFrenzyInfo) => {
-      this.frenzyInfo = frenzy;
-      this.frenzyModGoOrNot(frenzy);
-    });
-    // Profile Subject
-    this.userS.profile.subscribe((profile: IProfile) => {
-      profile.badConfig ? this.backgroundSky.stop() : this.backgroundSky.play();
-    });
-
-    // Upgrade Subject
-    this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
-      const tempLvl = upgrade.lvl;
-      this.drone.changeSpriteDrone(upgrade.lvl);
-    });
-
-    // upgrade Storage
-    this.userS.getUpgradeByName('storage')
-      .subscribe((userUpgrade) => {
-        this.storageCapacityMax = this.resourcesS[userUpgrade.name][userUpgrade.lvl].capacity;
+      // Asteroid is empty
+      this.asteroidS.isEmpty.subscribe((isEmpty: boolean) => {
+        this.drone.setIsAsteLifeSupZero(!isEmpty);
       });
 
-    // User ore amounts
-    this.oreS.OreAmounts
-      .subscribe((oreAmount: IOreAmounts) => {
-        this.drone.setIsUserHaveMaxCapacityStorage(this.asteroid && oreAmount[this.asteroid.ore] >= this.storageCapacityMax);
+      // Event Subject
+      this.userS.eventSubject.subscribe((user: User) => {
+        if (this.asteroidSprite) {
+          this.asteroidSprite.eventOk = user.event;
+          this.asteroidSprite.activEvent();
+          this.clickCapsule();
+        }
       });
+
+      // frenzy Subject
+      this.userS.frenzyInfo.subscribe((frenzy: IFrenzyInfo) => {
+        this.frenzyInfo = frenzy;
+        this.frenzyModGoOrNot(frenzy);
+      });
+      // Profile Subject
+      this.userS.profile.subscribe((profile: IProfile) => {
+        profile.badConfig ? this.backgroundSky.stop() : this.backgroundSky.play();
+      });
+
+      // Upgrade Subject
+      this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
+        const tempLvl = upgrade.lvl;
+        this.drone.changeSpriteDrone(upgrade.lvl);
+      });
+
+      // upgrade Storage
+      this.userS.getUpgradeByName('storage')
+        .subscribe((userUpgrade) => {
+          this.storageCapacityMax = this.resourcesS[userUpgrade.name][userUpgrade.lvl].capacity;
+        });
+
+      // User ore amounts
+      this.oreS.OreAmounts
+        .subscribe((oreAmount: IOreAmounts) => {
+          this.drone.setIsUserHaveMaxCapacityStorage(this.asteroid && oreAmount[this.asteroid.ore] >= this.storageCapacityMax);
+        });
 
     });
 
@@ -241,11 +246,13 @@ export class AsteroidViewComponent implements OnInit {
   asteroidClick() {
     // ga('asteroid.send', 'event', 'buttons', 'click', 'asteroid');
     if (!this.userS.currentUser.frenzy.state) {
+      this.numberOfClick++;
       this.clicks.push(Date.now());
     }
   }
 
   updateClick() {
+
     const max = this.resourcesS.mineRate[this.userMineRateLvl].maxRate;
     const base = this.resourcesS.mineRate[this.userMineRateLvl].baseRate;
 
