@@ -150,10 +150,15 @@ export class AsteroidViewComponent implements OnInit {
       this.asteroidClick();
     });
 
+<<<<<<< HEAD
 
     for (let i = 0; i < 20; i++) {
+=======
+/*
+    for (let i = 0; i < 20 ; i++) {
+>>>>>>> fix collectible
       this.asteroidSprite.generatePiece('carbon', i);
-    }
+    }*/
 
     this.asteroidSprite.eventOk = this.userS.currentUser.event;
     this.asteroidSprite.activEvent();
