@@ -95,7 +95,7 @@ export class QgViewComponent implements OnInit {
     for (let i = 0; i < keysCost.length; i++) {
       if (keysCost[i] === 'credit') {
         if (this.credit < tempUpgradeCost[keysCost[i]]) {
-          this.notif.alert('Not enough credit', 'You need ' + tempUpgradeCost[keysCost[i]]);
+          this.notif.alert('Not enough credit', 'You need ' + Math.round(tempUpgradeCost[keysCost[i]] - this.credit) + ' more !');
           return false;
         }
       }
@@ -104,7 +104,7 @@ export class QgViewComponent implements OnInit {
         return false;
       }
       if (this.oreAmount[keysCost[i]] < tempUpgradeCost[keysCost[i]]) {
-        this.notif.alert('Not enouh ' + keysCost[i], 'You need ' + tempUpgradeCost[keysCost[i]]);
+        this.notif.alert('Not enouh ' + keysCost[i], 'You need ' + Math.round(tempUpgradeCost[keysCost[i]] - this.oreAmount[keysCost[i]]) + ' more !');
         return false;
       }
     }
