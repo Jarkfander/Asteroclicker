@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { getFramesFromSpriteSheet, initSprite } from '../../loadAnimation';
+import { Vector2 } from '../../shared/utils';
 
 export enum STATS_DRONE {
     MINING,
@@ -8,36 +9,6 @@ export enum STATS_DRONE {
     NO_MINING,
     MOD_FRENZY
 }
-
-export class Vector2 {
-    x: number;
-    y: number;
-    rotate: number;
-    constructor() { }
-
-    initXY(_x: number, _y: number) {
-        this.x = _x;
-        this.y = _y;
-    }
-
-    initXYVector(vect: Vector2) {
-        this.x = vect.x;
-        this.y = vect.y;
-    }
-    // LERP - - - - - - -
-    lerp(_x: number, _y: number, delta: number) {
-        this.x += (_x - this.x) * delta;
-        this.y += (_y - this.y) * delta;
-        return this;
-    }
-
-    // LERP Rotation - - - - - - -
-    lerpRotate(_rotate: number, delta: number) {
-        this.rotate += (_rotate - this.rotate) * delta;
-        return this.rotate;
-    }
-}
-
 
 export class Drone {
     isFirstTimeBack: boolean;

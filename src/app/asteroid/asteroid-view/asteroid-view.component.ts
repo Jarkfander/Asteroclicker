@@ -146,8 +146,10 @@ export class AsteroidViewComponent implements OnInit {
     });
 
 
-    this.asteroidSprite.generatePiece('carbon');
-    
+    for (let i = 0; i < 20 ; i++) {
+      this.asteroidSprite.generatePiece('carbon', i);
+    }
+
     this.asteroidSprite.eventOk = this.userS.currentUser.event;
     this.asteroidSprite.activEvent();
     this.clickCapsule();
