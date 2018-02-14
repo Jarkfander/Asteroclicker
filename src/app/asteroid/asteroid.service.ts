@@ -9,6 +9,7 @@ import 'rxjs/add/operator/mergeMap';
 export interface IAsteroid {
   capacity: number;
   currentCapacity: number;
+  collectible: number;
   ore: string;
   purity: number;
   seed: string;
@@ -38,5 +39,6 @@ export class AsteroidService {
          Math.floor((asteroid.currentCapacity / asteroid.capacity) * 5))
        )
    }*/
+   
 
 }

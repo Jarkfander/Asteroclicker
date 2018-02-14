@@ -57,6 +57,10 @@ export interface IUserUpgrade {
   timer: number;
 }
 
+export interface IMiningInfo{
+  clickGauge : number;
+}
+
 @Injectable()
 export class UserService {
 
@@ -118,6 +122,10 @@ export class UserService {
 
   get frenzyTimer(): Observable<number> {
     return this.db.object('users/' + this.currentUser.uid + '/frenzy/time/timer').valueChanges<number>();
+  }
+
+  get miningInfo(): Observable<IMiningInfo> {
+    return this.db.object('users/' + this.currentUser.uid + '/miningInfo').valueChanges<IMiningInfo>();
   }
 
   get profile(): Observable<IProfile> {
