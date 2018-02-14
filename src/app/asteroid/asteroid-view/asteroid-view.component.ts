@@ -75,12 +75,12 @@ export class AsteroidViewComponent implements OnInit {
     this.subjectManage();
 
     setInterval(() => {
-      if (this.asteroid != null && this.asteroid.currentCapacity > 0) {
+      if (this.asteroid != null && this.asteroid.currentCapacity > 0 && this.asteroid.collectible <this.asteroid.currentCapacity) {
         this.socketS.breakIntoCollectible(
           parseFloat((this.userS.currentUser.currentMineRate *
             this.asteroid.purity / 100 *
             this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2)));
-
+            
         this.socketS.updateClickGauge(this.numberOfClick);
         this.numberOfClick = 0;
       }
@@ -282,7 +282,7 @@ export class AsteroidViewComponent implements OnInit {
     this.userS.modifyCurrentMineRate(newRate <= max ? newRate : max);
 
     if (this.coefClick >= 1) {
-      this.socketS.reachFrenzy();
+      //this.socketS.reachFrenzy();
     }
     if (!this.frenzyMOD) {
       if (this.coefClick > 0.5) {

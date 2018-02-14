@@ -1,6 +1,6 @@
 import { Chart } from 'chart.js';
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { IFrenzyInfo, UserService, IUserUpgrade } from './../../shared/user/user.service';
+import { IFrenzyInfo, UserService, IUserUpgrade, IMiningInfo } from './../../shared/user/user.service';
 
 import { IAsteroid, AsteroidService } from './../asteroid.service';
 import { User } from '../../shared/user/user';
@@ -22,8 +22,7 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
   public isEmpty: boolean;
   public mineRate: number;
 
-  private baseMineRate = 0;
-  private userMineRateLvl: number;
+  private clickGauge = 0;
   private progressBarMaxValue: number;
   public progressBarValue: number;
 
@@ -35,8 +34,8 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
 
 
   constructor(private userS: UserService,
-              private asteroidS: AsteroidService,
-              private resourcesS: ResourcesService) {
+    private asteroidS: AsteroidService,
+    private resourcesS: ResourcesService) {
   }
 
   ngOnInit() {
@@ -53,12 +52,11 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
       .map((user: User) => user.currentMineRate)
       .subscribe((mineRate: number) => this.mineRate = mineRate);
 
-    this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
-      this.userMineRateLvl = upgrade.lvl;
-      this.baseMineRate = this.resourcesS.mineRate[upgrade.lvl].baseRate;
-      this.progressBarMaxValue = this.resourcesS.mineRate[upgrade.lvl].maxRate - this.baseMineRate;
+    this.userS.miningInfo.subscribe((info: IMiningInfo) => {
+      this.clickGauge = info.clickGauge;
       this.updateMining();
     });
+
     this.updateMining();
   }
 
@@ -71,23 +69,23 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
 
   /** Update the mining rate chart */
   private updateMining() {
-    if (this.frenzyInfo.state) {
+   /* if (this.frenzyInfo.state) {
       const frenzyTime = this.resourcesS.mineRate[this.userMineRateLvl].frenzyTime;
       this.progressBarValue = this.frenzyTimer / (frenzyTime * 1000);
     } else {
       this.progressBarValue = this.mineRate - this.baseMineRate > 0 ? this.mineRate - this.baseMineRate : 0;
-    }
+    }*/
     this.setMiningRate();
   }
 
   /** Set the mining rate on the chart */
   private setMiningRate() {
     if (this.progressBarValue > 0) {
-      if (this.frenzyInfo.state) {
+    /*  if (this.frenzyInfo.state) {
         this.miningMeter.data.datasets[0].data = [this.progressBarValue, 1 - this.progressBarValue];
-      } else {
-        this.miningMeter.data.datasets[0].data = [this.progressBarValue, this.progressBarMaxValue - this.progressBarValue];
-      }
+      } else {*/
+        this.miningMeter.data.datasets[0].data = [this.clickGauge, 100-this.clickGauge];
+      //}
       this.miningMeter.update();
     }
   }
