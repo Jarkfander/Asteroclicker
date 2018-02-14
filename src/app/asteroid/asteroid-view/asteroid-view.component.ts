@@ -34,6 +34,7 @@ export enum KEY_CODE {
 })
 
 export class AsteroidViewComponent implements OnInit {
+  tempTabDeletePiece: any;
   delta: number;
   coefClick: number;
   frenzyMOD: boolean;
@@ -56,12 +57,9 @@ export class AsteroidViewComponent implements OnInit {
   private userMineRateLvl = 1;
   public clicked: boolean;
 
-<<<<<<< HEAD
-  private numberOfClick: number = 0;
-=======
+  private numberOfClick = 0;
   // Asteroid piece
   AsteroidPieceParent: AsteroidPiece;
->>>>>>> transfert
 
   private frenzyInfo: IFrenzyInfo = {
     state: 0,
@@ -156,26 +154,13 @@ export class AsteroidViewComponent implements OnInit {
     this.asteroidSprite.asteroid[0].on('click', (event) => {
       this.asteroidClick();
     });
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-    for (let i = 0; i < 20; i++) {
-=======
-/*
-    for (let i = 0; i < 20 ; i++) {
->>>>>>> fix collectible
-      this.asteroidSprite.generatePiece('carbon', i);
-    }*/
-=======
     this.AsteroidPieceParent = new AsteroidPiece(PIXI.Texture.fromImage('assets/AsteroidParticle/parentPiece.png'), 0.5, 0, 0, 0, 'carbon');
     this.app.stage.addChild(this.AsteroidPieceParent);
 
     for (let i = 0; i < 300; i++) {
-      this.generatePiece('iron', i);
+      this.generatePiece('iron', 0.1);
     }
     this.tickerApp();
->>>>>>> transfert
 
     this.asteroidSprite.eventOk = this.userS.currentUser.event;
     this.asteroidSprite.activEvent();
@@ -256,33 +241,10 @@ export class AsteroidViewComponent implements OnInit {
         profile.badConfig ? this.backgroundSky.stop() : this.backgroundSky.play();
       });
 
-<<<<<<< HEAD
-
       // Upgrade Subject
       this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
         const tempLvl = upgrade.lvl;
         this.drone.changeSpriteDrone(upgrade.lvl);
-=======
-      // Upgrade Subject
-      this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
-        const tempLvl = upgrade.lvl;
-        this.drone.changeSpriteDrone(upgrade.lvl);
-      });
-
-      // upgrade Storage
-      this.userS.getUpgradeByName('storage')
-        .subscribe((userUpgrade) => {
-          this.storageCapacityMax = this.resourcesS[userUpgrade.name][userUpgrade.lvl].capacity;
-        });
-      // frenzy Subject
-      this.userS.frenzyInfo.subscribe((frenzy: IFrenzyInfo) => {
-        this.frenzyInfo = frenzy;
-        this.frenzyModGoOrNot(frenzy);
-      });
-      // Profile Subject
-      this.userS.profile.subscribe((profile: IProfile) => {
-        profile.badConfig ? this.backgroundSky.stop() : this.backgroundSky.play();
->>>>>>> transfert
       });
 
       // upgrade Storage
@@ -521,8 +483,9 @@ export class AsteroidViewComponent implements OnInit {
   }
 
   // detroy
-  detroyPiece() {
-    
+  detroyPiece(values, orename, i) {
+    this.tempTabDeletePiece.push(i);
+    this.socketS.pickUpCollectible(orename, values);
   }
 
   lerpVector2(sourceX, sourceY, destX, destY, delta, isRotate = false) {
@@ -552,6 +515,8 @@ export class AsteroidViewComponent implements OnInit {
         if (pieceAsterCast.isOver) {
           if (pieceAster.y >= this.app.renderer.height + 48) {
             // stocker un tableau de chiffre puis les delete à la fin de la lecture
+            this.detroyPiece(pieceAsterCast.values, pieceAsterCast.type, i);
+            pieceAsterCast.isOver = false;
           } else {
             const vect = this.lerpVector2(pieceAster.x, pieceAster.y, this.app.renderer.width / 4, this.app.renderer.height + 50, 0.08);
             pieceAster.x = vect.x;
@@ -562,7 +527,6 @@ export class AsteroidViewComponent implements OnInit {
           pieceAster.y = pieceAsterCast.basePosY + Math.sin(this.delta) * -2.05 * (3 + pieceAsterCast.moveSpace);
         }
       }
-
       this.asteroidSprite.tickerAppAsteroid();
     });
   }
