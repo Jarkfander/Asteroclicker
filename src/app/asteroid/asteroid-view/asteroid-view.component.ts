@@ -5,7 +5,7 @@ import { AsteroidSprite } from './asteroidSprite';
 import { AsteroidPiece } from './asteroidPiece';
 import { Drone, STATS_DRONE } from './drone';
 import { SocketService } from '../../shared/socket/socket.service';
-import { UserService, IFrenzyInfo, IProfile, IUserUpgrade } from '../../shared/user/user.service';
+import { UserService, IFrenzyInfo, IProfile, IUserUpgrade, IMiningInfo } from '../../shared/user/user.service';
 import { ParticleBase } from '../../shared/pixiVisual/particleBase';
 import { User } from '../../shared/user/user';
 import { UpgradeType, Upgrade } from '../../ship/upgrade-class/upgrade';
@@ -58,6 +58,7 @@ export class AsteroidViewComponent implements OnInit {
   public clicked: boolean;
 
   private numberOfClick = 0;
+  private clickGauge= 0;
   // Asteroid piece
   AsteroidPieceParent: AsteroidPiece;
 
@@ -89,6 +90,16 @@ export class AsteroidViewComponent implements OnInit {
         this.numberOfClick = 0;
       }
     }, 1000);
+
+    this.userS.miningInfo.subscribe((info: IMiningInfo) => {
+
+      if(this.clickGauge > info.clickGauge){
+        
+      }
+      this.clickGauge = info.clickGauge;
+      
+    });
+
     this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
       this.userMineRateLvl = upgrade.lvl;
       this.initNumberOfDroneBegin();
