@@ -79,12 +79,12 @@ export class AsteroidViewComponent implements OnInit {
     this.subjectManage();
 
     setInterval(() => {
-      if (this.asteroid != null && this.asteroid.currentCapacity > 0 && this.asteroid.collectible <this.asteroid.currentCapacity) {
+      if (this.asteroid != null && this.asteroid.currentCapacity > 0 && this.asteroid.collectible < this.asteroid.currentCapacity) {
         this.socketS.breakIntoCollectible(
           parseFloat((this.userS.currentUser.currentMineRate *
             this.asteroid.purity / 100 *
             this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2)));
-            
+
         this.socketS.updateClickGauge(this.numberOfClick);
         this.numberOfClick = 0;
       }
@@ -506,7 +506,6 @@ export class AsteroidViewComponent implements OnInit {
 
   // detroy
   detroyPiece(values, orename, i) {
-    this.tempTabDeletePiece.push(i);
     this.socketS.pickUpCollectible(orename, values);
   }
 
