@@ -2,6 +2,7 @@ import { Component, AfterViewInit, ElementRef, Renderer2, HostListener } from '@
 import * as PIXI from 'pixi.js';
 
 import { AsteroidSprite } from './asteroidSprite';
+import { AsteroidPiece } from './asteroidPiece';
 import { Drone, STATS_DRONE } from './drone';
 import { SocketService } from '../../shared/socket/socket.service';
 import { UserService, IFrenzyInfo, IProfile, IUserUpgrade } from '../../shared/user/user.service';
@@ -15,8 +16,7 @@ import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Observable } from 'rxjs/Observable';
 import { OreService, IOreAmounts } from '../../ore/ore.service';
 import { ResourcesService } from '../../shared/resources/resources.service';
-
-
+import { Vector2 } from '../../shared/utils';
 
 export enum KEY_CODE {
   LEFT_ARROW = 37,
@@ -34,6 +34,7 @@ export enum KEY_CODE {
 })
 
 export class AsteroidViewComponent implements OnInit {
+  delta: number;
   coefClick: number;
   frenzyMOD: boolean;
   storageCapacityMax: number;
@@ -55,7 +56,12 @@ export class AsteroidViewComponent implements OnInit {
   private userMineRateLvl = 1;
   public clicked: boolean;
 
+<<<<<<< HEAD
   private numberOfClick: number = 0;
+=======
+  // Asteroid piece
+  AsteroidPieceParent: AsteroidPiece;
+>>>>>>> transfert
 
   private frenzyInfo: IFrenzyInfo = {
     state: 0,
@@ -141,6 +147,7 @@ export class AsteroidViewComponent implements OnInit {
   private initAsteroid(newAste: IAsteroid) {
     const w = this.el.nativeElement.offsetWidth;
     const h = this.el.nativeElement.offsetHeight;
+    this.delta = 0;
     // skyV1
     this.initSky(w, h);
 
@@ -151,9 +158,12 @@ export class AsteroidViewComponent implements OnInit {
     });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 /*
     for (let i = 0; i < 20 ; i++) {
 =======
+=======
+>>>>>>> transfert
 <<<<<<< HEAD
 
     for (let i = 0; i < 20; i++) {
@@ -164,6 +174,15 @@ export class AsteroidViewComponent implements OnInit {
 >>>>>>> fix collectible
       this.asteroidSprite.generatePiece('carbon', i);
     }*/
+=======
+    this.AsteroidPieceParent = new AsteroidPiece(PIXI.Texture.fromImage('assets/AsteroidParticle/parentPiece.png'), 0.5, 0, 0, 0, 'carbon');
+    this.app.stage.addChild(this.AsteroidPieceParent);
+
+    for (let i = 0; i < 300; i++) {
+      this.generatePiece('iron', i);
+    }
+    this.tickerApp();
+>>>>>>> transfert
 
     this.asteroidSprite.eventOk = this.userS.currentUser.event;
     this.asteroidSprite.activEvent();
@@ -244,11 +263,33 @@ export class AsteroidViewComponent implements OnInit {
       profile.badConfig ? this.backgroundSky.stop() : this.backgroundSky.play();
     });
 
+<<<<<<< HEAD
 
       // Upgrade Subject
       this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
         const tempLvl = upgrade.lvl;
         this.drone.changeSpriteDrone(upgrade.lvl);
+=======
+      // Upgrade Subject
+      this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
+        const tempLvl = upgrade.lvl;
+        this.drone.changeSpriteDrone(upgrade.lvl);
+      });
+
+      // upgrade Storage
+      this.userS.getUpgradeByName('storage')
+        .subscribe((userUpgrade) => {
+          this.storageCapacityMax = this.resourcesS[userUpgrade.name][userUpgrade.lvl].capacity;
+        });
+      // frenzy Subject
+      this.userS.frenzyInfo.subscribe((frenzy: IFrenzyInfo) => {
+        this.frenzyInfo = frenzy;
+        this.frenzyModGoOrNot(frenzy);
+      });
+      // Profile Subject
+      this.userS.profile.subscribe((profile: IProfile) => {
+        profile.badConfig ? this.backgroundSky.stop() : this.backgroundSky.play();
+>>>>>>> transfert
       });
 
       // upgrade Storage
@@ -454,5 +495,82 @@ export class AsteroidViewComponent implements OnInit {
       this.drone = new Drone(0.20, 0.20, 1, 1, false, this.app);
     }
     this.drone.changeSpriteDrone(this.userMineRateLvl);
+  }
+
+
+  /*
+  * Managed asteroid piece
+  */
+  // Piece of aste
+  generatePiece(oreName: string, values) {
+
+    const randomX = Math.random() * (this.app.renderer.width - 150) + 80;
+    const randomY = Math.random() * (this.app.renderer.height - 150) + 80;
+
+    const sprite = new AsteroidPiece(PIXI.Texture.fromImage('assets/AsteroidParticle/' + oreName + 'Particle.png'), Math.random() * 2, randomX, randomY, values, oreName);
+    sprite.texture.baseTexture.mipmap = true;
+    sprite.anchor.set(0.5);
+
+    sprite.x = randomX;
+    sprite.y = randomY;
+
+    sprite.rotation = Math.random() * 180;
+    const randomScale = Math.random() + 0.5;
+    sprite.scale.set(0.25 * randomScale, 0.25 * randomScale);
+
+    sprite.interactive = true;
+    sprite.buttonMode = true;
+
+    this.AsteroidPieceParent.addChild(sprite);
+    sprite.on('mouseover', (event) => {
+      sprite.isOver = true;
+    });
+  }
+
+  // detroy
+  detroyPiece() {
+    
+  }
+
+  lerpVector2(sourceX, sourceY, destX, destY, delta, isRotate = false) {
+    const vect = new Vector2(); const vectorTemp = new Vector2();
+    vectorTemp.initXY(sourceX, sourceY);
+    vect.initXYVector(vectorTemp.lerp(destX, destY, delta));
+    return vect;
+  }
+
+
+  /*
+  *  App Ticker Delta
+  */
+  tickerApp() {
+    this.app.ticker.add((delta) => {
+      if (this.delta > 2 * Math.PI) {
+        this.delta = 0;
+      }
+      this.delta += (2 * Math.PI) / 1000;
+      let pieceAster = this.AsteroidPieceParent.children[0];
+      let pieceAsterCast = (this.AsteroidPieceParent.children[0] as AsteroidPiece);
+      for (let i = 0; i < this.AsteroidPieceParent.children.length; i++) {
+
+        pieceAster = this.AsteroidPieceParent.children[i];
+        pieceAsterCast = (this.AsteroidPieceParent.children[i] as AsteroidPiece);
+
+        if (pieceAsterCast.isOver) {
+          if (pieceAster.y >= this.app.renderer.height + 48) {
+            // stocker un tableau de chiffre puis les delete à la fin de la lecture
+          } else {
+            const vect = this.lerpVector2(pieceAster.x, pieceAster.y, this.app.renderer.width / 4, this.app.renderer.height + 50, 0.08);
+            pieceAster.x = vect.x;
+            pieceAster.y = vect.y;
+          }
+        } else {
+          pieceAster.x = pieceAsterCast.basePosX + Math.cos(this.delta) * -2.40 * (3 + pieceAsterCast.moveSpace);
+          pieceAster.y = pieceAsterCast.basePosY + Math.sin(this.delta) * -2.05 * (3 + pieceAsterCast.moveSpace);
+        }
+      }
+
+      this.asteroidSprite.tickerAppAsteroid();
+    });
   }
 }
