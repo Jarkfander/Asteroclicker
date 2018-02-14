@@ -20,7 +20,6 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
   private miningMeter: Chart;
   public asteroid: IAsteroid;
   public isEmpty: boolean;
-  public mineRate: number;
 
   private clickGauge = 0;
   private progressBarMaxValue: number;
@@ -39,55 +38,33 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.setMiningCharts();
+
     this.userS.frenzyInfo
       .subscribe((fInfo: IFrenzyInfo) => this.frenzyInfo = fInfo);
 
     this.userS.frenzyTimer
       .subscribe((timer: number) => this.frenzyTimer = timer);
 
-    this.userS.mineRateSubject
-      .subscribe(() => this.updateMining());
-
-    this.userS.mineRateSubject
-      .map((user: User) => user.currentMineRate)
-      .subscribe((mineRate: number) => this.mineRate = mineRate);
-
     this.userS.miningInfo.subscribe((info: IMiningInfo) => {
       this.clickGauge = info.clickGauge;
-      this.updateMining();
+      this.setMiningRate();
     });
 
-    this.updateMining();
+    this.setMiningRate();
   }
 
   ngAfterViewInit() {
-    this.setMiningCharts();
     this.asteroidS.asteroid$
       .do((asteroid: IAsteroid) => this.isEmpty = (asteroid.currentCapacity === 0))
       .subscribe((asteroid: IAsteroid) => this.asteroid = asteroid);
   }
 
-  /** Update the mining rate chart */
-  private updateMining() {
-   /* if (this.frenzyInfo.state) {
-      const frenzyTime = this.resourcesS.mineRate[this.userMineRateLvl].frenzyTime;
-      this.progressBarValue = this.frenzyTimer / (frenzyTime * 1000);
-    } else {
-      this.progressBarValue = this.mineRate - this.baseMineRate > 0 ? this.mineRate - this.baseMineRate : 0;
-    }*/
-    this.setMiningRate();
-  }
 
   /** Set the mining rate on the chart */
   private setMiningRate() {
-    if (this.progressBarValue > 0) {
-    /*  if (this.frenzyInfo.state) {
-        this.miningMeter.data.datasets[0].data = [this.progressBarValue, 1 - this.progressBarValue];
-      } else {*/
-        this.miningMeter.data.datasets[0].data = [this.clickGauge, 100-this.clickGauge];
-      //}
-      this.miningMeter.update();
-    }
+    this.miningMeter.data.datasets[0].data = [this.clickGauge, 100 - this.clickGauge];
+    this.miningMeter.update();
   }
 
   /** Setup the mining chart */
