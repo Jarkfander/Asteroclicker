@@ -4,9 +4,34 @@ import * as PIXIParticles from 'pixi-particles';
 import { getFramesFromSpriteSheet, initSprite } from '../../loadAnimation';
 import { ParticleBase } from '../../shared/pixiVisual/particleBase';
 import { IAsteroid } from '../asteroid.service';
+import { Vector2 } from '../../shared/utils';
+
+class PieceAster extends PIXI.Sprite {
+    public sprite: PIXI.Sprite;
+    public moveSpace: number;
+    public isOver: boolean;
+    public values: number;
+    public type: string;
+
+    public basePosX: number;
+    public basePosY: number;
+
+    constructor(_sprite: PIXI.Texture, _moveSpace: number, _x, _y, _values, _type) {
+        super(_sprite);
+        this.values = _values;
+        this.type = _type;
+        this.basePosX = _x;
+        this.basePosY = _y;
+        this.moveSpace = _moveSpace;
+        this.isOver = false;
+    }
+}
 
 export class AsteroidSprite {
     asteroid: PIXI.Sprite[];
+
+    pieceAsterParent: PieceAster;
+
     app: PIXI.Application;
     clickEmitter: ParticleBase;
     destructionEmitter: ParticleBase;
@@ -59,6 +84,7 @@ export class AsteroidSprite {
         this.compteurEvent = 0;
         this.boolEvent = false;
         this.asteroid = new Array<PIXI.Sprite>();
+
         this.spriteStar = initSprite('etoile_filante', 500, 172, true, true, 0.30);
         this.spriteStarXY = { x: -200, y: 800 };
         this.spriteStar.scale.set(0.5, 0.5);
@@ -69,6 +95,9 @@ export class AsteroidSprite {
         this.spriteStar.onComplete = () => { this.spriteStar.visible = false; };
 
         this.app.stage.addChild(this.spriteStar);
+
+        this.pieceAsterParent = new PieceAster(PIXI.Texture.fromImage('assets/AsteroidParticle/parentPiece.png'), 0.5, 0, 0, 0, 'carbon');
+        this.app.stage.addChild(this.pieceAsterParent);
         // Frenzy init
         this.frenzyModInit();
 
@@ -124,6 +153,28 @@ export class AsteroidSprite {
                 }
                 this.asteroid[0].x = this.xBaseAsteroid + Math.cos(shakeAstex) * -5;
                 this.asteroid[0].y = this.yBaseAsteroid + Math.sin(shakeAstey) * -15;
+
+                let pieceAster = this.pieceAsterParent.children[0];
+                let pieceAsterCast = (this.pieceAsterParent.children[0] as PieceAster);
+                for (let i = 0 ; i < this.pieceAsterParent.children.length ; i++) {
+
+                    pieceAster = this.pieceAsterParent.children[i];
+                    pieceAsterCast = (this.pieceAsterParent.children[i] as PieceAster);
+
+                    if (pieceAsterCast.isOver) {
+                        if (pieceAster.y >= this.app.renderer.height + 48) {
+                            // stocker un tableau de chiffre puis les delete à la fin de la lecture
+                        } else {
+                            const vect = this.lerpVector2(pieceAster.x, pieceAster.y, this.app.renderer.width / 4, this.app.renderer.height + 50, 0.08);
+                            pieceAster.x = vect.x;
+                            pieceAster.y = vect.y;
+                        }
+                    } else {
+                        pieceAster.x = pieceAsterCast.basePosX + Math.cos(this.delta) * -2.40 * (3 + pieceAsterCast.moveSpace);
+                        pieceAster.y = pieceAsterCast.basePosY + Math.sin(this.delta) * -2.05 * (3 + pieceAsterCast.moveSpace);
+                    }
+
+                }
 
                 if (this.spriteStar.position.x < 1000) {
                     this.spriteStar.position.x = this.spriteStarXY.x + this.delta * 2000;
@@ -516,7 +567,7 @@ export class AsteroidSprite {
 
             this.posXArrow = this.xBaseAsteroid + randomX;
             this.posYArrow = this.yBaseAsteroid + randomY;
-            this.arrowFrenzy[numTouch].position.set(this.posXArrow, this.posYArrow );
+            this.arrowFrenzy[numTouch].position.set(this.posXArrow, this.posYArrow);
             this.arrowFrenzy[numTouch].visible = true;
         }
 
@@ -592,5 +643,43 @@ export class AsteroidSprite {
             this.comboSuccesLoop.gotoAndPlay(0);
             this.comboSucces.visible = false;
         };
+    }
+
+    // Piece of aste
+    generatePiece(oreName: string, values) {
+
+        const randomX = Math.random() * ( this.app.renderer.width - 150) + 80;
+        const randomY = Math.random() * ( this.app.renderer.height - 150) + 80;
+
+        const sprite = new PieceAster(PIXI.Texture.fromImage('assets/AsteroidParticle/' + oreName + 'Particle.png'), Math.random() * 2, randomX, randomY, values, oreName);
+        sprite.texture.baseTexture.mipmap = true;
+        sprite.anchor.set(0.5);
+
+        sprite.x = randomX;
+        sprite.y = randomY;
+
+        sprite.rotation = Math.random() * 180;
+        const randomScale = Math.random() + 0.5;
+        sprite.scale.set(0.25 * randomScale, 0.25 * randomScale);
+
+        sprite.interactive = true;
+        sprite.buttonMode = true;
+
+        this.pieceAsterParent.addChild(sprite);
+        sprite.on('mouseover', (event) => {
+            sprite.isOver = true;
+        });
+    }
+
+    // detroy
+    detroyPiece() {
+
+    }
+
+    lerpVector2(sourceX, sourceY, destX, destY, delta, isRotate = false) {
+        const vect = new Vector2(); const vectorTemp = new Vector2();
+        vectorTemp.initXY(sourceX, sourceY);
+        vect.initXYVector(vectorTemp.lerp(destX, destY, delta));
+        return vect;
     }
 }

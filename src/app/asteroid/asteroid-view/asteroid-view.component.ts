@@ -80,7 +80,7 @@ export class AsteroidViewComponent implements OnInit {
           parseFloat((this.userS.currentUser.currentMineRate *
             this.asteroid.purity / 100 *
             this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2)));
-            
+
         this.socketS.updateClickGauge(this.numberOfClick);
         this.numberOfClick = 0;
       }
@@ -151,6 +151,10 @@ export class AsteroidViewComponent implements OnInit {
     });
 
 
+    for (let i = 0; i < 20; i++) {
+      this.asteroidSprite.generatePiece('carbon', i);
+    }
+
     this.asteroidSprite.eventOk = this.userS.currentUser.event;
     this.asteroidSprite.activEvent();
     this.clickCapsule();
@@ -220,6 +224,16 @@ export class AsteroidViewComponent implements OnInit {
       this.userS.profile.subscribe((profile: IProfile) => {
         profile.badConfig ? this.backgroundSky.stop() : this.backgroundSky.play();
       });
+      // frenzy Subject
+      this.userS.frenzyInfo.subscribe((frenzy: IFrenzyInfo) => {
+        this.frenzyInfo = frenzy;
+        this.frenzyModGoOrNot(frenzy);
+      });
+      // Profile Subject
+      this.userS.profile.subscribe((profile: IProfile) => {
+        profile.badConfig ? this.backgroundSky.stop() : this.backgroundSky.play();
+      });
+
 
       // Upgrade Subject
       this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {

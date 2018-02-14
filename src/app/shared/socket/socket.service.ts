@@ -76,7 +76,7 @@ export class SocketService {
 
     json['user'] = this.userId;
     json['upgrade'] = upgradeName;
-
+    
     this.socket.emit('upgradeShipOre', json);
   }
 
