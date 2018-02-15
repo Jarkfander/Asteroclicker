@@ -87,7 +87,7 @@ export class AsteroidViewComponent implements OnInit {
 
     setInterval(() => {
       if (this.asteroid != null && this.asteroid.currentCapacity > 0 && this.asteroid.collectible < this.asteroid.currentCapacity) {
-        const amounts = parseFloat((this.userS.currentUser.currentMineRate *
+        const amounts = parseFloat((
           this.asteroid.purity / 100 *
           this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2));
         this.socketS.breakIntoCollectible(amounts);
@@ -100,15 +100,11 @@ export class AsteroidViewComponent implements OnInit {
       }
     }, 1000);
 
-    this.userS.miningInfo.subscribe((info: IMiningInfo) => {
-      this.clickGauge = info.clickGauge;
-    });
-
     this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
       this.userMineRateLvl = upgrade.lvl;
       this.initNumberOfDroneBegin();
     });
-    setInterval(() => { this.updateClick(); }, 100);
+    //setInterval(() => { this.updateClick(); }, 100);
   }
 
   // tslint:disable-next-line:member-ordering
@@ -181,7 +177,6 @@ export class AsteroidViewComponent implements OnInit {
     this.asteroidSprite.asteroid[0].on('click', (event) => {
       this.asteroidClick();
     });
-
     this.asteroidPieceParent = new AsteroidPiece(PIXI.Texture.fromImage('assets/AsteroidParticle/parentPiece.png'), 0.5, 0, 0, 0, 'carbon');
     this.tempTabDeletePiece = new Array<number>();
     this.app.stage.addChild(this.asteroidPieceParent);
@@ -211,17 +206,17 @@ export class AsteroidViewComponent implements OnInit {
       this.initPieceOfDrone();
 
       this.userS.miningInfo.subscribe((info: IMiningInfo) => {
-        const amounts = parseFloat((this.userS.currentUser.currentMineRate *
+        const amounts = parseFloat((
           this.asteroid.purity / 100 *
           this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2));
 
         if (this.clickGauge > info.clickGauge) {
-          console.log(this.clickGauge + "  " + info.clickGauge);
           for (let i = 0; i < 5; i++) {
             this.generatePiece(this.asteroid.ore, amounts, this.xLaser, this.yLaser);
           }
         }
         this.clickGauge = info.clickGauge;
+        this.asteroidSprite.shakeCoef = this.clickGauge * 5;
       });
       // Asteroid Subject
       this.asteroidS.asteroid$.subscribe((asteroid: IAsteroid) => {
@@ -229,11 +224,11 @@ export class AsteroidViewComponent implements OnInit {
 
         const state = this.asteroidSprite.computeState(asteroid);
 
-        if (this.asteroidSprite.state !== -1 && state === -1) {
+        if (this.asteroidSprite.state != -1 && state == -1) {
           this.asteroidSprite.destructBase();
         }
 
-        if (state < this.asteroidSprite.state && state !== -1) {
+        if (state < this.asteroidSprite.state && state != -1) {
           this.asteroidSprite.destructOnePart();
         }
 
@@ -254,7 +249,6 @@ export class AsteroidViewComponent implements OnInit {
 
       // Asteroid is empty
       this.asteroidS.isEmpty.subscribe((isEmpty: boolean) => {
-        console.log('is empty ' + isEmpty);
         this.drone.setIsAsteLifeSupZero(!isEmpty);
       });
 
@@ -267,13 +261,6 @@ export class AsteroidViewComponent implements OnInit {
         }
       });
 
-      // Search
-      this.searchS.search.subscribe((search: ISearch) => {
-        if (search.state === 3) {
-          this.drone.statsActu = STATS_DRONE.GO_OUT;
-          this.pieceGoAway();
-        }
-      });
 
       // frenzy Subject
       this.userS.frenzyInfo.subscribe((frenzy: IFrenzyInfo) => {
@@ -284,20 +271,28 @@ export class AsteroidViewComponent implements OnInit {
       this.userS.profile.subscribe((profile: IProfile) => {
         profile.badConfig ? this.backgroundSky.stop() : this.backgroundSky.play();
       });
-    // frenzy Subject
-    this.userS.frenzyInfo.subscribe((frenzy: IFrenzyInfo) => {
-      this.frenzyInfo = frenzy;
-      this.frenzyModGoOrNot(frenzy);
-    });
-    // Profile Subject
-    this.userS.profile.subscribe((profile: IProfile) => {
-      profile.badConfig ? this.backgroundSky.stop() : this.backgroundSky.play();
-    });
+      // frenzy Subject
+      this.userS.frenzyInfo.subscribe((frenzy: IFrenzyInfo) => {
+        this.frenzyInfo = frenzy;
+        this.frenzyModGoOrNot(frenzy);
+      });
+      // Profile Subject
+      this.userS.profile.subscribe((profile: IProfile) => {
+        profile.badConfig ? this.backgroundSky.stop() : this.backgroundSky.play();
+      });
 
       // Upgrade Subject
       this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
         const tempLvl = upgrade.lvl;
         this.drone.changeSpriteDrone(upgrade.lvl);
+      });
+
+      // Search
+      this.searchS.search.subscribe((search: ISearch) => {
+        if (search.state === 3) {
+          this.drone.statsActu = STATS_DRONE.GO_OUT;
+          this.pieceGoAway();
+        }
       });
 
       // upgrade Storage
