@@ -1,0 +1,39 @@
+<app-modal *ngIf="isModalOpen">
+  <div class="closeLine">
+    <a href="#" (click)="CloseHistory()">Close</a>
+  </div>
+  History of {{oreName.toUpperCase()}} cost for the last 24 hours
+  <div class="histo-curve">
+    <app-curve-view *ngIf="histoValues!=null" [color]='color' [size]='24'></app-curve-view>
+  </div>
+</app-modal>
+
+<article class="row border">
+  <div class="col info">
+    <div class="name row align-center">
+      <img class="button-info" (click)="OpenHistory()" src="assets/oreIcon/{{oreName}}Icon.png" />      
+      <h2>{{oreName}}</h2>
+    </div>
+    <div class="row">
+      {{unitValue}} cr/u
+    </div>
+    <div class="row" tooltip="Amount to sell / buy">
+      <input type="range" min=1 max={{maxSliderValue}} value="{{maxSliderValue/2}}" class="slider" [(ngModel)]="amountToSell">
+    </div>
+
+    <!-- Buy -->
+    <div class="action row align-center justify-around">
+      <button [disabled]="!hasOreLeft" type="button" class="btn-sell" (click)="SellOre(amountToSell);">Sell {{amountToSell.toFixed(1)}}</button>
+      <span class="credit">{{ valuesTotal }} cr</span>
+    </div>
+    <!-- Sell -->
+    <div class="action row align-center justify-around">
+      <button [disabled]="!hasMoney || !hasSpaceLeft" type="button" class="btn-buy" (click)="BuyOre(amountToSell);">Buy {{amountToSell.toFixed(1)}}</button>
+      <span class="credit">{{ valuesTotalWithTaxe }} cr</span>
+    </div>
+  </div>
+
+  <div class="col curve">
+    <app-curve-view #currentCostView [color]="color" [size]="500" ></app-curve-view>
+  </div>
+</article>
