@@ -12,10 +12,10 @@ import { staggerTile } from './../../shared/animations';
 import { ToasterService } from '../../shared/toaster/toaster.service';
 
 export enum searchState {
-    launchSearch,
-    searching,
-    chooseAsteroid,
-    traveling
+  launchSearch,
+  searching,
+  chooseAsteroid,
+  traveling
 }
 
 @Component({
@@ -36,10 +36,10 @@ export class SearchViewComponent implements OnInit {
   public researchInfo: Research;
 
   constructor(private userS: UserService,
-              private resourcesS: ResourcesService,
-              private toasterS: ToasterService,
-              private socketS: SocketService,
-              private searchS: SearchService) {
+    private resourcesS: ResourcesService,
+    private toasterS: ToasterService,
+    private socketS: SocketService,
+    private searchS: SearchService) {
   }
 
   ngOnInit() {
@@ -68,20 +68,22 @@ export class SearchViewComponent implements OnInit {
     if (state === this.currentState) { return; }
     if (!!this.currentState) {
       switch (state) {
-        case (0) : {
+        case (0): {
           this.toasterS.searchInfo('Captain, we are arrived !', '', {
             styles: {
               backgroundImage: 'url(assets/toaster/search-arrived.jpg',
               height: '200px'
-          }});
+            }
+          });
           break;
         }
-        case (2) : {
+        case (2): {
           this.toasterS.searchInfo('Captain, we found an asteroid !', '', {
             styles: {
               backgroundImage: 'url(assets/toaster/search-found.jpg',
               height: '200px'
-          }});
+            }
+          });
           break;
         }
       }
@@ -116,6 +118,7 @@ export class SearchViewComponent implements OnInit {
   }
   /** Look for new asteroids */
   public rejectResults() {
+    this.closeModal();
     this.socketS.rejectResults();
   }
 
@@ -126,6 +129,7 @@ export class SearchViewComponent implements OnInit {
   private updateTimer() {
     if (!this.search || this.search.start === 0) { return; }
     if (this.search.state === 1 || this.search.state === 3) {
+      this.closeModal();
       this.socketS.updateAsteroidTimer();
     }
   }
