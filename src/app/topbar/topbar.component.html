@@ -1,0 +1,51 @@
+<header class="col justify-between">
+    <article [@stagger-tile] class="row-reverse align-center justify-start">
+      <!--
+      <div>
+          <a href="#" (click)="openQuestModal()">Glory quest</a> <br>
+        <div *ngIf="questS.questGroup.values > 0">
+          {{ questS.questGroup.calculValueDisplay() }} / {{questS.questGroup.valueWithSpace(questS.questGroup.valuesFinal)}} {{questS.questGroup.type}}
+        </div>
+        <div *ngIf="questS.questGroup.values <= 0">
+            No quest for now.
+        </div>
+      </div>
+  
+      <div>
+          <a href="#" (click)="openQuestModal()">Daily quest</a> <br>
+        <div *ngIf="userS.currentUser.quest.gain != -1">
+          {{ userS.currentUser.quest.calculValueDisplay() }} / {{userS.currentUser.quest.valueWithSpace(userS.currentUser.quest.valuesFinal)}} {{userS.currentUser.quest.type}}
+        </div>
+        <div *ngIf="userS.currentUser.quest.gain == -1">
+            No quest for now.
+        </div>
+      </div>
+      -->
+  
+      <img class="border tile" tooltip="Quest" (click)="isModalQuest = true" src="../../assets/topbar/quest.jpg"/>
+      <img class="border tile" tooltip="Rank" (click)="isModalRank = true" src="../../assets/topbar/rank.jpg"/>
+      <img class="border tile" tooltip="Profile" (click)="isModalProfile = true" src="../../assets/topbar/profile.jpg"/>
+      <img class="border tile" tooltip="Boost" (click)="isModalBoost = true" src="../../assets/topbar/boost.jpg"/>      
+      <button class="border tile" (click)="LogOut()">Log Out</button>
+    </article>
+  
+    <article class="credit row align-center justify-center border">
+      <h1> {{ creditValue }} cr</h1>
+    </article>
+  </header>
+  
+  <app-modal (close)="isModalQuest = false" *ngIf="isModalQuest">
+      <app-quest></app-quest>
+  </app-modal>
+  
+  <app-modal (close)="isModalRank = false" *ngIf="isModalRank">
+    <app-ranking></app-ranking>
+  </app-modal> 
+  
+  <app-modal (close)="isModalProfile = false" *ngIf="isModalProfile">
+    <app-profile></app-profile>
+  </app-modal> 
+  
+  <app-modal (close)="isModalBoost = false" *ngIf="isModalBoost">
+    <app-boost></app-boost>
+  </app-modal>

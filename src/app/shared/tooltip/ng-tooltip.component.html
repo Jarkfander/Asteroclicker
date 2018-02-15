@@ -1,0 +1,12 @@
+<div class="tooltip {{ placement }}"
+     [style.top]="top + 'px'"
+     [style.left]="left + 'px'"
+     [class.in]="isIn"
+     role="tooltip">
+    <div class="inner">
+        <div class="background"></div>        
+        <ng-content></ng-content>
+        {{ content }}
+    </div> 
+    <div class="line"></div> 
+</div>

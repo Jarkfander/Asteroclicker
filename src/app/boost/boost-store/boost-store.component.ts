@@ -21,7 +21,7 @@ export class BoostStoreComponent implements OnInit {
 
   public buy(amount: number) {
     this.boostS.buyBoost(this.boost, amount)
-      .then((tx) => this.toasterS.success(''))
+      .then((tx) => this.toasterS.success('Your boost has arrived'))
       .catch((err) => console.log(err));
   }
 
