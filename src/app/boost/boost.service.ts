@@ -80,6 +80,7 @@ export class BoostService {
    */
   public activate(boost: IUserBoost) {
     this.socketS.activateBoost(boost.id);
+    this.toasterS.success('Boost activated', 'Let\s mine this asteroid boys!');
   }
 
   /**
@@ -88,10 +89,10 @@ export class BoostService {
    * @param {number} amount Amount of boost to buy
    */
   public buyBoost(boost: IBoost, amount: number): Promise<any> {
-    this.toasterS.comics('Shipping incoming', 'assets/toaster/tx-start.jpg');
+    this.toasterS.comics('Shipping incoming', 'tx-start');
     return this.nxcS.approveAndCall(environment.addresses.boostMarket, boost.price * amount, boost.extraData)
       .then((tx) => this.changeInventory())
-      .then((tx) => this.toasterS.comics('Your boost has arrived', 'assets/toaster/tx-arrived.jpg'))
-      .catch((err) => this.toasterS.comics('Something happened, transaction cancelled', 'assets/toaster/tx-arrived.jpg' ));
+      .then((tx) => this.toasterS.comics('Your boost has arrived', 'tx-arrived'))
+      .catch((err) => this.toasterS.comics('Something happened, transaction cancelled', 'tx-arrived' ));
   }
 }

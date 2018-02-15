@@ -11,6 +11,8 @@ import { NgSliderComponent } from './../../shared/ng-slider/ng-slider.component'
 import { staggerTile } from './../../shared/animations';
 import { ToasterService } from '../../shared/toaster/toaster.service';
 
+import { take } from 'rxjs/operators';
+
 export enum searchState {
   launchSearch,
   searching,
@@ -71,7 +73,8 @@ export class SearchViewComponent implements OnInit {
           break;
         }
         case (2): {
-          this.toasterS.comics('Captain, we found an asteroid !', 'search-found');
+          const toast = this.toasterS.comics('Captain, we found an asteroid !', 'search-found');
+          toast.onClick.pipe(take(1)).subscribe(() => this.showResult());
           break;
         }
       }
