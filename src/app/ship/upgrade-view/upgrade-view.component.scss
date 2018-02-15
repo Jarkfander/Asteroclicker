@@ -6,6 +6,7 @@
     position: relative;
 }
 
+
 section {
     height: 100%;
     width : 100%;
@@ -35,6 +36,13 @@ section {
         transform: translateY(200%);
     }
 }
+
+section.can-buy {
+    background-image: linear-gradient(to top, transparent 40%, rgba(255, 252, 213, 0.8), transparent 60%);
+    background-size : 100% 200%;  
+    animation: light 2s linear infinite;
+}
+
 
 :host:hover {
     section button, section h1, section .cost {
@@ -81,5 +89,14 @@ section {
         font-weight: bold;
         text-transform: uppercase;
         cursor: pointer;
+    }
+}
+
+@keyframes light {
+    from {
+        background-position-y: 0%;
+    }
+    to {
+        background-position-y: 200%;
     }
 }

@@ -1,4 +1,9 @@
-<section *ngIf="currentUpgrade" class="col-reverse border" (mouseenter)="openInfos()" (mouseleave)="closeInfos()" (click)="openModal()">
+<section *ngIf="currentUpgrade" 
+    class="col-reverse border"
+    [ngClass]="{'can-buy': canBuy()}" 
+    (mouseenter)="openInfos()"
+    (mouseleave)="closeInfos()"
+    (click)="openModal()">
     <h1>{{currentUpgrade.displayName}}</h1>
     <div #timer *ngIf="userUpgrade.start !== 0" class="timer"></div>
 </section>
