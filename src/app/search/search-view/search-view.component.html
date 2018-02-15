@@ -13,22 +13,22 @@
 
   <!-- Wait : Searching -->
   <ng-slide class="col">
-    <ng-progress [color]="'rgba(50,50,50,0.5)'" [total]="" [current]="timer"></ng-progress>
+    <ng-progress [color]="'rgba(50,50,50,0.8)'" [total]="search?.time" [current]="search?.timer"></ng-progress>
     <div class="timer col justify-center align-center">
-      <p>{{ timer | timer }}</p>
+      <p>{{ search?.timer | timer }}</p>
     </div>
   </ng-slide>
 
   <!-- Result -->
   <ng-slide class="result col align-center justify-center">
-    <button (click)="showResult()">Show</button>
+    <button (click)="showResult()">Asteroids Found</button>
   </ng-slide>
 
   <!-- Wait : Travel -->
   <ng-slide class="col">
-    <ng-progress [color]="'rgba(50,50,50,0.5)'" [total]="" [current]="timer"></ng-progress>
+    <ng-progress [color]="'rgba(50,50,50,0.8)'" [total]="search?.time" [current]="search?.timer"></ng-progress>
     <div class="timer col justify-center align-center">
-      <p>{{ timer | timer }}</p>
+      <p>{{ search?.timer | timer }}</p>
     </div>
   </ng-slide>
 </ng-slider>
@@ -38,7 +38,8 @@
       <app-search-result class="asteroid-result tile border" 
         *ngFor="let aste of search.result; let i = index"
         [num]="i"
-        [asteroid]="aste"></app-search-result>
+        [asteroid]="aste"
+        (choosed)="closeModal()"></app-search-result>
   </div>
   <button class="reject tile" (click)="rejectResults()">Search Again</button>
 </app-modal>

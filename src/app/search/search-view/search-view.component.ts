@@ -11,6 +11,8 @@ import { NgSliderComponent } from './../../shared/ng-slider/ng-slider.component'
 import { staggerTile } from './../../shared/animations';
 import { ToasterService } from '../../shared/toaster/toaster.service';
 
+import { take } from 'rxjs/operators';
+
 export enum searchState {
   launchSearch,
   searching,
@@ -31,7 +33,6 @@ export class SearchViewComponent implements OnInit {
   public search: ISearch;
   public distance: number;
   public searchTime: string;
-  public timer: number;
   public isModalOpen: boolean;
   public researchInfo: Research;
 
@@ -48,7 +49,6 @@ export class SearchViewComponent implements OnInit {
 
     this.searchS.search
       .do((search: ISearch) => this.changeState(search.state))
-      .do((search: ISearch) => this.timer = search.timer)
       .subscribe((searchResult: ISearch) => this.search = searchResult);
 
     this.userS.getUpgradeByName('research').subscribe((upgrade: IUserUpgrade) => {
@@ -69,21 +69,12 @@ export class SearchViewComponent implements OnInit {
     if (!!this.currentState) {
       switch (state) {
         case (0): {
-          this.toasterS.searchInfo('Captain, we are arrived !', '', {
-            styles: {
-              backgroundImage: 'url(assets/toaster/search-arrived.jpg',
-              height: '200px'
-            }
-          });
+          this.toasterS.comics('Captain, we are arrived !', 'search-arrived');
           break;
         }
         case (2): {
-          this.toasterS.searchInfo('Captain, we found an asteroid !', '', {
-            styles: {
-              backgroundImage: 'url(assets/toaster/search-found.jpg',
-              height: '200px'
-            }
-          });
+          const toast = this.toasterS.comics('Captain, we found an asteroid !', 'search-found');
+          toast.onClick.pipe(take(1)).subscribe(() => this.showResult());
           break;
         }
       }

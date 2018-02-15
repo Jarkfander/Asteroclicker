@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, EventEmitter, Output } from '@angular/core';
 import { SocketService } from '../../shared/socket/socket.service';
 import { UserService } from '../../shared/user/user.service';
 import { IAsteroid } from '../../asteroid/asteroid.service';
@@ -15,10 +15,12 @@ export class SearchResultComponent implements AfterViewInit {
 
   @Input('asteroid') asteroid: IAsteroid;
   @Input('num') num: number;
+  @Output('choosed') choosed = new EventEmitter<boolean>();
 
   ngAfterViewInit() { }
 
   chooseAsteroid() {
     this.socketS.chooseAsteroid(this.num);
+    this.choosed.emit(true);
   }
 }

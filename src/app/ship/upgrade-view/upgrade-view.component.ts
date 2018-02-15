@@ -25,7 +25,7 @@ import { upgradeInfo } from '../../../static/upgradeInfo';
 })
 export class UpgradeViewComponent implements AfterViewInit {
 
-  description: string;
+  public description: string;
   @Input() name: string;
   @Input() QGlvl: number;
   @Input() researchLvl: number;
@@ -130,34 +130,6 @@ export class UpgradeViewComponent implements AfterViewInit {
     }
     this.upgradeCostString = Object.keys(temp);
   }
-
-  /*****************
-   * CHECK CAN BUY
-   */
-
-  /** Check if user has enough credit && credit to upgrade
-  public canBuy(): boolean {
-    const tempUpgradeCost = this.nextUpgrade.costOreString;
-    const keysCost = Object.keys(tempUpgradeCost);
-
-    if (this.userUpgrade.lvl + 1 > this.QGlvl) {
-      return false;
-    }
-    for (let i = 0; i < keysCost.length; i++) {
-      if (keysCost[i] === 'credit') {
-        if (this.credit < tempUpgradeCost[keysCost[i]]) {
-          return false;
-        }
-      }
-      if (!this.oreMiss(keysCost[i])) {
-        return false;
-      }
-      if (this.oreAmount[keysCost[i]] < tempUpgradeCost[keysCost[i]]) {
-        return false;
-      }
-    }
-    return true;
-  } */
 
   /** Check if can buy and throw toaster alert if not */
   private checkCanBuy(toaster?: boolean): boolean {

@@ -55,8 +55,13 @@ export class ToasterService {
     return this.add(new Toast('error', title, content, options));
   }
 
-  /** Create an error toast */
-  public searchInfo(title: string, content?: string, options?: IToastOptions): Toast {
-    return this.add(new Toast('search-info', title, content, options));
+  /** Create an comics toast */
+  public comics(title: string, backgroundImage: string, options?: IToastOptions): Toast {
+    return this.add(new Toast('comics', title, '', {
+      ...options,
+      styles: {
+        backgroundImage: `url('assets/toaster/${backgroundImage}.jpg')`
+      }
+    }));
   }
 }

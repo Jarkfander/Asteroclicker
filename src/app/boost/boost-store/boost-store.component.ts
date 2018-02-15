@@ -4,7 +4,6 @@ import { IBoost } from './../boost';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { tap } from 'rxjs/operators';
-import { ToasterService } from '../../shared/toaster/toaster.service';
 import { BoostService } from './../boost.service';
 
 @Component({
@@ -17,12 +16,10 @@ export class BoostStoreComponent implements OnInit {
   public boosts: IBoost[];
   public boost: IBoost;
 
-  constructor(private boostS: BoostService, private toasterS: ToasterService) { }
+  constructor(private boostS: BoostService) { }
 
   public buy(amount: number) {
-    this.boostS.buyBoost(this.boost, amount)
-      .then((tx) => this.toasterS.success('Your boost has arrived'))
-      .catch((err) => console.log(err));
+    this.boostS.buyBoost(this.boost, amount);
   }
 
   ngOnInit() {
