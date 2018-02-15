@@ -4,5 +4,9 @@
 <footer class="border row justify-between">
   <input #amount type="number" placeholder="Amount to buy" value="1"/>
   <p>Price: {{ boost.price / 1000 }}/unit</p>
-  <button (click)="buy(amount.value)">Buy</button>
+  <div class="buy col align-center justify-center" (click)="buy(amount.value)">
+    <span>Buy</span>
+    <span>{{ boost.price * amount.value / 1000 }}Nxc</span>    
+  </div>
+
 </footer>
