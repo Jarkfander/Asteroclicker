@@ -29,7 +29,8 @@ export class AsteroidService {
   get isEmpty(): Observable<boolean> {
     return this.authS.UserId
       .mergeMap((id: String) => this.db.object('users/' + id + '/asteroid').valueChanges<IAsteroid>())
-      .map((asteroid: IAsteroid) => (asteroid.currentCapacity - asteroid.collectible) === 0);
+      .map((asteroid: IAsteroid) => (asteroid.currentCapacity - asteroid.collectible) < 0.01);
+
   }
 
   /* get state():Observable<number> {
