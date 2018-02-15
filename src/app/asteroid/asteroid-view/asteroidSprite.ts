@@ -111,6 +111,7 @@ export class AsteroidSprite {
 
     }
 
+    public shakeCoef = 100;
     tickerAppAsteroid() {
         if (this.asteroid[0]) {
             if (this.delta > 2 * Math.PI) {
@@ -118,18 +119,10 @@ export class AsteroidSprite {
             }
             this.delta += (2 * Math.PI) / 1000;
 
-            if (this.checkAstero) {
-                this.deltaCompteur++;
-            } else {
-                this.deltaCompteur = 0;
-            }
-            if (this.deltaCompteur > 20) {
-                this.shakeAstex = 150 * this.delta;
-                this.shakeAstey = 1 * this.delta;
-            } else {
-                this.shakeAstex = this.delta;
-                this.shakeAstey = this.delta;
-            }
+
+            this.shakeAstex = this.shakeCoef  * this.delta;
+            this.shakeAstey =  this.delta;
+
             this.asteroid[0].x = this.xBaseAsteroid + Math.cos(this.shakeAstex) * -5;
             this.asteroid[0].y = this.yBaseAsteroid + Math.sin(this.shakeAstey) * -15;
 
@@ -189,7 +182,7 @@ export class AsteroidSprite {
 
         sprite.interactive = true;
         sprite.buttonMode = true;
-        sprite.on('click', (event) => {
+        /*sprite.on('click', (event) => {
             this.emitClickParticle(event.data);
 
             let tempAnim = this.boomAnim;
@@ -207,7 +200,7 @@ export class AsteroidSprite {
                 tempAnim = this.woomAnim;
             }
             this.animBoomOnClick(xTemp, yTemp, tempAnim);
-        });
+        });*/
     }
 
     initAsteroidSprites() {

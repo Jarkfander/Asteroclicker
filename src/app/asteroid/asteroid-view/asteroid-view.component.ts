@@ -85,7 +85,7 @@ export class AsteroidViewComponent implements OnInit {
 
     setInterval(() => {
       if (this.asteroid != null && this.asteroid.currentCapacity > 0 && this.asteroid.collectible < this.asteroid.currentCapacity) {
-        const amounts = parseFloat((this.userS.currentUser.currentMineRate *
+        const amounts = parseFloat((
           this.asteroid.purity / 100 *
           this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2));
         this.socketS.breakIntoCollectible(amounts);
@@ -102,7 +102,7 @@ export class AsteroidViewComponent implements OnInit {
       this.userMineRateLvl = upgrade.lvl;
       this.initNumberOfDroneBegin();
     });
-    setInterval(() => { this.updateClick(); }, 100);
+    //setInterval(() => { this.updateClick(); }, 100);
   }
 
   // tslint:disable-next-line:member-ordering
@@ -204,17 +204,17 @@ export class AsteroidViewComponent implements OnInit {
       this.initPieceOfDrone();
 
       this.userS.miningInfo.subscribe((info: IMiningInfo) => {
-        const amounts = parseFloat((this.userS.currentUser.currentMineRate *
+        const amounts = parseFloat((
           this.asteroid.purity / 100 *
           this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2));
 
         if (this.clickGauge > info.clickGauge) {
-          console.log(this.clickGauge + "  " + info.clickGauge);
           for (let i = 0; i < 5; i++) {
             this.generatePiece(this.asteroid.ore, amounts, this.xLaser, this.yLaser);
           }
         }
         this.clickGauge = info.clickGauge;
+        this.asteroidSprite.shakeCoef = this.clickGauge * 5;
       });
       // Asteroid Subject
       this.asteroidS.asteroid$.subscribe((asteroid: IAsteroid) => {
@@ -533,7 +533,7 @@ export class AsteroidViewComponent implements OnInit {
 
   initPieceOfDrone() {
     if (this.asteroid.collectible > 0) {
-      const amounts = parseFloat((this.userS.currentUser.currentMineRate *
+      const amounts = parseFloat((
         this.asteroid.purity / 100 *
         this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2));
 
