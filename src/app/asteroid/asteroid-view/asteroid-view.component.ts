@@ -519,6 +519,7 @@ export class AsteroidViewComponent implements OnInit {
       this.addTextToPiecetext('Stock Max', '0xFF0000');
       return;
     }
+    
     if (this.asteroidPieceParent.children.length >= 50) {
       this.socketS.pickUpCollectible(oreName, values);
       this.addTextToPiecetext('+' + values, '0xffc966');
