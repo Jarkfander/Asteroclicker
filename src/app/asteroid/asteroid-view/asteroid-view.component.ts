@@ -17,6 +17,7 @@ import { Observable } from 'rxjs/Observable';
 import { OreService, IOreAmounts } from '../../ore/ore.service';
 import { ResourcesService } from '../../shared/resources/resources.service';
 import { Vector2 } from '../../shared/utils';
+import { SearchService, ISearch } from '../../search/search.service';
 
 export enum KEY_CODE {
   LEFT_ARROW = 37,
@@ -77,7 +78,8 @@ export class AsteroidViewComponent implements OnInit {
     private asteroidS: AsteroidService,
     private resourcesS: ResourcesService,
     private socketS: SocketService,
-    private oreS: OreService) { }
+    private oreS: OreService,
+    private searchS: SearchService) { }
 
   ngOnInit(): void {
     this.clicks = new Array();
@@ -230,11 +232,11 @@ export class AsteroidViewComponent implements OnInit {
 
         const state = this.asteroidSprite.computeState(asteroid);
 
-        if (this.asteroidSprite.state != -1 && state == -1) {
+        if (this.asteroidSprite.state !== -1 && state === -1) {
           this.asteroidSprite.destructBase();
         }
 
-        if (state < this.asteroidSprite.state && state != -1) {
+        if (state < this.asteroidSprite.state && state !== -1) {
           this.asteroidSprite.destructOnePart();
         }
 
@@ -243,12 +245,19 @@ export class AsteroidViewComponent implements OnInit {
           this.drone.laserAnim.visible = true;
         }
         this.asteroid = asteroid;
+        this.oreS.OreAmounts
+        .take(1).subscribe((oreAmount: IOreAmounts) => {
+          this.drone.setIsUserHaveMaxCapacityStorage(this.asteroid && oreAmount[this.asteroid.ore] >= this.storageCapacityMax);
+          this.drone.setIsAsteLifeSupZero(this.asteroid.currentCapacity > 0);
+        });
+
         this.drone.droneMiningVerif();
 
       });
 
       // Asteroid is empty
       this.asteroidS.isEmpty.subscribe((isEmpty: boolean) => {
+        console.log('is empty ' + isEmpty);
         this.drone.setIsAsteLifeSupZero(!isEmpty);
       });
 
@@ -258,6 +267,14 @@ export class AsteroidViewComponent implements OnInit {
           this.asteroidSprite.eventOk = user.event;
           this.asteroidSprite.activEvent();
           this.clickCapsule();
+        }
+      });
+
+      // Search
+      this.searchS.search.subscribe((search: ISearch) => {
+        if (search.state === 3) {
+          this.drone.statsActu = STATS_DRONE.GO_OUT;
+          this.pieceGoAway();
         }
       });
 
@@ -296,6 +313,7 @@ export class AsteroidViewComponent implements OnInit {
       this.oreS.OreAmounts
         .subscribe((oreAmount: IOreAmounts) => {
           this.drone.setIsUserHaveMaxCapacityStorage(this.asteroid && oreAmount[this.asteroid.ore] >= this.storageCapacityMax);
+          this.drone.setIsAsteLifeSupZero(this.asteroid.currentCapacity > 0);
         });
 
     });
@@ -497,10 +515,13 @@ export class AsteroidViewComponent implements OnInit {
 
   // Piece of aste
   generatePiece(oreName: string, values, _x: number, _y: number) {
-
-    if (this.asteroidPieceParent.children.length >= 100) {
+    if (this.drone.statsActu !== STATS_DRONE.MINING) {
+      this.addTextToPiecetext('Stock Max', '0xFF0000');
+      return;
+    }
+    if (this.asteroidPieceParent.children.length >= 50) {
       this.socketS.pickUpCollectible(oreName, values);
-      this.addTextToPiecetext(values, '0xFFA500');
+      this.addTextToPiecetext('+' + values, '0xffc966');
       return;
     }
     const randomX = Math.random() * (this.app.renderer.width - 150) + 80;
@@ -537,6 +558,13 @@ export class AsteroidViewComponent implements OnInit {
   detroyPiece(values, orename, i) {
     this.tempTabDeletePiece.push(i);
     this.socketS.pickUpCollectible(orename, values);
+  }
+
+  // State PIECE GO AWAY
+  pieceGoAway() {
+    for (let i = 0; i < this.asteroidPieceParent.children.length; i++) {
+      (this.asteroidPieceParent.children[i] as AsteroidPiece).state = STATE_PIECE.GOAWAY;
+    }
   }
 
   initPieceOfDrone() {
@@ -576,14 +604,25 @@ export class AsteroidViewComponent implements OnInit {
         pieceAsterCast = (this.asteroidPieceParent.children[i] as AsteroidPiece);
 
         switch (pieceAsterCast.state) {
-          case STATE_PIECE.GO:
-            if (pieceAster.y >= this.app.renderer.height) {
-              this.detroyPiece(pieceAsterCast.values, pieceAsterCast.type, i);
-              this.addTextToPiecetext(pieceAsterCast.values, '0x00FF00');
+          case STATE_PIECE.GOAWAY:
+            if (pieceAster.alpha < 0.1) {
+              this.tempTabDeletePiece.push(i);
             } else {
-              const vectGO = this.lerpVector2(pieceAster.x, pieceAster.y, this.app.renderer.width / 4, this.app.renderer.height + 50, 0.08);
-              pieceAster.x = vectGO.x;
-              pieceAster.y = vectGO.y;
+              pieceAster.alpha -= 0.05;
+            }
+            break;
+
+
+          case STATE_PIECE.GO:
+            if (this.drone.statsActu === STATS_DRONE.MINING) {
+              if (pieceAster.y >= this.app.renderer.height) {
+                this.detroyPiece(pieceAsterCast.values, pieceAsterCast.type, i);
+                this.addTextToPiecetext('+' + pieceAsterCast.values, '0x00FF00');
+              } else {
+                const vectGO = this.lerpVector2(pieceAster.x, pieceAster.y, this.app.renderer.width / 4, this.app.renderer.height + 50, 0.08);
+                pieceAster.x = vectGO.x;
+                pieceAster.y = vectGO.y;
+              }
             }
             break;
 
@@ -649,7 +688,7 @@ export class AsteroidViewComponent implements OnInit {
   }
 
   addTextToPiecetext(values, color) {
-    const textTemp = new PIXI.Text('+' + values,
+    const textTemp = new PIXI.Text(values,
       {
         fontFamily: 'Montserrat-Black',
         fontSize: 20, fill: color,

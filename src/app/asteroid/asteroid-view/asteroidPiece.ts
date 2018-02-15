@@ -1,7 +1,8 @@
 export enum STATE_PIECE {
     SPAWN,
     STAY,
-    GO
+    GO,
+    GOAWAY
 }
 
 export class AsteroidPiece extends PIXI.Sprite {
