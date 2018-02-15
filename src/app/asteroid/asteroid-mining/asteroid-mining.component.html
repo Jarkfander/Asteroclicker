@@ -15,10 +15,10 @@
     <div class="canvas-container">
       <ng-progress [color]="'rgba(120, 20, 20, 0.5)'"
         [total]="asteroid?.capacity"
-        [current]="asteroid?.currentCapacity"></ng-progress>
+        [current]="asteroid?.currentCapacity - asteroid?.collectible"></ng-progress>
       <div class="infos col justify-center align-center ">
-          <p [@figures-change]="asteroid?.currentCapacity" class="remains" *ngIf="!isEmpty">
-            {{ asteroid?.currentCapacity | number: '1.0-0' }}
+          <p [@figures-change]="asteroid?.collectible" class="remains" *ngIf="!isEmpty">
+            {{ asteroid?.currentCapacity-asteroid?.collectible | number: '1.0-0' }}
           </p>
           <p class="empty" *ngIf="isEmpty">EMPTY</p>
       </div>
