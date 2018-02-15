@@ -13,6 +13,7 @@ import { enter, staggerTile } from '../../shared/animations';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/interval';
 import 'rxjs/add/operator/filter';
+import { upgradeInfo } from '../../../static/upgradeInfo';
 
 
 @Component({
@@ -23,6 +24,7 @@ import 'rxjs/add/operator/filter';
 })
 export class UpgradeViewComponent implements OnInit {
 
+  description: string;
   @Input() name: string;
   @Input() QGlvl: number;
   @Input() researchLvl: number;
@@ -50,6 +52,7 @@ export class UpgradeViewComponent implements OnInit {
 
     this.userS.getUpgradeByName(this.name)
       .subscribe((userUpgrade) => {
+        this.description = upgradeInfo[this.name].description;
         this.userUpgrade = userUpgrade;
         this.currentUpgrade = this.resourcesS[userUpgrade.name][userUpgrade.lvl];
         this.nextUpgrade = this.resourcesS[userUpgrade.name][userUpgrade.lvl + 1];
