@@ -34,14 +34,32 @@ export class SocketService {
     this.socket.emit('loadResources', toExecute);
   }
 
-  incrementOre(oreName: string, delta: number) {
+  breakIntoCollectible(delta: number) {
+    const json = {};
+
+    json['user'] = this.userId;
+    json['amount'] = delta;
+
+    this.socket.emit('breakIntoCollectible', json);
+  }
+
+  updateClickGauge( numberOfClick: number) {
+    const json = {};
+
+    json['user'] = this.userId;
+    json['amount'] = numberOfClick;
+
+    this.socket.emit('updateClickGauge', json);
+  }
+
+  pickUpCollectible(oreName: string, delta: number) {
     const json = {};
 
     json['user'] = this.userId;
     json['ore'] = oreName;
     json['amount'] = delta;
 
-    this.socket.emit('incrementOre', json);
+    this.socket.emit('pickUpCollectible', json);
   }
 
   upgradeShipCredit(upgradeName: string) {
