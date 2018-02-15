@@ -100,13 +100,10 @@ export class AsteroidViewComponent implements OnInit {
       }
     }, 1000);
 
-<<<<<<< HEAD
     this.userS.miningInfo.subscribe((info: IMiningInfo) => {
       this.clickGauge = info.clickGauge;
     });
 
-=======
->>>>>>> asteroid explosion work with shard
     this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
       this.userMineRateLvl = upgrade.lvl;
       this.initNumberOfDroneBegin();
@@ -633,15 +630,7 @@ export class AsteroidViewComponent implements OnInit {
             break;
 
           case STATE_PIECE.SPAWN:
-<<<<<<< HEAD
-<<<<<<< HEAD
-            let vectSPAWN = this.lerpVector2(this.drone.xBaseDrone, this.drone.yBaseDrone, pieceAster.x, pieceAster.y, 0.01);
-=======
-            const vectSPAWN = this.lerpVector2(this.drone.xBaseDrone, this.drone.yBaseDrone, pieceAsterCast.x, pieceAsterCast.y, 0.01);
->>>>>>> click gauge tmp
-=======
             const vectSPAWN = this.lerpVector2(pieceAster.x, pieceAster.y, pieceAsterCast.basePosX, pieceAsterCast.basePosY, 0.1);
->>>>>>> fix some bug
             pieceAster.x = vectSPAWN.x;
             pieceAster.y = vectSPAWN.y;
             /*
