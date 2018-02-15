@@ -34,6 +34,8 @@ export enum KEY_CODE {
 })
 
 export class AsteroidViewComponent implements OnInit {
+  yLaser: number;
+  xLaser: number;
   textPiecePatron: PIXI.Text;
   textPieces: PIXI.Text;
   delta: number;
@@ -89,7 +91,9 @@ export class AsteroidViewComponent implements OnInit {
         this.socketS.breakIntoCollectible(amounts);
 
         this.socketS.updateClickGauge(this.numberOfClick);
-        this.generatePiece(this.asteroid.ore, amounts);
+        this.xLaser = -Math.cos(this.drone.drone.rotation - Math.PI / 2) * this.drone.laserAnim.height * this.drone.laserAnim.scale.y + this.drone.xBaseDrone;
+        this.yLaser = -Math.sin(this.drone.drone.rotation - Math.PI / 2) * this.drone.laserAnim.height * this.drone.laserAnim.scale.y;
+        this.generatePiece(this.asteroid.ore, amounts, this.xLaser, this.yLaser);
         this.numberOfClick = 0;
       }
     }, 1000);
@@ -200,7 +204,8 @@ export class AsteroidViewComponent implements OnInit {
     this.app = new PIXI.Application(w, h, { backgroundColor: 0x1079bb });
     this.render.appendChild(this.el.nativeElement, this.app.view);
     this.initNumberOfDroneBegin();
-
+    this.xLaser = -Math.cos(this.drone.drone.rotation - Math.PI / 2) * this.drone.laserAnim.height * this.drone.laserAnim.scale.y + this.drone.xBaseDrone;
+    this.yLaser = -Math.sin(this.drone.drone.rotation - Math.PI / 2) * this.drone.laserAnim.height * this.drone.laserAnim.scale.y;
     this.asteroidS.asteroid$.take(1).subscribe((asteroid: IAsteroid) => {
 
       this.initAsteroid(asteroid);
@@ -211,16 +216,14 @@ export class AsteroidViewComponent implements OnInit {
         const amounts = parseFloat((this.userS.currentUser.currentMineRate *
           this.asteroid.purity / 100 *
           this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2));
-  
+
         if (this.clickGauge > info.clickGauge) {
           for (let i = 0; i < 5; i++) {
-            this.generatePiece(this.asteroid.ore, amounts);
+            this.generatePiece(this.asteroid.ore, amounts, this.xLaser, this.yLaser);
           }
         }
         this.clickGauge = info.clickGauge;
-  
       });
-      
       // Asteroid Subject
       this.asteroidS.asteroid$.subscribe((asteroid: IAsteroid) => {
         this.drone.isMining = false;
@@ -496,9 +499,9 @@ export class AsteroidViewComponent implements OnInit {
   */
 
   // Piece of aste
-  generatePiece(oreName: string, values) {
+  generatePiece(oreName: string, values, _x: number, _y: number) {
 
-    if (this.asteroidPieceParent.children.length > 100) {
+    if (this.asteroidPieceParent.children.length >= 100) {
       this.socketS.pickUpCollectible(oreName, values);
       this.addTextToPiecetext(values, '0xFFA500');
       return;
@@ -510,13 +513,13 @@ export class AsteroidViewComponent implements OnInit {
     sprite.texture.baseTexture.mipmap = true;
     sprite.anchor.set(0.5);
 
-    sprite.x = randomX;
-    sprite.y = randomY;
+    sprite.x = _x;
+    sprite.y = _y;
 
     const randomScale = Math.random() + 0.5;
     sprite.scale.set(0.25 * randomScale, 0.25 * randomScale);
     sprite.rotation = Math.random() * 180;
-    var circle = new PIXI.Graphics();
+    const circle = new PIXI.Graphics();
     circle.beginFill(0x0000FF, 0);
     circle.drawCircle(150, 150, 200 * (1 - sprite.scale.x));
     circle.endFill();
@@ -546,7 +549,7 @@ export class AsteroidViewComponent implements OnInit {
         this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2));
 
       for (let i = 0; i < this.asteroid.collectible / amounts; i++) {
-        this.generatePiece(this.asteroid.ore, amounts);
+        this.generatePiece(this.asteroid.ore, amounts, this.xLaser, this.yLaser);
       }
     }
   }
@@ -581,7 +584,7 @@ export class AsteroidViewComponent implements OnInit {
               this.detroyPiece(pieceAsterCast.values, pieceAsterCast.type, i);
               this.addTextToPiecetext(pieceAsterCast.values, '0x00FF00');
             } else {
-              let vectGO = this.lerpVector2(pieceAster.x, pieceAster.y, this.app.renderer.width / 4, this.app.renderer.height + 50, 0.08);
+              const vectGO = this.lerpVector2(pieceAster.x, pieceAster.y, this.app.renderer.width / 4, this.app.renderer.height + 50, 0.08);
               pieceAster.x = vectGO.x;
               pieceAster.y = vectGO.y;
             }
@@ -593,13 +596,13 @@ export class AsteroidViewComponent implements OnInit {
             break;
 
           case STATE_PIECE.SPAWN:
-            let vectSPAWN = this.lerpVector2(this.drone.xBaseDrone, this.drone.yBaseDrone, pieceAster.x, pieceAster.y, 0.01);
+            const vectSPAWN = this.lerpVector2(pieceAster.x, pieceAster.y, pieceAsterCast.basePosX, pieceAsterCast.basePosY, 0.1);
             pieceAster.x = vectSPAWN.x;
             pieceAster.y = vectSPAWN.y;
-
-            if (Math.round(pieceAster.x - this.drone.xBaseDrone) < 1 && Math.round(pieceAster.y - this.drone.yBaseDrone) < 1) {
+            /*
+            if (Math.abs(pieceAster.x - pieceAsterCast.basePosX) < 0.001 && Math.abs(pieceAster.y - pieceAsterCast.basePosY) < 0.001) {
               pieceAsterCast.state = STATE_PIECE.STAY;
-            }
+            }*/
             break;
 
         }
@@ -617,7 +620,7 @@ export class AsteroidViewComponent implements OnInit {
 
 
   /*
-  * MANAGED Text 
+  * MANAGED Text
   */
   textAlphaDecrease() {
     const tempErase = new Array<number>();
