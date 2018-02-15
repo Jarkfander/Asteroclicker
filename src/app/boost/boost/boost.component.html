@@ -9,7 +9,7 @@
 
 <section>
   <div class="nxc border">
-    <p>Nexiums : {{(nxc$ | async) / 1000 | number: '1.0-3'}}</p>
+    <h2>Nexiums : {{(nxc$ | async) / 1000 | number: '1.0-3'}}</h2>
   </div>
   <boost-inventory *ngIf="route === 'inventory'"></boost-inventory>
   <boost-store *ngIf="route === 'store'"></boost-store>

@@ -11,6 +11,7 @@ import { take, map, tap, reduce, filter, mergeMap, scan } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { environment } from '../../environments/environment';
 import { SocketService } from '../shared/socket/socket.service';
+import { ToasterService } from '../shared/toaster/toaster.service';
 
 @Injectable()
 export class BoostService {
@@ -23,7 +24,8 @@ export class BoostService {
               private nxcS: NexiumService,
               private db: AngularFireDatabase,
               private socketS: SocketService,
-              private userS: UserService
+              private userS: UserService,
+              private toasterS: ToasterService
   ) {
     this.getStore().subscribe((boosts: IBoost[]) => this.boosts = boosts);
     this.changeInventory();
@@ -31,6 +33,7 @@ export class BoostService {
 
   /** Updage Inventory */
   public changeInventory() {
+    // TODO : socket upsert user boost
     this.getInventory().pipe(take(1))
         .subscribe((inventory: IUserBoost[]) => this.inventorySubject.next(inventory));
   }
@@ -58,7 +61,7 @@ export class BoostService {
   /** 
    * Get Inventory of the current user and update subject
   */
-  private getInventory(): Observable<IUserBoost[]> {
+  public getInventory(): Observable<IUserBoost[]> {
     return this.db.list<any>(`users/${this.userS.currentUser.uid}/boosts`)
                   .valueChanges<any>()
                   .pipe(
@@ -77,6 +80,7 @@ export class BoostService {
    */
   public activate(boost: IUserBoost) {
     this.socketS.activateBoost(boost.id);
+    this.toasterS.success('Boost activated', 'Let\s mine this asteroid boys!');
   }
 
   /**
@@ -85,7 +89,10 @@ export class BoostService {
    * @param {number} amount Amount of boost to buy
    */
   public buyBoost(boost: IBoost, amount: number): Promise<any> {
+    this.toasterS.comics('Shipping incoming', 'tx-start');
     return this.nxcS.approveAndCall(environment.addresses.boostMarket, boost.price * amount, boost.extraData)
-      .then((tx) => this.changeInventory());
+      .then((tx) => this.changeInventory())
+      .then((tx) => this.toasterS.comics('Your boost has arrived', 'tx-arrived'))
+      .catch((err) => this.toasterS.comics('Something happened, transaction cancelled', 'tx-arrived' ));
   }
 }
