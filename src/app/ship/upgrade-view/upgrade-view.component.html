@@ -1,6 +1,6 @@
 <section *ngIf="currentUpgrade" 
     class="col-reverse border"
-    [ngClass]="{'can-buy': canBuy()}" 
+    [ngClass]="{'can-buy': checkCanBuy()}" 
     (mouseenter)="openInfos()"
     (mouseleave)="closeInfos()"
     (click)="openModal()">

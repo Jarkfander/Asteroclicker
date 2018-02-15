@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, Input, ElementRef, Renderer2, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { Upgrade, UpgradeType } from '../upgrade-class/upgrade';
 import { SocketService } from '../../shared/socket/socket.service';
 import { User, UserUpgrade } from '../../shared/user/user';
@@ -17,12 +17,13 @@ import { upgradeInfo } from '../../../static/upgradeInfo';
 
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-upgrade-view',
   templateUrl: './upgrade-view.component.html',
   styleUrls: ['./upgrade-view.component.scss'],
   animations: [enter, staggerTile]
 })
-export class UpgradeViewComponent implements OnInit {
+export class UpgradeViewComponent implements AfterViewInit {
 
   description: string;
   @Input() name: string;
@@ -48,8 +49,7 @@ export class UpgradeViewComponent implements OnInit {
     private resourcesS: ResourcesService,
     private upgradeS: UpgradeService) {}
 
-  ngOnInit() {
-
+  ngAfterViewInit() {
     this.userS.getUpgradeByName(this.name)
       .subscribe((userUpgrade) => {
         this.description = upgradeInfo[this.name].description;
@@ -59,7 +59,7 @@ export class UpgradeViewComponent implements OnInit {
         this.updateCost();
         this.setTimer();
         this.renderer.setStyle(this.el.nativeElement, 'backgroundImage', `url('../../../assets/upgrade/img/${this.userUpgrade.name}.jpg')`);
-        if (!this.canBuy) {
+        if (!!this.oreAmount && !this.checkCanBuy()) {
           this.renderer.addClass(this.el.nativeElement, 'cannot-buy');
         } else {
           this.renderer.removeClass(this.el.nativeElement, 'cannot-buy');
@@ -88,7 +88,7 @@ export class UpgradeViewComponent implements OnInit {
 
   /** Update ore amount of user and update timer */
   public levelUpOre() {
-    if (this.canBuy(true)) {
+    if (this.checkCanBuy(true)) {
       this.socketS.upgradeShipOre( this.currentUpgrade.name);
       this.socketS.updateUpgradeTimer( this.userUpgrade.name);
     }
@@ -160,7 +160,7 @@ export class UpgradeViewComponent implements OnInit {
   } */
 
   /** Check if can buy and throw toaster alert if not */
-  private canBuy(toaster?: boolean): boolean {
+  private checkCanBuy(toaster?: boolean): boolean {
     const tempUpgradeCost = this.nextUpgrade.costOreString;
     const keysCost = Object.keys(tempUpgradeCost);
     // Check QG lvl
@@ -181,15 +181,17 @@ export class UpgradeViewComponent implements OnInit {
         }
       }
       // Check research level
-      if (!this.oreMiss(keysCost[i])) {
+      else if (!this.oreMiss(keysCost[i])) {
         if (toaster) {
           this.toasterS.alert('Research should be higher', 'You should upgrade research before');
         }
         return false;
       }
       // Check ore
-      if (this.oreAmount[keysCost[i]] < tempUpgradeCost[keysCost[i]]) {
-        this.toasterS.alert('Not enouh ' + keysCost[i], 'You need ' + Math.round(tempUpgradeCost[keysCost[i]] - this.oreAmount[keysCost[i]]) + ' more !');
+      else if (this.oreAmount[keysCost[i]] < tempUpgradeCost[keysCost[i]]) {
+        if (toaster) {
+          this.toasterS.alert('Not enouh ' + keysCost[i], 'You need ' + Math.round(tempUpgradeCost[keysCost[i]] - this.oreAmount[keysCost[i]]) + ' more !');
+        }
         return false;
       }
     }
