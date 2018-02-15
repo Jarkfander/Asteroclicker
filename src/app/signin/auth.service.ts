@@ -32,7 +32,7 @@ export class AuthService {
 
   public CreateAccount(email, pswd, pseudo) {
     this.afAuth.auth.createUserWithEmailAndPassword(email, pswd).then((message) => {
-      this.socketS.initializeUser(email, pseudo);
+      this.socketS.initializeUser(message.uid,email, pseudo);
     });
   }
 

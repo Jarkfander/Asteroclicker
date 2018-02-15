@@ -14,11 +14,11 @@ export class SocketService {
   private socket;
 
   constructor(private resourceS: ResourcesService) {
-
+    this.socket = io(environment.socketUrl);
   }
 
   openSocket(userId: string) {
-    this.socket = io(environment.socketUrl);
+
     this.userId = userId;
     
 
@@ -171,9 +171,9 @@ export class SocketService {
     this.socket.emit('deleteEvent', json);
   }
 
-  initializeUser(email: string, pseudo: string) {
+  initializeUser(userId : string,email: string, pseudo: string) {
     const json = {};
-    json['user'] = this.userId;
+    json['user'] = userId;
     json['email'] = email;
     json['pseudo'] = pseudo;
     this.socket.emit('initializeUser', json);
