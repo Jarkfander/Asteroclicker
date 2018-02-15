@@ -203,6 +203,20 @@ export class AsteroidViewComponent implements OnInit {
       this.asteroid = asteroid;
       this.initPieceOfDrone();
 
+      this.userS.miningInfo.subscribe((info: IMiningInfo) => {
+        const amounts = parseFloat((this.userS.currentUser.currentMineRate *
+          this.asteroid.purity / 100 *
+          this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2));
+  
+        if (this.clickGauge > info.clickGauge) {
+          for (let i = 0; i < 5; i++) {
+            this.generatePiece(this.asteroid.ore, amounts);
+          }
+        }
+        this.clickGauge = info.clickGauge;
+  
+      });
+      
       // Asteroid Subject
       this.asteroidS.asteroid$.subscribe((asteroid: IAsteroid) => {
         this.drone.isMining = false;
@@ -575,7 +589,11 @@ export class AsteroidViewComponent implements OnInit {
             break;
 
           case STATE_PIECE.SPAWN:
+<<<<<<< HEAD
             let vectSPAWN = this.lerpVector2(this.drone.xBaseDrone, this.drone.yBaseDrone, pieceAster.x, pieceAster.y, 0.01);
+=======
+            const vectSPAWN = this.lerpVector2(this.drone.xBaseDrone, this.drone.yBaseDrone, pieceAsterCast.x, pieceAsterCast.y, 0.01);
+>>>>>>> click gauge tmp
             pieceAster.x = vectSPAWN.x;
             pieceAster.y = vectSPAWN.y;
 
