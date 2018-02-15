@@ -4,9 +4,9 @@ import { UserService, IUserUpgrade } from '../../shared/user/user.service';
 import { Observable } from 'rxjs/Observable';
 import { SocketService } from '../../shared/socket/socket.service';
 import { OreService, IOreAmounts } from '../../ore/ore.service';
-import { NgNotifComponent } from '../../shared/ng-notif/ng-notif.component';
 import { ResourcesService } from '../../shared/resources/resources.service';
 import { UpgradeService } from '../upgrade.service';
+import { ToasterService } from '../../shared/toaster/toaster.service';
 
 @Component({
   selector: 'app-qg-view',
@@ -16,7 +16,6 @@ import { UpgradeService } from '../upgrade.service';
 export class QgViewComponent implements OnInit {
 
   @ViewChild('timer') timerRef: ElementRef;
-  @ViewChild(NgNotifComponent) notif: NgNotifComponent;
 
   public userUpgrade: IUserUpgrade;
   public currentUpgrade: Upgrade;
@@ -32,6 +31,7 @@ export class QgViewComponent implements OnInit {
     private userS: UserService,
     private oreS: OreService,
     private upgradeS: UpgradeService,
+    private toasterS: ToasterService,
     private resourcesS: ResourcesService) { }
 
 
@@ -95,16 +95,16 @@ export class QgViewComponent implements OnInit {
     for (let i = 0; i < keysCost.length; i++) {
       if (keysCost[i] === 'credit') {
         if (this.credit < tempUpgradeCost[keysCost[i]]) {
-          this.notif.alert('Not enough credit', 'You need ' + Math.round(tempUpgradeCost[keysCost[i]] - this.credit) + ' more !');
+          this.toasterS.alert('Not enough credit', 'You need ' + Math.round(tempUpgradeCost[keysCost[i]] - this.credit) + ' more !');
           return false;
         }
       }
       if (!this.oreMiss(keysCost[i])) {
-        this.notif.alert('Research should be higher', 'You should upgrade research before');
+        this.toasterS.alert('Research should be higher', 'You should upgrade research before');
         return false;
       }
       if (this.oreAmount[keysCost[i]] < tempUpgradeCost[keysCost[i]]) {
-        this.notif.alert('Not enouh ' + keysCost[i], 'You need ' + Math.round(tempUpgradeCost[keysCost[i]] - this.oreAmount[keysCost[i]]) + ' more !');
+        this.toasterS.alert('Not enouh ' + keysCost[i], 'You need ' + Math.round(tempUpgradeCost[keysCost[i]] - this.oreAmount[keysCost[i]]) + ' more !');
         return false;
       }
     }

@@ -20,7 +20,7 @@
           <p [@figures-change]="asteroid?.currentCapacity" class="remains" *ngIf="!isEmpty">
             {{ asteroid?.currentCapacity | number: '1.0-0' }}
           </p>
-          <p class="empty" *ngIf="isEmpty">EMPTY</p>
+          <p class="empty" tooltip="No Asteroid nearby" *ngIf="isEmpty">EMPTY</p>
       </div>
     </div>
     <div class="asteroid">
@@ -28,4 +28,3 @@
     </div>
   </article>
 </section>
-
