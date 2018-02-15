@@ -54,6 +54,7 @@ export class AsteroidSprite {
     height: number;
     width: number;
 
+    state: number;
     constructor(width: number, height: number, app: PIXI.Application, asteroid: IAsteroid) {
         this.height = height;
         this.width = width;
@@ -222,9 +223,24 @@ export class AsteroidSprite {
         }
     }
 
+    computeState(asteroid: IAsteroid): number {
+        let state = 0;
+
+        if ((asteroid.currentCapacity - asteroid.collectible) === asteroid.capacity) {
+            state = 4;
+        }
+        else if (asteroid.currentCapacity - asteroid.collectible == 0) {
+            state = -1;
+        }
+        else {
+            state = Math.floor(((asteroid.currentCapacity - asteroid.collectible) / asteroid.capacity) * 5);
+        }
+        return state;
+    }
+
     generateAsteroid(asteroid: IAsteroid) {
-        const state = asteroid.currentCapacity === asteroid.capacity ? 4 :
-            Math.floor((asteroid.currentCapacity / asteroid.capacity) * 5);
+        this.state = this.computeState(asteroid);
+
         const seedNum = [];
         const nums = [1, 2, 3, 4];
         const comb = [[1, 1], [1, -1], [-1, -1], [-1, 1]];
@@ -250,17 +266,17 @@ export class AsteroidSprite {
 
         this.asteroid[0].texture = this.asteroidFolders[asteroid.ore][0];
 
-        for (let i = 0; i < state; i++) {
+        for (let i = 0; i < this.state; i++) {
             this.asteroid[i + 1].texture = this.asteroidFolders[asteroid.ore][nums[seedNum[i]]];
         }
 
-        if (asteroid.currentCapacity > 0) {
+        if (this.state != -1) {
             this.addSpriteToScene(this.asteroid[0], 0, 0);
         }
 
         const offSet = 60;
 
-        for (let i = 0; i < state; i++) {
+        for (let i = 0; i < this.state; i++) {
             this.addSpriteToScene(this.asteroid[i + 1], comb[seedNum[i + 4]][0] * offSet, comb[seedNum[i + 4]][1] * offSet);
         }
     }
@@ -274,6 +290,7 @@ export class AsteroidSprite {
                 this.asteroid[0].children[this.asteroid[0].children.length - 1].worldTransform.ty, this.boomAnim, true);
             this.boomAnim.scale.set(1, 1);
             this.asteroid[0].removeChild(this.asteroid[0].children[this.asteroid[0].children.length - 1]);
+            this.state--;
         }
     }
 
@@ -285,6 +302,7 @@ export class AsteroidSprite {
             this.asteroid[0].worldTransform.ty, this.woomAnim, true);
         this.woomAnim.scale.set(1, 1);
         this.app.stage.removeChild(this.asteroid[0]);
+        this.state--;
     }
     // Change the sprite of asteroid when the user change
     changeSprite(asteroid: IAsteroid) {

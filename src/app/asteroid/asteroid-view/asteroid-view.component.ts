@@ -46,7 +46,6 @@ export class AsteroidViewComponent implements OnInit {
   private app: PIXI.Application;
   private asteroidSprite: AsteroidSprite;
   private asteroid: IAsteroid;
-  private state: number;
   private drone: Drone;
   private emitter: ParticleBase;
 
@@ -62,6 +61,7 @@ export class AsteroidViewComponent implements OnInit {
 
   private numberOfClick = 0;
   private clickGauge = 0;
+
   // Asteroid piece
   asteroidPieceParent: AsteroidPiece;
   tempTabDeletePiece: Array<number>;
@@ -98,10 +98,13 @@ export class AsteroidViewComponent implements OnInit {
       }
     }, 1000);
 
+<<<<<<< HEAD
     this.userS.miningInfo.subscribe((info: IMiningInfo) => {
       this.clickGauge = info.clickGauge;
     });
 
+=======
+>>>>>>> asteroid explosion work with shard
     this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
       this.userMineRateLvl = upgrade.lvl;
       this.initNumberOfDroneBegin();
@@ -214,6 +217,7 @@ export class AsteroidViewComponent implements OnInit {
           this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2));
 
         if (this.clickGauge > info.clickGauge) {
+          console.log(this.clickGauge + "  " + info.clickGauge);
           for (let i = 0; i < 5; i++) {
             this.generatePiece(this.asteroid.ore, amounts, this.xLaser, this.yLaser);
           }
@@ -224,18 +228,15 @@ export class AsteroidViewComponent implements OnInit {
       this.asteroidS.asteroid$.subscribe((asteroid: IAsteroid) => {
         this.drone.isMining = false;
 
-        const state = asteroid.currentCapacity === asteroid.capacity ? 4 :
-          Math.floor((asteroid.currentCapacity / asteroid.capacity) * 5);
+        const state = this.asteroidSprite.computeState(asteroid);
 
-        if (asteroid.currentCapacity === 0 && this.asteroid.currentCapacity !== 0) {
+        if (this.asteroidSprite.state != -1 && state == -1) {
           this.asteroidSprite.destructBase();
         }
 
-        if (state < this.state) {
+        if (state < this.asteroidSprite.state && state != -1) {
           this.asteroidSprite.destructOnePart();
         }
-
-        this.state = state;
 
         if (asteroid.currentCapacity > this.asteroid.currentCapacity) {
           this.asteroidSprite.changeSprite(asteroid);
