@@ -57,7 +57,7 @@ export class AsteroidViewComponent implements OnInit {
   public clicked: boolean;
 
   private numberOfClick = 0;
-  private clickGauge= 0;
+  private clickGauge = 0;
   // Asteroid piece
   asteroidPieceParent: AsteroidPiece;
   tempTabDeletePiece: Array<number>;
@@ -91,15 +91,6 @@ export class AsteroidViewComponent implements OnInit {
         this.numberOfClick = 0;
       }
     }, 1000);
-
-    this.userS.miningInfo.subscribe((info: IMiningInfo) => {
-
-      if(this.clickGauge > info.clickGauge){
-        
-      }
-      this.clickGauge = info.clickGauge;
-      
-    });
 
     this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
       this.userMineRateLvl = upgrade.lvl;
@@ -193,6 +184,20 @@ export class AsteroidViewComponent implements OnInit {
       this.initAsteroid(asteroid);
       this.asteroid = asteroid;
 
+      this.userS.miningInfo.subscribe((info: IMiningInfo) => {
+        const amounts = parseFloat((this.userS.currentUser.currentMineRate *
+          this.asteroid.purity / 100 *
+          this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2));
+  
+        if (this.clickGauge > info.clickGauge) {
+          for (let i = 0; i < 5; i++) {
+            this.generatePiece(this.asteroid.ore, amounts);
+          }
+        }
+        this.clickGauge = info.clickGauge;
+  
+      });
+      
       // Asteroid Subject
       this.asteroidS.asteroid$.subscribe((asteroid: IAsteroid) => {
         this.drone.isMining = false;
@@ -545,11 +550,11 @@ export class AsteroidViewComponent implements OnInit {
             break;
 
           case STATE_PIECE.SPAWN:
-            const vectSPAWN = this.lerpVector2( this.drone.xBaseDrone, this.drone.yBaseDrone, pieceAsterCast.x, pieceAsterCast.y, 0.01);
+            const vectSPAWN = this.lerpVector2(this.drone.xBaseDrone, this.drone.yBaseDrone, pieceAsterCast.x, pieceAsterCast.y, 0.01);
             pieceAster.x = vectSPAWN.x;
             pieceAster.y = vectSPAWN.y;
-            
-            if ( Math.round(pieceAster.x - this.drone.xBaseDrone) < 1 && Math.round(pieceAster.y - this.drone.yBaseDrone) < 1 ) {
+
+            if (Math.round(pieceAster.x - this.drone.xBaseDrone) < 1 && Math.round(pieceAster.y - this.drone.yBaseDrone) < 1) {
               pieceAsterCast.state = STATE_PIECE.STAY;
             }
             break;
