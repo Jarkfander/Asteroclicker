@@ -1,4 +1,9 @@
-<section *ngIf="currentUpgrade" class="col-reverse border" (mouseenter)="openInfos()" (mouseleave)="closeInfos()" (click)="openModal()">
+<section *ngIf="currentUpgrade" 
+    class="col-reverse border"
+    [ngClass]="{'can-buy': checkCanBuy()}" 
+    (mouseenter)="openInfos()"
+    (mouseleave)="closeInfos()"
+    (click)="openModal()">
     <h1>{{currentUpgrade.displayName}}</h1>
     <div #timer *ngIf="userUpgrade.start !== 0" class="timer"></div>
 </section>
@@ -7,7 +12,7 @@
     <div class="modal col justify-between">
         <app-upgrade-info [upgrade]="currentUpgrade" class="info"></app-upgrade-info>
         <div class="description border tile">
-            <p>Description of the upgrade here</p>
+            <p>{{description}}</p>
         </div>
         <div class="ores row">
             <div class="cost-ore border tile">

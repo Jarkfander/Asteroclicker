@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { IBoost, IUserBoost } from './../boost';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
-import { tap } from 'rxjs/operators';
+import { tap, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'boost-inventory',
@@ -24,7 +24,9 @@ export class BoostInventoryComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.boosts$ = this.boostS.getInventory().pipe(
+    // this.boosts$ = this.boostS.getInventory().pipe(
+    this.boosts$ = this.boostS.inventory$.pipe(
+      filter((boosts: IUserBoost[]) => !!boosts),
       tap((boosts: IUserBoost[]) => this.boost = boosts[0])
     );
   }

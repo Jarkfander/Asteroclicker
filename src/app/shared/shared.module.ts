@@ -1,36 +1,43 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ModalComponent } from './modal/modal.component';
-import { NgNotifComponent } from './ng-notif/ng-notif.component';
-import { SimpleNotificationsModule } from 'angular2-notifications';
+// Components
 import { NgSliderComponent, NgSlideComponent } from './ng-slider/ng-slider.component';
+import { NgTooltipComponent } from './tooltip/ng-tooltip.component';
+import { ModalComponent } from './modal/modal.component';
 import { NgProgressComponent } from './ng-progress/ng-progress.component';
-import { TimerPipe } from './timer.pipe';
-import { NotifyService } from './notify/notify.service';
 
+// Directive 
+import { TooltipDirective } from './tooltip/tooltip.directive';
+
+// pipe
+import { TimerPipe } from './timer.pipe';
+
+// Services 
+import { NotifyService } from './notify/notify.service';
 
 @NgModule({
   imports: [
-    CommonModule,
-    SimpleNotificationsModule.forRoot()
+    CommonModule
   ],
   declarations: [
     ModalComponent,
-    NgNotifComponent,
     NgSlideComponent,
     NgSliderComponent,
     NgProgressComponent,
+    NgTooltipComponent,
+    TooltipDirective,
     TimerPipe
   ],
   exports: [
     ModalComponent,
-    NgNotifComponent,
     NgSlideComponent,
     NgSliderComponent,
     NgProgressComponent,
+    TooltipDirective,
     TimerPipe
   ],
-  providers: [NotifyService]
+  providers: [NotifyService],
+  entryComponents: [NgTooltipComponent]
 })
 
 export class SharedModule {

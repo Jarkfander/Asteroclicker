@@ -13,17 +13,17 @@ export class LoadAnimation {
 
         // ciel animation
         for (let i = 1; i < 3; i++) {
-            this.addKeySpriteName('ciel1_' + i, './assets/sky/ciel1_' + i + '.png');
+            this.addKeySpriteName('ciel1_' + i, './assets/sky/ciel1_' + i + '.jpg');
         }
 
         // ciel animation V1
         for (let i = 1; i < 3; i++) {
-            this.addKeySpriteName('ciel2_' + i, './assets/sky/ciel2_' + i + '.png');
+            this.addKeySpriteName('ciel2_' + i, './assets/sky/ciel2_' + i + '.jpg');
         }
 
         // ciel animation V2
         for (let i = 1; i < 3; i++) {
-            this.addKeySpriteName('ciel3_' + i, './assets/sky/ciel3_' + i + '.png');
+            this.addKeySpriteName('ciel3_' + i, './assets/sky/ciel3_' + i + '.jpg');
         }
 
         // etoile filante

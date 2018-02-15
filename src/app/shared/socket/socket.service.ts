@@ -208,4 +208,10 @@ export class SocketService {
       type: type
     });
   }
+
+  public upsertUserBoosts() {
+    this.socket.emit('upsertUserBoosts', {
+      user: this.userId
+    });
+  }
 }
