@@ -101,7 +101,8 @@ export class AsteroidViewComponent implements OnInit {
         this.numberOfClick = 0;
       } else {
         this.drone.isMining = false;
-      }    }, 1000);
+      }
+    }, 1000);
 
     this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
       this.userMineRateLvl = upgrade.lvl;
@@ -206,8 +207,9 @@ export class AsteroidViewComponent implements OnInit {
 
       this.initAsteroid(asteroid);
       this.asteroid = asteroid;
-      this.initPieceOfDrone();
 
+      this.initPieceOfDrone();
+      
       this.userS.miningInfo.subscribe((info: IMiningInfo) => {
         this.userS.localClickGauge = info.clickGauge;
         this.userS.localClickGaugeSubject.next(this.userS.localClickGauge);
@@ -520,11 +522,14 @@ export class AsteroidViewComponent implements OnInit {
       this.addTextToPiecetext('Stock Max', '0xFF0000');
       return;
     }
-    if (this.asteroidPieceParent.children.length >= 250) {
+    const iTemp = this.tabElementEmpty();
+    if (this.asteroidPieceParent.children.length === 250 && iTemp === -1) {
       this.socketS.pickUpCollectible(oreName, values);
       this.addTextToPiecetext('+' + values, '0xffc966');
       return;
     }
+
+    // Voir pour reaffecter la valeur du tableau et pas la reset parce que le tableau se reduit tout seul
     const randomX = Math.random() * (this.app.renderer.width - 150) + 80;
     const randomY = Math.random() * (this.app.renderer.height - 150) + 80;
 
@@ -549,22 +554,37 @@ export class AsteroidViewComponent implements OnInit {
 
     circle.interactive = true;
 
-    this.asteroidPieceParent.addChild(sprite);
+    if (this.asteroidPieceParent.children.length <= 250) {
+      this.asteroidPieceParent.addChild(sprite);
+    } else {
+      this.asteroidPieceParent.addChildAt(sprite, iTemp);
+    }
     circle.on('mouseover', (event) => {
       sprite.state = STATE_PIECE.GO;
     });
   }
 
+  // Return the element empty in tab
+  tabElementEmpty() {
+    for (let i = 0; i < this.asteroidPieceParent.children.length; i++) {
+      if (!this.asteroidPieceParent.children[i]) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
   // detroy
   detroyPiece(values, orename, i) {
-    this.tempTabDeletePiece.push(i);
     this.socketS.pickUpCollectible(orename, values);
   }
 
   // State PIECE GO AWAY
   pieceGoAway() {
     for (let i = 0; i < this.asteroidPieceParent.children.length; i++) {
-      (this.asteroidPieceParent.children[i] as AsteroidPiece).state = STATE_PIECE.GOAWAY;
+      if (this.asteroidPieceParent.children[i]) {
+        (this.asteroidPieceParent.children[i] as AsteroidPiece).state = STATE_PIECE.GOAWAY;
+      }
     }
   }
 
@@ -573,7 +593,7 @@ export class AsteroidViewComponent implements OnInit {
       const amounts = parseFloat((this.userS.currentUser.currentMineRate *
         this.asteroid.purity / 100 *
         this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2));
-
+      console.log(amounts);
       for (let i = 0; i < this.asteroid.collectible / amounts; i++) {
         this.generatePiece(this.asteroid.ore, amounts, this.xLaser, this.yLaser);
       }
@@ -597,10 +617,12 @@ export class AsteroidViewComponent implements OnInit {
       }
       this.delta += (2 * Math.PI) / 1000;
       this.textAlphaDecrease();
-      let pieceAster = this.asteroidPieceParent.children[0];
-      let pieceAsterCast = (this.asteroidPieceParent.children[0] as AsteroidPiece);
+      let pieceAster: PIXI.DisplayObject;
+      let pieceAsterCast: AsteroidPiece;
       for (let i = 0; i < this.asteroidPieceParent.children.length; i++) {
-
+        if (!this.asteroidPieceParent.children[i]) {
+          continue;
+        }
         pieceAster = this.asteroidPieceParent.children[i];
         pieceAsterCast = (this.asteroidPieceParent.children[i] as AsteroidPiece);
 
@@ -618,6 +640,7 @@ export class AsteroidViewComponent implements OnInit {
             if (this.asteroid.collectible > 0) {
               if (pieceAster.y >= this.app.renderer.height) {
                 this.detroyPiece(pieceAsterCast.values, pieceAsterCast.type, i);
+                this.asteroidPieceParent.children[i].destroy();
                 this.addTextToPiecetext('+' + pieceAsterCast.values, '0x00FF00');
               } else {
                 const vectGO = this.lerpVector2(pieceAster.x, pieceAster.y, this.app.renderer.width / 4, this.app.renderer.height + 50, 0.08);
@@ -645,12 +668,6 @@ export class AsteroidViewComponent implements OnInit {
         }
 
       }
-
-      for (let j = 0; j < this.tempTabDeletePiece.length; j++) {
-        this.asteroidPieceParent.children.splice(this.tempTabDeletePiece[j], 1);
-        this.textPieces.children.splice(this.tempTabDeletePiece[j], 1);
-      }
-      this.tempTabDeletePiece.splice(0, this.tempTabDeletePiece.length);
       this.asteroidSprite.tickerAppAsteroid();
     });
   }
