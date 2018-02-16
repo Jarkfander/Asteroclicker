@@ -11,8 +11,8 @@ export interface ISearch {
   timer: number;
   start: number;
   state: searchState;
-  distance:number;
-  time : number;
+  distance: number;
+  time: number;
 }
 
 @Injectable()
@@ -22,7 +22,7 @@ export class SearchService {
 
   get search(): Observable<ISearch> {
     return this.authS.UserId
-      .mergeMap((id: String) => this.db.object('users/' + id + '/search').valueChanges<ISearch>())
+      .mergeMap((id: String) => this.db.object('users/' + id + '/search').valueChanges<ISearch>());
   }
 
 }
