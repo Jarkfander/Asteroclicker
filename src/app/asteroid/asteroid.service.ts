@@ -29,14 +29,14 @@ export class AsteroidService {
   get isEmpty(): Observable<boolean> {
     return this.authS.UserId
       .mergeMap((id: String) => this.db.object('users/' + id + '/asteroid').valueChanges<IAsteroid>())
-      .map((asteroid: IAsteroid) => (asteroid.currentCapacity - asteroid.collectible) < 0.01);
+      .map((asteroid: IAsteroid) => (asteroid.currentCapacity - asteroid.collectible) < 0.1);
 
   }
 
   /* get state():Observable<number> {
      return this.authS.UserId
        .mergeMap((id: String) => this.db.object('users/' + id + '/asteroid').valueChanges<IAsteroid>()
-       .map((asteroid:IAsteroid)=> asteroid.currentCapacity == asteroid.capacity ? 4 : 
+       .map((asteroid:IAsteroid)=> asteroid.currentCapacity == asteroid.capacity ? 4 :
          Math.floor((asteroid.currentCapacity / asteroid.capacity) * 5))
        )
    }*/
