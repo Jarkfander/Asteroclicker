@@ -138,7 +138,7 @@ export class UpgradeViewComponent implements AfterViewInit {
     // Check QG lvl
     if (this.userUpgrade.lvl + 1 > this.QGlvl) {
       if (toaster) {
-        this.toasterS.alert('QG Level', 'QG should be higher than ' + this.userUpgrade.lvl + 1);
+        this.toasterS.comics('QG should be higher than ' + this.userUpgrade.lvl + 1, "upgrade-low-qg");
       }
       return false;
     }
@@ -147,7 +147,7 @@ export class UpgradeViewComponent implements AfterViewInit {
       if (keysCost[i] === 'credit') {
         if (this.credit < tempUpgradeCost[keysCost[i]]) {
           if (toaster) {
-            this.toasterS.alert('Not enough credit', 'You need ' + Math.round(tempUpgradeCost[keysCost[i]] - this.credit) + ' more !');
+            this.toasterS.comics('You need ' + Math.round(tempUpgradeCost[keysCost[i]] - this.credit) + ' more !',"upgrade-oremiss" );
           }
           return false;
         }
@@ -155,14 +155,14 @@ export class UpgradeViewComponent implements AfterViewInit {
       // Check research level
       else if (!this.oreMiss(keysCost[i])) {
         if (toaster) {
-          this.toasterS.alert('Research should be higher', 'You should upgrade research before');
+          this.toasterS.comics('You should upgrade research before', "upgrade-low-research");
         }
         return false;
       }
       // Check ore
       else if (this.oreAmount[keysCost[i]] < tempUpgradeCost[keysCost[i]]) {
         if (toaster) {
-          this.toasterS.alert('Not enouh ' + keysCost[i], 'You need ' + Math.round(tempUpgradeCost[keysCost[i]] - this.oreAmount[keysCost[i]]) + ' more !');
+          this.toasterS.comics( 'You need ' + Math.round(tempUpgradeCost[keysCost[i]] - this.oreAmount[keysCost[i]]) + ' more '+keysCost[i],"upgrade-oremiss");
         }
         return false;
       }
