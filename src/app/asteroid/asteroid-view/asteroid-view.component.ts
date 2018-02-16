@@ -104,7 +104,7 @@ export class AsteroidViewComponent implements OnInit {
       this.userMineRateLvl = upgrade.lvl;
       this.initNumberOfDroneBegin();
     });
-    //setInterval(() => { this.updateClick(); }, 100);
+    // setInterval(() => { this.updateClick(); }, 100);
   }
 
   // tslint:disable-next-line:member-ordering
@@ -219,24 +219,24 @@ export class AsteroidViewComponent implements OnInit {
         this.asteroidSprite.shakeCoef = this.clickGauge * 5;
       });
       // Asteroid Subject
-      this.asteroidS.asteroid$.subscribe((asteroid: IAsteroid) => {
+      this.asteroidS.asteroid$.subscribe((iasteroid: IAsteroid) => {
         this.drone.isMining = false;
 
-        const state = this.asteroidSprite.computeState(asteroid);
+        const state = this.asteroidSprite.computeState(iasteroid);
 
-        if (this.asteroidSprite.state != -1 && state == -1) {
+        if (this.asteroidSprite.state !== -1 && state === -1) {
           this.asteroidSprite.destructBase();
         }
 
-        if (state < this.asteroidSprite.state && state != -1) {
+        if (state < this.asteroidSprite.state && state !== -1) {
           this.asteroidSprite.destructOnePart();
         }
 
-        if (asteroid.currentCapacity > this.asteroid.currentCapacity) {
-          this.asteroidSprite.changeSprite(asteroid);
+        if (iasteroid.currentCapacity > this.asteroid.currentCapacity) {
+          this.asteroidSprite.changeSprite(iasteroid);
           this.drone.laserAnim.visible = true;
         }
-        this.asteroid = asteroid;
+        this.asteroid = iasteroid;
         this.oreS.OreAmounts
         .take(1).subscribe((oreAmount: IOreAmounts) => {
           this.drone.setIsUserHaveMaxCapacityStorage(this.asteroid && oreAmount[this.asteroid.ore] >= this.storageCapacityMax);
@@ -336,7 +336,7 @@ export class AsteroidViewComponent implements OnInit {
     this.userS.modifyCurrentMineRate(newRate <= max ? newRate : max);
 
     if (this.coefClick >= 1) {
-      //this.socketS.reachFrenzy();
+      // this.socketS.reachFrenzy();
     }
     if (!this.frenzyMOD) {
       if (this.coefClick > 0.5) {
@@ -511,7 +511,6 @@ export class AsteroidViewComponent implements OnInit {
       this.addTextToPiecetext('Stock Max', '0xFF0000');
       return;
     }
-    
     if (this.asteroidPieceParent.children.length >= 50) {
       this.socketS.pickUpCollectible(oreName, values);
       this.addTextToPiecetext('+' + values, '0xffc966');
@@ -667,8 +666,8 @@ export class AsteroidViewComponent implements OnInit {
   }
 
   textAlphaToOne(i: number) {
-    for (let i = 0; i < this.textPieces.children.length; i++) {
-      this.textPieces.children[i].alpha = 1;
+    for (let d = 0; d < this.textPieces.children.length; d++) {
+      this.textPieces.children[d].alpha = 1;
     }
   }
 
