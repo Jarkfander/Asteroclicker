@@ -9,6 +9,7 @@ import 'rxjs/add/operator/mergeMap';
 export interface IAsteroid {
   capacity: number;
   currentCapacity: number;
+  collectible: number;
   ore: string;
   purity: number;
   seed: string;
@@ -28,15 +29,17 @@ export class AsteroidService {
   get isEmpty(): Observable<boolean> {
     return this.authS.UserId
       .mergeMap((id: String) => this.db.object('users/' + id + '/asteroid').valueChanges<IAsteroid>())
-      .map((asteroid: IAsteroid) => asteroid.currentCapacity === 0);
+      .map((asteroid: IAsteroid) => (asteroid.currentCapacity - asteroid.collectible) < 0.1);
+
   }
 
   /* get state():Observable<number> {
      return this.authS.UserId
        .mergeMap((id: String) => this.db.object('users/' + id + '/asteroid').valueChanges<IAsteroid>()
-       .map((asteroid:IAsteroid)=> asteroid.currentCapacity == asteroid.capacity ? 4 : 
+       .map((asteroid:IAsteroid)=> asteroid.currentCapacity == asteroid.capacity ? 4 :
          Math.floor((asteroid.currentCapacity / asteroid.capacity) * 5))
        )
    }*/
+   
 
 }

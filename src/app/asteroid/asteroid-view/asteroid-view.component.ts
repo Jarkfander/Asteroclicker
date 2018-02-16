@@ -2,9 +2,10 @@ import { Component, AfterViewInit, ElementRef, Renderer2, HostListener } from '@
 import * as PIXI from 'pixi.js';
 
 import { AsteroidSprite } from './asteroidSprite';
+import { AsteroidPiece, STATE_PIECE } from './asteroidPiece';
 import { Drone, STATS_DRONE } from './drone';
 import { SocketService } from '../../shared/socket/socket.service';
-import { UserService, IFrenzyInfo, IProfile, IUserUpgrade } from '../../shared/user/user.service';
+import { UserService, IFrenzyInfo, IProfile, IUserUpgrade, IMiningInfo } from '../../shared/user/user.service';
 import { ParticleBase } from '../../shared/pixiVisual/particleBase';
 import { User } from '../../shared/user/user';
 import { UpgradeType, Upgrade } from '../../ship/upgrade-class/upgrade';
@@ -15,8 +16,8 @@ import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Observable } from 'rxjs/Observable';
 import { OreService, IOreAmounts } from '../../ore/ore.service';
 import { ResourcesService } from '../../shared/resources/resources.service';
-
-
+import { Vector2 } from '../../shared/utils';
+import { SearchService, ISearch } from '../../search/search.service';
 
 export enum KEY_CODE {
   LEFT_ARROW = 37,
@@ -34,6 +35,11 @@ export enum KEY_CODE {
 })
 
 export class AsteroidViewComponent implements OnInit {
+  yLaser: number;
+  xLaser: number;
+  textPiecePatron: PIXI.Text;
+  textPieces: PIXI.Text;
+  delta: number;
   coefClick: number;
   frenzyMOD: boolean;
   storageCapacityMax: number;
@@ -41,7 +47,6 @@ export class AsteroidViewComponent implements OnInit {
   private app: PIXI.Application;
   private asteroidSprite: AsteroidSprite;
   private asteroid: IAsteroid;
-  private state: number;
   private drone: Drone;
   private emitter: ParticleBase;
 
@@ -55,6 +60,12 @@ export class AsteroidViewComponent implements OnInit {
   private userMineRateLvl = 1;
   public clicked: boolean;
 
+  private numberOfClick = 0;
+
+  // Asteroid piece
+  asteroidPieceParent: AsteroidPiece;
+  tempTabDeletePiece: Array<number>;
+
   private frenzyInfo: IFrenzyInfo = {
     state: 0,
     nextCombos: {}
@@ -66,25 +77,38 @@ export class AsteroidViewComponent implements OnInit {
     private asteroidS: AsteroidService,
     private resourcesS: ResourcesService,
     private socketS: SocketService,
-    private oreS: OreService) { }
+    private oreS: OreService,
+    private searchS: SearchService) { }
 
   ngOnInit(): void {
     this.clicks = new Array();
     this.subjectManage();
 
     setInterval(() => {
-      if (this.asteroid != null && this.asteroid.currentCapacity > 0) {
-        this.socketS.incrementOre(this.asteroid.ore,
-          parseFloat((this.userS.currentUser.currentMineRate *
-            this.asteroid.purity / 100 *
-            this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2)));
+      if (this.asteroid != null
+        && this.asteroid.currentCapacity > 0
+        && !((this.asteroid.currentCapacity - this.asteroid.collectible) < 0.01)) {
+
+        const amounts = parseFloat((this.resourcesS.mineRate[this.userMineRateLvl].baseRate *
+          this.asteroid.purity / 100 *
+          this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2));
+        this.socketS.breakIntoCollectible(amounts);
+
+        this.socketS.updateClickGauge(this.numberOfClick);
+        this.xLaser = -Math.cos(this.drone.drone.rotation - Math.PI / 2) * this.drone.laserAnim.height * this.drone.laserAnim.scale.y + this.drone.xBaseDrone;
+        this.yLaser = -Math.sin(this.drone.drone.rotation - Math.PI / 2) * this.drone.laserAnim.height * this.drone.laserAnim.scale.y;
+        this.generatePiece(this.asteroid.ore, amounts, this.xLaser, this.yLaser);
+        this.numberOfClick = 0;
+      } else {
+        this.drone.isMining = false;
       }
     }, 1000);
+
     this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
       this.userMineRateLvl = upgrade.lvl;
       this.initNumberOfDroneBegin();
     });
-    setInterval(() => { this.updateClick(); }, 100);
+    // setInterval(() => { this.updateClick(); }, 100);
   }
 
   // tslint:disable-next-line:member-ordering
@@ -136,19 +160,32 @@ export class AsteroidViewComponent implements OnInit {
   private initAsteroid(newAste: IAsteroid) {
     const w = this.el.nativeElement.offsetWidth;
     const h = this.el.nativeElement.offsetHeight;
+    this.delta = 0;
     // skyV1
     this.initSky(w, h);
+    this.textPieces = new PIXI.Text(' ',
+      {
+        fontFamily: 'Montserrat-Black',
+        fontSize: 20, fill: 0x000FF00,
+        align: 'center'
+      });
+
+    this.textPieces.x = this.app.stage.width / 3 - 200;
+    this.textPieces.y = this.app.stage.height;
+
+    this.app.stage.addChild(this.textPieces);
+
 
     this.asteroidSprite = new AsteroidSprite(w, h, this.app, newAste);
 
     this.asteroidSprite.asteroid[0].on('click', (event) => {
       this.asteroidClick();
     });
+    this.asteroidPieceParent = new AsteroidPiece(PIXI.Texture.fromImage('assets/AsteroidParticle/parentPiece.png'), 0.5, 0, 0, 0, 'carbon');
+    this.tempTabDeletePiece = new Array<number>();
+    this.app.stage.addChild(this.asteroidPieceParent);
 
-/*
-    for (let i = 0; i < 20 ; i++) {
-      this.asteroidSprite.generatePiece('carbon', i);
-    }*/
+    this.tickerApp();
 
     this.asteroidSprite.eventOk = this.userS.currentUser.event;
     this.asteroidSprite.activEvent();
@@ -164,93 +201,137 @@ export class AsteroidViewComponent implements OnInit {
     this.app = new PIXI.Application(w, h, { backgroundColor: 0x1079bb });
     this.render.appendChild(this.el.nativeElement, this.app.view);
     this.initNumberOfDroneBegin();
-
+    this.xLaser = -Math.cos(this.drone.drone.rotation - Math.PI / 2) * this.drone.laserAnim.height * this.drone.laserAnim.scale.y + this.drone.xBaseDrone;
+    this.yLaser = -Math.sin(this.drone.drone.rotation - Math.PI / 2) * this.drone.laserAnim.height * this.drone.laserAnim.scale.y;
     this.asteroidS.asteroid$.take(1).subscribe((asteroid: IAsteroid) => {
 
       this.initAsteroid(asteroid);
       this.asteroid = asteroid;
 
+      this.initPieceOfDrone();
+      
+      this.userS.miningInfo.subscribe((info: IMiningInfo) => {
+        this.userS.localClickGauge = info.clickGauge;
+        this.userS.localClickGaugeSubject.next(this.userS.localClickGauge);
+        this.asteroidSprite.shakeCoef = this.userS.localClickGauge * 10;
+      });
       // Asteroid Subject
-      this.asteroidS.asteroid$.subscribe((asteroid: IAsteroid) => {
+      this.asteroidS.asteroid$.subscribe((iasteroid: IAsteroid) => {
         this.drone.isMining = false;
 
-        const state = asteroid.currentCapacity === asteroid.capacity ? 4 :
-          Math.floor((asteroid.currentCapacity / asteroid.capacity) * 5);
+        const state = this.asteroidSprite.computeState(iasteroid);
 
-        if (asteroid.currentCapacity === 0 && this.asteroid.currentCapacity !== 0) {
+        if (this.asteroidSprite.state !== -1 && state === -1) {
           this.asteroidSprite.destructBase();
         }
 
-        if (state < this.state) {
+        if (state < this.asteroidSprite.state && state !== -1) {
           this.asteroidSprite.destructOnePart();
         }
 
-        this.state = state;
-
-        if (asteroid.currentCapacity > this.asteroid.currentCapacity) {
-          this.asteroidSprite.changeSprite(asteroid);
+        if (iasteroid.currentCapacity > this.asteroid.currentCapacity) {
+          this.asteroidSprite.changeSprite(iasteroid);
           this.drone.laserAnim.visible = true;
         }
-        this.asteroid = asteroid;
+        this.asteroid = iasteroid;
+        this.oreS.OreAmounts
+          .take(1).subscribe((oreAmount: IOreAmounts) => {
+            this.drone.setIsUserHaveMaxCapacityStorage(this.asteroid && oreAmount[this.asteroid.ore] >= this.storageCapacityMax);
+          });
+
         this.drone.droneMiningVerif();
 
       });
 
-          // Asteroid is empty
-    this.asteroidS.isEmpty.subscribe((isEmpty: boolean) => {
-      this.drone.setIsAsteLifeSupZero(!isEmpty);
-    });
-
-    // Event Subject
-    this.userS.eventSubject.subscribe((user: User) => {
-      if (this.asteroidSprite) {
-        this.asteroidSprite.eventOk = user.event;
-        this.asteroidSprite.activEvent();
-        this.clickCapsule();
-      }
-    });
-
-
-    // Upgrade Subject
-    this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
-      const tempLvl = upgrade.lvl;
-      this.drone.changeSpriteDrone(upgrade.lvl);
-    });
-
-    // upgrade Storage
-    this.userS.getUpgradeByName('storage')
-      .subscribe((userUpgrade) => {
-        this.storageCapacityMax = this.resourcesS[userUpgrade.name][userUpgrade.lvl].capacity;
-      });
-    // frenzy Subject
-    this.userS.frenzyInfo.subscribe((frenzy: IFrenzyInfo) => {
-      this.frenzyInfo = frenzy;
-      this.frenzyModGoOrNot(frenzy);
-    });
-    // Profile Subject
-    this.userS.profile.subscribe((profile: IProfile) => {
-      profile.badConfig ? this.backgroundSky.stop() : this.backgroundSky.play();
-    });
-
-
-    // User ore amounts
-    this.oreS.OreAmounts
-      .subscribe((oreAmount: IOreAmounts) => {
-        this.drone.setIsUserHaveMaxCapacityStorage(this.asteroid && oreAmount[this.asteroid.ore] >= this.storageCapacityMax);
+      // Asteroid is empty
+      this.asteroidS.isEmpty.subscribe((isEmpty: boolean) => {
+        this.drone.setIsAsteLifeSupZero(!isEmpty);
       });
 
-    });
+      // Event Subject
+      this.userS.eventSubject.subscribe((user: User) => {
+        if (this.asteroidSprite) {
+          this.asteroidSprite.eventOk = user.event;
+          this.asteroidSprite.activEvent();
+          this.clickCapsule();
+        }
+      });
 
+
+      // frenzy Subject
+      this.userS.frenzyInfo.subscribe((frenzy: IFrenzyInfo) => {
+        this.frenzyInfo = frenzy;
+        this.frenzyModGoOrNot(frenzy);
+      });
+      // Profile Subject
+      this.userS.profile.subscribe((profile: IProfile) => {
+        profile.badConfig ? this.backgroundSky.stop() : this.backgroundSky.play();
+      });
+      // frenzy Subject
+      this.userS.frenzyInfo.subscribe((frenzy: IFrenzyInfo) => {
+        this.frenzyInfo = frenzy;
+        this.frenzyModGoOrNot(frenzy);
+      });
+      // Profile Subject
+      this.userS.profile.subscribe((profile: IProfile) => {
+        profile.badConfig ? this.backgroundSky.stop() : this.backgroundSky.play();
+      });
+
+      // Upgrade Subject
+      this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
+        const tempLvl = upgrade.lvl;
+        this.drone.changeSpriteDrone(upgrade.lvl);
+      });
+
+      // Search
+      this.searchS.search.subscribe((search: ISearch) => {
+        if (search.state === 3) {
+          this.drone.statsActu = STATS_DRONE.GO_OUT;
+          this.pieceGoAway();
+        }
+      });
+
+      // upgrade Storage
+      this.userS.getUpgradeByName('storage')
+        .subscribe((userUpgrade) => {
+          this.storageCapacityMax = this.resourcesS[userUpgrade.name][userUpgrade.lvl].capacity;
+        });
+
+      // User ore amounts
+      this.oreS.OreAmounts
+        .subscribe((oreAmount: IOreAmounts) => {
+          this.drone.setIsUserHaveMaxCapacityStorage(this.asteroid && oreAmount[this.asteroid.ore] >= this.storageCapacityMax);
+        });
+
+    });
   }
 
   asteroidClick() {
     // ga('asteroid.send', 'event', 'buttons', 'click', 'asteroid');
     if (!this.userS.currentUser.frenzy.state) {
+      this.numberOfClick++;
+      this.userS.localClickGauge++;
+      if (this.userS.localClickGauge > 50) {
+        const amounts = parseFloat((
+          this.resourcesS.mineRate[this.userMineRateLvl].baseRate *
+          this.asteroid.purity / 100 *
+          this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2));
+
+
+        for (let i = 0; i < 10; i++) {
+          this.generatePiece(this.asteroid.ore, amounts, this.xLaser, this.yLaser);
+        }
+        this.asteroidSprite.clickExplosion();
+        this.userS.localClickGauge = 0;
+      }
+      this.asteroidSprite.shakeCoef = this.userS.localClickGauge * 10;
+      this.userS.localClickGaugeSubject.next(this.userS.localClickGauge);
       this.clicks.push(Date.now());
     }
   }
 
   updateClick() {
+
     const max = this.resourcesS.mineRate[this.userMineRateLvl].maxRate;
     const base = this.resourcesS.mineRate[this.userMineRateLvl].baseRate;
 
@@ -266,7 +347,7 @@ export class AsteroidViewComponent implements OnInit {
     this.userS.modifyCurrentMineRate(newRate <= max ? newRate : max);
 
     if (this.coefClick >= 1) {
-      this.socketS.reachFrenzy();
+      // this.socketS.reachFrenzy();
     }
     if (!this.frenzyMOD) {
       if (this.coefClick > 0.5) {
@@ -428,5 +509,203 @@ export class AsteroidViewComponent implements OnInit {
       this.drone = new Drone(0.20, 0.20, 1, 1, false, this.app);
     }
     this.drone.changeSpriteDrone(this.userMineRateLvl);
+  }
+
+
+  /*
+  * Managed asteroid piece
+  */
+
+  // Piece of aste
+  generatePiece(oreName: string, values, _x: number, _y: number) {
+    if (this.drone.statsActu !== STATS_DRONE.MINING) {
+      this.addTextToPiecetext('Stock Max', '0xFF0000');
+      return;
+    }
+    const iTemp = this.tabElementEmpty();
+    if (this.asteroidPieceParent.children.length === 250 && iTemp === -1) {
+      this.socketS.pickUpCollectible(oreName, values);
+      this.addTextToPiecetext('+' + values, '0xffc966');
+      return;
+    }
+
+    // Voir pour reaffecter la valeur du tableau et pas la reset parce que le tableau se reduit tout seul
+    const randomX = Math.random() * (this.app.renderer.width - 150) + 80;
+    const randomY = Math.random() * (this.app.renderer.height - 150) + 80;
+
+    const sprite = new AsteroidPiece(PIXI.Texture.fromImage('assets/AsteroidParticle/' + oreName + 'Particle.png'), Math.random() * 2, randomX, randomY, values, oreName);
+    sprite.texture.baseTexture.mipmap = true;
+    sprite.anchor.set(0.5);
+
+    sprite.x = _x;
+    sprite.y = _y;
+
+    const randomScale = Math.random() + 0.5;
+    sprite.scale.set(0.25 * randomScale, 0.25 * randomScale);
+    sprite.rotation = Math.random() * 180;
+    const circle = new PIXI.Graphics();
+    circle.beginFill(0x0000FF, 0);
+    circle.drawCircle(150, 150, 200 * (1 - sprite.scale.x));
+    circle.endFill();
+    circle.alpha = 0.5;
+    circle.x -= (sprite.width) + 150;
+    circle.y -= (sprite.height) + 150;
+    sprite.addChild(circle);
+
+    circle.interactive = true;
+
+    if (this.asteroidPieceParent.children.length <= 250) {
+      this.asteroidPieceParent.addChild(sprite);
+    } else {
+      this.asteroidPieceParent.addChildAt(sprite, iTemp);
+    }
+    circle.on('mouseover', (event) => {
+      sprite.state = STATE_PIECE.GO;
+    });
+  }
+
+  // Return the element empty in tab
+  tabElementEmpty() {
+    for (let i = 0; i < this.asteroidPieceParent.children.length; i++) {
+      if (!this.asteroidPieceParent.children[i]) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  // detroy
+  detroyPiece(values, orename, i) {
+    this.socketS.pickUpCollectible(orename, values);
+  }
+
+  // State PIECE GO AWAY
+  pieceGoAway() {
+    for (let i = 0; i < this.asteroidPieceParent.children.length; i++) {
+      if (this.asteroidPieceParent.children[i]) {
+        (this.asteroidPieceParent.children[i] as AsteroidPiece).state = STATE_PIECE.GOAWAY;
+      }
+    }
+  }
+
+  initPieceOfDrone() {
+    if (this.asteroid.collectible > 0) {
+      const amounts = parseFloat((this.userS.currentUser.currentMineRate *
+        this.asteroid.purity / 100 *
+        this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2));
+      console.log(amounts);
+      for (let i = 0; i < this.asteroid.collectible / amounts; i++) {
+        this.generatePiece(this.asteroid.ore, amounts, this.xLaser, this.yLaser);
+      }
+    }
+  }
+
+  lerpVector2(sourceX, sourceY, destX, destY, delta, isRotate = false) {
+    const vect = new Vector2(); const vectorTemp = new Vector2();
+    vectorTemp.initXY(sourceX, sourceY);
+    vect.initXYVector(vectorTemp.lerp(destX, destY, delta));
+    return vect;
+  }
+
+  /*
+  *  App Ticker Delta
+  */
+  tickerApp() {
+    this.app.ticker.add((delta) => {
+      if (this.delta > 2 * Math.PI) {
+        this.delta = 0;
+      }
+      this.delta += (2 * Math.PI) / 1000;
+      this.textAlphaDecrease();
+      let pieceAster: PIXI.DisplayObject;
+      let pieceAsterCast: AsteroidPiece;
+      for (let i = 0; i < this.asteroidPieceParent.children.length; i++) {
+        if (!this.asteroidPieceParent.children[i]) {
+          continue;
+        }
+        pieceAster = this.asteroidPieceParent.children[i];
+        pieceAsterCast = (this.asteroidPieceParent.children[i] as AsteroidPiece);
+
+        switch (pieceAsterCast.state) {
+          case STATE_PIECE.GOAWAY:
+            if (pieceAster.alpha < 0.1) {
+              this.tempTabDeletePiece.push(i);
+            } else {
+              pieceAster.alpha -= 0.05;
+            }
+            break;
+
+
+          case STATE_PIECE.GO:
+            if (this.asteroid.collectible > 0) {
+              if (pieceAster.y >= this.app.renderer.height) {
+                this.detroyPiece(pieceAsterCast.values, pieceAsterCast.type, i);
+                this.asteroidPieceParent.children[i].destroy();
+                this.addTextToPiecetext('+' + pieceAsterCast.values, '0x00FF00');
+              } else {
+                const vectGO = this.lerpVector2(pieceAster.x, pieceAster.y, this.app.renderer.width / 4, this.app.renderer.height + 50, 0.08);
+                pieceAster.x = vectGO.x;
+                pieceAster.y = vectGO.y;
+              }
+            }
+            break;
+
+          case STATE_PIECE.STAY:
+            pieceAster.x = pieceAsterCast.basePosX + Math.cos(this.delta) * -2.40 * (3 + pieceAsterCast.moveSpace);
+            pieceAster.y = pieceAsterCast.basePosY + Math.sin(this.delta) * -2.05 * (3 + pieceAsterCast.moveSpace);
+            break;
+
+          case STATE_PIECE.SPAWN:
+            const vectSPAWN = this.lerpVector2(pieceAster.x, pieceAster.y, pieceAsterCast.basePosX, pieceAsterCast.basePosY, 0.1);
+            pieceAster.x = vectSPAWN.x;
+            pieceAster.y = vectSPAWN.y;
+            /*
+            if (Math.abs(pieceAster.x - pieceAsterCast.basePosX) < 0.001 && Math.abs(pieceAster.y - pieceAsterCast.basePosY) < 0.001) {
+              pieceAsterCast.state = STATE_PIECE.STAY;
+            }*/
+            break;
+
+        }
+
+      }
+      this.asteroidSprite.tickerAppAsteroid();
+    });
+  }
+
+
+  /*
+  * MANAGED Text
+  */
+  textAlphaDecrease() {
+    const tempErase = new Array<number>();
+    for (let i = 0; i < this.textPieces.children.length; i++) {
+      if (this.textPieces.children[i].alpha < 0) {
+        tempErase.push(i);
+        continue;
+      }
+      this.textPieces.children[i].y -= 1.8;
+      this.textPieces.children[i].alpha -= 0.01;
+    }
+    for (let i = 0; i < tempErase.length; i++) {
+      this.textPieces.children.splice(tempErase[i], 1);
+    }
+  }
+
+  textAlphaToOne(i: number) {
+    for (let d = 0; d < this.textPieces.children.length; d++) {
+      this.textPieces.children[d].alpha = 1;
+    }
+  }
+
+  addTextToPiecetext(values, color) {
+    const textTemp = new PIXI.Text(values,
+      {
+        fontFamily: 'Montserrat-Black',
+        fontSize: 20, fill: color,
+        align: 'center'
+      });
+    textTemp.alpha = 1;
+    textTemp.x += Math.random() * 250;
+    this.textPieces.addChild(textTemp);
   }
 }

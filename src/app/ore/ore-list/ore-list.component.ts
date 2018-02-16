@@ -54,9 +54,6 @@ export class OreListComponent implements OnInit {
       .map((upgrade: IUserUpgrade) => this.resourcesS.storage[upgrade.lvl].capacity)
       .subscribe((capacity: number) => this.capacity = capacity);
 
-    this.userS.mineRateSubject
-      .map((user: User) => user.currentMineRate)
-      .subscribe((mineRate: number) => this.mineRate = mineRate);
   }
 
   /** Return the amount of the ore */

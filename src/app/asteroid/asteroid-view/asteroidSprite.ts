@@ -4,33 +4,11 @@ import * as PIXIParticles from 'pixi-particles';
 import { getFramesFromSpriteSheet, initSprite } from '../../loadAnimation';
 import { ParticleBase } from '../../shared/pixiVisual/particleBase';
 import { IAsteroid } from '../asteroid.service';
-import { Vector2 } from '../../shared/utils';
-
-class PieceAster extends PIXI.Sprite {
-    public sprite: PIXI.Sprite;
-    public moveSpace: number;
-    public isOver: boolean;
-    public values: number;
-    public type: string;
-
-    public basePosX: number;
-    public basePosY: number;
-
-    constructor(_sprite: PIXI.Texture, _moveSpace: number, _x, _y, _values, _type) {
-        super(_sprite);
-        this.values = _values;
-        this.type = _type;
-        this.basePosX = _x;
-        this.basePosY = _y;
-        this.moveSpace = _moveSpace;
-        this.isOver = false;
-    }
-}
 
 export class AsteroidSprite {
+    shakeAstey: number;
+    shakeAstex: number;
     asteroid: PIXI.Sprite[];
-
-    pieceAsterParent: PieceAster;
 
     app: PIXI.Application;
     clickEmitter: ParticleBase;
@@ -76,6 +54,7 @@ export class AsteroidSprite {
     height: number;
     width: number;
 
+    state: number;
     constructor(width: number, height: number, app: PIXI.Application, asteroid: IAsteroid) {
         this.height = height;
         this.width = width;
@@ -96,8 +75,7 @@ export class AsteroidSprite {
 
         this.app.stage.addChild(this.spriteStar);
 
-        this.pieceAsterParent = new PieceAster(PIXI.Texture.fromImage('assets/AsteroidParticle/parentPiece.png'), 0.5, 0, 0, 0, 'carbon');
-        this.app.stage.addChild(this.pieceAsterParent);
+
         // Frenzy init
         this.frenzyModInit();
 
@@ -128,86 +106,56 @@ export class AsteroidSprite {
         this.spriteEventParent.addChild(this.initAnimationFromSpriteEvent('explosionBulle', 350, 348, false));
 
         this.app.stage.addChild(this.spriteEventParent);
+        this.shakeAstex = 1;
+        this.shakeAstey = 1;
 
-        let shakeAstex = 1;
-        let shakeAstey = 1;
-        // Listen for animate update
-        this.app.ticker.add((delta) => {
-            if (this.asteroid[0]) {
-                if (this.delta > 2 * Math.PI) {
-                    this.delta = 0;
-                }
-                this.delta += (2 * Math.PI) / 1000;
-
-                if (this.checkAstero) {
-                    this.deltaCompteur++;
-                } else {
-                    this.deltaCompteur = 0;
-                }
-                if (this.deltaCompteur > 20) {
-                    shakeAstex = 150 * this.delta;
-                    shakeAstey = 1 * this.delta;
-                } else {
-                    shakeAstex = this.delta;
-                    shakeAstey = this.delta;
-                }
-                this.asteroid[0].x = this.xBaseAsteroid + Math.cos(shakeAstex) * -5;
-                this.asteroid[0].y = this.yBaseAsteroid + Math.sin(shakeAstey) * -15;
-
-                let pieceAster = this.pieceAsterParent.children[0];
-                let pieceAsterCast = (this.pieceAsterParent.children[0] as PieceAster);
-                for (let i = 0 ; i < this.pieceAsterParent.children.length ; i++) {
-
-                    pieceAster = this.pieceAsterParent.children[i];
-                    pieceAsterCast = (this.pieceAsterParent.children[i] as PieceAster);
-
-                    if (pieceAsterCast.isOver) {
-                        if (pieceAster.y >= this.app.renderer.height + 48) {
-                            // stocker un tableau de chiffre puis les delete à la fin de la lecture
-                        } else {
-                            const vect = this.lerpVector2(pieceAster.x, pieceAster.y, this.app.renderer.width / 4, this.app.renderer.height + 50, 0.08);
-                            pieceAster.x = vect.x;
-                            pieceAster.y = vect.y;
-                        }
-                    } else {
-                        pieceAster.x = pieceAsterCast.basePosX + Math.cos(this.delta) * -2.40 * (3 + pieceAsterCast.moveSpace);
-                        pieceAster.y = pieceAsterCast.basePosY + Math.sin(this.delta) * -2.05 * (3 + pieceAsterCast.moveSpace);
-                    }
-
-                }
-
-                if (this.spriteStar.position.x < 1000) {
-                    this.spriteStar.position.x = this.spriteStarXY.x + this.delta * 2000;
-                    this.spriteStar.position.y = this.spriteStarXY.y - this.delta * 1800;
-                } else {
-                    this.spriteStar.position.x = this.spriteStarXY.x;
-                    this.spriteStarXY.y = Math.random() * 1000 + 200;
-                    this.spriteStar.position.y = this.spriteStarXY.y;
-                    const randScal = Math.random() * 0.75 + 0.25;
-                    this.spriteStar.scale.set(randScal, randScal);
-                    this.spriteStar.visible = true,
-                        this.spriteStar.gotoAndPlay(0);
-                }
-
-                if (this.boolEvent) {
-                    this.spriteEventParent.x += 1;
-                    this.spriteEventParent.y -= 1;
-                    if (this.spriteEventParent.x > 1500) {
-                        this.boolEvent = false;
-                        this.compteurEvent++;
-                        if (this.compteurEvent > 3) {
-                            this.eventOk = 0;
-                            this.compteurEvent = 0;
-                        }
-                        this.activEvent();
-                    }
-                }
-            }
-        });
     }
 
-    emitClickParticle(data) {
-        this.clickEmitter.updateOwnerPos(data.global.x, data.global.y);
+    public shakeCoef = 100;
+    tickerAppAsteroid() {
+        if (this.asteroid[0]) {
+            if (this.delta > 2 * Math.PI) {
+                this.delta = 0;
+            }
+            this.delta += (2 * Math.PI) / 1000;
+
+
+            this.shakeAstex = this.shakeCoef * this.delta;
+            this.shakeAstey = this.delta;
+
+            this.asteroid[0].x = this.xBaseAsteroid + Math.cos(this.shakeAstex) * -5;
+            this.asteroid[0].y = this.yBaseAsteroid + Math.sin(this.shakeAstey) * -15;
+
+            if (this.spriteStar.position.x < 1000) {
+                this.spriteStar.position.x = this.spriteStarXY.x + this.delta * 2000;
+                this.spriteStar.position.y = this.spriteStarXY.y - this.delta * 1800;
+            } else {
+                this.spriteStar.position.x = this.spriteStarXY.x;
+                this.spriteStarXY.y = Math.random() * 1000 + 200;
+                this.spriteStar.position.y = this.spriteStarXY.y;
+                const randScal = Math.random() * 0.75 + 0.25;
+                this.spriteStar.scale.set(randScal, randScal);
+                this.spriteStar.visible = true,
+                    this.spriteStar.gotoAndPlay(0);
+            }
+
+            if (this.boolEvent) {
+                this.spriteEventParent.x += 1;
+                this.spriteEventParent.y -= 1;
+                if (this.spriteEventParent.x > 1500) {
+                    this.boolEvent = false;
+                    this.compteurEvent++;
+                    if (this.compteurEvent > 3) {
+                        this.eventOk = 0;
+                        this.compteurEvent = 0;
+                    }
+                    this.activEvent();
+                }
+            }
+        }
+    }
+    emitClickParticle(x: number, y: number) {
+        this.clickEmitter.updateOwnerPos(x, y);
         this.clickEmitter.emit = true;
     }
 
@@ -234,7 +182,7 @@ export class AsteroidSprite {
 
         sprite.interactive = true;
         sprite.buttonMode = true;
-        sprite.on('click', (event) => {
+        /*sprite.on('click', (event) => {
             this.emitClickParticle(event.data);
 
             let tempAnim = this.boomAnim;
@@ -252,7 +200,27 @@ export class AsteroidSprite {
                 tempAnim = this.woomAnim;
             }
             this.animBoomOnClick(xTemp, yTemp, tempAnim);
-        });
+        });*/
+    }
+
+    clickExplosion() {
+        this.emitClickParticle(this.width / 2, this.height / 2);
+
+        let tempAnim = this.boomAnim;
+        let xTemp = this.width / 2;
+        const yTemp = this.height / 2;
+
+        const random = Math.floor(Math.random() * 3);
+        if (random === 0) {
+            tempAnim = this.krashAnim;
+            xTemp += 50;
+        } else if (random === 1) {
+            tempAnim = this.kaboomAnim;
+            xTemp += 50;
+        } else if (random === 2) {
+            tempAnim = this.woomAnim;
+        }
+        this.animBoomOnClick(xTemp, yTemp, tempAnim,true);
     }
 
     initAsteroidSprites() {
@@ -268,9 +236,24 @@ export class AsteroidSprite {
         }
     }
 
+    computeState(asteroid: IAsteroid): number {
+        let state = 0;
+
+        if ((asteroid.currentCapacity - asteroid.collectible) === asteroid.capacity) {
+            state = 4;
+        }
+        else if (asteroid.currentCapacity - asteroid.collectible == 0) {
+            state = -1;
+        }
+        else {
+            state = Math.floor(((asteroid.currentCapacity - asteroid.collectible) / asteroid.capacity) * 5);
+        }
+        return state;
+    }
+
     generateAsteroid(asteroid: IAsteroid) {
-        const state = asteroid.currentCapacity === asteroid.capacity ? 4 :
-            Math.floor((asteroid.currentCapacity / asteroid.capacity) * 5);
+        this.state = this.computeState(asteroid);
+
         const seedNum = [];
         const nums = [1, 2, 3, 4];
         const comb = [[1, 1], [1, -1], [-1, -1], [-1, 1]];
@@ -296,17 +279,17 @@ export class AsteroidSprite {
 
         this.asteroid[0].texture = this.asteroidFolders[asteroid.ore][0];
 
-        for (let i = 0; i < state; i++) {
+        for (let i = 0; i < this.state; i++) {
             this.asteroid[i + 1].texture = this.asteroidFolders[asteroid.ore][nums[seedNum[i]]];
         }
 
-        if (asteroid.currentCapacity > 0) {
+        if (this.state != -1) {
             this.addSpriteToScene(this.asteroid[0], 0, 0);
         }
 
         const offSet = 60;
 
-        for (let i = 0; i < state; i++) {
+        for (let i = 0; i < this.state; i++) {
             this.addSpriteToScene(this.asteroid[i + 1], comb[seedNum[i + 4]][0] * offSet, comb[seedNum[i + 4]][1] * offSet);
         }
     }
@@ -320,6 +303,7 @@ export class AsteroidSprite {
                 this.asteroid[0].children[this.asteroid[0].children.length - 1].worldTransform.ty, this.boomAnim, true);
             this.boomAnim.scale.set(1, 1);
             this.asteroid[0].removeChild(this.asteroid[0].children[this.asteroid[0].children.length - 1]);
+            this.state--;
         }
     }
 
@@ -331,6 +315,7 @@ export class AsteroidSprite {
             this.asteroid[0].worldTransform.ty, this.woomAnim, true);
         this.woomAnim.scale.set(1, 1);
         this.app.stage.removeChild(this.asteroid[0]);
+        this.state--;
     }
     // Change the sprite of asteroid when the user change
     changeSprite(asteroid: IAsteroid) {
@@ -348,7 +333,7 @@ export class AsteroidSprite {
                 'end': 1
             },
             'scale': {
-                'start': 0.4,
+                'start': 1,
                 'end': 0
             },
             'color': {
@@ -373,7 +358,7 @@ export class AsteroidSprite {
             },
             'frequency': 0.008,
             'emitterLifetime': 0.20,
-            'maxParticles': 10,
+            'maxParticles': 20,
             'pos': {
                 'x': 0,
                 'y': 0
@@ -645,41 +630,4 @@ export class AsteroidSprite {
         };
     }
 
-    // Piece of aste
-    generatePiece(oreName: string, values) {
-
-        const randomX = Math.random() * ( this.app.renderer.width - 150) + 80;
-        const randomY = Math.random() * ( this.app.renderer.height - 150) + 80;
-
-        const sprite = new PieceAster(PIXI.Texture.fromImage('assets/AsteroidParticle/' + oreName + 'Particle.png'), Math.random() * 2, randomX, randomY, values, oreName);
-        sprite.texture.baseTexture.mipmap = true;
-        sprite.anchor.set(0.5);
-
-        sprite.x = randomX;
-        sprite.y = randomY;
-
-        sprite.rotation = Math.random() * 180;
-        const randomScale = Math.random() + 0.5;
-        sprite.scale.set(0.25 * randomScale, 0.25 * randomScale);
-
-        sprite.interactive = true;
-        sprite.buttonMode = true;
-
-        this.pieceAsterParent.addChild(sprite);
-        sprite.on('mouseover', (event) => {
-            sprite.isOver = true;
-        });
-    }
-
-    // detroy
-    detroyPiece() {
-
-    }
-
-    lerpVector2(sourceX, sourceY, destX, destY, delta, isRotate = false) {
-        const vect = new Vector2(); const vectorTemp = new Vector2();
-        vectorTemp.initXY(sourceX, sourceY);
-        vect.initXYVector(vectorTemp.lerp(destX, destY, delta));
-        return vect;
-    }
 }
