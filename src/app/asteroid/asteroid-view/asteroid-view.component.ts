@@ -595,7 +595,6 @@ export class AsteroidViewComponent implements OnInit {
         this.asteroid.purity / 100 *
         this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2));
       for (let i = 0; i < this.asteroid.collectible / amounts; i++) {
-        console.log(i);
         this.generatePiece(this.asteroid.ore, amounts, this.xLaser, this.yLaser);
       }
     }
