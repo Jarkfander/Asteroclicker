@@ -86,7 +86,10 @@ export class AsteroidViewComponent implements OnInit {
     this.subjectManage();
 
     setInterval(() => {
-      if (this.asteroid != null && this.asteroid.currentCapacity > 0 && this.asteroid.collectible < this.asteroid.currentCapacity) {
+      if (this.asteroid != null
+        && this.asteroid.currentCapacity > 0
+        && !((this.asteroid.currentCapacity - this.asteroid.collectible) < 0.01)) {
+
         const amounts = parseFloat((
           this.asteroid.purity / 100 *
           this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2));
@@ -97,8 +100,9 @@ export class AsteroidViewComponent implements OnInit {
         this.yLaser = -Math.sin(this.drone.drone.rotation - Math.PI / 2) * this.drone.laserAnim.height * this.drone.laserAnim.scale.y;
         this.generatePiece(this.asteroid.ore, amounts, this.xLaser, this.yLaser);
         this.numberOfClick = 0;
-      }
-    }, 1000);
+      } else {
+        this.drone.isMining = false;
+      }    }, 1000);
 
     this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
       this.userMineRateLvl = upgrade.lvl;
@@ -238,10 +242,9 @@ export class AsteroidViewComponent implements OnInit {
         }
         this.asteroid = iasteroid;
         this.oreS.OreAmounts
-        .take(1).subscribe((oreAmount: IOreAmounts) => {
-          this.drone.setIsUserHaveMaxCapacityStorage(this.asteroid && oreAmount[this.asteroid.ore] >= this.storageCapacityMax);
-          this.drone.setIsAsteLifeSupZero(this.asteroid.currentCapacity > 0);
-        });
+          .take(1).subscribe((oreAmount: IOreAmounts) => {
+            this.drone.setIsUserHaveMaxCapacityStorage(this.asteroid && oreAmount[this.asteroid.ore] >= this.storageCapacityMax);
+          });
 
         this.drone.droneMiningVerif();
 
@@ -305,7 +308,6 @@ export class AsteroidViewComponent implements OnInit {
       this.oreS.OreAmounts
         .subscribe((oreAmount: IOreAmounts) => {
           this.drone.setIsUserHaveMaxCapacityStorage(this.asteroid && oreAmount[this.asteroid.ore] >= this.storageCapacityMax);
-          this.drone.setIsAsteLifeSupZero(this.asteroid.currentCapacity > 0);
         });
 
     });
@@ -511,7 +513,7 @@ export class AsteroidViewComponent implements OnInit {
       this.addTextToPiecetext('Stock Max', '0xFF0000');
       return;
     }
-    if (this.asteroidPieceParent.children.length >= 50) {
+    if (this.asteroidPieceParent.children.length >= 250) {
       this.socketS.pickUpCollectible(oreName, values);
       this.addTextToPiecetext('+' + values, '0xffc966');
       return;
@@ -606,7 +608,7 @@ export class AsteroidViewComponent implements OnInit {
 
 
           case STATE_PIECE.GO:
-            if (this.drone.statsActu === STATS_DRONE.MINING) {
+            if (this.asteroid.collectible > 0) {
               if (pieceAster.y >= this.app.renderer.height) {
                 this.detroyPiece(pieceAsterCast.values, pieceAsterCast.type, i);
                 this.addTextToPiecetext('+' + pieceAsterCast.values, '0x00FF00');
