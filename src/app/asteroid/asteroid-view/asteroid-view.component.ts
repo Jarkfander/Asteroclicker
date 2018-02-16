@@ -209,7 +209,7 @@ export class AsteroidViewComponent implements OnInit {
       this.asteroid = asteroid;
 
       this.initPieceOfDrone();
-      
+
       this.userS.miningInfo.subscribe((info: IMiningInfo) => {
         this.userS.localClickGauge = info.clickGauge;
         this.userS.localClickGaugeSubject.next(this.userS.localClickGauge);
@@ -518,10 +518,11 @@ export class AsteroidViewComponent implements OnInit {
 
   // Piece of aste
   generatePiece(oreName: string, values, _x: number, _y: number) {
-    if (this.drone.statsActu !== STATS_DRONE.MINING) {
+    if (this.drone.isUserHaveMaxCapacityStorage ) {
       this.addTextToPiecetext('Stock Max', '0xFF0000');
       return;
     }
+    
     const iTemp = this.tabElementEmpty();
     if (this.asteroidPieceParent.children.length === 250 && iTemp === -1) {
       this.socketS.pickUpCollectible(oreName, values);
@@ -590,11 +591,11 @@ export class AsteroidViewComponent implements OnInit {
 
   initPieceOfDrone() {
     if (this.asteroid.collectible > 0) {
-      const amounts = parseFloat((this.userS.currentUser.currentMineRate *
+      const amounts = parseFloat((this.resourcesS.mineRate[this.userMineRateLvl].baseRate *
         this.asteroid.purity / 100 *
         this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2));
-      console.log(amounts);
       for (let i = 0; i < this.asteroid.collectible / amounts; i++) {
+        console.log(i);
         this.generatePiece(this.asteroid.ore, amounts, this.xLaser, this.yLaser);
       }
     }
