@@ -19,7 +19,7 @@ export class BoostStoreComponent implements OnInit {
   constructor(private boostS: BoostService) { }
 
   public buy(amount: number) {
-    this.boostS.buyBoost(this.boost, amount);
+    this.boostS.buyBoost(this.boost, amount).subscribe();
   }
 
   ngOnInit() {

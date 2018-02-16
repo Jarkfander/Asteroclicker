@@ -7,11 +7,15 @@ import { IBoost, IUserBoost } from './boost';
 
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { take, map, tap, reduce, filter, mergeMap, scan } from 'rxjs/operators';
+import { interval } from 'rxjs/observable/interval';
+import { fromPromise } from 'rxjs/observable/fromPromise';
 import { of } from 'rxjs/observable/of';
+import { mergeAll, scan, reduce, take, map, tap, catchError, filter, mergeMap, delay, switchMap } from 'rxjs/operators';
+
 import { environment } from '../../environments/environment';
 import { SocketService } from '../shared/socket/socket.service';
 import { ToasterService } from '../shared/toaster/toaster.service';
+import { Toast, IToast } from '../shared/toaster/models/toast';
 
 @Injectable()
 export class BoostService {
@@ -27,15 +31,12 @@ export class BoostService {
               private userS: UserService,
               private toasterS: ToasterService
   ) {
-    this.getStore().subscribe((boosts: IBoost[]) => this.boosts = boosts);
-    this.changeInventory();
-  }
+    this.getStore()
+      .subscribe((boosts: IBoost[]) => this.boosts = boosts);
 
-  /** Updage Inventory */
-  public changeInventory() {
-    // TODO : socket upsert user boost
-    this.getInventory().pipe(take(1))
-        .subscribe((inventory: IUserBoost[]) => this.inventorySubject.next(inventory));
+    this.getInventory()
+      .subscribe((inventory: IUserBoost[]) => this.inventorySubject.next(inventory));
+    this.socketS.upsertUserBoosts();
   }
 
   /** transform extra Data */
@@ -63,14 +64,15 @@ export class BoostService {
   */
   public getInventory(): Observable<IUserBoost[]> {
     return this.db.list<any>(`users/${this.userS.currentUser.uid}/boosts`)
-                  .valueChanges<any>()
+                  .valueChanges<any[]>()
                   .pipe(
-                    map((boosts: any[], index: number) => boosts.map((boost: any) => {
-                      return { ...boost, ...this.boosts[index], quantity: (boost.boughtQuantity - boost.usedQuantity) };
-                    })),
-                    mergeMap((boosts) => boosts),
-                    filter((boost: IUserBoost) => boost.quantity > 0),
-                    scan((acc: IUserBoost[], add: IUserBoost) => acc = [...acc, add], [])
+                    map((boosts: any[]) => {
+                      return boosts
+                        .map((boost) => {
+                          return { ...boost, ...this.boosts[0], quantity: (boost.boughtQuantity - boost.usedQuantity) };
+                        })
+                        .filter((boost: IUserBoost) => boost.quantity > 0);
+                    })
                   );
   }
 
@@ -80,7 +82,7 @@ export class BoostService {
    */
   public activate(boost: IUserBoost) {
     this.socketS.activateBoost(boost.id);
-    this.toasterS.success('Boost activated', 'Let\s mine this asteroid boys!');
+    this.toasterS.comics('Boost activated', 'boost-activated');
   }
 
   /**
@@ -88,11 +90,16 @@ export class BoostService {
    * @param {IBoose} boost The boost you want to buy
    * @param {number} amount Amount of boost to buy
    */
-  public buyBoost(boost: IBoost, amount: number): Promise<any> {
-    this.toasterS.comics('Shipping incoming', 'tx-start');
-    return this.nxcS.approveAndCall(environment.addresses.boostMarket, boost.price * amount, boost.extraData)
-      .then((tx) => this.changeInventory())
-      .then((tx) => this.toasterS.comics('Your boost has arrived', 'tx-arrived'))
-      .catch((err) => this.toasterS.comics('Something happened, transaction cancelled', 'tx-arrived' ));
+  public buyBoost(boost: IBoost, amount: number): Observable<any> {
+    const call = this.nxcS.approveAndCall(environment.addresses.boostMarket, boost.price * amount, boost.extraData)
+      .on('transactionHash', () => this.toasterS.comics('Shipping incoming', 'tx-start'))
+      .then();
+
+    return fromPromise(call).pipe(
+      take(1),
+      tap(() => this.socketS.upsertUserBoosts()),
+      map(() => this.toasterS.comics('Your boost has arrived', 'tx-arrived')),
+      catchError((err) => of(this.toasterS.comics('Something happened, transaction cancelled', 'tx-error' )))
+    )
   }
 }
