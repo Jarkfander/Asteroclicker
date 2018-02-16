@@ -46,8 +46,8 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
     this.userS.frenzyTimer
       .subscribe((timer: number) => this.frenzyTimer = timer);
 
-    this.userS.miningInfo.subscribe((info: IMiningInfo) => {
-      this.clickGauge = info.clickGauge;
+    this.userS.localClickGaugeSubject.subscribe((clickNumber:number) => {
+      this.clickGauge = clickNumber;
       this.setMiningRate();
     });
 
@@ -63,7 +63,7 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
 
   /** Set the mining rate on the chart */
   private setMiningRate() {
-    this.miningMeter.data.datasets[0].data = [this.clickGauge, 100 - this.clickGauge];
+    this.miningMeter.data.datasets[0].data = [this.clickGauge, 50 - this.clickGauge];
     this.miningMeter.update();
   }
 

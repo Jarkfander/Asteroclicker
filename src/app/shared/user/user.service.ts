@@ -57,12 +57,14 @@ export interface IUserUpgrade {
   timer: number;
 }
 
-export interface IMiningInfo{
-  clickGauge : number;
+export interface IMiningInfo {
+  clickGauge: number;
 }
 
 @Injectable()
 export class UserService {
+
+  public localClickGauge = 0;
 
   loadedTrigger = 3;
   loadedCounter = 0;
@@ -77,7 +79,7 @@ export class UserService {
   questSubject = new Subject<User>();
   searchSubject = new Subject<User>();
 
-  mineRateSubject = new Subject<User>();
+  localClickGaugeSubject = new Subject<number>();
   eventSubject = new Subject<User>();
 
   cargoSubject = new Subject<User>();
@@ -199,6 +201,6 @@ export class UserService {
 
   modifyCurrentMineRate(value: number) {
     this.currentUser.currentMineRate = value;
-    this.mineRateSubject.next(this.currentUser);
   }
+
 }
