@@ -21,7 +21,7 @@ export class AsteroidMiningComponent implements OnInit, AfterViewInit {
   public asteroid: IAsteroid;
   public isEmpty: boolean;
 
-  private clickGauge = 0;
+  public clickGauge = 0;
   private progressBarMaxValue: number;
   public progressBarValue: number;
 
