@@ -209,9 +209,11 @@ export class SocketService {
     });
   }
 
+  /** Upsert all boosts of the current user */
   public upsertUserBoosts() {
+    console.log('Upsert Boosts');
     this.socket.emit('upsertUserBoosts', {
       user: this.userId
-    });
+    }); 
   }
 }

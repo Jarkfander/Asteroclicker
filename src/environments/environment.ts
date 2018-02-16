@@ -22,5 +22,4 @@ export const environment = {
   provider: 'https://ropsten.infura.io/Ge8pLCXZNKUB86c7miUf',
   authClient: 'http://localhost:4201/',
   clientId: 'urn:b2e:nxcrus'
-
 };
