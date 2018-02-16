@@ -61,7 +61,6 @@ export class AsteroidViewComponent implements OnInit {
   public clicked: boolean;
 
   private numberOfClick = 0;
-  private clickGauge = 0;
 
   // Asteroid piece
   asteroidPieceParent: AsteroidPiece;
@@ -90,7 +89,7 @@ export class AsteroidViewComponent implements OnInit {
         && this.asteroid.currentCapacity > 0
         && !((this.asteroid.currentCapacity - this.asteroid.collectible) < 0.01)) {
 
-        const amounts = parseFloat((
+        const amounts = parseFloat((this.resourcesS.mineRate[this.userMineRateLvl].baseRate *
           this.asteroid.purity / 100 *
           this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2));
         this.socketS.breakIntoCollectible(amounts);
@@ -210,17 +209,9 @@ export class AsteroidViewComponent implements OnInit {
       this.initPieceOfDrone();
 
       this.userS.miningInfo.subscribe((info: IMiningInfo) => {
-        const amounts = parseFloat((
-          this.asteroid.purity / 100 *
-          this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2));
-
-        if (this.clickGauge > info.clickGauge) {
-          for (let i = 0; i < 5; i++) {
-            this.generatePiece(this.asteroid.ore, amounts, this.xLaser, this.yLaser);
-          }
-        }
-        this.clickGauge = info.clickGauge;
-        this.asteroidSprite.shakeCoef = this.clickGauge * 5;
+        this.userS.localClickGauge = info.clickGauge;
+        this.userS.localClickGaugeSubject.next(this.userS.localClickGauge);
+        this.asteroidSprite.shakeCoef = this.userS.localClickGauge * 10;
       });
       // Asteroid Subject
       this.asteroidS.asteroid$.subscribe((iasteroid: IAsteroid) => {
@@ -317,6 +308,22 @@ export class AsteroidViewComponent implements OnInit {
     // ga('asteroid.send', 'event', 'buttons', 'click', 'asteroid');
     if (!this.userS.currentUser.frenzy.state) {
       this.numberOfClick++;
+      this.userS.localClickGauge++;
+      if (this.userS.localClickGauge > 50) {
+        const amounts = parseFloat((
+          this.resourcesS.mineRate[this.userMineRateLvl].baseRate *
+          this.asteroid.purity / 100 *
+          this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2));
+
+
+        for (let i = 0; i < 10; i++) {
+          this.generatePiece(this.asteroid.ore, amounts, this.xLaser, this.yLaser);
+        }
+        this.asteroidSprite.clickExplosion();
+        this.userS.localClickGauge = 0;
+      }
+      this.asteroidSprite.shakeCoef = this.userS.localClickGauge * 10;
+      this.userS.localClickGaugeSubject.next(this.userS.localClickGauge);
       this.clicks.push(Date.now());
     }
   }

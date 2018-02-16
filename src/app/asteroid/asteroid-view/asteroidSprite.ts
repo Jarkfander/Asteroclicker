@@ -120,8 +120,8 @@ export class AsteroidSprite {
             this.delta += (2 * Math.PI) / 1000;
 
 
-            this.shakeAstex = this.shakeCoef  * this.delta;
-            this.shakeAstey =  this.delta;
+            this.shakeAstex = this.shakeCoef * this.delta;
+            this.shakeAstey = this.delta;
 
             this.asteroid[0].x = this.xBaseAsteroid + Math.cos(this.shakeAstex) * -5;
             this.asteroid[0].y = this.yBaseAsteroid + Math.sin(this.shakeAstey) * -15;
@@ -154,8 +154,8 @@ export class AsteroidSprite {
             }
         }
     }
-    emitClickParticle(data) {
-        this.clickEmitter.updateOwnerPos(data.global.x, data.global.y);
+    emitClickParticle(x: number, y: number) {
+        this.clickEmitter.updateOwnerPos(x, y);
         this.clickEmitter.emit = true;
     }
 
@@ -201,6 +201,26 @@ export class AsteroidSprite {
             }
             this.animBoomOnClick(xTemp, yTemp, tempAnim);
         });*/
+    }
+
+    clickExplosion() {
+        this.emitClickParticle(this.width / 2, this.height / 2);
+
+        let tempAnim = this.boomAnim;
+        let xTemp = this.width / 2;
+        const yTemp = this.height / 2;
+
+        const random = Math.floor(Math.random() * 3);
+        if (random === 0) {
+            tempAnim = this.krashAnim;
+            xTemp += 50;
+        } else if (random === 1) {
+            tempAnim = this.kaboomAnim;
+            xTemp += 50;
+        } else if (random === 2) {
+            tempAnim = this.woomAnim;
+        }
+        this.animBoomOnClick(xTemp, yTemp, tempAnim,true);
     }
 
     initAsteroidSprites() {
@@ -313,7 +333,7 @@ export class AsteroidSprite {
                 'end': 1
             },
             'scale': {
-                'start': 0.4,
+                'start': 1,
                 'end': 0
             },
             'color': {
@@ -338,7 +358,7 @@ export class AsteroidSprite {
             },
             'frequency': 0.008,
             'emitterLifetime': 0.20,
-            'maxParticles': 10,
+            'maxParticles': 20,
             'pos': {
                 'x': 0,
                 'y': 0
