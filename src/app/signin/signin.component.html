@@ -6,7 +6,7 @@
       <form class="col">
           <input #log type="email" placeholder="e-mail">
           <input #pswd type="password" placeholder="password">
-          <button (click)="ValiderLogIn(log.value,pswd.value)">Connect</button>
+          <button type="button" (click)="validerLogIn(log.value, pswd.value)">Connect</button>
       </form>
     </div>
     <div class="form-panel col align-center">
@@ -17,7 +17,7 @@
           <input #newPswd2 type="password" placeholder="confirm password">
           <input #pseudo placeholder="pseudo">
           <input #address placeholder="wallet address">
-          <button (click)="CreateAccount(email.value, newPswd.value, newPswd2.value, pseudo.value, address.value)">Create account</button>
+          <button type="button" (click)="createAccount(email.value, newPswd.value, newPswd2.value, pseudo.value, address.value)">Create account</button>
       </form>
     </div>
   </div>
