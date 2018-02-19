@@ -69,8 +69,7 @@ export class AsteroidPiecesManaged {
 
 
                 case STATE_PIECE.GO:
-
-                    if (collectible > 0) {
+                    if (collectible >= 0) {
                         if (pieceAster.y >= this.app.renderer.height) {
                             this.detroyPiece(pieceAsterCast.values, pieceAsterCast.type, i);
                             this.asteroidPieceParent.children[i].destroy();
