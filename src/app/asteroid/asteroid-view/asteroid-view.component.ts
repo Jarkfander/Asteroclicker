@@ -140,19 +140,23 @@ export class AsteroidViewComponent implements OnInit {
   }
 
   @HostListener('window:resize') onResize() {
+    // Detroy
     this.app.stage.removeChildren();
     this.render.removeChild(this.el.nativeElement, this.app.view);
     this.asteroidPiecesManaged.asteroidPiecesManagedsubject.unsubscribe();
+
     delete this.asteroidPiecesManaged;
     delete this.asteroidSprite;
+    delete this.drone;
+
     this.app.destroy();
 
+    // Create
     this.app = new PIXI.Application(this.el.nativeElement.offsetWidth, this.el.nativeElement.offsetHeight, { backgroundColor: 0x1079bb });
     this.render.appendChild(this.el.nativeElement, this.app.view);
 
     this.initAsteroid(this.asteroid);
 
-    delete this.drone;
     this.initNumberOfDroneBegin();
     this.drone.statsActu = STATS_DRONE.MINING;
 
@@ -163,6 +167,7 @@ export class AsteroidViewComponent implements OnInit {
     this.initPieceOfDrone();
   }
 
+  // Init the sprite of the asteroid
   private initAsteroid(newAste: IAsteroid) {
     const w = this.el.nativeElement.offsetWidth;
     const h = this.el.nativeElement.offsetHeight;
@@ -176,7 +181,6 @@ export class AsteroidViewComponent implements OnInit {
       this.asteroidClick();
     });
 
-
     this.tickerApp();
 
     this.asteroidSprite.eventOk = this.userS.currentUser.event;
@@ -186,7 +190,7 @@ export class AsteroidViewComponent implements OnInit {
     this.initializeEmmiter();
   }
 
-  // Subject
+  // Managed the Subject
   subjectManage() {
     const w = this.el.nativeElement.offsetWidth;
     const h = this.el.nativeElement.offsetHeight;
@@ -202,6 +206,7 @@ export class AsteroidViewComponent implements OnInit {
       this.socketS.pickUpCollectible(Ipieces.namePieces, Ipieces.values);
     });
 
+    // All Subject
     this.asteroidS.asteroid$.take(1).subscribe((asteroid: IAsteroid) => {
 
       this.initAsteroid(asteroid);
@@ -209,11 +214,6 @@ export class AsteroidViewComponent implements OnInit {
 
       this.initPieceOfDrone();
 
-      this.userS.miningInfo.subscribe((info: IMiningInfo) => {
-        this.userS.localClickGauge = info.clickGauge;
-        this.userS.localClickGaugeSubject.next(this.userS.localClickGauge);
-        this.asteroidSprite.shakeCoef = this.userS.localClickGauge * 10;
-      });
       // Asteroid Subject
       this.asteroidS.asteroid$.subscribe((iasteroid: IAsteroid) => {
         this.drone.isMining = false;
@@ -266,21 +266,25 @@ export class AsteroidViewComponent implements OnInit {
       this.userS.profile.subscribe((profile: IProfile) => {
         profile.badConfig ? this.backgroundSky.stop() : this.backgroundSky.play();
       });
-      // frenzy Subject
-      this.userS.frenzyInfo.subscribe((frenzy: IFrenzyInfo) => {
-        this.frenzyInfo = frenzy;
-        this.frenzyModGoOrNot(frenzy);
-      });
-      // Profile Subject
-      this.userS.profile.subscribe((profile: IProfile) => {
-        profile.badConfig ? this.backgroundSky.stop() : this.backgroundSky.play();
+
+      // Mining info for CLickgauge
+      this.userS.miningInfo.subscribe((info: IMiningInfo) => {
+        this.userS.localClickGauge = info.clickGauge;
+        this.userS.localClickGaugeSubject.next(this.userS.localClickGauge);
+        this.asteroidSprite.shakeCoef = this.userS.localClickGauge * 10;
       });
 
-      // Upgrade Subject
+      // Upgrade Subject Minerate
       this.userS.getUpgradeByName('mineRate').subscribe((upgrade: IUserUpgrade) => {
         const tempLvl = upgrade.lvl;
         this.drone.changeSpriteDrone(upgrade.lvl);
       });
+
+      // Upgrade Subject Storage
+      this.userS.getUpgradeByName('storage')
+        .subscribe((userUpgrade) => {
+          this.storageCapacityMax = this.resourcesS[userUpgrade.name][userUpgrade.lvl].capacity;
+        });
 
       // Search
       this.searchS.search.subscribe((search: ISearch) => {
@@ -289,12 +293,6 @@ export class AsteroidViewComponent implements OnInit {
           this.asteroidPiecesManaged.pieceGoAway();
         }
       });
-
-      // upgrade Storage
-      this.userS.getUpgradeByName('storage')
-        .subscribe((userUpgrade) => {
-          this.storageCapacityMax = this.resourcesS[userUpgrade.name][userUpgrade.lvl].capacity;
-        });
 
       // User ore amounts
       this.oreS.OreAmounts
@@ -305,6 +303,7 @@ export class AsteroidViewComponent implements OnInit {
     });
   }
 
+  // Managed the click in asteroid
   asteroidClick() {
     // ga('asteroid.send', 'event', 'buttons', 'click', 'asteroid');
     if (!this.userS.currentUser.frenzy.state) {
@@ -440,6 +439,7 @@ export class AsteroidViewComponent implements OnInit {
     };
   }
 
+  // MANAGED EVENT - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   clickCapsule() {
     if (this.asteroidSprite.eventOk === 1) {
       const tempSprite: any = this.asteroidSprite.spriteEventParent.children;
@@ -458,7 +458,6 @@ export class AsteroidViewComponent implements OnInit {
       });
     }
   }
-
 
   /*
   * MOD FRENZY MANAGED - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -510,7 +509,7 @@ export class AsteroidViewComponent implements OnInit {
   }
 
   /*
-  * Function Managed Piece
+  * MANAGED PIECE - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   */
   generatePieceCall(oreName: string, values, _x: number, _y: number) {
     if (this.drone.isUserHaveMaxCapacityStorage) {
@@ -527,6 +526,7 @@ export class AsteroidViewComponent implements OnInit {
     this.asteroidPiecesManaged.generatePiece(oreName, values, _x, _y);
   }
 
+  // Init piece of drone
   initPieceOfDrone() {
     if (this.asteroid.collectible > 0) {
       const amounts = parseFloat((this.resourcesS.mineRate[this.userMineRateLvl].baseRate *
@@ -539,7 +539,7 @@ export class AsteroidViewComponent implements OnInit {
   }
 
   /*
-  *  App Ticker Delta
+  *  TICKER - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   */
   tickerApp() {
     this.app.ticker.add((delta) => {

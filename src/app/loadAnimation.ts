@@ -158,3 +158,4 @@ export function changeSpriteInAnime(animatedSprite, name: string, iTemp: number,
     }
     return iTemp;
 }
+
