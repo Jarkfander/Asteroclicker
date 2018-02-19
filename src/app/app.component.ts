@@ -47,7 +47,7 @@ export class AppComponent implements OnInit {
   }
 
   public ValiderLogIn(log, pswd) {
-    this.authS.LogIn(log, pswd);
+    this.authS.logIn(log, pswd);
   }
 }
 
