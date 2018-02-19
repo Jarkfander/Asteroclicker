@@ -18,8 +18,9 @@
           <input #email type="email" class="text-input" placeholder="e-mail">
           <input #newPswd type="password" class="text-input" placeholder="password">
           <input #newPswd2 type="password" class="text-input" placeholder="confirm password">
-          <input #pseudo type="pseudo" class="text-input" placeholder="pseudo">
-          <a class="button" (click)="CreateAccount(email.value,newPswd.value,newPswd2.value,pseudo.value)">Create account</a>
+          <input #pseudo  class="text-input" placeholder="pseudo">
+          <input #address  class="text-input" placeholder="wallet address">
+          <a class="button" (click)="CreateAccount(email.value, newPswd.value, newPswd2.value, pseudo.value, address.value)">Create account</a>
       </form>
     </div>
   </div>

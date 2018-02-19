@@ -14,30 +14,6 @@ import { Research } from '../../ship/upgrade-class/research';
 import { storage } from 'firebase';
 
 
-
-export interface IUser {
-
-  uid: string;
-  credit: number;
-
-  email: string;
-  name: string;
-
-  currentMineRate: number;
-
-  quest: Quest;
-  chest: Array<Chest>;
-  numberOfChest: number;
-
-  upgrades: UserUpgrade[];
-
-  event: number;
-
-  frenzy: Frenzy;
-
-  boolBadConfig: boolean;
-}
-
 export interface IFrenzyInfo {
   nextCombos;
   state: number;
@@ -66,10 +42,7 @@ export class UserService {
 
   public localClickGauge = 0;
 
-  loadedTrigger = 3;
-  loadedCounter = 0;
 
-  db: AngularFireDatabase;
   currentUser: User;
   userLoad = false;
   afAuth: AngularFireAuth;
@@ -82,14 +55,9 @@ export class UserService {
   localClickGaugeSubject = new Subject<number>();
   eventSubject = new Subject<User>();
 
-  cargoSubject = new Subject<User>();
+  //cargoSubject = new Subject<User>();
 
-  constructor(db: AngularFireDatabase, afAuth: AngularFireAuth, private marketS: MarketService) {
-
-    this.db = db;
-    this.afAuth = afAuth;
-
-  }
+  constructor(private db: AngularFireDatabase, private marketS: MarketService) {}
 
   initializeUser(id: string) {
     this.currentUser = new User();
@@ -108,10 +76,22 @@ export class UserService {
         this.FillEvent(snapshot);
       });
 
-    this.db.object('users/' + id + '/cargo').valueChanges().subscribe(
+   /* this.db.object('users/' + id + '/cargo').valueChanges().subscribe(
       (snapshot: any) => {
         this.FillCargo(snapshot);
-      });
+      });*/
+  }
+
+  get quest(): Observable<number> {
+    return this.db.object('users/' + this.currentUser.uid + '/quest').valueChanges<number>();
+  }
+
+  get event(): Observable<number> {
+    return this.db.object('users/' + this.currentUser.uid + '/event').valueChanges<number>();
+  }
+
+  get chest(): Observable<number> {
+    return this.db.object('users/' + this.currentUser.uid + '/chest').valueChanges<number>();
   }
 
   get credit(): Observable<number> {
@@ -167,7 +147,6 @@ export class UserService {
       this.currentUser.chest.push(new Chest(snapshot[tempString][0], snapshot[tempString][1], snapshot[tempString][2]));
     }
     this.chestSubject.next(this.currentUser);
-    this.incrementCounter();
   }
 
 
@@ -177,7 +156,6 @@ export class UserService {
     this.currentUser.quest.text = snapshot.text;
     this.currentUser.quest.valuesFinal = snapshot.valuesFinal;
     this.questSubject.next(this.currentUser);
-    this.incrementCounter();
   }
 
   FillEvent(snapshot) {
@@ -185,22 +163,9 @@ export class UserService {
     this.eventSubject.next(this.currentUser);
   }
 
-  FillCargo(snapshot) {
+  /*FillCargo(snapshot) {
     this.currentUser.cargo = snapshot;
     this.cargoSubject.next(this.currentUser);
-  }
-
-  incrementCounter() {
-    if (!this.userLoad && this.loadedCounter < this.loadedTrigger) {
-      this.loadedCounter++;
-      if (this.loadedCounter === this.loadedTrigger) {
-        this.userLoad = true;
-      }
-    }
-  }
-
-  modifyCurrentMineRate(value: number) {
-    this.currentUser.currentMineRate = value;
-  }
+  }*/
 
 }

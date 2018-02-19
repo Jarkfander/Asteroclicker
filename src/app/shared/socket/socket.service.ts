@@ -20,7 +20,7 @@ export class SocketService {
   openSocket(userId: string) {
 
     this.userId = userId;
-    
+
 
     this.socket.on('sendResources', (message) => {
       this.resourceS.FillAll(message);
@@ -43,7 +43,7 @@ export class SocketService {
     this.socket.emit('breakIntoCollectible', json);
   }
 
-  updateClickGauge( numberOfClick: number) {
+  updateClickGauge(numberOfClick: number) {
     const json = {};
 
     json['user'] = this.userId;
@@ -76,7 +76,7 @@ export class SocketService {
 
     json['user'] = this.userId;
     json['upgrade'] = upgradeName;
-    
+
     this.socket.emit('upgradeShipOre', json);
   }
 
@@ -171,11 +171,13 @@ export class SocketService {
     this.socket.emit('deleteEvent', json);
   }
 
-  initializeUser(userId : string,email: string, pseudo: string) {
+  initializeUser(userId: string, email: string, pseudo: string, address: string) {
     const json = {};
     json['user'] = userId;
     json['email'] = email;
     json['pseudo'] = pseudo;
+    console.log(address);
+    json['address'] = address;
     this.socket.emit('initializeUser', json);
   }
 
@@ -214,6 +216,6 @@ export class SocketService {
     console.log('Upsert Boosts');
     this.socket.emit('upsertUserBoosts', {
       user: this.userId
-    }); 
+    });
   }
 }
