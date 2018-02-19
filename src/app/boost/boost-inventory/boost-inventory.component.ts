@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { IBoost, IUserBoost } from './../boost';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
-import { tap, filter } from 'rxjs/operators';
+import { tap, filter, combineLatest } from 'rxjs/operators';
 
 @Component({
   selector: 'boost-inventory',

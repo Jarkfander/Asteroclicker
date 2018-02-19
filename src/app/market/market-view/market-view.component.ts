@@ -31,15 +31,13 @@ export class MarketViewComponent implements OnInit {
   public histoValues: number[];
 
   public unitValue: string;
-  public valuesTotal: any;
-  public valuesTotalWithTaxe: any;
 
   public hasMoney: boolean;
   public hasOreLeft: boolean;
   public hasSpaceLeft: boolean;
 
   public maxSliderValue: number;
-  public amountToSell = 1;
+  public amount = 0;
 
   public currentOreAmount = 0;
 
@@ -57,8 +55,6 @@ export class MarketViewComponent implements OnInit {
   }
 
   ngOnInit() {
-
-
 
     this.oreS.getOreAmountByString(this.oreName).subscribe((oreAmount: number) => {
       this.hasOreLeft = oreAmount > 0;
@@ -81,19 +77,12 @@ export class MarketViewComponent implements OnInit {
         * this.resourcesS.oreInfos[this.oreName].miningSpeed);
       this.maxSliderValue = ((Math.floor(this.maxSliderValue / 50)) + 1) * 50;
 
-      this.valuesTotal = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell);
-      this.valuesTotalWithTaxe = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell * 1.025);
-
-      this.amountToSell = this.maxSliderValue / 2;
+      this.amount = this.maxSliderValue / 2;
     });
 
     this.marketS.currentCostsSubject[this.oreName].subscribe((newVal: number) => {
       this.value = newVal;
       this.unitValue = SharedModule.calculeMoneyWithSpace(this.value);
-
-      this.valuesTotal = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell);
-      this.valuesTotalWithTaxe = SharedModule.calculeMoneyWithSpace(this.value * this.amountToSell * 1.025);
-
       this.currentCostView.updateInfo(this.marketS.allCurrentOreCosts[this.oreName]);
     });
 
