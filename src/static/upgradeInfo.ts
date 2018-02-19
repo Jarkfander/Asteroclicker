@@ -4,7 +4,7 @@ export const upgradeInfo = {
     },
 
     research: {
-        description: 'Reduces asteroid search time and unlock new ore'
+        description: 'Reduces asteroid search time, unlock new ore and upgrade the quality of the asteroids found'
     },
 
     mineRate: {
@@ -12,6 +12,6 @@ export const upgradeInfo = {
     },
 
     storage: {
-        description: 'Increases storage capacity and increases the maximum amount that can be sold or purchased'
+        description: 'Increases storage capacity, increases the maximum amount that can be sold or purchased'
     }
 };

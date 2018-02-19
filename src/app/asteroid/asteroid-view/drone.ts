@@ -12,7 +12,7 @@ export enum STATS_DRONE {
 
 export class Drone {
     isFirstTimeBack: boolean;
-    private isUserHaveMaxCapacityStorage: boolean;
+    public isUserHaveMaxCapacityStorage: boolean;
     public isAsteLifeSupZero: boolean;
     app: PIXI.Application;
     public drone: PIXI.extras.AnimatedSprite;
