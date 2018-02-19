@@ -343,7 +343,6 @@ export class AsteroidViewComponent implements OnInit {
 
     this.coefClick = this.clicks.length / 16;
     const newRate = base + ((max - base) * this.coefClick);
-    this.userS.modifyCurrentMineRate(newRate <= max ? newRate : max);
 
     if (this.coefClick >= 1) {
       // this.socketS.reachFrenzy();

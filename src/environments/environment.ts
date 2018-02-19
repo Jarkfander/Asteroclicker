@@ -6,12 +6,12 @@
 export const environment = {
   production: false,
   firebase: {
-    apiKey: 'AIzaSyBk3U307MoiQsSPAXmzmry7yaAHApU85Rw',
-    authDomain: 'asteroclicker5.firebaseapp.com',
-    databaseURL: 'https://asteroclicker5.firebaseio.com',
-    projectId: 'asteroclicker5',
-    storageBucket: 'asteroclicker5.appspot.com',
-    messagingSenderId: '298728737915'
+    apiKey: "AIzaSyCSzklAwe9ABz2fTpTRseQN-zqIwexbVIQ",
+    authDomain: "asteroclickerush.firebaseapp.com",
+    databaseURL: "https://asteroclickerush.firebaseio.com",
+    projectId: "asteroclickerush",
+    storageBucket: "asteroclickerush.appspot.com",
+    messagingSenderId: "582772943008"
   },
   socketUrl: 'http://localhost:4000',
   loadingTime: 0,

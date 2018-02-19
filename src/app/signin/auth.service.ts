@@ -30,9 +30,9 @@ export class AuthService {
     this.afAuth.auth.signInWithEmailAndPassword(log, pswd);
   }
 
-  public CreateAccount(email, pswd, pseudo) {
+  public CreateAccount(email, pswd, pseudo, address) {
     this.afAuth.auth.createUserWithEmailAndPassword(email, pswd).then((message) => {
-      this.socketS.initializeUser(message.uid,email, pseudo);
+      this.socketS.initializeUser(message.uid,email, pseudo, address);
     });
   }
 

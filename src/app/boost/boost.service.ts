@@ -1,4 +1,4 @@
-import { UserService, IUser } from './../shared/user/user.service';
+import { UserService } from './../shared/user/user.service';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { PromiEvent } from 'web3/types';
 import { Injectable } from '@angular/core';
