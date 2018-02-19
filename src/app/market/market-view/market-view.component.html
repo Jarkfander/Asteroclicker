@@ -10,26 +10,25 @@
 
 <article class="row border">
   <div class="col info">
-    <div class="name row align-center">
+    <div class="name row align-center justify-between border-title">
       <img class="button-info" (click)="OpenHistory()" src="assets/oreIcon/{{oreName}}Icon.png" />      
       <h2>{{oreName}}</h2>
+      <span>{{unitValue}} cr/u</span>
     </div>
-    <div class="row">
-      {{unitValue}} cr/u
-    </div>
-    <div class="row" tooltip="Amount to sell / buy">
-      <input type="range" min=1 max={{maxSliderValue}} value="{{maxSliderValue/2}}" class="slider" [(ngModel)]="amountToSell">
+    <div class="amount col border-amount" tooltip="Amount to sell / buy">
+      <h4>Amount: {{ amount }}</h4>
+      <input type="range" step="100" min="0" [max]="maxSliderValue" value="0" class="slider" [(ngModel)]="amount">
     </div>
 
     <!-- Buy -->
-    <div class="action row align-center justify-around">
-      <button [disabled]="!hasOreLeft" type="button" class="btn-sell" (click)="SellOre(amountToSell);">Sell {{amountToSell.toFixed(1)}}</button>
-      <span class="credit">{{ valuesTotal }} cr</span>
+    <div class="action row align-center border-std">
+      <button class="buy" [disabled]="!hasOreLeft" type="button" (click)="SellOre(amount)">Sell</button>
+      <span class="credit">{{ amount * value | number: '1.0-2' }} cr</span>
     </div>
     <!-- Sell -->
-    <div class="action row align-center justify-around">
-      <button [disabled]="!hasMoney || !hasSpaceLeft" type="button" class="btn-buy" (click)="BuyOre(amountToSell);">Buy {{amountToSell.toFixed(1)}}</button>
-      <span class="credit">{{ valuesTotalWithTaxe }} cr</span>
+    <div class="action row align-center border-std">
+      <button class="sell" [disabled]="!hasMoney || !hasSpaceLeft" type="button" (click)="BuyOre(amount)">Buy</button>
+      <span class="credit">{{ value * amount * 1.025 | number: '1.0-2' }} cr</span>
     </div>
   </div>
 

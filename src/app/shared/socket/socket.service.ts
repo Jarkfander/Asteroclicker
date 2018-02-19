@@ -61,7 +61,9 @@ export class SocketService {
 
     this.socket.emit('pickUpCollectible', json);
   }
-
+/*********
+ * UPGRADE
+ *********/
   upgradeShipCredit(upgradeName: string) {
     const json = {};
 
@@ -96,6 +98,9 @@ export class SocketService {
     this.socket.emit('updateCargoTimer', json);
   }
 
+/******
+ * ORE
+ *****/
 
   sellOre(oreName: string, amount: number) {
     const json = {};
@@ -185,6 +190,12 @@ export class SocketService {
     json['user'] = this.userId;
     this.socket.emit('reachFrenzy', json);
   }
+
+  /**
+   * 
+   * @param {number} keyCode Key code 
+   * @param {number} keyInd 
+   */
   validArrow(keyCode: number, keyInd: number) {
     const json = {};
     json['user'] = this.userId;
@@ -200,9 +211,7 @@ export class SocketService {
     this.socket.emit('changeBadConfig', json);
   }
 
-  /**
-   * Activate the boost of a user
-   */
+  /** Activate the boost of a user */
   public activateBoost(type: number) {
     this.socket.emit('activateBoost', {
       user: this.userId,
@@ -212,7 +221,6 @@ export class SocketService {
 
   /** Upsert all boosts of the current user */
   public upsertUserBoosts() {
-    console.log('Upsert Boosts');
     this.socket.emit('upsertUserBoosts', {
       user: this.userId
     });

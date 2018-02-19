@@ -42,7 +42,7 @@ export class TopbarComponent implements AfterViewInit {
   }
 
   public LogOut() {
-    this.authS.LogOut();
+    this.authS.logOut();
   }
 
   /*

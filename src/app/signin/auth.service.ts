@@ -26,17 +26,17 @@ export class AuthService {
     });
   }
 
-  public LogIn(log, pswd) {
+  public logIn(log, pswd) {
     this.afAuth.auth.signInWithEmailAndPassword(log, pswd);
   }
 
-  public CreateAccount(email, pswd, pseudo, address) {
+  public createAccount(email, pswd, pseudo, address) {
     this.afAuth.auth.createUserWithEmailAndPassword(email, pswd).then((message) => {
       this.socketS.initializeUser(message.uid,email, pseudo, address);
     });
   }
 
-  public LogOut() {
+  public logOut() {
     this.userLogged = false;
     this.afAuth.auth.signOut().then(() => {
       location.reload();
