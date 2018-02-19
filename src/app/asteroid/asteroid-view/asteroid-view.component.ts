@@ -210,7 +210,7 @@ export class AsteroidViewComponent implements OnInit {
       this.initPieceOfDrone();
 
       this.userS.miningInfo.subscribe((info: IMiningInfo) => {
-        this.userS.localClickGauge = info.clickGauge;
+        this.userS.localClickGauge = info.clickGauge + this.numberOfClick;
         this.userS.localClickGaugeSubject.next(this.userS.localClickGauge);
         this.asteroidSprite.shakeCoef = this.userS.localClickGauge * 10;
       });
@@ -310,7 +310,7 @@ export class AsteroidViewComponent implements OnInit {
     if (!this.userS.currentUser.frenzy.state) {
       this.numberOfClick++;
       this.userS.localClickGauge++;
-      if (this.userS.localClickGauge > 50) {
+      if (this.userS.localClickGauge >= 50) {
         const amounts = parseFloat((
           this.resourcesS.mineRate[this.userMineRateLvl].baseRate *
           this.asteroid.purity / 100 *
