@@ -61,7 +61,7 @@ export class AsteroidPiecesManaged {
             switch (pieceAsterCast.state) {
                 case STATE_PIECE.GOAWAY:
                     if (pieceAster.alpha < 0.1) {
-                        this.tempTabDeletePiece.push(i);
+                        this.asteroidPieceParent.children[i].destroy();
                     } else {
                         pieceAster.alpha -= 0.05;
                     }
@@ -69,7 +69,7 @@ export class AsteroidPiecesManaged {
 
 
                 case STATE_PIECE.GO:
-                    if (collectible > 0) {
+                    if (collectible >= 0) {
                         if (pieceAster.y >= this.app.renderer.height) {
                             this.detroyPiece(pieceAsterCast.values, pieceAsterCast.type, i);
                             this.asteroidPieceParent.children[i].destroy();
@@ -137,7 +137,7 @@ export class AsteroidPiecesManaged {
     }
     // detroy
     detroyPiece(values, orename, i) {
-        const temp = {values: values, namePieces: orename};
+        const temp = { values: values, namePieces: orename };
         this.asteroidPiecesManagedsubject.next(temp);
     }
 
