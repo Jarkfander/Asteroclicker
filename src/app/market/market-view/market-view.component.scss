@@ -2,29 +2,91 @@
 
 article {
     height: 100%;
-    padding: 5px;
     margin-bottom: $gap;
     background-image: url('../../../assets/texture/market-bg.jpg');
 
     .info {
         width: 40%;
+        .name {
+            background-color: rgb(40, 50, 80);
+            box-shadow: inset 0 0 10px 5px black;
+            h2 {
+                text-transform: uppercase;
+                font-size: 1rem;
+                margin: 0;
+                color: white;
+            }
+            img {
+                width: 20%;
+                margin-right: 5px;
+            }
+            span {
+                color: $credit-font-color;
+            }
+        }
+        .amount {
+            background-color: rgb(40, 50, 80);
+            box-shadow: inset 0 0 10px 5px black;
+            h4 {
+                margin: 10px 0 0 0;
+                color: white;
+                text-transform: uppercase;
+                text-align: center;
+            }
+            input {
+                width: 100%;
+                margin: 0;
+            }
+        }
+
+
+        .action {
+            button {
+                width: 40%;
+                padding: 5px 0;
+                text-transform: uppercase;
+                border: none;
+            }
+            button.buy {
+                background-color: $buy-color;
+                box-shadow: inset 3px 3px 5px #50ff66, inset -3px -3px 5px #267e31;
+            }
+            button.sell {
+                background-color: $sell-color;
+                box-shadow: inset 3px 3px 5px #ed4040, inset -3px -3px 5px #6c1212
+            }
+            span {
+                width: 60%;
+                height: 100%;
+                text-align: right;
+                color: $credit-font-color;
+                padding: 5px;
+                background-color: rgb(40, 50, 80);
+                box-shadow: inset 0 0 10px 5px black;
+            }
+        }
+    
+        .border-amount {
+            border: solid 10px;
+            border-image: url('../../../assets/market/border-amount.png') 20;
+        }
+        .border-std {
+            border: solid 5px;
+            border-image: url('../../../assets/market/border-std.png') 10;
+        }
     }
+
     .curve {
         width: 60%;
+        app-curve-view {
+            height: 100%;
+        }
     }
+
+
 }
 
-.name {
-    height: 20px;
-    h2 {
-        text-transform: uppercase;
-        font-size: 1rem;
-    }
-    img {
-        height: 100%;
-        margin-right: 5px;
-    }
-}
+
 
 .action {
     button, span {
