@@ -1,9 +1,9 @@
 @import '../../../theme';
 
 .curve{
-    background-color: #36518d;
+    background-color: $market-color;
     background-image: url('../../../assets/texture/market-curve.png');
-    box-shadow: inset 0 0 30px 40px $black;
+    box-shadow: inset 0 0 15px 30px $black;
     border: 10px solid;
     border-image: url("../../../assets/market/border.png") 15;
     border-image-repeat: stretch;
