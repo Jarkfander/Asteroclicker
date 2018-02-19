@@ -77,7 +77,6 @@ export class UserService {
   chestSubject = new Subject<User>();
 
   questSubject = new Subject<User>();
-  searchSubject = new Subject<User>();
 
   localClickGaugeSubject = new Subject<number>();
   eventSubject = new Subject<User>();
@@ -135,8 +134,8 @@ export class UserService {
   }
 
   get upgrade(): Observable<IUserUpgrade[]> {
-    return this.db.object('users/' + this.currentUser.uid + '/upgrade').valueChanges<IUserUpgrade>()
-      .map((upgrades) => {
+    return this.db.object('users/' + this.currentUser.uid + '/upgrade').valueChanges<IUserUpgrade[]>()
+      .map((upgrades: IUserUpgrade[]) => {
         const allCurrentUpgrade: IUserUpgrade[] = new Array();
         for (const key in upgrades) {
           if (key in upgrades && key !== 'QG') {
@@ -152,8 +151,7 @@ export class UserService {
   getUpgradeByName(upgradeName: string): Observable<IUserUpgrade> {
     return this.db.object('users/' + this.currentUser.uid + '/upgrade/' + upgradeName).valueChanges<IUserUpgrade>()
       .map((upgrade: IUserUpgrade) => {
-        upgrade.name = upgradeName;
-        return upgrade;
+        return {...upgrade, name: upgradeName };
       });
   }
 

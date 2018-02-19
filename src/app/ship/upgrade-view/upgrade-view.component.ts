@@ -5,7 +5,7 @@ import { User, UserUpgrade } from '../../shared/user/user';
 import { UserService, IUserUpgrade } from '../../shared/user/user.service';
 import { Utils } from '../../shared/utils';
 import { UpgradeService } from '../upgrade.service';
-import { OreService, IOreAmounts } from '../../ore/ore.service';
+import { IOreAmounts } from '../../ore/ore.service';
 import { ResourcesService } from '../../shared/resources/resources.service';
 import { ToasterService } from '../../shared/toaster/toaster.service';
 import { enter, staggerTile } from '../../shared/animations';
@@ -45,7 +45,6 @@ export class UpgradeViewComponent implements AfterViewInit {
     private el: ElementRef,
     private renderer: Renderer2,
     private userS: UserService,
-    private oreS: OreService,
     private resourcesS: ResourcesService,
     private upgradeS: UpgradeService) {}
 

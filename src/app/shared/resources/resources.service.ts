@@ -37,8 +37,7 @@ export class ResourcesService {
   
   oreInfos: IOreInfos;  
 
-  constructor() {
-  }
+  constructor() { }
 
   public FillAll(data) {
     this.FillEngine(data.engine);
