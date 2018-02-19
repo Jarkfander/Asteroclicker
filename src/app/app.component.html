@@ -1,6 +1,4 @@
-<div *ngIf="!(user$|async)">
-  <app-signin></app-signin>
-</div>
+<app-signin *ngIf="!(user$|async)"></app-signin>
 
 
 <main [@stagger-tile] *ngIf="!!(user$|async) && resourcesS && resourcesS.resourcesLoaded && loadAnimation.boolFinishLoad">

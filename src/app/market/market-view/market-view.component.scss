@@ -8,7 +8,7 @@ article {
     .info {
         width: 40%;
         .name {
-            background-color: rgb(40, 50, 80);
+            background-color: $market-color;
             box-shadow: inset 0 0 10px 5px black;
             h2 {
                 text-transform: uppercase;
@@ -41,19 +41,22 @@ article {
 
 
         .action {
+            padding: 5px;
+            background-color: $market-color;
+            box-shadow: inset 0 0 10px 5px black;
             button {
                 width: 40%;
                 padding: 5px 0;
                 text-transform: uppercase;
-                border: none;
+                border: solid 1px black;
             }
             button.buy {
                 background-color: $buy-color;
-                box-shadow: inset 3px 3px 5px #50ff66, inset -3px -3px 5px #267e31;
+                box-shadow: inset 3px 3px #50ff66, inset -3px -3px #267e31;
             }
             button.sell {
                 background-color: $sell-color;
-                box-shadow: inset 3px 3px 5px #ed4040, inset -3px -3px 5px #6c1212
+                box-shadow: inset 3px 3px #ed4040, inset -3px -3px #6c1212
             }
             span {
                 width: 60%;
@@ -61,11 +64,13 @@ article {
                 text-align: right;
                 color: $credit-font-color;
                 padding: 5px;
-                background-color: rgb(40, 50, 80);
-                box-shadow: inset 0 0 10px 5px black;
             }
         }
     
+        .border-title {
+            border: solid 10px;
+            border-image: url('../../../assets/market/border-title.png') 20;
+        }
         .border-amount {
             border: solid 10px;
             border-image: url('../../../assets/market/border-amount.png') 20;

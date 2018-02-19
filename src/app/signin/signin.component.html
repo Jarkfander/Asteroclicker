@@ -1,28 +1,25 @@
-<div class="background-image"></div>
-<div class="content">
-  <div class="title">
-    <h1>AsteroClicker</h1>
-  </div>
-  <div class="forms">
-    <div class="form-panel">
-      <h1>Sign in</h1>
-      <form class="form">
-          <input #log type="email" class="text-input" placeholder="e-mail">
-          <input #pswd type="password" class="text-input" placeholder="password">
-          <a class="button" (click)="ValiderLogIn(log.value,pswd.value)">Connect</a>
+<section class="content col align-center">
+  <h1>AsteroClicker</h1>
+  <div class="forms row justify-around align-start">
+    <div class="form-panel col align-center">
+      <h2>Sign in</h2>
+      <form class="col">
+          <input #log type="email" placeholder="e-mail">
+          <input #pswd type="password" placeholder="password">
+          <button (click)="ValiderLogIn(log.value,pswd.value)">Connect</button>
       </form>
     </div>
-    <div class="form-panel">
-      <h1>Sign up</h1>
-      <form class="form">
-          <input #email type="email" class="text-input" placeholder="e-mail">
-          <input #newPswd type="password" class="text-input" placeholder="password">
-          <input #newPswd2 type="password" class="text-input" placeholder="confirm password">
-          <input #pseudo  class="text-input" placeholder="pseudo">
-          <input #address  class="text-input" placeholder="wallet address">
-          <a class="button" (click)="CreateAccount(email.value, newPswd.value, newPswd2.value, pseudo.value, address.value)">Create account</a>
+    <div class="form-panel col align-center">
+      <h2>Sign up</h2>
+      <form class="col">
+          <input #email type="email" placeholder="e-mail">
+          <input #newPswd type="password" placeholder="password">
+          <input #newPswd2 type="password" placeholder="confirm password">
+          <input #pseudo placeholder="pseudo">
+          <input #address placeholder="wallet address">
+          <button (click)="CreateAccount(email.value, newPswd.value, newPswd2.value, pseudo.value, address.value)">Create account</button>
       </form>
     </div>
   </div>
-</div>
+</section>
 
