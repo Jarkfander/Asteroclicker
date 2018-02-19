@@ -526,7 +526,7 @@ export class AsteroidViewComponent implements OnInit {
     this.asteroidPiecesManaged.generatePiece(oreName, values, _x, _y);
   }
 
-  // Init piece of drone 
+  // Init piece of drone
   initPieceOfDrone() {
     if (this.asteroid.collectible > 0) {
       const amounts = parseFloat((this.resourcesS.mineRate[this.userMineRateLvl].baseRate *
