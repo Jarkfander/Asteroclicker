@@ -5,12 +5,15 @@
 
 /* ===== Imports ===== */
 @import 'assets/fonts/font';
+@import url('https://fonts.googleapis.com/css?family=Bangers');
 @import 'theme';
 
 /* ===== Resets and base page ===== */
 * {
     box-sizing: border-box;
-    font-family: 'Montserrat-Regular', sans-serif;
+    font-family: 'Bangers', cursive;
+    letter-spacing: 3px;
+    font-weight: 100;
 }
 
 html {

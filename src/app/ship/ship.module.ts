@@ -9,12 +9,13 @@ import { UpgradeService } from './upgrade.service';
 import { UpgradeInfoComponent } from './upgrade-info/upgrade-info.component';
 import { QgViewComponent } from './qg-view/qg-view.component';
 import { SharedModule } from '../shared/shared.module';
-
+import { StoryModule } from './../story/story.module';
 
 @NgModule({
   imports: [
     CommonModule,
     SharedModule,
+    StoryModule,
     BrowserAnimationsModule
   ],
   declarations: [ShipViewComponent, UpgradeListComponent, UpgradeViewComponent, UpgradeInfoComponent, QgViewComponent],

@@ -50,7 +50,7 @@ ng-slide:hover {
         opacity: 1;
     }
     
-    input[type=range]::-webkit-slider-thumb,  {
+    input[type=range]::-webkit-slider-thumb {
         -webkit-appearance: none;
         width: 25px;
         height: 1000%;

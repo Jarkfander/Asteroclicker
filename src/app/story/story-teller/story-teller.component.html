@@ -1,0 +1,7 @@
+<article *ngIf="story$ | async as story" class="row border">
+  <img src="../../../assets/story/avatar.jpg"/>
+  <div class="text">
+    <p>{{ story }}</p>
+    <button (click)="next()">Ok</button>
+  </div>
+</article>
