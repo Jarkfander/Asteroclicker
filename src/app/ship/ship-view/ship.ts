@@ -2,6 +2,8 @@ import * as PIXI from 'pixi.js';
 import { getFramesFromSpriteSheet, initSprite, changeSpriteInAnime } from '../../loadAnimation';
 import { UserService } from '../../shared/user/user.service';
 import { ChestSprite } from './chestSprite';
+import { Vector2 } from '../../shared/utils';
+import { Subject } from 'rxjs/Subject';
 
 class UpgradeShip {
     posX: number;
@@ -78,6 +80,7 @@ export class Ship {
     mineRate: UpgradeShip;
     currentLevelDrone: number;
 
+<<<<<<< HEAD
     public chest: ChestSprite;
 
     constructor(app: PIXI.Application) {
@@ -85,6 +88,19 @@ export class Ship {
         this.deltaSum = 0;
 
         this.chest = new ChestSprite(this.app);
+=======
+    stepTutorial = new Subject<boolean>();
+
+    chest: ChestSprite;
+
+    shipGoCenterScreen: boolean;
+
+    constructor(app: PIXI.Application, chestSprite: ChestSprite) {
+        this.app = app;
+        this.deltaSum = 0;
+        this.shipGoCenterScreen = true;
+        this.chest = chestSprite;
+>>>>>>> tuto
 
         this.boolNewTourelle = false;
         this.deltaSumShip = 0;
@@ -109,9 +125,8 @@ export class Ship {
         this.stockUpgradeLvl = 0;
         this.storage = this.initTabSprite(5, 'stockage_', this.stockUpgradeLvl, 500, 500, 30, 0, true);
 
-        this.transformShipY = this.ship.y;
         this.transformShipX = this.ship.x;
-
+        this.transformShipY = this.ship.y;
 
         let deltaChest = 0;
         // Listen for animate update
@@ -127,23 +142,34 @@ export class Ship {
                 }
                 this.deltaSumShip += (2 * Math.PI) / 1500;
 
-                this.ship.y = this.transformShipY + Math.sin(this.deltaSumShip) * 17;
-                this.ship.x = this.transformShipX + Math.cos(this.deltaSumShip) * 5;
-                this.initMoveXY(this.engine, 30, 20, this.deltaSum);
-
-                if (this.chest.boolParentChest) {
-                    if (this.chest.spriteChestParent.y <= 151) {
-                        this.chest.boolParentChest = false;
-                        this.chest.spriteTextOpenChest.visible = false;
+                if (this.shipGoCenterScreen) {
+                    const vectGO = this.lerpVector2(this.ship.x, this.ship.y, this.app.renderer.width / 2, this.app.renderer.height / 2, 0.005);
+                    this.ship.x = vectGO.x;
+                    this.ship.y = vectGO.y;
+                    if (this.ship.x < (this.app.renderer.width / 2) + 1.5) {
+                        this.stepTutorial.next(true);
+                        this.shipGoCenterScreen = false;
+                        this.transformShipX = this.app.renderer.width / 2;
+                        this.transformShipY = this.app.renderer.height / 2;
                     }
-                    this.chest.spriteTextOpenChest.alpha -= 0.007;
-                    this.chest.spriteChestParent.y = 300 - deltaChest;
-                    deltaChest += 1;
                 } else {
-                    if (this.chest.spriteChestParent != null && this.chest.spriteChestParent.children[4].visible) {
-                        this.chest.spriteChestParent.x = Math.sin(this.deltaSum * 100) * -5;
+                    this.ship.y = this.transformShipY + Math.sin(this.deltaSumShip) * 17;
+                    this.ship.x = this.transformShipX + Math.cos(this.deltaSumShip) * 5;
+                    this.initMoveXY(this.engine, 30, 20, this.deltaSum);
+                    if (this.chest.boolParentChest) {
+                        if (this.chest.spriteChestParent.y <= 151) {
+                            this.chest.boolParentChest = false;
+                            this.chest.spriteTextOpenChest.visible = false;
+                        }
+                        this.chest.spriteTextOpenChest.alpha -= 0.007;
+                        this.chest.spriteChestParent.y = 300 - deltaChest;
+                        deltaChest += 1;
+                    } else {
+                        if (this.chest.spriteChestParent != null && this.chest.spriteChestParent.children[4].visible) {
+                            this.chest.spriteChestParent.x = Math.sin(this.deltaSum * 100) * -5;
+                        }
+                        deltaChest = 0;
                     }
-                    deltaChest = 0;
                 }
             }
         });
@@ -196,7 +222,7 @@ export class Ship {
     initShip() {
         this.ship = initSprite('ship', 500, 500, true, false, 0.10);
         this.ship.loop = true;
-        this.ship.x = this.app.renderer.width / 2 - 20;
+        this.ship.x = this.app.renderer.width + 200;
         this.ship.y = this.app.renderer.height / 2;
         this.ship.texture.baseTexture.mipmap = true;
         this.ship.cacheAsBitmap = true;
@@ -205,24 +231,31 @@ export class Ship {
 
     // Tourelle init - - - - - - - -  - - - - -  - - - - - - - - - - - -  - - - - - - - - - - - - -
     initTourelle() {
-        this.tourelle = initSprite('tourelle_1', 500 , 500, true, true, 0.18);
+        this.tourelle = initSprite('tourelle_1', 500, 500, true, true, 0.18);
         this.tourelle.loop = false;
         this.tourelle.onComplete = () => {
             this.iTourelle = changeSpriteInAnime(this.tourelle, 'tourelle_', this.iTourelle, 4);
             this.tourelle.gotoAndPlay(0);
-         };
+        };
         this.ship.addChild(this.tourelle);
     }
 
     initNewTourelle() {
         this.boolNewTourelle = true;
         this.iNewTourelle = 4;
-        this.newTourelle = initSprite('newTourelle_4', 500 , 500, true, true, 0.15);
+        this.newTourelle = initSprite('newTourelle_4', 500, 500, true, true, 0.15);
         this.newTourelle.loop = false;
         this.newTourelle.onComplete = () => {
             this.iNewTourelle = changeSpriteInAnime(this.newTourelle, 'newTourelle_', this.iNewTourelle, 7);
             this.newTourelle.gotoAndPlay(0);
-         };
+        };
         this.ship.addChild(this.newTourelle);
+    }
+
+    lerpVector2(sourceX, sourceY, destX, destY, delta, isRotate = false) {
+        const vect = new Vector2(); const vectorTemp = new Vector2();
+        vectorTemp.initXY(sourceX, sourceY);
+        vect.initXYVector(vectorTemp.lerp(destX, destY, delta));
+        return vect;
     }
 }

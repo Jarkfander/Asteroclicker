@@ -85,7 +85,6 @@ export class ShipViewComponent implements AfterViewInit {
     this.initPixi();
   }
 
-
   private initPixi() {
     const w = this.el.nativeElement.offsetWidth;
     const h = this.el.nativeElement.offsetHeight;
@@ -103,7 +102,11 @@ export class ShipViewComponent implements AfterViewInit {
     this.ship = new Ship(this.app);
     this.ship.chest.afterInitShip();
     this.ship.ship.addChildAt(this.ship.chest.spriteChestParent, 5);
-
+    this.ship.stepTutorial.subscribe((iBool: boolean) => {
+      if (iBool) {
+        this.socketS.nextStep();
+      }
+    });
     // init musique
     /*
     PIXI.loader.load(function (loader, resources) {
@@ -124,8 +127,6 @@ export class ShipViewComponent implements AfterViewInit {
     let i = 0;
     const tabTempUpgrade = new Array<any>();
     const tabTempUpgradeLvl = new Array<any>();
-
-
 
     for (let j = 0; j < upgrades.length; j++) {
       if (upgrades[j].name !== 'QG') {
