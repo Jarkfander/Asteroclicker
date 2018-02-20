@@ -79,8 +79,8 @@ export class Ship {
 
     mineRate: UpgradeShip;
     currentLevelDrone: number;
-
-<<<<<<< HEAD
+    stepTutorial = new Subject<boolean>();
+    shipGoCenterScreen: boolean;
     public chest: ChestSprite;
 
     constructor(app: PIXI.Application) {
@@ -88,22 +88,10 @@ export class Ship {
         this.deltaSum = 0;
 
         this.chest = new ChestSprite(this.app);
-=======
-    stepTutorial = new Subject<boolean>();
-
-    chest: ChestSprite;
-
-    shipGoCenterScreen: boolean;
-
-    constructor(app: PIXI.Application, chestSprite: ChestSprite) {
-        this.app = app;
-        this.deltaSum = 0;
-        this.shipGoCenterScreen = true;
-        this.chest = chestSprite;
->>>>>>> tuto
 
         this.boolNewTourelle = false;
         this.deltaSumShip = 0;
+        this.shipGoCenterScreen = true;
         this.iTourelle = 1;
 
         // Init Sprite Animated Ship
