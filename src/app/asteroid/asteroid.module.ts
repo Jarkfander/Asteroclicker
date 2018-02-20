@@ -15,7 +15,7 @@ import { AsteroidMiningComponent } from './asteroid-mining/asteroid-mining.compo
   imports: [
     CommonModule,
     SharedModule,
-    FormsModule
+    FormsModule,
   ],
   declarations: [AsteroidViewComponent, AsteroidMiningComponent],
   exports: [AsteroidViewComponent, AsteroidMiningComponent],

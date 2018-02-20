@@ -14,22 +14,22 @@
   </div>
 
   <!-- Ship -->
-  <app-ship-view class="ship border tile"></app-ship-view>
+  <app-ship-view story="0" class="ship border tile"></app-ship-view>
 
   <!-- QG -->
-  <app-qg-view class="qg border tile"></app-qg-view>
+  <app-qg-view story="1" class="qg border tile"></app-qg-view>
 
   <!-- Upgrades -->
-  <app-upgrade-list class="upgrade tile"></app-upgrade-list>
+  <app-upgrade-list story="2" class="upgrade tile"></app-upgrade-list>
 
   <!-- Asteroid -->
-  <app-asteroid-view class="asteroid border tile"></app-asteroid-view>
+  <app-asteroid-view story="4" class="asteroid border tile"></app-asteroid-view>
 
   <!-- Ore -->
-  <app-ore-list class="ore tile"></app-ore-list>
+  <app-ore-list story="3" class="ore tile"></app-ore-list>
 
   <!-- Mining Rate -->
-  <app-asteroid-mining class="mining border tile"></app-asteroid-mining>
+  <app-asteroid-mining story="4" class="mining border tile"></app-asteroid-mining>
 
   <!-- Search -->
   <app-search-view class="search border tile"></app-search-view>
@@ -41,4 +41,5 @@
   <app-market-list class="market tile"></app-market-list>  
 
   <ng-toaster></ng-toaster>
+  <story-state></story-state>
 </main>

@@ -1,3 +1,4 @@
+import { StoryModule } from './story/story.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -47,6 +48,7 @@ import { Web3MModule } from './web3-m/web3-m.module';
     OreModule,
     SearchModule,
     ToasterModule,
+    StoryModule,
     Web3MModule
   ],
   providers: [UserService, UpgradeService, MarketService, QuestService, RankingService, AuthService, ResourcesService],
