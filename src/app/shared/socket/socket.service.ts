@@ -181,7 +181,6 @@ export class SocketService {
     json['user'] = userId;
     json['email'] = email;
     json['pseudo'] = pseudo;
-    console.log(address);
     json['address'] = address;
     this.socket.emit('initializeUser', json);
   }
