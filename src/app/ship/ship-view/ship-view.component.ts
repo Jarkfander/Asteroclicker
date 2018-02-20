@@ -19,6 +19,7 @@ import { fail } from 'assert';
 })
 
 export class ShipViewComponent implements AfterViewInit {
+  step: number;
   private app: PIXI.Application;
   private v: number;
   private ship: Ship;
@@ -42,6 +43,7 @@ export class ShipViewComponent implements AfterViewInit {
 
     this.userS.profile.subscribe((profile: IProfile) => {
       this.animationGoodConfig(profile.badConfig === 1);
+      this.step = profile.step;
     });
 
     this.userS.chest.subscribe((chests: IChest[]) => {
@@ -108,7 +110,7 @@ export class ShipViewComponent implements AfterViewInit {
     this.ship.chest.afterInitShip();
     this.ship.ship.addChildAt(this.ship.chest.spriteChestParent, 5);
     this.ship.stepTutorial.subscribe((iBool: boolean) => {
-      if (iBool) {
+      if (iBool && this.step === 0) {
         this.socketS.nextStep();
       }
     });

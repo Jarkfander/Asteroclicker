@@ -19,10 +19,6 @@ export class StoryDirective implements OnInit {
   constructor(private elRef: ElementRef,
               private renderer: Renderer2,
               private storyS: StoryService) { }
-  
-  @HostListener('click', ['$event']) onclick() {
-    if (this.clickable) { this.storyS.nextState(); }
-  }
 
   private isLocked() {
     this.clickable = false;
@@ -30,22 +26,11 @@ export class StoryDirective implements OnInit {
     this.renderer.setStyle(this.el, 'pointerEvents', 'none');
   }
 
-  private isClickable() {
-    this.clickable = true;
-    let alternate = false;
-    interval(1000).pipe(
-      takeWhile(() => this.clickable),
-      tap(() => alternate = !alternate)
-    ).subscribe(() => this.renderer.setStyle(this.el, 'filter', `brightness(${alternate ? 100 : 140}%)`));
-    this.renderer.setStyle(this.el, 'cursor', 'pointer');
-    // Remove previous styles
-    this.renderer.setStyle(this.el, 'pointerEvents', 'auto');
-  }
 
   private isActive() {
     this.clickable = false;
     this.renderer.setStyle(this.el, 'filter', '');
-    // Remove previous styles    
+    // Remove previous styles
     this.renderer.setStyle(this.el, 'cursor', 'auto');
     this.renderer.setStyle(this.el, 'pointerEvents', 'auto');
   }
@@ -53,8 +38,10 @@ export class StoryDirective implements OnInit {
   ngOnInit() {
     this.el = this.elRef.nativeElement;
     this.renderer.setStyle(this.el, 'transition', 'filter 1s ease-in-out');
-    
-    this.storyS.state$.subscribe((state: number) => {
+
+    this.storyS.state$.pipe(
+      takeWhile((state: number) => state <= this.storyState + 1))
+    .subscribe((state: number) => {
       if (state < this.storyState) {
         this.isLocked();
       } else if (state === this.storyState) {

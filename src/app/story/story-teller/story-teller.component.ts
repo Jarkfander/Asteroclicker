@@ -16,10 +16,6 @@ export class StoryTellerComponent implements OnInit {
 
   constructor(private storyS: StoryService) { }
 
-  public next() {
-    this.storyS.nextState();
-  }
-
   ngOnInit() {
     this.story$ = this.storyS.state$.pipe(
       map((state: number) => story[state])
