@@ -27,6 +27,7 @@ section {
 
     h1 {
         color: $black;
+        padding: 5px;
         background-color: white;
         border-top: solid 3px $black;
         border-bottom: solid 3px $black;
@@ -64,6 +65,8 @@ section.can-buy {
     }
     .description {
         background-color: white;
+        padding: 10px;
+        font-size: 1.2rem;
     }
     .cost-ore {
         width: 20%;
@@ -86,8 +89,9 @@ section.can-buy {
         padding: 10px;
         font-size: 1.2rem;
         background-color: white;
-        font-weight: bold;
         text-transform: uppercase;
+        background-color: $buy-color;
+        box-shadow: inset 3px 3px #50ff66, inset -3px -3px #267e31;
         cursor: pointer;
     }
 }

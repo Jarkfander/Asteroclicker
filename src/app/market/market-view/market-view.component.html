@@ -15,7 +15,7 @@
       <h2>{{oreName}}</h2>
       <span>{{unitValue}} cr/u</span>
     </div>
-    <div class="amount col border-amount" tooltip="Amount to sell / buy">
+    <div class="amount col border-amount">
       <h4>Amount: {{ amount }}</h4>
       <input type="range" step="100" min="0" [max]="maxSliderValue" value="0" class="slider" [(ngModel)]="amount">
     </div>
