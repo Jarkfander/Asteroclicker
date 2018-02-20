@@ -37,7 +37,6 @@ article {
                 width: 100%;
                 margin: 0;
             }
-
         }
 
 
@@ -50,6 +49,7 @@ article {
                 padding: 5px 0;
                 text-transform: uppercase;
                 border: solid 1px black;
+                cursor: pointer;
             }
             button.buy {
                 background-color: $buy-color;
