@@ -78,13 +78,13 @@ export class Ship {
     mineRate: UpgradeShip;
     currentLevelDrone: number;
 
-    chest: ChestSprite;
+    public chest: ChestSprite;
 
-    constructor(app: PIXI.Application, chestSprite: ChestSprite) {
+    constructor(app: PIXI.Application) {
         this.app = app;
         this.deltaSum = 0;
 
-        this.chest = chestSprite;
+        this.chest = new ChestSprite(this.app);
 
         this.boolNewTourelle = false;
         this.deltaSumShip = 0;

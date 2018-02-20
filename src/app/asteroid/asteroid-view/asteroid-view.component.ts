@@ -183,7 +183,6 @@ export class AsteroidViewComponent implements OnInit {
 
     this.tickerApp();
 
-    this.asteroidSprite.eventOk = this.userS.currentUser.event;
     this.asteroidSprite.activEvent();
     this.clickCapsule();
 
@@ -248,9 +247,9 @@ export class AsteroidViewComponent implements OnInit {
       });
 
       // Event Subject
-      this.userS.eventSubject.subscribe((user: User) => {
+      this.userS.event.subscribe((hasEvent: number) => {
         if (this.asteroidSprite) {
-          this.asteroidSprite.eventOk = user.event;
+          this.asteroidSprite.eventOk = hasEvent;
           this.asteroidSprite.activEvent();
           this.clickCapsule();
         }
@@ -306,26 +305,26 @@ export class AsteroidViewComponent implements OnInit {
   // Managed the click in asteroid
   asteroidClick() {
     // ga('asteroid.send', 'event', 'buttons', 'click', 'asteroid');
-    if (!this.userS.currentUser.frenzy.state) {
-      this.numberOfClick++;
-      this.userS.localClickGauge++;
-      if (this.userS.localClickGauge >= 50) {
-        const amounts = parseFloat((
-          this.resourcesS.mineRate[this.userMineRateLvl].baseRate *
-          this.asteroid.purity / 100 *
-          this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2));
+
+    this.numberOfClick++;
+    this.userS.localClickGauge++;
+    if (this.userS.localClickGauge >= 50) {
+      const amounts = parseFloat((
+        this.resourcesS.mineRate[this.userMineRateLvl].baseRate *
+        this.asteroid.purity / 100 *
+        this.resourcesS.oreInfos[this.asteroid.ore].miningSpeed).toFixed(2));
 
 
-        for (let i = 0; i < 10; i++) {
-          this.generatePieceCall(this.asteroid.ore, amounts, this.xLaser, this.yLaser);
-        }
-        this.asteroidSprite.clickExplosion();
-        this.userS.localClickGauge = 0;
+      for (let i = 0; i < 10; i++) {
+        this.generatePieceCall(this.asteroid.ore, amounts, this.xLaser, this.yLaser);
       }
-      this.asteroidSprite.shakeCoef = this.userS.localClickGauge * 10;
-      this.userS.localClickGaugeSubject.next(this.userS.localClickGauge);
-      this.clicks.push(Date.now());
+      this.asteroidSprite.clickExplosion();
+      this.userS.localClickGauge = 0;
     }
+    this.asteroidSprite.shakeCoef = this.userS.localClickGauge * 10;
+    this.userS.localClickGaugeSubject.next(this.userS.localClickGauge);
+    this.clicks.push(Date.now());
+
   }
 
   updateClick() {
@@ -420,7 +419,7 @@ export class AsteroidViewComponent implements OnInit {
   // initial sky animated Sprite
   initSky(w, h) {
     this.numberOfSky = 1;
-    this.backgroundSky = initSprite('ciel3_1', 500, 500, true, this.userS.currentUser.boolBadConfig, 0.32);
+    this.backgroundSky = initSprite('ciel3_1', 500, 500, true, false, 0.32);
     this.backgroundSky.gotoAndPlay(0);
     this.backgroundSky.loop = false;
     this.backgroundSky.texture.baseTexture.mipmap = true;
@@ -465,7 +464,7 @@ export class AsteroidViewComponent implements OnInit {
   frenzyModGoOrNot(frenzy) {
     if (!frenzy.state) {
       this.frenzyMOD = false;
-      this.userS.currentUser.frenzy.comboInd = 0;
+      frenzy.comboInd = 0;
       this.asteroidSprite.frenzyModTouchDown();
       this.drone.statsActu = STATS_DRONE.MINING;
       this.asteroidSprite.frenzyModComboFinish();
@@ -484,10 +483,10 @@ export class AsteroidViewComponent implements OnInit {
   // frenzy Touch
   frenzyModTouch(numTouchUserActu: number) {
     if (this.frenzyInfo.state) {
-      this.socketS.validArrow(numTouchUserActu - 37, this.userS.currentUser.frenzy.comboInd);
-      if (this.frenzyInfo.nextCombos[this.userS.currentUser.frenzy.comboInd] === (numTouchUserActu - 37)) {
-        this.userS.currentUser.frenzy.comboInd++;
-        this.asteroidSprite.frenzyModTouch(this.frenzyInfo.nextCombos[this.userS.currentUser.frenzy.comboInd]);
+      this.socketS.validArrow(numTouchUserActu - 37, this.userS.localFrenzyInd);
+      if (this.frenzyInfo.nextCombos[this.userS.localFrenzyInd] === (numTouchUserActu - 37)) {
+        this.userS.localFrenzyInd++;
+        this.asteroidSprite.frenzyModTouch(this.frenzyInfo.nextCombos[this.userS.localFrenzyInd]);
         this.drone.frenzyTouchX = this.asteroidSprite.posXArrow + 50;
         this.drone.frenzyTouchY = this.asteroidSprite.posYArrow - 150;
       } else {

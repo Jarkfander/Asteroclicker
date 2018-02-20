@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { UserService } from '../shared/user/user.service';
+import { UserService, IProfile } from '../shared/user/user.service';
 import { SocketService } from '../shared/socket/socket.service';
 
 @Component({
@@ -11,7 +11,9 @@ export class ProfileComponent implements AfterViewInit {
 
   isBadConfig = false;
   constructor(private userS: UserService, private socketS: SocketService) {
-    this.isBadConfig = this.userS.currentUser.boolBadConfig;
+    this.userS.profile.take(1).subscribe((profile: IProfile) => {
+      this.isBadConfig = profile.badConfig==1;
+    });
   }
 
   ngAfterViewInit() {

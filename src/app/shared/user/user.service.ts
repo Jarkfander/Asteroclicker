@@ -37,43 +37,41 @@ export interface IMiningInfo {
   clickGauge: number;
 }
 
+export interface IChest{
+  reward1,
+  reward2,
+  reward3,
+}
+
+export interface IQuest{
+  gain:number,
+  name:string,
+  num : number,
+  test:string,
+  type: string,
+  values:number,
+  valuesFinal:number
+}
+
+
 @Injectable()
 export class UserService {
 
   public localClickGauge = 0;
 
+  public localFrenzyInd = 0;
 
-  currentUser: User;
-  userLoad = false;
+  public userId:string;
   afAuth: AngularFireAuth;
 
-  chestSubject = new Subject<User>();
-
-  questSubject = new Subject<User>();
-
   localClickGaugeSubject = new Subject<number>();
-  eventSubject = new Subject<User>();
 
   //cargoSubject = new Subject<User>();
 
   constructor(private db: AngularFireDatabase, private marketS: MarketService) {}
 
   initializeUser(id: string) {
-    this.currentUser = new User();
-    this.currentUser.frenzy = new Frenzy(false, 0, {});
-    this.currentUser.uid = id;
-    this.db.object('users/' + id + '/chest').valueChanges().subscribe(
-      (snapshot: any) => {
-        this.FillChest(snapshot);
-      });
-    this.db.object('users/' + id + '/quest').valueChanges().subscribe(
-      (snapshot: any) => {
-        this.FillQuest(snapshot);
-      });
-    this.db.object('users/' + id + '/event').valueChanges().subscribe(
-      (snapshot: any) => {
-        this.FillEvent(snapshot);
-      });
+    this.userId = id;
 
    /* this.db.object('users/' + id + '/cargo').valueChanges().subscribe(
       (snapshot: any) => {
@@ -81,40 +79,44 @@ export class UserService {
       });*/
   }
 
-  get quest(): Observable<number> {
-    return this.db.object('users/' + this.currentUser.uid + '/quest').valueChanges<number>();
+  get quest(): Observable<IQuest> {
+    return this.db.object('users/' + this.userId + '/quest').valueChanges<IQuest>();
   }
 
   get event(): Observable<number> {
-    return this.db.object('users/' + this.currentUser.uid + '/event').valueChanges<number>();
+    return this.db.object('users/' + this.userId + '/event').valueChanges<number>();
   }
 
-  get chest(): Observable<number> {
-    return this.db.object('users/' + this.currentUser.uid + '/chest').valueChanges<number>();
+  get score(): Observable<number> {
+    return this.db.object('users/' + this.userId + '/score').valueChanges<number>();
+  }
+
+  get chest(): Observable<IChest[]> {
+    return this.db.object('users/' + this.userId + '/chest').valueChanges<IChest[]>();
   }
 
   get credit(): Observable<number> {
-    return this.db.object('users/' + this.currentUser.uid + '/credit').valueChanges<number>();
+    return this.db.object('users/' + this.userId + '/credit').valueChanges<number>();
   }
 
   get frenzyInfo(): Observable<IFrenzyInfo> {
-    return this.db.object('users/' + this.currentUser.uid + '/frenzy/info').valueChanges<IFrenzyInfo>();
+    return this.db.object('users/' + this.userId + '/frenzy/info').valueChanges<IFrenzyInfo>();
   }
 
   get frenzyTimer(): Observable<number> {
-    return this.db.object('users/' + this.currentUser.uid + '/frenzy/time/timer').valueChanges<number>();
+    return this.db.object('users/' + this.userId + '/frenzy/time/timer').valueChanges<number>();
   }
 
   get miningInfo(): Observable<IMiningInfo> {
-    return this.db.object('users/' + this.currentUser.uid + '/miningInfo').valueChanges<IMiningInfo>();
+    return this.db.object('users/' + this.userId + '/miningInfo').valueChanges<IMiningInfo>();
   }
 
   get profile(): Observable<IProfile> {
-    return this.db.object('users/' + this.currentUser.uid + '/profile').valueChanges<IProfile>();
+    return this.db.object('users/' + this.userId + '/profile').valueChanges<IProfile>();
   }
 
   get upgrade(): Observable<IUserUpgrade[]> {
-    return this.db.object('users/' + this.currentUser.uid + '/upgrade').valueChanges<IUserUpgrade[]>()
+    return this.db.object('users/' + this.userId + '/upgrade').valueChanges<IUserUpgrade[]>()
       .map((upgrades: IUserUpgrade[]) => {
         const allCurrentUpgrade: IUserUpgrade[] = new Array();
         for (const key in upgrades) {
@@ -129,36 +131,10 @@ export class UserService {
   }
 
   getUpgradeByName(upgradeName: string): Observable<IUserUpgrade> {
-    return this.db.object('users/' + this.currentUser.uid + '/upgrade/' + upgradeName).valueChanges<IUserUpgrade>()
+    return this.db.object('users/' + this.userId + '/upgrade/' + upgradeName).valueChanges<IUserUpgrade>()
       .map((upgrade: IUserUpgrade) => {
         return {...upgrade, name: upgradeName };
       });
-  }
-
-  FillChest(snapshot) {
-    this.currentUser.numberOfChest = snapshot.numberOfChest;
-    this.currentUser.destroyChest();
-    delete this.currentUser.chest;
-    this.currentUser.chest = new Array<Chest>();
-    for (let i = 0; i < snapshot.numberOfChest; i++) {
-      const tempString = 'chest' + i;
-      this.currentUser.chest.push(new Chest(snapshot[tempString][0], snapshot[tempString][1], snapshot[tempString][2]));
-    }
-    this.chestSubject.next(this.currentUser);
-  }
-
-
-  FillQuest(snapshot) {
-    this.currentUser.quest = new Quest(snapshot.name, snapshot.type, snapshot.values,
-      snapshot.num, snapshot.gain);
-    this.currentUser.quest.text = snapshot.text;
-    this.currentUser.quest.valuesFinal = snapshot.valuesFinal;
-    this.questSubject.next(this.currentUser);
-  }
-
-  FillEvent(snapshot) {
-    this.currentUser.event = snapshot;
-    this.eventSubject.next(this.currentUser);
   }
 
   /*FillCargo(snapshot) {

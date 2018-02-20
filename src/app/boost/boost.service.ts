@@ -63,7 +63,7 @@ export class BoostService {
    * Get Inventory of the current user and update subject
   */
   public getInventory(): Observable<IUserBoost[]> {
-    return this.db.list<any>(`users/${this.userS.currentUser.uid}/boosts`)
+    return this.db.list<any>(`users/${this.userS.userId}/boosts`)
                   .valueChanges<any[]>()
                   .pipe(
                     map((boosts: any[]) => {

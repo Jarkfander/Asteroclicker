@@ -1,7 +1,7 @@
 import { Component, AfterViewInit, ElementRef, Renderer2, HostListener } from '@angular/core';
 import * as PIXI from 'pixi.js';
 import { Ship } from './ship';
-import { UserService, IProfile, IUserUpgrade } from '../../shared/user/user.service';
+import { UserService, IProfile, IUserUpgrade, IChest } from '../../shared/user/user.service';
 import { User } from '../../shared/user/user';
 import { UpgradeType } from '../upgrade-class/upgrade';
 import { getFramesFromSpriteSheet, initSprite, changeSpriteInAnime } from '../../loadAnimation';
@@ -9,6 +9,7 @@ import { SocketService } from '../../shared/socket/socket.service';
 import { ChestSprite } from './chestSprite';
 import { UpgradeService } from '../upgrade.service';
 import { Observable } from 'rxjs/Observable';
+import { fail } from 'assert';
 
 
 @Component({
@@ -21,7 +22,6 @@ export class ShipViewComponent implements AfterViewInit {
   private app: PIXI.Application;
   private v: number;
   private ship: Ship;
-  private chestSprite: ChestSprite;
   private boolShipTourelle: boolean;
   private backgroundSky: PIXI.extras.AnimatedSprite;
   private numberOfSky: number;
@@ -30,51 +30,15 @@ export class ShipViewComponent implements AfterViewInit {
   public activeUpgrade$: Observable<IUserUpgrade>;
 
   constructor(private el: ElementRef,
-              private render: Renderer2,
-              private userS: UserService,
-              private upgradeS: UpgradeService,
-              private socketS: SocketService) { }
+    private render: Renderer2,
+    private userS: UserService,
+    private upgradeS: UpgradeService,
+    private socketS: SocketService) { }
 
   ngAfterViewInit() {
     this.activeUpgrade$ = this.upgradeS.activeUserUpgrade$.asObservable();
-    setTimeout(() => this.initPixi(), 0);
-  }
 
-  @HostListener('window:resize') onResize() {
-    this.app.stage.removeChildren();
-    this.render.removeChild(this.el.nativeElement, this.app.view);
-    delete this.ship;
-    this.app.destroy();
     this.initPixi();
-  }
-
-
-  private initPixi() {
-    const w = this.el.nativeElement.offsetWidth;
-    const h = this.el.nativeElement.offsetHeight;
-    this.app = new PIXI.Application(w, h, { backgroundColor: 0xffffff });
-    this.render.appendChild(this.el.nativeElement, this.app.view);
-
-    this.boolShipTourelle = false;
-
-    // skyV1
-    this.numberOfSky = 1;
-    this.initSky(w, h);
-
-    this.chestSprite = new ChestSprite(this.app, this.userS.currentUser.numberOfChest);
-    this.ship = new Ship(this.app, this.chestSprite);
-    this.chestSprite.afterInitShip();
-    this.ship.ship.addChildAt(this.chestSprite.spriteChestParent, 5);
-
-    this.clickChest();
-    // init
-
-    // start the animation before the init
-    if (this.ship.ship.cacheAsBitmap) {
-      setInterval(() => {
-        this.ship.ship.cacheAsBitmap = false;
-      }, 10000);
-    }
 
     this.userS.profile.subscribe((profile: IProfile) => {
       this.animationGoodConfig(profile.badConfig === 1);
@@ -85,7 +49,7 @@ export class ShipViewComponent implements AfterViewInit {
       if (this.animationLoaded) {
 
         for (let i = 0; i < upgrades.length; i++) {
-          if (upgrades[i].name !== 'QG'){
+          if (upgrades[i].name !== 'QG') {
             this.ship.autoUpgrade(upgrades[i].lvl, this.ship[upgrades[i].name]);
           }
 
@@ -104,11 +68,50 @@ export class ShipViewComponent implements AfterViewInit {
       this.initWithTimeUpgrade(upgrades);
     });
 
-    this.userS.chestSubject.subscribe((user: User) => {
-      this.chestSprite.numberOfChest = user.numberOfChest;
-      this.chestSprite.supChest();
-      this.clickChest();
+    this.userS.chest.subscribe((chests: IChest[]) => {
+      this.ship.chest.numberOfChest = chests.length;
+      this.ship.chest.supChest();
+      this.clickChest(chests);
     });
+
+
+  }
+
+  @HostListener('window:resize') onResize() {
+    this.app.stage.removeChildren();
+    this.render.removeChild(this.el.nativeElement, this.app.view);
+    delete this.ship;
+    this.app.destroy();
+    this.initPixi();
+  }
+
+
+  private initPixi() {
+    const w = this.el.nativeElement.offsetWidth;
+    const h = this.el.nativeElement.offsetHeight;
+    this.app = new PIXI.Application(w, h, { backgroundColor: 0xffffff });
+    this.render.appendChild(this.el.nativeElement, this.app.view);
+
+
+
+    this.boolShipTourelle = false;
+
+    // skyV1
+    this.numberOfSky = 1;
+    this.initSky(w, h);
+
+    this.ship = new Ship(this.app);
+    this.ship.chest.afterInitShip();
+    this.ship.ship.addChildAt(this.ship.chest.spriteChestParent, 5);
+
+    // init
+
+    // start the animation before the init
+    if (this.ship.ship.cacheAsBitmap) {
+      setInterval(() => {
+        this.ship.ship.cacheAsBitmap = false;
+      }, 10000);
+    }
   }
 
 
@@ -139,7 +142,7 @@ export class ShipViewComponent implements AfterViewInit {
   // initial ship animated Sprite
   initSky(w, h) {
     this.backgroundSky = initSprite('ciel2_1', 500, 500, true,
-      this.userS.currentUser.boolBadConfig, 0.32);
+      false, 0.32);
     this.backgroundSky.loop = false;
     this.backgroundSky.texture.baseTexture.mipmap = true;
 
@@ -158,9 +161,9 @@ export class ShipViewComponent implements AfterViewInit {
   }
 
   // Animation when you click on chest
-  clickChest() {
-    if (this.chestSprite.numberOfChest > 0) {
-      const tempSprite: any = this.chestSprite.spriteChestParent.children;
+  clickChest(chests: IChest[]) {
+    if (this.ship.chest.numberOfChest > 0) {
+      const tempSprite: any = this.ship.chest.spriteChestParent.children;
       tempSprite[0].interactive = true;
       tempSprite[0].buttonMode = true;
       tempSprite[0].on('click', (event) => {
@@ -173,24 +176,24 @@ export class ShipViewComponent implements AfterViewInit {
         tempSprite[1].gotoAndPlay(0);
         tempSprite[3].gotoAndPlay(0);
         tempSprite[1].onComplete = () => {
-          tempSprite[3].addChild(this.chestSprite.spriteTextChest);
+          tempSprite[3].addChild(this.ship.chest.spriteTextChest);
           const xTemp = -50;
           const yTemp = -10;
 
-          let tempChest = this.userS.currentUser.chest[this.chestSprite.numberOfChest - 1].chest1;
-          this.chestSprite.openChestText(0, xTemp - 42, yTemp + 12,
+          let tempChest = chests[this.ship.chest.numberOfChest - 1].reward1;
+          this.ship.chest.openChestText(0, xTemp - 42, yTemp + 12,
             Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
 
-          tempChest = this.userS.currentUser.chest[this.chestSprite.numberOfChest - 1].chest2;
-          this.chestSprite.openChestText(0, xTemp + 27, yTemp - 25, Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
+          tempChest = chests[this.ship.chest.numberOfChest - 1].reward2;
+          this.ship.chest.openChestText(0, xTemp + 27, yTemp - 25, Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
 
-          tempChest = this.userS.currentUser.chest[this.chestSprite.numberOfChest - 1].chest3;
-          this.chestSprite.openChestText(0, xTemp + 90, yTemp + 20, Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
+          tempChest = chests[this.ship.chest.numberOfChest - 1].reward3;
+          this.ship.chest.openChestText(0, xTemp + 90, yTemp + 20, Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
 
           tempSprite[1].interactive = true;
           tempSprite[1].buttonMode = true;
           tempSprite[1].on('click', () => {
-            this.chestSprite.spriteTextChest.destroy();
+            this.ship.chest.spriteTextChest.destroy();
             tempSprite[3].visible = false;
             tempSprite[1].interactive = false;
             tempSprite[1].buttonMode = false;
@@ -207,13 +210,13 @@ export class ShipViewComponent implements AfterViewInit {
               tempSprite[2].visible = true;
               tempSprite[2].gotoAndPlay(0);
 
-              delete this.chestSprite.spriteTextChest;
+              delete this.ship.chest.spriteTextChest;
 
               tempSprite[2].onComplete = () => {
               };
 
               tempSprite[5].onComplete = () => {
-                this.socketS.removeChest(this.userS.currentUser.numberOfChest);
+                this.socketS.removeChest(chests.length);
               };
             };
           });

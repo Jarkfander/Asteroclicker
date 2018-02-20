@@ -1,8 +1,9 @@
 import { staggerTile } from '../shared/animations';
 import { Component, OnInit } from '@angular/core';
 import { QuestService } from './quest.service';
-import { UserService } from '../shared/user/user.service';
+import { UserService, IQuest } from '../shared/user/user.service';
 import { Quest } from './quest';
+import { Observable } from 'rxjs/Observable';
 
 
 @Component({
@@ -13,13 +14,13 @@ import { Quest } from './quest';
 })
 export class QuestComponent implements OnInit {
 
-  public quest: Quest;
+  public quest$: Observable<IQuest>;
   public questGroup: Quest;
   constructor(private userS: UserService, private questS: QuestService) {
   }
 
   ngOnInit() {
-    this.quest = this.userS.currentUser.quest;
+    this.quest$ = this.userS.quest;
     this.questGroup = this.questS.questGroup;
   }
 
