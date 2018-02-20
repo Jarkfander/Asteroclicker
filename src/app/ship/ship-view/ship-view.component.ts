@@ -105,10 +105,11 @@ export class ShipViewComponent implements AfterViewInit {
     this.ship.ship.addChildAt(this.ship.chest.spriteChestParent, 5);
 
     // init musique
+    /*
     PIXI.loader.load(function (loader, resources) {
       resources.enrico.data.play();
     });
-
+    */
 
     // start the animation before the init
     if (this.ship.ship.cacheAsBitmap) {
