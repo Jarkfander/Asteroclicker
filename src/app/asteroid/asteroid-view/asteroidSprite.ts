@@ -36,7 +36,7 @@ export class AsteroidSprite {
     spriteStar: PIXI.extras.AnimatedSprite;
     spriteStarXY: any;
 
-    eventOk: number;
+    eventOk=0;
     spriteEventParent: PIXI.Container;
     boolEvent: boolean;
     compteurEvent: number;

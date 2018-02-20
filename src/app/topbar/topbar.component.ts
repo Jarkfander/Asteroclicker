@@ -16,19 +16,16 @@ import { staggerTile } from '../shared/animations';
   animations: [staggerTile]
 })
 export class TopbarComponent implements AfterViewInit {
-  public name: string;
-  public credit: number;
+  public name: string = "";
+  public credit: number = 0;
 
   public isModalQuest: boolean;
   public isModalRank: boolean;
   public isModalProfile: boolean;
   public isModalBoost: boolean;
-  public creditValue: string;
+  public creditValue: string = "";
 
   constructor(private authS: AuthService, public userS: UserService, public questS: QuestService, private socketS: SocketService) {
-    this.name = userS.currentUser.name;
-    this.credit = userS.currentUser.credit;
-    this.creditValue = SharedModule.calculeMoneyWithSpace(userS.currentUser.credit);
   }
 
   ngAfterViewInit() {

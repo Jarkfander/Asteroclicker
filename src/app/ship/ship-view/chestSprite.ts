@@ -7,11 +7,11 @@ export class ChestSprite {
     spriteTextOpenChest: PIXI.Sprite;
     boolParentChest: boolean;
     spriteTextChest: PIXI.Container;
-    numberOfChest: number;
+    numberOfChest: number = 0;
     app: PIXI.Application;
 
     spriteBoolText: boolean;
-    constructor(app, numberOfChest) {
+    constructor(app) {
         this.app = app;
         // Init the font 
         const text = new PIXI.Text(' ',
@@ -21,8 +21,6 @@ export class ChestSprite {
             });
 
         this.app.stage.addChild(text);
-
-        this.numberOfChest = numberOfChest;
 
         // Text new chest
         this.spriteTextOpenChest = PIXI.Sprite.fromImage('../../assets/capsule/youHaveNew.png');
