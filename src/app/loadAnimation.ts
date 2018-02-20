@@ -98,6 +98,7 @@ export class LoadAnimation {
         this.addKeySpriteName('kaboom', './assets/kaboom.png');
         this.addKeySpriteName('woom', './assets/woom.png');
         this.addKeySpriteName('laserSound', '../assets/sound/laserSound.mp3');
+        this.addKeySpriteName('enrico', '../assets/sound/enrico.mp3');
 
         this.onAssetsLoaded();
     }

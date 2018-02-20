@@ -61,9 +61,9 @@ export class SocketService {
 
     this.socket.emit('pickUpCollectible', json);
   }
-/*********
- * UPGRADE
- *********/
+  /*********
+   * UPGRADE
+   *********/
   upgradeShipCredit(upgradeName: string) {
     const json = {};
 
@@ -98,9 +98,9 @@ export class SocketService {
     this.socket.emit('updateCargoTimer', json);
   }
 
-/******
- * ORE
- *****/
+  /******
+   * ORE
+   *****/
 
   sellOre(oreName: string, amount: number) {
     const json = {};
@@ -224,5 +224,12 @@ export class SocketService {
     this.socket.emit('upsertUserBoosts', {
       user: this.userId
     });
+  }
+
+  // Next step for the tutorial
+  nextStep() {
+    const json = {};
+    json['user'] = this.userId;
+    this.socket.emit('nextStep', json);
   }
 }
