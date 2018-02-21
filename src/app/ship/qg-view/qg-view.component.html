@@ -1,7 +1,8 @@
-<section class="row-reverse justify-between">
+<section (click)="openModal()" class="row-reverse justify-between">
   <div class="name">
     <h1>Head Quarter</h1>
   </div>
+  <!--
   <div (click)="levelUpOre()" class="level-up row align-center justify-between">
     <img src="../../../assets/icon/level-up.png" alt="levelUp"/>
     <div class="cost-ore col align-center justify-around" *ngFor="let key of upgradeCostString">
@@ -9,4 +10,27 @@
       <p>{{nextUpgrade.costOreString[key]}}</p>
     </div>
   </div>
+-->
 </section>
+
+
+<app-modal [@stagger-tile] (close)="closeModal()" *ngIf="lvlUpModal">
+  <div class="modal col justify-between">
+      <app-upgrade-info [upgrade]="currentUpgrade" class="info"></app-upgrade-info>
+      <div class="description border tile">
+          <p>Head Quarter description</p>
+      </div>
+      <div class="ores row">
+          <div class="cost-ore border tile">
+              <h2>Price to Level Up</h2>
+          </div>
+          <div class="cost-ore col justify-around align-center border tile" *ngFor="let key of upgradeCostString">
+              <img *ngIf="key !== '???'" src="../../../assets/oreIcon/{{key}}Icon.png" />
+              <p>{{nextUpgrade.costOreString[key]}}</p>
+              <p *ngIf="key === '???'">{{key}}</p>
+          </div>
+      </div>
+  
+      <button class="border tile" (click)="levelUpOre()">Level Up</button>
+  </div>
+</app-modal>
