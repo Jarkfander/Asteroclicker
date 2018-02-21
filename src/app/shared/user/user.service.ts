@@ -37,20 +37,21 @@ export interface IMiningInfo {
   clickGauge: number;
 }
 
-export interface IChest{
-  reward1,
-  reward2,
-  reward3,
+export interface IChest { // maper 0,1,2 sur reward 1 etc ...
+  0,
+  1,
+  2,
 }
 
-export interface IQuest{
-  gain:number,
-  name:string,
-  num : number,
-  test:string,
+
+export interface IQuest {
+  gain: number,
+  name: string,
+  num: number,
+  test: string,
   type: string,
-  values:number,
-  valuesFinal:number
+  values: number,
+  valuesFinal: number
 }
 
 
@@ -61,22 +62,22 @@ export class UserService {
 
   public localFrenzyInd = 0;
 
-  public userId:string;
+  public userId: string;
   afAuth: AngularFireAuth;
 
   localClickGaugeSubject = new Subject<number>();
 
   //cargoSubject = new Subject<User>();
 
-  constructor(private db: AngularFireDatabase, private marketS: MarketService) {}
+  constructor(private db: AngularFireDatabase, private marketS: MarketService) { }
 
   initializeUser(id: string) {
     this.userId = id;
 
-   /* this.db.object('users/' + id + '/cargo').valueChanges().subscribe(
-      (snapshot: any) => {
-        this.FillCargo(snapshot);
-      });*/
+    /* this.db.object('users/' + id + '/cargo').valueChanges().subscribe(
+       (snapshot: any) => {
+         this.FillCargo(snapshot);
+       });*/
   }
 
   get quest(): Observable<IQuest> {
@@ -92,7 +93,14 @@ export class UserService {
   }
 
   get chest(): Observable<IChest[]> {
-    return this.db.object('users/' + this.userId + '/chest').valueChanges<IChest[]>();
+    return this.db.object('users/' + this.userId + '/chest').valueChanges()
+      .map((allChests: any) => {
+        let chests: IChest[] = new Array();
+        for (let i = 0; i < allChests.numberOfChest; i++) {
+          chests.push(allChests["chest" + i]);
+        }
+        return chests;
+      });
   }
 
   get credit(): Observable<number> {
@@ -133,7 +141,7 @@ export class UserService {
   getUpgradeByName(upgradeName: string): Observable<IUserUpgrade> {
     return this.db.object('users/' + this.userId + '/upgrade/' + upgradeName).valueChanges<IUserUpgrade>()
       .map((upgrade: IUserUpgrade) => {
-        return {...upgrade, name: upgradeName };
+        return { ...upgrade, name: upgradeName };
       });
   }
 

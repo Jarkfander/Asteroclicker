@@ -87,7 +87,7 @@ export class Ship {
         this.app = app;
         this.deltaSum = 0;
 
-        this.chest = new ChestSprite(this.app);
+
 
         this.boolNewTourelle = false;
         this.deltaSumShip = 0;
@@ -118,6 +118,8 @@ export class Ship {
 
         let deltaChest = 0;
         // Listen for animate update
+        this.chest = new ChestSprite(this.app);
+        
         this.app.ticker.add((delta) => {
             if (this.ship) {
                 if (this.deltaSum > 2 * Math.PI) {

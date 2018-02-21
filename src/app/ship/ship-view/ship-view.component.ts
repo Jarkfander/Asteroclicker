@@ -44,6 +44,13 @@ export class ShipViewComponent implements AfterViewInit {
       this.animationGoodConfig(profile.badConfig === 1);
     });
 
+    this.userS.chest.subscribe((chests: IChest[]) => {
+  
+      this.ship.chest.numberOfChest = chests.length;
+      this.ship.chest.supChest();
+      this.clickChest(chests);
+    });
+
     this.userS.upgrade.subscribe((upgrades: IUserUpgrade[]) => {
 
       if (this.animationLoaded) {
@@ -64,17 +71,6 @@ export class ShipViewComponent implements AfterViewInit {
       }
     });
 
-    this.userS.upgrade.take(1).subscribe((upgrades: IUserUpgrade[]) => {
-      this.initWithTimeUpgrade(upgrades);
-    });
-
-    this.userS.chest.subscribe((chests: IChest[]) => {
-      this.ship.chest.numberOfChest = chests.length;
-      this.ship.chest.supChest();
-      this.clickChest(chests);
-    });
-
-
   }
 
   @HostListener('window:resize') onResize() {
@@ -83,6 +79,17 @@ export class ShipViewComponent implements AfterViewInit {
     delete this.ship;
     this.app.destroy();
     this.initPixi();
+
+    this.userS.profile.take(1).subscribe((profile: IProfile) => {
+      this.animationGoodConfig(profile.badConfig === 1);
+    });
+
+    this.userS.chest.take(1).subscribe((chests: IChest[]) => {
+      this.ship.chest.numberOfChest = chests.length;
+      this.ship.chest.supChest();
+      this.clickChest(chests);
+    });
+
   }
 
   private initPixi() {
@@ -90,8 +97,6 @@ export class ShipViewComponent implements AfterViewInit {
     const h = this.el.nativeElement.offsetHeight;
     this.app = new PIXI.Application(w, h, { backgroundColor: 0xffffff });
     this.render.appendChild(this.el.nativeElement, this.app.view);
-
-
 
     this.boolShipTourelle = false;
 
@@ -120,6 +125,11 @@ export class ShipViewComponent implements AfterViewInit {
         this.ship.ship.cacheAsBitmap = false;
       }, 10000);
     }
+
+    this.userS.upgrade.take(1).subscribe((upgrades: IUserUpgrade[]) => {
+      this.initWithTimeUpgrade(upgrades);
+    });
+
   }
 
 
@@ -186,14 +196,14 @@ export class ShipViewComponent implements AfterViewInit {
           const xTemp = -50;
           const yTemp = -10;
 
-          let tempChest = chests[this.ship.chest.numberOfChest - 1].reward1;
+          let tempChest = chests[this.ship.chest.numberOfChest - 1][0];
           this.ship.chest.openChestText(0, xTemp - 42, yTemp + 12,
             Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
 
-          tempChest = chests[this.ship.chest.numberOfChest - 1].reward2;
+          tempChest = chests[this.ship.chest.numberOfChest - 1][1];
           this.ship.chest.openChestText(0, xTemp + 27, yTemp - 25, Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
 
-          tempChest = chests[this.ship.chest.numberOfChest - 1].reward3;
+          tempChest = chests[this.ship.chest.numberOfChest - 1][2];
           this.ship.chest.openChestText(0, xTemp + 90, yTemp + 20, Object.keys(tempChest)[0], tempChest[Object.keys(tempChest)[0]]);
 
           tempSprite[1].interactive = true;
