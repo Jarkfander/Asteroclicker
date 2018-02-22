@@ -3,6 +3,7 @@
     [ngClass]="{'can-buy': checkCanBuy()}" 
     (mouseenter)="openInfos()"
     (mouseleave)="closeInfos()"
+    [story]="storyState"
     (click)="openModal()">
     <h1>{{currentUpgrade.displayName}}</h1>
     <div #timer *ngIf="userUpgrade.start !== 0" class="timer"></div>

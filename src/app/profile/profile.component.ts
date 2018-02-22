@@ -12,7 +12,7 @@ export class ProfileComponent implements AfterViewInit {
   isBadConfig = false;
   constructor(private userS: UserService, private socketS: SocketService) {
     this.userS.profile.take(1).subscribe((profile: IProfile) => {
-      this.isBadConfig = profile.badConfig==1;
+      this.isBadConfig = profile.badConfig === 1;
     });
   }
 

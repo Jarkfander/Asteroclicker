@@ -2,6 +2,6 @@
   <img src="../../../assets/story/avatar.jpg"/>
   <div class="text col align-start justify-between">
     <p>{{ story }}</p>
-    <button type="button" (click)="next()">Ok</button>
+    <button *ngIf="hasOk" type="button" (click)="next()">Ok</button>
   </div>
 </article>

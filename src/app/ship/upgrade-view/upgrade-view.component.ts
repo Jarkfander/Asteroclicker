@@ -39,6 +39,7 @@ export class UpgradeViewComponent implements AfterViewInit {
   public nextUpgrade: Upgrade;
   public upgradeCostString: string[];
   public lvlUpModal: boolean;
+  public storyState: number;
 
   constructor(private socketS: SocketService,
     private toasterS: ToasterService,
@@ -46,7 +47,7 @@ export class UpgradeViewComponent implements AfterViewInit {
     private renderer: Renderer2,
     private userS: UserService,
     private resourcesS: ResourcesService,
-    private upgradeS: UpgradeService) {}
+    private upgradeS: UpgradeService) { }
 
   ngAfterViewInit() {
     this.userS.getUpgradeByName(this.name)
@@ -58,6 +59,7 @@ export class UpgradeViewComponent implements AfterViewInit {
         this.updateCost();
         this.setTimer();
         this.renderer.setStyle(this.el.nativeElement, 'backgroundImage', `url('../../../assets/upgrade/img/${this.userUpgrade.name}.jpg')`);
+        this.storyStateInit(userUpgrade.name);
         if (!!this.oreAmount && !this.checkCanBuy()) {
           this.renderer.addClass(this.el.nativeElement, 'cannot-buy');
         } else {
@@ -72,7 +74,7 @@ export class UpgradeViewComponent implements AfterViewInit {
       if (this.userUpgrade.start !== 0) {
         const timeLeft = 100 - ((this.userUpgrade.timer - this.nextUpgrade.time) / (10 * this.nextUpgrade.time));
         this.renderer.setStyle(this.timerRef.nativeElement, 'transform', `translateY(${timeLeft}%)`);
-        this.socketS.updateUpgradeTimer( this.userUpgrade.name);
+        this.socketS.updateUpgradeTimer(this.userUpgrade.name);
       }
     }, 1000);
 
@@ -88,8 +90,8 @@ export class UpgradeViewComponent implements AfterViewInit {
   /** Update ore amount of user and update timer */
   public levelUpOre() {
     if (this.checkCanBuy(true)) {
-      this.socketS.upgradeShipOre( this.currentUpgrade.name);
-      this.socketS.updateUpgradeTimer( this.userUpgrade.name);
+      this.socketS.upgradeShipOre(this.currentUpgrade.name);
+      this.socketS.updateUpgradeTimer(this.userUpgrade.name);
     }
   }
 
@@ -101,6 +103,27 @@ export class UpgradeViewComponent implements AfterViewInit {
 
   private costOreForCredit(nameOre: string, costCredit: number) {
     return costCredit / this.resourcesS.oreInfos[nameOre].meanValue;
+  }
+
+  /** Init state ... */
+  private storyStateInit(name: string) {
+    switch (name) {
+      case 'engine':
+        this.storyState = 10;
+        break;
+
+      case 'research':
+        this.storyState = 11;
+        break;
+
+      case 'mineRate':
+        this.storyState = 12;
+        break;
+
+      case 'storage':
+        this.storyState = 13;
+        break;
+    }
   }
 
   /** Change the cost depending on user's upgrade lvl */
@@ -137,7 +160,7 @@ export class UpgradeViewComponent implements AfterViewInit {
     // Check QG lvl
     if (this.userUpgrade.lvl + 1 > this.QGlvl) {
       if (toaster) {
-        this.toasterS.comics('QG should be higher than ' + this.userUpgrade.lvl + 1, "upgrade-low-qg");
+        this.toasterS.comics('QG should be higher than ' + this.userUpgrade.lvl + 1, 'upgrade-low-qg');
       }
       return false;
     }
@@ -146,22 +169,18 @@ export class UpgradeViewComponent implements AfterViewInit {
       if (keysCost[i] === 'credit') {
         if (this.credit < tempUpgradeCost[keysCost[i]]) {
           if (toaster) {
-            this.toasterS.comics('You need ' + Math.round(tempUpgradeCost[keysCost[i]] - this.credit) + ' more !',"upgrade-oremiss" );
+            this.toasterS.comics('You need ' + Math.round(tempUpgradeCost[keysCost[i]] - this.credit) + ' more !', 'upgrade-oremiss');
           }
           return false;
         }
-      }
-      // Check research level
-      else if (!this.oreMiss(keysCost[i])) {
+      } else if (!this.oreMiss(keysCost[i])) { // Check research level
         if (toaster) {
-          this.toasterS.comics('You should upgrade research before', "upgrade-low-research");
+          this.toasterS.comics('You should upgrade research before', 'upgrade-low-research');
         }
         return false;
-      }
-      // Check ore
-      else if (this.oreAmount[keysCost[i]] < tempUpgradeCost[keysCost[i]]) {
+      } else if (this.oreAmount[keysCost[i]] < tempUpgradeCost[keysCost[i]]) { // Check ore
         if (toaster) {
-          this.toasterS.comics( 'You need ' + Math.round(tempUpgradeCost[keysCost[i]] - this.oreAmount[keysCost[i]]) + ' more '+keysCost[i],"upgrade-oremiss");
+          this.toasterS.comics('You need ' + Math.round(tempUpgradeCost[keysCost[i]] - this.oreAmount[keysCost[i]]) + ' more ' + keysCost[i], 'upgrade-oremiss');
         }
         return false;
       }

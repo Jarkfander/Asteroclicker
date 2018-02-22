@@ -23,6 +23,7 @@ export interface IProfile {
   badConfig: number;
   email: string;
   name: string;
+  step: number;
 }
 
 

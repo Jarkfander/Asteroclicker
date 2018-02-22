@@ -133,14 +133,16 @@ export class Ship {
                 this.deltaSumShip += (2 * Math.PI) / 1500;
 
                 if (this.shipGoCenterScreen) {
-                    const vectGO = this.lerpVector2(this.ship.x, this.ship.y, this.app.renderer.width / 2, this.app.renderer.height / 2, 0.005);
+                    const vectGO = this.lerpVector2(this.ship.x, this.ship.y, this.app.renderer.width / 2, this.app.renderer.height / 2, 0.01);
                     this.ship.x = vectGO.x;
                     this.ship.y = vectGO.y;
+
                     if (this.ship.x < (this.app.renderer.width / 2) + 1.5) {
-                        this.stepTutorial.next(true);
                         this.shipGoCenterScreen = false;
+                        this.stepTutorial.next(true);
                         this.transformShipX = this.app.renderer.width / 2;
                         this.transformShipY = this.app.renderer.height / 2;
+                        this.deltaSumShip = 0;
                     }
                 } else {
                     this.ship.y = this.transformShipY + Math.sin(this.deltaSumShip) * 17;

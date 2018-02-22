@@ -10,6 +10,7 @@ import { ChestSprite } from './chestSprite';
 import { UpgradeService } from '../upgrade.service';
 import { Observable } from 'rxjs/Observable';
 import { fail } from 'assert';
+import { takeWhile } from 'rxjs/operators';
 
 
 @Component({
@@ -19,6 +20,7 @@ import { fail } from 'assert';
 })
 
 export class ShipViewComponent implements AfterViewInit {
+  step: number;
   private app: PIXI.Application;
   private v: number;
   private ship: Ship;
@@ -42,6 +44,7 @@ export class ShipViewComponent implements AfterViewInit {
 
     this.userS.profile.subscribe((profile: IProfile) => {
       this.animationGoodConfig(profile.badConfig === 1);
+      this.step = profile.step;
     });
 
     this.userS.chest.subscribe((chests: IChest[]) => {
@@ -107,9 +110,11 @@ export class ShipViewComponent implements AfterViewInit {
     this.ship = new Ship(this.app);
     this.ship.chest.afterInitShip();
     this.ship.ship.addChildAt(this.ship.chest.spriteChestParent, 5);
-    this.ship.stepTutorial.subscribe((iBool: boolean) => {
-      if (iBool) {
-        this.socketS.nextStep();
+    this.ship.stepTutorial.pipe(
+      takeWhile((iBool: boolean) => iBool <= true))
+      .subscribe((iBool: boolean) => {
+      if (iBool && this.step === 0) {
+        this.socketS.nextStep(1);
       }
     });
     // init musique
