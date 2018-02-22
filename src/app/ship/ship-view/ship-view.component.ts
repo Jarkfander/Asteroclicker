@@ -10,6 +10,7 @@ import { ChestSprite } from './chestSprite';
 import { UpgradeService } from '../upgrade.service';
 import { Observable } from 'rxjs/Observable';
 import { fail } from 'assert';
+import { takeWhile } from 'rxjs/operators';
 
 
 @Component({
@@ -109,9 +110,11 @@ export class ShipViewComponent implements AfterViewInit {
     this.ship = new Ship(this.app);
     this.ship.chest.afterInitShip();
     this.ship.ship.addChildAt(this.ship.chest.spriteChestParent, 5);
-    this.ship.stepTutorial.subscribe((iBool: boolean) => {
+    this.ship.stepTutorial.pipe(
+      takeWhile((iBool: boolean) => iBool <= true))
+      .subscribe((iBool: boolean) => {
       if (iBool && this.step === 0) {
-        this.socketS.nextStep();
+        this.socketS.nextStep(1);
       }
     });
     // init musique

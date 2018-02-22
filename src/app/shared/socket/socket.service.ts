@@ -193,8 +193,8 @@ export class SocketService {
 
   /**
    * 
-   * @param {number} keyCode Key code 
-   * @param {number} keyInd 
+   * @param {number} keyCode Key code
+   * @param {number} keyInd
    */
   validArrow(keyCode: number, keyInd: number) {
     const json = {};
@@ -227,9 +227,10 @@ export class SocketService {
   }
 
   // Next step for the tutorial
-  nextStep() {
+  nextStep(step: number) {
     const json = {};
     json['user'] = this.userId;
+    json['step'] = step;
     this.socket.emit('nextStep', json);
   }
 }

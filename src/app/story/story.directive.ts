@@ -40,7 +40,7 @@ export class StoryDirective implements OnInit {
     this.renderer.setStyle(this.el, 'transition', 'filter 1s ease-in-out');
 
     this.storyS.state$.pipe(
-      takeWhile((state: number) => state <= this.storyState + 1))
+      takeWhile((state: number) => state <= this.storyState))
     .subscribe((state: number) => {
       if (state < this.storyState) {
         this.isLocked();

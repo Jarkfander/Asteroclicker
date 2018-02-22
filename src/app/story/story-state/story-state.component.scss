@@ -1,5 +1,6 @@
 :host {
-    position : absolute;
+    position : fixed;
+    pointer-events: none;
     transition: all 0.3s ease-in-out;
     animation: flicker 0.5s ease-in-out alternate infinite;
 }

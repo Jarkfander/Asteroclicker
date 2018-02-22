@@ -19,7 +19,7 @@ export class UpgradeService {
   public activeUserUpgrade$ = new Subject<IUserUpgrade>();
 
   constructor() {
-    
+
   }
-  
+
 }
