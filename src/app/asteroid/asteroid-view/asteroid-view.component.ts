@@ -319,7 +319,7 @@ export class AsteroidViewComponent implements OnInit {
         this.generatePieceCall(this.asteroid.ore, amounts, this.xLaser, this.yLaser);
       }
       this.asteroidSprite.clickExplosion();
-      this.userS.localClickGauge = 0;
+      this.userS.localClickGauge = this.userS.localClickGauge % 50;
     }
     this.asteroidSprite.shakeCoef = this.userS.localClickGauge * 10;
     this.userS.localClickGaugeSubject.next(this.userS.localClickGauge);
