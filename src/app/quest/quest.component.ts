@@ -4,6 +4,7 @@ import { QuestService } from './quest.service';
 import { UserService, IQuest } from '../shared/user/user.service';
 import { Quest } from './quest';
 import { Observable } from 'rxjs/Observable';
+import { SharedModule } from '../shared/shared.module';
 
 
 @Component({
@@ -22,6 +23,10 @@ export class QuestComponent implements OnInit {
   ngOnInit() {
     this.quest$ = this.userS.quest;
     this.questGroup = this.questS.questGroup;
+  }
+
+  public valueWithSpace(values: number) {
+    return SharedModule.calculeMoneyWithSpace(values);
   }
 
 }
