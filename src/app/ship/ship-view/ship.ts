@@ -5,6 +5,13 @@ import { ChestSprite } from './chestSprite';
 import { Vector2 } from '../../shared/utils';
 import { Subject } from 'rxjs/Subject';
 
+export enum STATE_SHIP {
+    STAY,
+    GO_LEFT,
+    GO_RIGHT,
+    STAY_OUT
+}
+
 class UpgradeShip {
     posX: number;
     posY: number;
@@ -53,7 +60,10 @@ class UpgradeShip {
 }
 
 export class Ship {
+    boolGOLEFT: boolean;
     ship: PIXI.extras.AnimatedSprite;
+    shipState: STATE_SHIP;
+
     tourelle: PIXI.extras.AnimatedSprite;
     iTourelle: number;
 
@@ -80,18 +90,16 @@ export class Ship {
     mineRate: UpgradeShip;
     currentLevelDrone: number;
     stepTutorial = new Subject<boolean>();
-    shipGoCenterScreen: boolean;
     public chest: ChestSprite;
 
     constructor(app: PIXI.Application) {
         this.app = app;
         this.deltaSum = 0;
 
-
-
         this.boolNewTourelle = false;
         this.deltaSumShip = 0;
-        this.shipGoCenterScreen = true;
+        this.shipState = STATE_SHIP.GO_RIGHT;
+
         this.iTourelle = 1;
 
         // Init Sprite Animated Ship
@@ -116,10 +124,11 @@ export class Ship {
         this.transformShipX = this.ship.x;
         this.transformShipY = this.ship.y;
 
+        this.boolGOLEFT = false;
         let deltaChest = 0;
         // Listen for animate update
         this.chest = new ChestSprite(this.app);
-        
+
         this.app.ticker.add((delta) => {
             if (this.ship) {
                 if (this.deltaSum > 2 * Math.PI) {
@@ -131,37 +140,62 @@ export class Ship {
                     this.deltaSumShip = 0;
                 }
                 this.deltaSumShip += (2 * Math.PI) / 1500;
+                switch (this.shipState) {
+                    case STATE_SHIP.GO_RIGHT:
+                        const vectGO = this.lerpVector2(this.ship.x, this.ship.y, this.app.renderer.width / 2, this.app.renderer.height / 2, 0.01);
+                        this.ship.x = vectGO.x;
+                        this.ship.y = vectGO.y;
 
-                if (this.shipGoCenterScreen) {
-                    const vectGO = this.lerpVector2(this.ship.x, this.ship.y, this.app.renderer.width / 2, this.app.renderer.height / 2, 0.01);
-                    this.ship.x = vectGO.x;
-                    this.ship.y = vectGO.y;
+                        if (this.ship.x < (this.app.renderer.width / 2) + 1.5) {
+                            this.shipState = STATE_SHIP.STAY;
+                            this.stepTutorial.next(true);
+                            this.transformShipX = this.app.renderer.width / 2;
+                            this.transformShipY = this.app.renderer.height / 2;
+                            this.deltaSumShip = 0;
+                        }
+                        break;
 
-                    if (this.ship.x < (this.app.renderer.width / 2) + 1.5) {
-                        this.shipGoCenterScreen = false;
-                        this.stepTutorial.next(true);
-                        this.transformShipX = this.app.renderer.width / 2;
-                        this.transformShipY = this.app.renderer.height / 2;
-                        this.deltaSumShip = 0;
-                    }
-                } else {
-                    this.ship.y = this.transformShipY + Math.sin(this.deltaSumShip) * 17;
-                    this.ship.x = this.transformShipX + Math.cos(this.deltaSumShip) * 5;
-                    this.initMoveXY(this.engine, 30, 20, this.deltaSum);
-                    if (this.chest.boolParentChest) {
-                        if (this.chest.spriteChestParent.y <= 151) {
-                            this.chest.boolParentChest = false;
-                            this.chest.spriteTextOpenChest.visible = false;
+                    case STATE_SHIP.STAY:
+                        this.ship.y = this.transformShipY + Math.sin(this.deltaSumShip) * 17;
+                        this.ship.x = this.transformShipX + Math.cos(this.deltaSumShip) * 5;
+                        this.boolGOLEFT = false;
+                        this.initMoveXY(this.engine, 30, 20, this.deltaSum);
+                        if (this.chest.boolParentChest) {
+                            if (this.chest.spriteChestParent.y <= 151) {
+                                this.chest.boolParentChest = false;
+                                this.chest.spriteTextOpenChest.visible = false;
+                            }
+                            this.chest.spriteTextOpenChest.alpha -= 0.007;
+                            this.chest.spriteChestParent.y = 300 - deltaChest;
+                            deltaChest += 1;
+                        } else {
+                            if (this.chest.spriteChestParent != null && this.chest.spriteChestParent.children[4].visible) {
+                                this.chest.spriteChestParent.x = Math.sin(this.deltaSum * 100) * -5;
+                            }
+                            deltaChest = 0;
                         }
-                        this.chest.spriteTextOpenChest.alpha -= 0.007;
-                        this.chest.spriteChestParent.y = 300 - deltaChest;
-                        deltaChest += 1;
-                    } else {
-                        if (this.chest.spriteChestParent != null && this.chest.spriteChestParent.children[4].visible) {
-                            this.chest.spriteChestParent.x = Math.sin(this.deltaSum * 100) * -5;
+                        break;
+
+                    case STATE_SHIP.GO_LEFT:
+                        if (!this.boolGOLEFT) {
+                            if (this.ship.x < -100) {
+                                this.shipState = STATE_SHIP.STAY_OUT;
+                                this.ship.x = this.app.renderer.width + 200;
+                                this.ship.y = this.app.renderer.height / 2;
+                                this.boolGOLEFT = true;
+                                this.deltaSumShip = 0;
+                            } else {
+                                const vectGOLEFT = this.lerpVector2(this.ship.x, this.ship.y, -200, this.app.renderer.height / 2, 0.01);
+                                this.ship.x = vectGOLEFT.x;
+                                this.ship.y = vectGOLEFT.y;
+                            }
                         }
-                        deltaChest = 0;
-                    }
+                        break;
+
+                    case STATE_SHIP.STAY_OUT:
+                        this.ship.x = this.app.renderer.width + 200;
+                        this.ship.y = this.app.renderer.height / 2;
+                        break;
                 }
             }
         });
