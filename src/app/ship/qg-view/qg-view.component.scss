@@ -6,6 +6,7 @@ section {
     overflow: hidden;
     background-image: url('../../../assets/upgrade/img/QG.jpg');
     background-size: cover;
+    cursor: pointer;
 }
 
 .name{
@@ -25,26 +26,43 @@ section {
     }
 }
 
-.level-up {
+.modal {
     height: 100%;
-    width: 30%;
-    background-color: white;
-    border-right: solid 5px $black;
-    transform: translateX(-100%);
-    transition: transform 0.3s ease-in-out;
-    cursor: pointer;
-    img {
-        height: 80%;
+
+    .info {
+        height: 30%;
+        display: block;
+    }
+    .description {
+        background-color: white;
+        padding: 10px;
+        font-size: 1.2rem;
     }
     .cost-ore {
-        height: 100%;
-        width: 30%;
-        img {
-            height: 60%;
-        }
-        p {
-            font-size: 0.6rem;
-        }
+        width: 20%;
+        padding: 10px;
+        background-color: white;
+        color: black;
+        margin-right: 10px;
+    }
+    p {
+        margin: 0;
+        font-size: 0.8rem;
+    }
+    img {
+        width: 80%;
+        margin-right: 10px;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        font-size: 1.2rem;
+        background-color: white;
+        text-transform: uppercase;
+        background-color: $buy-color;
+        box-shadow: inset 3px 3px #50ff66, inset -3px -3px #267e31;
+        cursor: pointer;
     }
 }
 

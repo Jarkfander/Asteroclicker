@@ -1,3 +1,4 @@
+import { staggerTile, enter } from './../../shared/animations';
 import { Upgrade } from './../upgrade-class/upgrade';
 import { Component, OnInit, ElementRef, Renderer2, ViewChild, Input, HostListener } from '@angular/core';
 import { UserService, IUserUpgrade } from '../../shared/user/user.service';
@@ -11,7 +12,8 @@ import { ToasterService } from '../../shared/toaster/toaster.service';
 @Component({
   selector: 'app-qg-view',
   templateUrl: './qg-view.component.html',
-  styleUrls: ['./qg-view.component.scss']
+  styleUrls: ['./qg-view.component.scss'],
+  animations: [enter, staggerTile]
 })
 export class QgViewComponent implements OnInit {
 
@@ -24,6 +26,7 @@ export class QgViewComponent implements OnInit {
   public oreAmount: IOreAmounts;
   public credit: number;
   public lvlResearch: number;
+  public lvlUpModal: boolean;
 
   constructor(private socketS: SocketService,
     private el: ElementRef,
@@ -154,5 +157,18 @@ export class QgViewComponent implements OnInit {
       }
     }
     this.upgradeCostString = Object.keys(temp);
+  }
+
+  /** 
+   * MODAL
+  */
+  public openModal() {
+    this.lvlUpModal = true;
+    this.upgradeS.activeUserUpgrade$.next(null);
+  }
+
+  
+  public closeModal() {
+    this.lvlUpModal = false;
   }
 }
