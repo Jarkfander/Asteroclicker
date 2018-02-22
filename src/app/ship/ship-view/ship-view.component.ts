@@ -1,6 +1,6 @@
 import { Component, AfterViewInit, ElementRef, Renderer2, HostListener } from '@angular/core';
 import * as PIXI from 'pixi.js';
-import { Ship } from './ship';
+import { Ship, STATE_SHIP } from './ship';
 import { UserService, IProfile, IUserUpgrade, IChest } from '../../shared/user/user.service';
 import { User } from '../../shared/user/user';
 import { UpgradeType } from '../upgrade-class/upgrade';
@@ -11,6 +11,7 @@ import { UpgradeService } from '../upgrade.service';
 import { Observable } from 'rxjs/Observable';
 import { fail } from 'assert';
 import { takeWhile } from 'rxjs/operators';
+import { SearchService, ISearch } from '../../search/search.service';
 
 
 @Component({
@@ -35,7 +36,8 @@ export class ShipViewComponent implements AfterViewInit {
     private render: Renderer2,
     private userS: UserService,
     private upgradeS: UpgradeService,
-    private socketS: SocketService) { }
+    private socketS: SocketService,
+    private searchS: SearchService) { }
 
   ngAfterViewInit() {
     this.activeUpgrade$ = this.upgradeS.activeUserUpgrade$.asObservable();
@@ -47,8 +49,16 @@ export class ShipViewComponent implements AfterViewInit {
       this.step = profile.step;
     });
 
+    this.searchS.search.subscribe((isearch: ISearch) => {
+      if (isearch.state === 3) {
+        this.ship.shipState = STATE_SHIP.GO_LEFT;
+      }
+      if (isearch.state === 0) {
+        this.ship.shipState = STATE_SHIP.GO_RIGHT;
+      }
+    });
+
     this.userS.chest.subscribe((chests: IChest[]) => {
-  
       this.ship.chest.numberOfChest = chests.length;
       this.ship.chest.supChest();
       this.clickChest(chests);
@@ -113,10 +123,10 @@ export class ShipViewComponent implements AfterViewInit {
     this.ship.stepTutorial.pipe(
       takeWhile((iBool: boolean) => iBool <= true))
       .subscribe((iBool: boolean) => {
-      if (iBool && this.step === 0) {
-        this.socketS.nextStep(1);
-      }
-    });
+        if (iBool && this.step === 0) {
+          this.socketS.nextStep(1);
+        }
+      });
     // init musique
     /*
     PIXI.loader.load(function (loader, resources) {
