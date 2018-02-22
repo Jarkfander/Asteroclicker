@@ -8,7 +8,7 @@ export const environment = {
     storageBucket: "asteroclickerush.appspot.com",
     messagingSenderId: "582772943008"
   },
-  socketUrl: 'http://localhost:4000',
+  socketUrl: 'https://asteroclickerserver.herokuapp.com/',
   loadingTime: 0,
   addresses: {
     nexium: '0xab904d9c85388653e6fb1c75b41fbc0465d39b90',
